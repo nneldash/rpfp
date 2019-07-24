@@ -86,3 +86,4 @@ defined('EXIT__AUTO_MAX')      OR define('EXIT__AUTO_MAX', 125); // highest auto
 
 defined('USERNAME')             or define('USERNAME', 'username');
 defined('USERPASSWORD')         or define('USERPASSWORD', 'password');
+defined('DB_DEFAULT')           or define('DB_DEFAULT', 'db_default');
