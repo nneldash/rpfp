@@ -432,7 +432,7 @@ $config['standardize_newlines'] = FALSE;
 |          for backwards compatibility purposes!
 |
 */
-$config['global_xss_filtering'] = FALSE;
+$config['global_xss_filtering'] = TRUE;
 
 /*
 |--------------------------------------------------------------------------
@@ -449,8 +449,8 @@ $config['global_xss_filtering'] = FALSE;
 | 'csrf_exclude_uris' = Array of URIs which ignore CSRF checks
 */
 $config['csrf_protection'] = FALSE;
-$config['csrf_token_name'] = 'csrf_test_name';
-$config['csrf_cookie_name'] = 'csrf_cookie_name';
+$config['csrf_token_name'] = 'CROSSSITE_PROTECTION';
+$config['csrf_cookie_name'] = 'CROSSSITE_COOKIE';
 $config['csrf_expire'] = 7200;
 $config['csrf_regenerate'] = TRUE;
 $config['csrf_exclude_uris'] = array();
@@ -521,3 +521,26 @@ $config['rewrite_short_tags'] = FALSE;
 | Array:		array('10.0.1.200', '192.168.5.0/24')
 */
 $config['proxy_ips'] = '';
+
+$config[DB_DEFAULT] = array(
+    'dsn'      => '',
+    'hostname' => 'localhost',
+    USERNAME => '',
+    USERPASSWORD => '',
+    'database' => '',
+    'dbdriver' => 'mysqli',
+    'dbprefix' => '',
+    'pconnect' => TRUE,
+    'db_debug' => FALSE,  // (ENVIRONMENT !== 'production'),
+    'cache_on' => FALSE,
+    'cachedir' => '',
+    'char_set' => 'utf8',
+    'dbcollat' => 'utf8_general_ci',
+    'swap_pre' => '',
+    'encrypt' => FALSE,
+    'compress' => FALSE,
+        'autoinit' => TRUE,
+    'stricton' => FALSE,
+    'failover' => array(),
+    'save_queries' => FALSE
+    );
