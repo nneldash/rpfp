@@ -9,11 +9,11 @@ $CI->load->iface('form/lists/ListEducationalBackgroundInterface');
 abstract class FormInterface extends BaseInterface
 {
     /** @var CoupleInterface */
-    public $CoupleInterface;
+    public $Couple;
     /** @var IndividualInterface */
-    public $IndividualInterface;
+    public $Individual;
     /** @var SeminarInterface */
-    public $SeminarInterface;
+    public $Seminar;
     /** @var ListEducationalBackgroundInterface */
-    public $ListEducationalBackgroundInterface;
+    public $ListEducationalBackground;
 }
