@@ -11,3 +11,15 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 |	https://codeigniter.com/user_guide/general/hooks.html
 |
 */
+
+
+$hook['pre_system'] = array(
+	'class'    => 'Spl_class_loader',
+	'function' => 'register',
+	'filename' => 'Spl_class_loader.php',
+	'filepath' => 'hooks',
+	'params'   => array(APPPATH.'core/', FCPATH.'core/'),
+);
+
+/* End of file hooks.php */
+/* Location: ./application/config/hooks.php */
