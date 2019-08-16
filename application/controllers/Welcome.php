@@ -25,12 +25,16 @@ class Welcome extends CI_Controller
 
     public function index()
     {
+        $header['title'] = 'RPFP - Homepage';
+
         if (isset($GLOBALS[NO_OUTPUT]) && $GLOBALS[NO_OUTPUT]) {
             return;
         }
 
         if (!$this->LoginModel->isLoggedIn()) {
-            $this->load->view('login/login_page');
+            $this->load->view("includes/header", $header);
+            $this->load->view('index/landingPage');
+            $this->load->view("includes/footer");
             return;
         }
 

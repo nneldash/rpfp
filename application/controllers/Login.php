@@ -10,6 +10,8 @@ class Login extends CI_Controller
 
     public function loginUser()
     {
+        $header['title'] = 'RPFP - Login';
+
         if ($this->LoginModel->isLoggedIn()) {
             redirect(site_url());
             return;
@@ -28,7 +30,9 @@ class Login extends CI_Controller
         $this->form_validation->set_rules(POST_USERPASSWORD, 'Password', REQUIRED);
 
         if ($this->form_validation->run() == false) {
+            $this->load->view("includes/header", $header);
             $this->load->view("login/login_page");
+            $this->load->view("includes/footer");
             return;
         }
 
@@ -40,7 +44,9 @@ class Login extends CI_Controller
             }]]);
 
             if ($this->form_validation->run() == false) {
+                $this->load->view("includes/header", $header);
                 $this->load->view("login/login_page");
+                $this->load->view("includes/footer");
                 return;
             }
         }
@@ -55,8 +61,12 @@ class Login extends CI_Controller
 
     public function logoffSystem()
     {
+        $header['title'] = 'RPFP - Login';
+
         if ($this->input->get('timeout') == 1) {
+            $this->load->view("includes/header", $header);
             $this->load->view("login/login_page");
+            $this->load->view("includes/footer");
         } elseif ($this->input->get('timeout') == 2) {
             $this->LoginModel->clearCredentials();
             redirect(site_url());

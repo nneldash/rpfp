@@ -107,3 +107,6 @@ defined('N_A') or define('N_A', 'N/A');
 defined('NOT_FOUND') or define('NOT_FOUND', ' NOT FOUND!!!');
 defined('BLANK') or define('BLANK', '');
 
+defined('BOOTSRAP_CSS')         or define('BOOTSRAP_CSS', '/../node_modules/bootstrap/dist/css/bootstrap.min.css');
+defined('BOOTSRAP_JS')          or define('BOOTSRAP_JS', '/../node_modules/bootstrap/dist/js/bootstrap.min.js');
+defined('JQUERY_JS')            or define('JQUERY_JS', '/../node_modules/jquery/dist/jquery.min.js');
