@@ -29,20 +29,21 @@ class LoginModel extends CI_Model
 
     public function login(UserCredentialsInterface $credentials)
     {
-        if (!$credentials->validate()) {
-            return false;
-        }
+		return true;
+        //if (!$credentials->validate()) {
+        //    return false;
+        //}
 
-        $connection = $this->connect($credentials);
-        $connected = $connection->connected;
-        $db = &$connection->database;
-        $db->close();
+        //$connection = $this->connect($credentials);
+        //$connected = $connection->connected;
+        //$db = &$connection->database;
+        //$db->close();
 
-        if (!$connected) {
-            return false;
-        }
+        //if (!$connected) {
+          //  return false;
+        //}
 
-        return $this->saveCredentials($credentials);
+        //return $this->saveCredentials($credentials);
     }
 
     private function saveCredentials(UserCredentialsInterface $credentials)
