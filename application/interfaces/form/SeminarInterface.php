@@ -7,8 +7,9 @@ abstract class SeminarInterface extends BaseInterface
 {
     public $Location;
     public $ClassNumber;
-    public $DateCondcted;
+	public $Province;
+	public $Barangay;
+    public $DateConducted;
     public $ParentLeader;
     public $TypeOfClass;
 }
- 

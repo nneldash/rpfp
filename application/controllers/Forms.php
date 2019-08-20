@@ -16,5 +16,10 @@ class Forms extends CI_Controller
         $this->load->view('forms/form1');
         $this->load->view('includes/footer');
     }
+
+    public function saveForm1()
+    {
+       echo 1;
+    }
     
 }
