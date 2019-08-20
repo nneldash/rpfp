@@ -111,3 +111,6 @@ defined('BOOTSRAP_CSS')         or define('BOOTSRAP_CSS', '/../node_modules/boot
 defined('BOOTSRAP_JS')          or define('BOOTSRAP_JS', '/../node_modules/bootstrap/dist/js/bootstrap.min.js');
 defined('JQUERY_JS')            or define('JQUERY_JS', '/../node_modules/jquery/dist/jquery.min.js');
 defined('POPPER_JS')            or define('POPPER_JS', '/../node_modules/popper.js/dist/popper.js');
+
+defined('SWEETALERT_CSS')       or define('SWEETALERT_CSS', '/../node_modules/sweetalert2/dist/sweetalert2.min.css');
+defined('SWEETALERT_JS')        or define('SWEETALERT_JS', '/../node_modules/sweetalert2/dist/sweetalert2.min.js');

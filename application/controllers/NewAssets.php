@@ -36,4 +36,16 @@ class NewAssets extends CI_Controller
         header('Content-Type: application/javascript');
         readfile(BASEPATH . POPPER_JS);
     }
+
+    public function sweetalertCss()
+    {
+        header('Content-Type: text/css');
+        readfile(BASEPATH . SWEETALERT_CSS);
+    }
+
+    public function sweetalertJs()
+    {
+        header('Content-Type: application/javascript');
+        readfile(BASEPATH . SWEETALERT_JS);
+    }
 }

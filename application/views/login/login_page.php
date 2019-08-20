@@ -18,7 +18,7 @@
                         </span>
                     </div>
                     <div class="form-group wrap-input100 validate-input">
-                        <input class="input100 form-control" type="password" name="password" placeholder="Username" required />
+                        <input class="input100 form-control" type="password" name="password" placeholder="Password" required />
                         <span class="focus-input100"></span>
                         <span class="symbol-input100">
                             <i class="material-icons">lock</i>
@@ -33,3 +33,5 @@
             </div>
         </div>
     </div>
+    <script type="text/javascript" src="<?= base_url('NewAssets/popper')?>"></script>
+    <script type="text/javascript" src="<?= base_url('assets/js/login.js')?>"></script>
