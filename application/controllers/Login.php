@@ -10,23 +10,24 @@ class Login extends CI_Controller
 
     public function loginUser()
     {
+	
         $header['title'] = 'RPFP - Login';
 
         if ($this->LoginModel->isLoggedIn()) {
             redirect(site_url());
             return;
         }
-
+		
         /* GET USER INPUT */
         $this->load->library('login/BasicUserCredentials');
         $cred = $this->basicusercredentials;
-
+		
         $cred->UserName = $this->input->post(POST_USERNAME);
         $cred->Password = $this->input->post(POST_USERPASSWORD);
 
         /* VALIDATE INPUT */
         $this->load->library('form_validation');
-        $this->form_validation->set_rules(POST_USERNAME, 'User Name', REQUIRED);
+        $this->form_validation->set_rules(POST_USERNAME, 'Username', REQUIRED);
         $this->form_validation->set_rules(POST_USERPASSWORD, 'Password', REQUIRED);
 
         if ($this->form_validation->run() == false) {
@@ -35,7 +36,7 @@ class Login extends CI_Controller
             $this->load->view("includes/footer");
             return;
         }
-
+		
         /* CHECK DATABASE PASSWORD */
         if (!$this->LoginModel->login($cred)) {
             $this->form_validation->set_rules(POST_USERNAME, 'User Name', [REQUIRED, ['invalid_password', function () {
@@ -50,7 +51,7 @@ class Login extends CI_Controller
                 return;
             }
         }
-        redirect(site_url());
+        redirect(site_url('forms'));
     }
 
     public function logoffUser()
