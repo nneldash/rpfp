@@ -31,4 +31,9 @@ class NewAssets extends CI_Controller
         readfile(BASEPATH . JQUERY_JS);
     }
     
+    public function popper()
+    {
+        header('Content-Type: application/javascript');
+        readfile(BASEPATH . POPPER_JS);
+    }
 }

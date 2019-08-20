@@ -110,3 +110,4 @@ defined('BLANK') or define('BLANK', '');
 defined('BOOTSRAP_CSS')         or define('BOOTSRAP_CSS', '/../node_modules/bootstrap/dist/css/bootstrap.min.css');
 defined('BOOTSRAP_JS')          or define('BOOTSRAP_JS', '/../node_modules/bootstrap/dist/js/bootstrap.min.js');
 defined('JQUERY_JS')            or define('JQUERY_JS', '/../node_modules/jquery/dist/jquery.min.js');
+defined('POPPER_JS')            or define('POPPER_JS', '/../node_modules/popper.js/dist/popper.js');
