@@ -3,7 +3,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
 $this->load->library('helpers/HtmlHelper');
 ?>
 
-<link href="<?= base_url('assets/css/form.css') ?>" rel="stylesheet">
+<?php if($is_pdf == true) : ?>
+	<link href="<?= base_url('assets/css/form.css') ?>" rel="stylesheet">
+<?php endif; ?>
 
 <div class="body-padding">	
 	<div class="border-2">
@@ -22,9 +24,14 @@ $this->load->library('helpers/HtmlHelper');
 			</p>
 		</div>
 		<form id="form_validation" class="form-horizontal">
-			<div id="mybutton">
-	            <input type="submit" class="save" value="SAVE" name="saveform1" />
-	        </div>
+			<?php if(!$is_pdf) : ?>
+				<div id="mybutton">
+		            <input type="submit" class="save saveForm1" value="SAVE" name="saveform1" />
+		        </div>
+		        <div id="myBackButton">
+			        <input type="submit" class="save printForm1" value="PRINT" />
+			    </div>
+			<?php endif; ?>
 			<div class="border-t1 flex">
 				<div class="col-md-2 padding-l0 padding-t20">
 					<div class="flex">
@@ -538,5 +545,6 @@ $this->load->library('helpers/HtmlHelper');
 		</form>
 	</div>
 </div>
-
-<script type="text/javascript" src="<?= base_url('assets/js/form.js')?>"></script>
+<?php if(!$is_pdf) : ?>
+	<script type="text/javascript" src="<?= base_url('assets/js/form.js')?>"></script>
+<?php endif; ?>
