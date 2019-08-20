@@ -6,7 +6,7 @@
                     <img src="<?= base_url('assets/images/popcom_logo.png') ?>" alt="IMG">
                 </div>
 
-                <form class="login100-form needs-validation" novalidate>
+                <form class="login100-form needs-validation" url="<?= base_url('login/loginUser')?>" method="post" novalidate>
                     <span class="login100-form-title">
                         <h4>RPFP Online Login</h4>
                     </span>
@@ -18,7 +18,7 @@
                         </span>
                     </div>
                     <div class="form-group wrap-input100 validate-input">
-                        <input class="input100 form-control" type="password" name="username" placeholder="Username" required />
+                        <input class="input100 form-control" type="password" name="password" placeholder="Username" required />
                         <span class="focus-input100"></span>
                         <span class="symbol-input100">
                             <i class="material-icons">lock</i>
