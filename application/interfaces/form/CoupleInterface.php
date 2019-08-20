@@ -8,7 +8,4 @@ abstract class CoupleInterface extends BaseInterface
 {
     /** @var NameInterface */
     public $Name;
-    public $Method;
-    public $ReasonForUsing;
-    public $IntentionToUse;
 }
