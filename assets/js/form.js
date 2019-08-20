@@ -1,9 +1,10 @@
 var base_url = window.location.origin + '/rpfp';
 $(function() {
-	saveForm();
+	saveForm1();
+	saveFormA();
 });
 
-function saveForm()
+function saveForm1()
 {
 	$('#form_validation').submit(function(){
 		const Toast = Swal.mixin({
@@ -35,6 +36,26 @@ function saveForm()
 
 		
 		
+
+		return false;
+	});
+
+}
+
+function saveFormA()
+{
+	$('.saveFormA').click(function(){
+		const Toast = Swal.mixin({
+			toast: true,
+			position: 'top-end',
+			showConfirmButton: false,
+			timer: 3000
+		});
+
+		Toast.fire({
+			type: 'success',
+			title: 'Form A successfully saved!'
+		});
 
 		return false;
 	});

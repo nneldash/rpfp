@@ -161,3 +161,14 @@ input:focus {
     top: 3%;
     right: 2%;
 }
+#myBackButton {
+  position: fixed;
+  top: 3%;
+  left: 2%;
+}
+
+
+@page {
+	font-family: inherit;
+	font-size: 12px;
+}
