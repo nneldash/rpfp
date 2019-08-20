@@ -538,3 +538,5 @@ $this->load->library('helpers/HtmlHelper');
 		</form>
 	</div>
 </div>
+
+<script type="text/javascript" src="<?= base_url('assets/js/form.js')?>"></script>

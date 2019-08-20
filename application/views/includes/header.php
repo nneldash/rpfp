@@ -10,6 +10,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="<?= base_url('NewAssets/bootstrapCss') ?>" rel="stylesheet">
+    <link href="<?= base_url('NewAssets/sweetalertCss') ?>" rel="stylesheet">
     <link href="<?= base_url('assets/css/main.css') ?>" rel="stylesheet">
+    <script type="text/javascript" src="<?= base_url('NewAssets/jquery')?>"></script>
 </head>
 <body>
