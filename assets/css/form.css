@@ -155,20 +155,28 @@ input:focus {
 	background: -o-linear-gradient(-135deg, #1a635c, #5dbd61);
 	background: -moz-linear-gradient(-135deg, #1a635c, #5dbd61);
 	background: linear-gradient(-135deg, #1a635c, #5dbd61);
+
 }
 #mybutton {
     position: fixed;
     top: 3%;
     right: 2%;
 }
-#myBackButton {
-  position: fixed;
-  top: 3%;
-  left: 2%;
+#myPrintButton {
+	position: fixed;
+	top: 3%;
+	left: 2%;
+	z-index: 99999999;
 }
 
 
 @page {
 	font-family: inherit;
 	font-size: 12px;
+	/*margin-top: 0;*/
+	margin: 0;
+}
+
+.text-bold {
+	font-weight: 700;
 }
