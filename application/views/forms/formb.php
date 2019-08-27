@@ -98,7 +98,7 @@ $this->load->library('helpers/HtmlHelper');
 								</th>
 							</tr>
 							<tr>
-								<th rowspan="2" class="text-center padding-0">
+								<th class="text-center padding-0">
 									<p class="small">
 										<b>
 											W/out intention <br>
@@ -107,7 +107,7 @@ $this->load->library('helpers/HtmlHelper');
 										</b>
 									</p>
 								</th>
-								<th rowspan="2" class="text-center padding-0">
+								<th class="text-center padding-0">
 									<p class="small">
 										<b>
 											W/ intention <br>
@@ -259,7 +259,7 @@ $this->load->library('helpers/HtmlHelper');
 								<td class="text-center">
 									<p class="small text-primary">
 										<b>
-											Grand Total
+											Total
 										</b>
 									</p>
 								</td>
@@ -274,7 +274,7 @@ $this->load->library('helpers/HtmlHelper');
 						</tbody>
 					</table>
 				</div>
-
+				<br><br>
 				<table class="table">
 					<tr>
 						<td style="padding-left: 20px; border: none"></td>
@@ -303,7 +303,7 @@ $this->load->library('helpers/HtmlHelper');
 						<td style="border: none"></td>
 					</tr>
 					<tr>
-						<td style="padding-left: 20px; border: none;"></td>
+						<td style="padding-left: 20px; padding-top: 30px; border: none;"></td>
 						<td style="border: none">
 							
 						</td>
@@ -318,8 +318,9 @@ $this->load->library('helpers/HtmlHelper');
 					<tr>
 						<td style="padding-left: 20px; border: none"></td>
 						<td style="padding-left: 20px; border: none;">
+
 						</td>
-						<td style="padding-left: 60px; border: none;">
+						<td style="border: none;">
 							<p class="small">Planning Officer IV</p>
 						</td>
 						<td style="border: none">
@@ -328,14 +329,6 @@ $this->load->library('helpers/HtmlHelper');
 						<td style="border: none"></td>
 					</tr>
 				</table>
-				<!-- <div class="padding-t20">
-					<p class="small"><b>Note: Profiled only are not to be included in the total accomplishment</b></p>
-				</div>
-				<div class="flex padding-t20">
-					<p class="small padding-l10p">Prepared by:</p>
-					<p class="small padding-l30p">Reviewed by:</p>
-					<p class="small padding-l28p">Approved by:</p>
-				</div> -->
 			</div>
 	    </form>
 	</div>

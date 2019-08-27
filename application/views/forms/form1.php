@@ -271,9 +271,9 @@ $this->load->library('helpers/HtmlHelper');
 							</tr>
 						</thead>
 						<tbody>
-							<?php for($i = 1; $i <= 10; $i++): ?>
+							<?php for($i = 0; $i <= 9; $i++): ?>
 								<tr>
-									<td class="text-center" style="border-left: none" rowspan="2"><p class="small"><?= $i; ?></p></td>
+									<td class="text-center" style="border-left: none" rowspan="2"><p class="small"><?= $i + 1; ?></p></td>
 									<td class="small" style="padding: 5px;">
 										<?php
 				                            echo HtmlHelper::inputPdf(
