@@ -3,15 +3,18 @@ defined('BASEPATH') or exit('No direct script access allowed');
 $this->load->library('helpers/HtmlHelper');
 ?>
 
-<?php if($is_pdf == true) : ?>
-	<link href="<?= base_url('assets/css/form.css') ?>" rel="stylesheet">
-<?php endif; ?>
+<?php if($is_pdf): ?>
+	<link href="<?= base_url('NewAssets/bootstrapCss') ?>" rel="stylesheet">
+	<link href="<?= base_url('assets/css/style.css') ?>" rel="stylesheet">
+<?php endif?>
+
+<link href="<?= base_url('assets/css/form.css') ?>" rel="stylesheet">
 
 <div class="body-padding">	
 	<div class="border-2">
 		<div class="row">
-			<div class="col padding-r3p padding-b8">
-				<p class="small float-right">RPFP FORM 1</p>
+			<div class="col-md-12 padding-r3p text-right">
+				<p class="small">RPFP FORM 1</p>
 			</div>
 		</div>
 		<div class="border-t1">
@@ -25,68 +28,139 @@ $this->load->library('helpers/HtmlHelper');
 		</div>
 		<form id="form_validation" class="form-horizontal">
 			<?php if(!$is_pdf) : ?>
-				<div id="mybutton">
+				<div id="mybutton">					
 		            <input type="submit" class="save saveForm1" value="SAVE" name="saveform1" />
 		        </div>
-		        <div id="myBackButton">
-			        <input type="submit" class="save printForm1" value="PRINT" />
+		        <div id="myPrintButton">
+		        	<a href="<?= base_url('forms/viewpdf') ?>" class="save printForm1" target="_blank">
+                        <span>PRINT</span>
+                    </a>
 			    </div>
 			<?php endif; ?>
 			<div class="border-t1 flex">
-				<div class="col-md-2 padding-l0 padding-t20">
-					<div class="flex">
-						<div class="width-20 height-20 border-1 margin-r5 border-l0 border-b0"></div>
-						<p class="small"><b>4Ps</b></p>
+				<?php if($is_pdf) { ?>
+					<div style="padding-top: 10px"></div>
+					<table style="float: left">
+						<tr>
+							<td class="border-1 width-30" style="border-left: none"></td>
+							<td class="padding-r20p">
+								<span class="small padding-l100"><b>&nbsp;&nbsp;4Ps</b></span>
+							</td>
+
+							<td class="border-1 width-30"></td>
+							<td class="padding-r20p">
+								<span class="small padding-l100"><b>&nbsp;&nbsp;House-to-House</b></span>
+							</td>
+
+							<td class="padding-r8p">
+								<span class="small">Class No.:</span>
+							</td>
+							<td class="border-b1 padding-r15p"></td>
+						</tr>
+						<tr>
+							<td class="border-1 width-30" style="border-left: none"></td>
+							<td>
+								<span class="small"><b>&nbsp;&nbsp;Faith-Based Organization</b></span>
+							</td>
+
+							<td class="border-1 width-30"></td>
+							<td>
+								<span class="small"><b>&nbsp;&nbsp;Profile only</b></span>
+							</td>
+
+							<td>
+								<span class="small">Prov/City/Mun.:</span>
+							</td>
+							<td class="border-b1"></td>
+						</tr>
+						<tr>
+							<td class="border-1 width-30" style="border-left: none"></td>
+							<td>
+								<span class="small"><b>&nbsp;&nbsp;PMC</b></span>
+							</td>
+
+							<td class="border-1 width-30"></td>
+							<td>
+								<span class="small"><b>&nbsp;&nbsp;Others, please specify ____________________</b></span>
+							</td>
+
+							<td>
+								<span class="small">Barangay:</span>
+							</td>
+							<td class="border-b1"></td>
+						</tr>
+						<tr>
+							<td class="border-1 width-30" style="border-left: none"></td>
+							<td>
+								<span class="small"><b>&nbsp;&nbsp;Usapan</b></span>
+							</td>
+
+							<td></td>
+							<td></td>
+
+							<td>
+								<span class="small">Date Conducted:</span>
+							</td>
+							<td class="border-b1"></td>
+						</tr>
+					</table>
+				<?php } else { ?>
+					<div class="col-md-2 padding-l0 padding-t20">
+						<div class="flex">
+							<div class="width-20 height-20 border-1 margin-r5 border-l0 border-b0">
+								<p class="small" style="padding-left: 100px"><b>4Ps</b></p>
+							</div>
+						</div>
+						<div class="flex">
+							<div class="width-20 height-20 border-1 margin-r5 border-l0 border-b0"></div>
+							<span class="small"><b>Faith-Based Organization</b></span>
+						</div>
+						<div class="flex">
+							<div class="width-20 height-20 border-1 margin-r5 border-l0 border-b0"></div>
+							<span class="small"><b>PMC</b></span>
+						</div>
+						<div class="flex">
+							<div class="width-20 height-20 border-1 margin-r5 border-l0"></div>
+							<span class="small"><b>Usapan</b></span>
+						</div>
 					</div>
-					<div class="flex">
-						<div class="width-20 height-20 border-1 margin-r5 border-l0 border-b0"></div>
-						<p class="small"><b>Faith-Based Organization</b></p>
+					<div class="col-md-5 padding-l0 padding-t20 text-right">
+						<div class="flex">
+							<div class="width-8 height-20 border-1 margin-r5 border-b0"></div>
+							<span class="small"><b>House-to-House</b></span>
+						</div>
+						<div class="flex">
+							<div class="width-8 height-20 border-1 margin-r5 border-b0"></div>
+							<span class="small"><b>Profile only</b></span>
+						</div>
+						<div class="flex">
+							<div class="width-8 height-20 border-1 margin-r5"></div>
+							<span class="small"><b>Others, please specify</b></span>
+						</div>
 					</div>
-					<div class="flex">
-						<div class="width-20 height-20 border-1 margin-r5 border-l0 border-b0"></div>
-						<p class="small"><b>PMC</b></p>
+					<div class="col-md-5 padding-l0 padding-t20">
+						<div class="flex">
+							<span class="small">Class No.:</span>
+						</div>
+						<div class="flex">
+							<span class="small">Prov/City/Mun.:</span>
+						</div>
+						<div class="flex">
+							<span class="small">Barangay</span>
+						</div>
+						<div class="flex">
+							<span class="small">Date Conducted</span>
+						</div>
 					</div>
-					<div class="flex">
-						<div class="width-20 height-20 border-1 margin-r5 border-l0"></div>
-						<p class="small"><b>Usapan</b></p>
-					</div>
-				</div>
-				<div class="col-md-5 padding-l0 padding-t20">
-					<div class="flex">
-						<div class="width-8 height-20 border-1 margin-r5 border-b0"></div>
-						<p class="small"><b>House-to-House</b></p>
-					</div>
-					<div class="flex">
-						<div class="width-8 height-20 border-1 margin-r5 border-b0"></div>
-						<p class="small"><b>Profile only</b></p>
-					</div>
-					<div class="flex">
-						<div class="width-8 height-20 border-1 margin-r5"></div>
-						<p class="small"><b>Others, please specify</b></p>
-					</div>
-				</div>
-				<div class="col-md-5 padding-l0 padding-t20">
-					<div class="flex">
-						<p class="small">Class No.:</p>
-					</div>
-					<div class="flex">
-						<p class="small">Prov/City/Mun.:</p>
-					</div>
-					<div class="flex">
-						<p class="small">Barangay</p>
-					</div>
-					<div class="flex">
-						<p class="small">Date Conducted</p>
-					</div>
-				</div>
+				<?php } ?>
 			</div>
-			<div class="padding-t20">
+			<div class="padding-t20" style="page-break-inside: avoid">
 				<div class="table-responsive">	
 					<table class="table table-bordered margin-b0">
 						<thead>
 							<tr>
-								<th rowspan="2"></th>
-								<th rowspan="2" class="text-center padding-0">
+								<th rowspan="2" style="border-left: none; width: 2%;"></th>
+								<th rowspan="2" class="text-center padding-0" style="width: 18%">
 									<p class="small">
 										<b>
 											Name of Participants/Couple (Husband & <br>
@@ -110,19 +184,19 @@ $this->load->library('helpers/HtmlHelper');
 										<b>Traditional FP User</b>
 									</p>
 								</th>
-								<th rowspan="2" class="text-center">
+								<th rowspan="2" class="text-center" style="border-right: none">
 									<p class="small">
 										<b>PARTICIPANT'S SIGNATURE <br>(13)</b>
 									</p>
 								</th>
 							</tr>
 							<tr>
-								<th class="text-center">
+								<th class="text-center" style="width: 5%">
 									<p class="small">
 										<b>Sex <br> (M/F) <br> (2)</b>
 									</p>
 								</th>
-								<th class="text-center">
+								<th class="text-center" style="width: 5%">
 									<p class="small">
 										<b>Civil <br>Status <br> (3)</b>
 									</p>
@@ -147,7 +221,7 @@ $this->load->library('helpers/HtmlHelper');
 										</b>
 									</p>
 								</th>
-								<th class="text-center">
+								<th class="text-center" style="width: 5%">
 									<p class="small">
 										<b>
 											No. of <br> 
@@ -156,7 +230,7 @@ $this->load->library('helpers/HtmlHelper');
 										</b>
 									</p>
 								</th>
-								<th class="text-center">
+								<th class="text-center" style="width: 5%">
 									<p class="small">
 										<b>
 											Method <br> 
@@ -175,12 +249,12 @@ $this->load->library('helpers/HtmlHelper');
 										</b>
 									</p>
 								</th>
-								<th class="text-center">
+								<th class="text-center" style="width: 5%">
 									<p class="small">
 										<b>Type <br> (10)</b>
 									</p>
 								</th>
-								<th class="text-center">
+								<th class="text-center" style="width: 5%">
 									<p class="small">
 										<b>Status <br> (11)</b>
 									</p>
@@ -197,12 +271,14 @@ $this->load->library('helpers/HtmlHelper');
 							</tr>
 						</thead>
 						<tbody>
-							<?php for($i = 1; $i <= 10; $i++): ?>
+							<?php for($i = 0; $i <= 9; $i++): ?>
 								<tr>
-									<td class="text-center" rowspan="2"><p class="small"><?= $i; ?></p></td>
-									<td>
+									<td class="text-center" style="border-left: none" rowspan="2"><p class="small"><?= $i + 1; ?></p></td>
+									<td class="small" style="padding: 5px;">
 										<?php
 				                            echo HtmlHelper::inputPdf(
+				                                $is_pdf,
+				                                "",
 				                                "text",
 				                                "name_participant1[".$i."]",
 				                                "padding-l10",
@@ -210,9 +286,11 @@ $this->load->library('helpers/HtmlHelper');
 				                            );
 				                        ?>
 									</td>
-									<td class="width-3">
+									<td class="small text-center">
 										<?php
 				                            echo HtmlHelper::inputPdf(
+				                            	$is_pdf,
+				                                "",
 				                                "text",
 				                                "sex1[".$i."]",
 				                                "text-center",
@@ -220,9 +298,11 @@ $this->load->library('helpers/HtmlHelper');
 				                            );
 				                        ?>
 									</td>
-									<td class="width-3">
+									<td class="small text-center">
 										<?php
 				                            echo HtmlHelper::inputPdf(
+				                            	$is_pdf,
+				                            	"",
 				                                "text",
 				                                "civil_status1[".$i."]",
 				                                "text-center",
@@ -230,9 +310,11 @@ $this->load->library('helpers/HtmlHelper');
 				                            );
 				                        ?>
 									</td>
-									<td class="width-10">
+									<td class="small text-center">
 										<?php
 				                            echo HtmlHelper::inputPdf(
+				                            	$is_pdf,
+				                            	"",
 				                                "text",
 				                                "age1[".$i."]",
 				                                "text-center",
@@ -240,9 +322,11 @@ $this->load->library('helpers/HtmlHelper');
 				                            );
 				                        ?>
 									</td>
-									<td rowspan="2">
+									<td class="small text-center" rowspan="2">
 										<?php
 				                            echo HtmlHelper::inputPdf(
+				                            	$is_pdf,
+				                            	"",
 				                                "text",
 				                                "address[".$i."]",
 				                                "height-50 padding-l10",
@@ -250,9 +334,11 @@ $this->load->library('helpers/HtmlHelper');
 				                            );
 				                        ?>
 									</td>
-									<td class="width-5">
+									<td class="small text-center">
 										<?php
 				                            echo HtmlHelper::inputPdf(
+				                            	$is_pdf,
+				                            	"",
 				                                "text",
 				                                "educ1[".$i."]",
 				                                "text-center",
@@ -260,19 +346,23 @@ $this->load->library('helpers/HtmlHelper');
 				                            );
 				                        ?>
 									</td>
-									<td rowspan="2" class="width-5">
+									<td class="small text-center" rowspan="2">
 										<?php
 				                            echo HtmlHelper::inputPdf(
+				                            	$is_pdf,
+				                            	"",
 				                                "text",
-				                                "no_children[".$i."]",
+				                                "no_of_children[".$i."]",
 				                                "height-50 text-center",
 				                                "2"
 				                            );
 				                        ?>
 									</td>
-									<td rowspan="2" class="width-5">
+									<td class="small text-center" rowspan="2">
 										<?php
 				                            echo HtmlHelper::inputPdf(
+				                            	$is_pdf,
+				                            	"",
 				                                "text",
 				                                "method[".$i."]",
 				                                "height-50 text-center",
@@ -280,9 +370,11 @@ $this->load->library('helpers/HtmlHelper');
 				                            );
 				                        ?>
 									</td>
-									<td rowspan="2" class="width-5">
+									<td class="small text-center" rowspan="2">
 										<?php
 				                            echo HtmlHelper::inputPdf(
+				                            	$is_pdf,
+				                            	"",
 				                                "text",
 				                                "fp_method[".$i."]",
 				                                "height-50 text-center",
@@ -290,9 +382,11 @@ $this->load->library('helpers/HtmlHelper');
 				                            );
 				                        ?>
 									</td>
-									<td rowspan="2" class="width-5">
+									<td class="small text-center" rowspan="2">
 										<?php
 				                            echo HtmlHelper::inputPdf(
+				                            	$is_pdf,
+				                            	"",
 				                                "text",
 				                                "type[".$i."]",
 				                                "height-50 text-center",
@@ -300,9 +394,11 @@ $this->load->library('helpers/HtmlHelper');
 				                            );
 				                        ?>
 									</td>
-									<td rowspan="2" class="width-5">
+									<td class="small text-center" rowspan="2">
 										<?php
 				                            echo HtmlHelper::inputPdf(
+				                            	$is_pdf,
+				                            	"",
 				                                "text",
 				                                "status[".$i."]",
 				                                "height-50 text-center",
@@ -310,9 +406,11 @@ $this->load->library('helpers/HtmlHelper');
 				                            );
 				                        ?>
 									</td>
-									<td rowspan="2" class="width-10">
+									<td class="small text-center" rowspan="2">
 										<?php
 				                            echo HtmlHelper::inputPdf(
+				                            	$is_pdf,
+				                            	"",
 				                                "text",
 				                                "reason[".$i."]",
 				                                "height-50 text-center",
@@ -320,91 +418,101 @@ $this->load->library('helpers/HtmlHelper');
 				                            );
 				                        ?>
 									</td>
-									<td></td>
+									<td class="small" style="border-right: none"></td>
 								</tr>
-								<tr>
-									<td>
-										<?php
+									<tr>
+										<td class="small" style="padding: 5px;">
+											<?php
+					                            echo HtmlHelper::inputPdf(
+					                            	$is_pdf,
+					                                "",
+					                                "text",
+					                                "name_participant2[".$i."]",
+					                                "padding-l10",
+					                                ""
+					                            );
+					                        ?>
+										</td>
+										<td class="small text-center">
+											<?php
+					                            echo HtmlHelper::inputPdf(
+					                            	$is_pdf,
+					                                "",
+					                                "text",
+					                                "sex2[".$i."]",
+					                                "text-center",
+					                                "1"
+					                            );
+					                        ?>
+										</td>
+										<td class="small text-center">
+											<?php
+					                            echo HtmlHelper::inputPdf(
+					                            	$is_pdf,
+					                            	"",
+					                                "text",
+					                                "civil_status2[".$i."]",
+					                                "text-center",
+					                                "1"
+					                            );
+					                        ?>
+										</td>
+										<td class="small text-center">
+											<?php
 				                            echo HtmlHelper::inputPdf(
-				                                "text",
-				                                "name_participant2[".$i."]",
-				                                "padding-l10",
-				                                ""
-				                            );
-				                        ?>
-									</td>
-									<td class="width-3">
-										<?php
-				                            echo HtmlHelper::inputPdf(
-				                                "text",
-				                                "sex2[".$i."]",
-				                                "text-center",
-				                                "1"
-				                            );
-				                        ?>
-									</td>
-									<td class="width-3">
-										<?php
-				                            echo HtmlHelper::inputPdf(
-				                                "text",
-				                                "civil_status2[".$i."]",
-				                                "text-center",
-				                                "1"
-				                            );
-				                        ?>
-									</td>
-									<td class="width-10">
-										<?php
-				                            echo HtmlHelper::inputPdf(
+				                            	$is_pdf,
+				                            	"",
 				                                "text",
 				                                "age2[".$i."]",
 				                                "text-center",
 				                                ""
 				                            );
 				                        ?>
-									</td>
-									<td class="width-5">
-										<?php
+										</td>
+										<td class="small text-center">
+											<?php
 				                            echo HtmlHelper::inputPdf(
+				                            	$is_pdf,
+				                            	"",
 				                                "text",
 				                                "educ2[".$i."]",
 				                                "text-center",
 				                                "1"
 				                            );
 				                        ?>
-									</td>
-									<td></td>
+										</td>
+										<td class="small" style="border-right: none"></td>
 								</tr>
-							<?php endfor; ?>						
+							<?php endfor; ?>
 						</tbody>
 					</table>
 				</div>
 			</div>
-			<div>
+			<div style="page-break-inside: avoid;">
 				<p class="small text-center">NOTE: Please use CODE NUMBER below for Civil Status, Educational Attainment and Method Used</p>
 				<div class="table-responsive">	
 					<table class="table table-bordered margin-b0">
 						<thead>
 							<tr>
-								<th class="text-center" rowspan="2">
+								<th class="text-center" rowspan="2" style="border-left: none; width: 10%">
 									<p class="small">
 										<b>Civil Status</b> <br> 
 										(Column 3)
 									</p>
 								</th>
-								<th class="text-center" colspan="2" rowspan="2">
+								<th class="text-center" colspan="2" rowspan="2" style="width: 10%">
 									<p class="small">
 										<b>Highest Educational Attainment</b> <br> 
 										(Column 6)
 									</p>
 								</th>
-								<th class="text-center" colspan="4">
+								<th class="text-center" colspan="4" style="width: 15%">
 									<p class="small">
 										<b>Modern FP Method Used</b> <br> 
 										(Columns 8 & 9)
 									</p>
 								</th>
-								<th class="text-center" rowspan="2">
+								<th class="text-center" rowspan="2" style="width: 10%">
 									<p class="small">
 										<b>
 											Reason for Using FP / <br> 
@@ -413,13 +521,13 @@ $this->load->library('helpers/HtmlHelper');
 										<br> (Column 12)
 									</p>
 								</th>
-								<th class="text-center" rowspan="2" colspan="2">
+								<th class="text-center" rowspan="2" colspan="2" style="width: 10%">
 									<p class="small">
 										<b>Traditional FP User: TYPE </b> <br> 
 										(Column 10)
 									</p>
 								</th>
-								<th class="text-center" rowspan="2">
+								<th class="text-center" rowspan="2" style="border-right: none; width: 20%">
 									<p class="small">
 										<b>Non-Modern FP User: STATUS </b> <br> 
 										(Column 11)
@@ -432,7 +540,7 @@ $this->load->library('helpers/HtmlHelper');
 										<b>Artificial Methods:</b>
 									</p>
 								</th>
-								<th class="text-center" colspan="2">
+								<th class="text-center" colspan="2" style="width: 10%">
 									<p class="small">
 										<b>Modern NFP Methods:</b>
 									</p>
@@ -441,7 +549,7 @@ $this->load->library('helpers/HtmlHelper');
 						</thead>
 						<tbody>
 							<tr>
-								<td class="padding-l15">
+								<td style="padding-left: 10px;" style="border-left: none">
 									<p class="small">
 										1 - Married <br>
 										2 - Single <br>
@@ -450,7 +558,7 @@ $this->load->library('helpers/HtmlHelper');
 										5 - Live-in
 									</p>								
 								</td>
-								<td class="padding-l5 border-r0">
+								<td style="border-right: none; padding-left: 5px;">
 									<p class="small">
 										1 - No Education  <br>
 										2 - Elemantary Level <br>
@@ -459,7 +567,7 @@ $this->load->library('helpers/HtmlHelper');
 										5 - High School Graduate 
 									</p>
 								</td>
-								<td class="border-l0">
+								<td style="border-left: none;">
 									<p class="small">
 										6 - Vocational <br>
 										7 - College Level <br>
@@ -467,7 +575,7 @@ $this->load->library('helpers/HtmlHelper');
 										9 - Post Graduate
 									</p>
 								</td>
-								<td class="padding-l5 border-r0">
+								<td style="border-right: none; padding-left: 5px;">
 									<p class="small">
 										1 - Condom  <br>
 										2 - IUD <br>
@@ -475,35 +583,35 @@ $this->load->library('helpers/HtmlHelper');
 										4 - Injectable
 									</p>
 								</td>
-								<td class="border-l0">
+								<td style="border-left: none;">
 									<p class="small">
 										5 - Vasectomy <br>
 										6 - Tubal Ligation <br>
 										7 - Implant
 									</p>
 								</td>
-								<td class="padding-l5 border-r0">
+								<td style="border-right: none; padding-left: 5px;">
 									<p class="small">
 										8 - CMM / Billings  <br>
 										9 - BBT <br>
 										10 - Sympto-Thermal
 									</p>
 								</td>
-								<td class="border-l0">
+								<td style="border-left: none;">
 									<p class="small">
 										11 - SDM <br>
 										12 - LAM
 									</p>
 								</td>
 
-								<td class="padding-l5">
+								<td style="padding-left: 5px;">
 									<p class="small">
 										1 - Spacing <br>
 										2 - Limiting <br>
 										3 - Achieving
 									</p>
 								</td>
-								<td class="padding-l5 border-r0">
+								<td style="border-right: none; padding-left: 5px;">
 									<p class="small">
 										1 - Withdrawal <br>
 										2 - Rhythm <br>
@@ -511,13 +619,13 @@ $this->load->library('helpers/HtmlHelper');
 										4 - Abstinence
 									</p>
 								</td>
-								<td class="border-l0">
+								<td style="border-left: none;">
 									<p class="small">
 										5 - Herbal <br>
 										6 - No Method
 									</p>
 								</td>
-								<td class="padding-l5">
+								<td style="padding-left: 5px; border-right: none">
 									<p class="small">
 										A - Espressing Intention to Use Modern FP <br> 
 											Method (indicate CODE for Modern FP Methods <br> 
@@ -531,7 +639,61 @@ $this->load->library('helpers/HtmlHelper');
 						</tbody>
 					</table>
 				</div>
-				<div class="flex">
+				<table class="table" style="border: none">
+					<tr>
+						<td style="padding-left: 20px"></td>
+						<td>
+							<p class="small">Prepared by:</p>
+						</td>
+						<td>
+							<p class="small">Reviewed by:</p>
+						</td>
+						<td>
+							<p class="small">Approved by:</p>
+						</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td style="padding: 5px;"></td>
+						<td>
+							
+						</td>
+						<td>
+							
+						</td>
+						<td>
+							
+						</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td style="padding-left: 20px"></td>
+						<td>
+							_______________________________
+						</td>
+						<td>
+							_______________________________
+						</td>
+						<td>
+							_______________________________
+						</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td style="padding-left: 20px"></td>
+						<td style="padding-left: 20px; border-top: ">
+							<p class="small">Name/Signature of RPM Team Member/s</p>
+						</td>
+						<td style="padding-left: 60px">
+							<p class="small">Name & Signature</p>
+						</td>
+						<td>
+							<p class="small">Name & Signature of Provincial/City Population Officer</p>
+						</td>
+						<td></td>
+					</tr>
+				</table>
+				<!-- <div class="flex">
 					<p class="small padding-l10p">Prepared by:</p>
 					<p class="small padding-l30p">Reviewed by:</p>
 					<p class="small padding-l28p">Approved by:</p>
@@ -540,7 +702,7 @@ $this->load->library('helpers/HtmlHelper');
 					<p class="small padding-l15p">Name/Signature of RPM Team Member/s</p>
 					<p class="small padding-l20p">Name & Signature</p>
 					<p class="small padding-l25p">Name & Signature of Provincial/City Population Officer</p>
-				</div>
+				</div> -->
 			</div>
 		</form>
 	</div>

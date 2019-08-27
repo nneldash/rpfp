@@ -19,16 +19,15 @@ $this->load->library('helpers/HtmlHelper');
 	<div class="">
 		<div class="row">
 			<div class="col padding-r3p padding-b8">
-				<p class="small text-right">FORM A</p>
+				<p class="small text-right">FORM B</p>
 			</div>
 		</div>
 		<div class="text-center">
 			<p class="small">
 				<b>
 					RPFP CLASSES IMPLEMENTATION REPORT <br>
-					FOR THE PERIOD ___________________ 2018 <br>
-					POPCOM Regional Office __________ <br>
-					DEMAND GENERATION ACTIVITIES
+					FOR THE PERIOD January to December 2018 <br>
+					TOTAL NUMBER OF UNMET NEED
 				</b>
 			</p>
 		</div>
@@ -38,7 +37,7 @@ $this->load->library('helpers/HtmlHelper');
 		            <input type="submit" class="save saveFormA" value="SAVE" name="saveform1" />
 		        </div>
 		        <div id="myPrintButton">
-		        	<a href="<?= base_url('forms/viewforma') ?>" class="save printForm1" target="_blank">
+		        	<a href="<?= base_url('forms/viewformb') ?>" class="save printForm1" target="_blank">
                         <span>PRINT</span>
                     </a>
 			    </div>
@@ -48,176 +47,72 @@ $this->load->library('helpers/HtmlHelper');
 					<table class="table table-bordered margin-b0">
 						<thead>
 							<tr>
-								<th rowspan="3" class="text-center padding-0">
+								<th rowspan="2" class="text-center padding-0">
 									<p class="small">Month</p>									
 								</th>
-								<th colspan="7" class="text-center padding-0">
-									<p class="small">
-										<b>
-											No. of Classes/Sessions Held
-										</b>
-									</p>
-								</th>
-								<th rowspan="3" class="text-center padding-0">
-									<p class="small">
-										<b>
-											Target No. <br> 
-											of Couples/<br>
-											Individuals
-										</b>
-									</p>
-								</th>
-								<th colspan="7" class="text-center padding-0">
-									<p class="small">
-										<b>
-											No. of Individuals of Reproductive Age Reached
-										</b>
-									</p>
-								</th>
-								<th colspan="3" class="text-center padding-0">
-									<p class="small">
-										<b>
-											Solo/Couple Disaggregation
-										</b>
-									</p>
-								</th>
-								<th rowspan="3" class="text-center padding-0">
-									<p class="small">Total Couples/ <br>Individuals <br>Reached</p>									
-								</th>
-							</tr>
-							<tr>
 								<th rowspan="2" class="text-center padding-0">
 									<p class="small">
 										<b>
-											Sub Module <br>
-											2.2 (4Ps)
+											No. of Couples with unmet need for Modern FP
 										</b>
 									</p>
 								</th>
 								<th rowspan="2" class="text-center padding-0">
 									<p class="small">
 										<b>
-											Non- <br>
-											4Ps
-										</b>
-									</p>
-								</th>
-								<th rowspan="2" class="text-center padding-0">
-									<p class="small">
-										<b>
-											USAPAN
-										</b>
-									</p>
-								</th>
-								<th rowspan="2" class="text-center padding-0">
-									<p class="small">
-										<b>
-											PMC
-										</b>
-									</p>
-								</th>
-								<th rowspan="2" class="text-center padding-0">
-									<p class="small">
-										<b>
-											H2H
-										</b>
-									</p>
-								</th>
-								<th rowspan="2" class="text-center padding-0">
-									<p class="small">
-										<b>
-											Profiled <br>
-											Only
-										</b>
-									</p>
-								</th>
-								<th rowspan="2" class="text-center padding-0">
-									<p class="small">
-										<b>
-											Total
-										</b>
-									</p>
-								</th>
-								<th rowspan="2" class="text-center padding-0">
-									<p class="small">
-										<b>
-											Sub Module <br>
-											2.2 (4Ps)
-										</b>
-									</p>
-								</th>
-								<th rowspan="2" class="text-center padding-0">
-									<p class="small">
-										<b>
-											Non- <br>
-											4Ps
-										</b>
-									</p>
-								</th>
-								<th rowspan="2" class="text-center padding-0">
-									<p class="small">
-										<b>
-											USAPAN
-										</b>
-									</p>
-								</th>
-								<th rowspan="2" class="text-center padding-0">
-									<p class="small">
-										<b>
-											PMC
-										</b>
-									</p>
-								</th>
-								<th rowspan="2" class="text-center padding-0">
-									<p class="small">
-										<b>
-											H2H
-										</b>
-									</p>
-								</th>
-								<th rowspan="2" class="text-center padding-0">
-									<p class="small">
-										<b>
-											Profiled <br>
-											Only
-										</b>
-									</p>
-								</th>
-								<th rowspan="2" class="text-center padding-0">
-									<p class="small">
-										<b>
-											Total
+											No. of Clients <br> 
+											with Unmet <br>
+											need for Modern FP <br>
+											referred/ <br>
+											served
 										</b>
 									</p>
 								</th>
 								<th colspan="2" class="text-center padding-0">
 									<p class="small">
 										<b>
-											Solo Attendees
+											No. of Couples who are currently using Traditional FP
 										</b>
 									</p>
 								</th>
 								<th rowspan="2" class="text-center padding-0">
 									<p class="small">
 										<b>
-											Couple <br>
-											Attendees
+											No. of Clients currently using Traditional FP referred/served
 										</b>
 									</p>
+								</th>
+								<th rowspan="2" class="text-center padding-0">
+									<p class="small">
+										<b>
+											Total No. of Unmet Need
+										</b>
+									</p>									
+								</th>
+								<th rowspan="2" class="text-center padding-0">
+									<p class="small">
+										<b>
+											Total No. of Clients referred/served
+										</b>
+									</p>									
 								</th>
 							</tr>
 							<tr>
 								<th class="text-center padding-0">
 									<p class="small">
 										<b>
-											Male
+											W/out intention <br>
+											to shift modern <br>
+											FP
 										</b>
 									</p>
 								</th>
 								<th class="text-center padding-0">
 									<p class="small">
 										<b>
-											Female
+											W/ intention <br>
+											to shift modern <br>
+											FP
 										</b>
 									</p>
 								</th>
@@ -240,18 +135,6 @@ $this->load->library('helpers/HtmlHelper');
 									<td></td>
 									<td></td>
 									<td></td>
-									<td></td>
-									<td></td>
-									<td></td>
-									<td></td>
-									<td></td>
-									<td></td>
-									<td></td>
-									<td></td>
-									<td></td>
-									<td></td>
-									<td></td>
-									<td></td>
 								</tr>
 							<?php endfor; ?>
 							<tr>
@@ -262,18 +145,6 @@ $this->load->library('helpers/HtmlHelper');
 										</b>
 									</p>
 								</td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
 								<td></td>
 								<td></td>
 								<td></td>
@@ -298,18 +169,6 @@ $this->load->library('helpers/HtmlHelper');
 									<td></td>
 									<td></td>
 									<td></td>
-									<td></td>
-									<td></td>
-									<td></td>
-									<td></td>
-									<td></td>
-									<td></td>
-									<td></td>
-									<td></td>
-									<td></td>
-									<td></td>
-									<td></td>
-									<td></td>
 								</tr>
 							<?php endfor; ?>
 							<tr>
@@ -320,18 +179,6 @@ $this->load->library('helpers/HtmlHelper');
 										</b>
 									</p>
 								</td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
 								<td></td>
 								<td></td>
 								<td></td>
@@ -356,18 +203,6 @@ $this->load->library('helpers/HtmlHelper');
 									<td></td>
 									<td></td>
 									<td></td>
-									<td></td>
-									<td></td>
-									<td></td>
-									<td></td>
-									<td></td>
-									<td></td>
-									<td></td>
-									<td></td>
-									<td></td>
-									<td></td>
-									<td></td>
-									<td></td>
 								</tr>
 							<?php endfor; ?>
 							<tr>
@@ -378,18 +213,6 @@ $this->load->library('helpers/HtmlHelper');
 										</b>
 									</p>
 								</td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
 								<td></td>
 								<td></td>
 								<td></td>
@@ -414,18 +237,6 @@ $this->load->library('helpers/HtmlHelper');
 									<td></td>
 									<td></td>
 									<td></td>
-									<td></td>
-									<td></td>
-									<td></td>
-									<td></td>
-									<td></td>
-									<td></td>
-									<td></td>
-									<td></td>
-									<td></td>
-									<td></td>
-									<td></td>
-									<td></td>
 								</tr>
 							<?php endfor; ?>
 							<tr>
@@ -443,24 +254,12 @@ $this->load->library('helpers/HtmlHelper');
 								<td></td>
 								<td></td>
 								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
 							</tr>
 							<tr>
 								<td class="text-center">
 									<p class="small text-primary">
 										<b>
-											Grand Total
+											Total
 										</b>
 									</p>
 								</td>
@@ -471,25 +270,9 @@ $this->load->library('helpers/HtmlHelper');
 								<td></td>
 								<td></td>
 								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
 							</tr>
 						</tbody>
 					</table>
-				</div>
-
-				<div class="padding-t20">
-					<p class="small"><b>Note: Profiled only are not to be included in the total accomplishment</b></p>
 				</div>
 				<br><br>
 				<table class="table">
@@ -520,7 +303,7 @@ $this->load->library('helpers/HtmlHelper');
 						<td style="border: none"></td>
 					</tr>
 					<tr>
-						<td style="padding-left: 20px; padding-top: 40px; border: none;"></td>
+						<td style="padding-left: 20px; padding-top: 30px; border: none;"></td>
 						<td style="border: none">
 							
 						</td>
@@ -535,6 +318,7 @@ $this->load->library('helpers/HtmlHelper');
 					<tr>
 						<td style="padding-left: 20px; border: none"></td>
 						<td style="padding-left: 20px; border: none;">
+
 						</td>
 						<td style="border: none;">
 							<p class="small">Planning Officer IV</p>

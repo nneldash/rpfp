@@ -20,6 +20,7 @@ class Forms extends CI_Controller
         $this->load->view('includes/footer');
     }
 
+<<<<<<< HEAD
     public function saveForm1()
     {
         $form1 = new FormClass();
@@ -59,6 +60,8 @@ class Forms extends CI_Controller
         return $listCouple;
     }
     
+=======
+>>>>>>> f16198440c1e2638cc65a468734600a068aaf160
     public function formA()
     {
         $header['title'] = 'RPFP Online | Form A';
@@ -68,15 +71,20 @@ class Forms extends CI_Controller
         $this->load->view('includes/footer');
     }
 
+    public function formB()
+    {
+        $header['title'] = 'RPFP Online | Form B';
+
+        $this->load->view('includes/header', $header);
+        $this->load->view('forms/formb', array('is_pdf' => false));
+        $this->load->view('includes/footer');
+    }
+
+
     public function viewpdf()
     {
         $mpdfConfig = array(
-                'mode' => 'utf-8', 
-                'format' => 'A4', 
-                'margin_left' => 0,
-                'margin_right' => 0,
-                'margin_header' => 0,
-                'margin_footer' => 0,
+                'format' => 'A4',
                 'orientation' => 'L'
             );
         
@@ -84,7 +92,34 @@ class Forms extends CI_Controller
         $html = $this->load->view('forms/form1', array('is_pdf' => true), true);
 
         $mpdf->WriteHTML($html);
-        $mpdf->Output('Form-A.pdf', 'I');
+        $mpdf->Output('Form1.pdf', 'I');
     }
-    
+
+    public function viewforma()
+    {
+        $mpdfConfig = array(
+                'format' => 'A4',
+                'orientation' => 'L'
+            );
+        
+        $mpdf = new \Mpdf\Mpdf($mpdfConfig);
+        $html = $this->load->view('forms/forma', array('is_pdf' => true), true);
+
+        $mpdf->WriteHTML($html);
+        $mpdf->Output('FormA.pdf', 'I');
+    }   
+
+    public function viewformb()
+    {
+        $mpdfConfig = array(
+                'format' => 'A4',
+                'orientation' => 'L'
+            );
+        
+        $mpdf = new \Mpdf\Mpdf($mpdfConfig);
+        $html = $this->load->view('forms/formb', array('is_pdf' => true), true);
+
+        $mpdf->WriteHTML($html);
+        $mpdf->Output('FormB.pdf', 'I');
+    }    
 }
