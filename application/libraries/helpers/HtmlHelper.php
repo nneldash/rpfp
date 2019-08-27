@@ -30,11 +30,24 @@ class HtmlHelper
                 return returnIfEmpty;
             } else {
                 return (
-                    ($type == "date") ? $date_pdf : $field
+                    ($type == "date") ? $field : $field
                 );
             }
         }
     }
     
-    
+    public static function checkBox($is_pdf, $field, $value, $name)
+    {
+        $state = BLANK;
+        if (!$is_pdf) {
+            $state = (($field == $value) ? "checked" : BLANK);
+            return "<input class='text-inherit text-size10' type='checkbox' value='{$value}'
+                    name='{$name}' {$state} />{$value}";
+        } else {
+            $state = (($field == $value) ? "&#x25A0;" : "&#9744;");
+            return "{$state}<span class='padding-l5'>{$value}</span>";
+        }
+    }
+
+
 }

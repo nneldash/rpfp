@@ -37,122 +37,176 @@ $this->load->library('helpers/HtmlHelper');
                     </a>
 			    </div>
 			<?php endif; ?>
-			<div class="border-t1 flex">
-				<?php if($is_pdf) { ?>
-					<div style="padding-top: 10px"></div>
-					<table style="float: left">
-						<tr>
-							<td class="border-1 width-30" style="border-left: none"></td>
-							<td class="padding-r20p">
-								<span class="small padding-l100"><b>&nbsp;&nbsp;4Ps</b></span>
-							</td>
+			<div class="border-t1 table-responsive">
+				<div style="padding-top: 10px"></div>
+				<table style="float: left" class="table">
+					<tr>
+						<td class="border-1 padding-0" style="border-left: none">
+							<?php if (!$is_pdf) : ?>
+								<label class="cont border-t1">
+									<input type="checkbox">
+									<span class="checkmark"></span>
+								</label>
+							<?php endif; ?>
+						</td>
+						<td class="padding-r20p border-0">
+							<span class="small padding-l100"><b>&nbsp;&nbsp;4Ps</b></span>
+						</td>
 
-							<td class="border-1 width-30"></td>
-							<td class="padding-r20p">
-								<span class="small padding-l100"><b>&nbsp;&nbsp;House-to-House</b></span>
-							</td>
+						<td class="border-1 padding-0" style="border: 1px solid">
+							<?php if (!$is_pdf) : ?>
+								<label class="cont">
+									<input type="checkbox">
+									<span class="checkmark"></span>
+								</label>
+							<?php endif; ?>
+						</td>
+						<td class="padding-r20p border-0">
+							<span class="small padding-l100"><b>&nbsp;&nbsp;House-to-House</b></span>
+						</td>
 
-							<td class="padding-r8p">
-								<span class="small">Class No.:</span>
-							</td>
-							<td class="border-b1 padding-r15p"></td>
-						</tr>
-						<tr>
-							<td class="border-1 width-30" style="border-left: none"></td>
-							<td>
-								<span class="small"><b>&nbsp;&nbsp;Faith-Based Organization</b></span>
-							</td>
-
-							<td class="border-1 width-30"></td>
-							<td>
-								<span class="small"><b>&nbsp;&nbsp;Profile only</b></span>
-							</td>
-
-							<td>
-								<span class="small">Prov/City/Mun.:</span>
-							</td>
-							<td class="border-b1"></td>
-						</tr>
-						<tr>
-							<td class="border-1 width-30" style="border-left: none"></td>
-							<td>
-								<span class="small"><b>&nbsp;&nbsp;PMC</b></span>
-							</td>
-
-							<td class="border-1 width-30"></td>
-							<td>
-								<span class="small"><b>&nbsp;&nbsp;Others, please specify ____________________</b></span>
-							</td>
-
-							<td>
-								<span class="small">Barangay:</span>
-							</td>
-							<td class="border-b1"></td>
-						</tr>
-						<tr>
-							<td class="border-1 width-30" style="border-left: none"></td>
-							<td>
-								<span class="small"><b>&nbsp;&nbsp;Usapan</b></span>
-							</td>
-
-							<td></td>
-							<td></td>
-
-							<td>
-								<span class="small">Date Conducted:</span>
-							</td>
-							<td class="border-b1"></td>
-						</tr>
-					</table>
-				<?php } else { ?>
-					<div class="col-md-2 padding-l0 padding-t20">
-						<div class="flex">
-							<div class="width-20 height-20 border-1 margin-r5 border-l0 border-b0">
-								<p class="small" style="padding-left: 100px"><b>4Ps</b></p>
-							</div>
-						</div>
-						<div class="flex">
-							<div class="width-20 height-20 border-1 margin-r5 border-l0 border-b0"></div>
-							<span class="small"><b>Faith-Based Organization</b></span>
-						</div>
-						<div class="flex">
-							<div class="width-20 height-20 border-1 margin-r5 border-l0 border-b0"></div>
-							<span class="small"><b>PMC</b></span>
-						</div>
-						<div class="flex">
-							<div class="width-20 height-20 border-1 margin-r5 border-l0"></div>
-							<span class="small"><b>Usapan</b></span>
-						</div>
-					</div>
-					<div class="col-md-5 padding-l0 padding-t20 text-right">
-						<div class="flex">
-							<div class="width-8 height-20 border-1 margin-r5 border-b0"></div>
-							<span class="small"><b>House-to-House</b></span>
-						</div>
-						<div class="flex">
-							<div class="width-8 height-20 border-1 margin-r5 border-b0"></div>
-							<span class="small"><b>Profile only</b></span>
-						</div>
-						<div class="flex">
-							<div class="width-8 height-20 border-1 margin-r5"></div>
-							<span class="small"><b>Others, please specify</b></span>
-						</div>
-					</div>
-					<div class="col-md-5 padding-l0 padding-t20">
-						<div class="flex">
+						<td class="padding-r8p border-0">
 							<span class="small">Class No.:</span>
-						</div>
-						<div class="flex">
+						</td>
+						<td class="padding-r15p border-0">
+							<?php
+	                            echo HtmlHelper::inputPdf(
+	                                $is_pdf,
+	                                "",
+	                                "text",
+	                                "class_no",
+	                                "padding-l10 underline width-70",
+	                                ""
+	                            );
+	                        ?>
+						</td>
+					</tr>
+					<tr>
+						<td class="border-1 width-30 padding-0" style="border-left: none!important;">
+							<?php if (!$is_pdf) : ?>
+								<label class="cont border-t1">
+									<input type="checkbox">
+									<span class="checkmark"></span>
+								</label>
+							<?php endif; ?>
+						</td>
+						<td class="border-0">
+							<span class="small"><b>&nbsp;&nbsp;Faith-Based Organization</b></span>
+						</td>
+
+						<td class="border-1 width-30 padding-0">
+							<?php if (!$is_pdf) : ?>
+								<label class="cont border-t1">
+									<input type="checkbox">
+									<span class="checkmark"></span>
+								</label>
+							<?php endif; ?>
+						</td>
+						<td class="border-0">
+							<span class="small"><b>&nbsp;&nbsp;Profile only</b></span>
+						</td>
+
+						<td class="border-0">
 							<span class="small">Prov/City/Mun.:</span>
-						</div>
-						<div class="flex">
-							<span class="small">Barangay</span>
-						</div>
-						<div class="flex">
-							<span class="small">Date Conducted</span>
-						</div>
-					</div>
-				<?php } ?>
+						</td>
+						<td class="border-0">
+							<?php
+	                            echo HtmlHelper::inputPdf(
+	                                $is_pdf,
+	                                "",
+	                                "text",
+	                                "province",
+	                                "padding-l10 underline width-70",
+	                                ""
+	                            );
+	                        ?>
+						</td>
+					</tr>
+					<tr>
+						<td class="border-1 width-30 padding-0" style="border-left: none">
+							<?php if (!$is_pdf) : ?>
+								<label class="cont border-t1">
+									<input type="checkbox">
+									<span class="checkmark"></span>
+								</label>
+							<?php endif; ?>
+						</td>
+						<td class="border-0">
+							<span class="small"><b>&nbsp;&nbsp;PMC</b></span>
+						</td>
+
+						<td class="border-1 width-30 padding-0">
+							<?php if (!$is_pdf) : ?>
+								<label class="cont border-t1">
+									<input type="checkbox">
+									<span class="checkmark"></span>
+								</label>
+							<?php endif; ?>
+						</td>
+						<td class="border-0">
+							<span class="small"><b>&nbsp;&nbsp;Others, please specify </b>
+								<?php
+		                            echo HtmlHelper::inputPdf(
+		                                $is_pdf,
+		                                "",
+		                                "text",
+		                                "others",
+		                                "padding-l10 underline width-20",
+		                                ""
+		                            );
+		                        ?>
+		                    </span>
+						</td>
+
+						<td class="border-0">
+							<span class="small">Barangay:</span>
+						</td>
+						<td class="border-0">
+							<?php
+	                            echo HtmlHelper::inputPdf(
+	                                $is_pdf,
+	                                "",
+	                                "text",
+	                                "barangay",
+	                                "padding-l10 underline width-70",
+	                                ""
+	                            );
+	                        ?>
+						</td>
+					</tr>
+					<tr>
+						<td class="border-1 width-30 padding-0" style="border-left: none">
+							<?php if (!$is_pdf) : ?>
+								<label class="cont border-t1">
+									<input type="checkbox">
+									<span class="checkmark"></span>
+								</label>
+							<?php endif; ?>
+						</td>
+						<td class="border-0">
+							<span class="small"><b>&nbsp;&nbsp;Usapan</b></span>
+						</td>
+
+						<td class="border-t1"></td>
+						<td class="border-0"></td>
+
+						<td class="border-0">
+							<span class="small">Date Conducted:</span>
+						</td>
+						<td class="border-0">
+							<?php
+	                            echo HtmlHelper::inputPdf(
+	                                $is_pdf,
+	                                "",
+	                                "date",
+	                                "date_conducted",
+	                                "padding-l10 underline width-70",
+	                                ""
+	                            );
+	                        ?>
+						</td>
+					</tr>
+				</table>
 			</div>
 			<div class="padding-t20" style="page-break-inside: avoid">
 				<div class="table-responsive">	
