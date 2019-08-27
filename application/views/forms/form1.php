@@ -44,7 +44,7 @@ $this->load->library('helpers/HtmlHelper');
 						<td class="border-1 padding-0" style="border-left: none">
 							<?php if (!$is_pdf) : ?>
 								<label class="cont border-t1">
-									<input type="checkbox">
+									<input type="checkbox" name="4Ps" value="4Ps" />
 									<span class="checkmark"></span>
 								</label>
 							<?php endif; ?>
@@ -56,7 +56,7 @@ $this->load->library('helpers/HtmlHelper');
 						<td class="border-1 padding-0" style="border: 1px solid">
 							<?php if (!$is_pdf) : ?>
 								<label class="cont">
-									<input type="checkbox">
+									<input type="checkbox" name="house_to_house" value="house_to_house" />
 									<span class="checkmark"></span>
 								</label>
 							<?php endif; ?>
@@ -85,7 +85,7 @@ $this->load->library('helpers/HtmlHelper');
 						<td class="border-1 width-30 padding-0" style="border-left: none!important;">
 							<?php if (!$is_pdf) : ?>
 								<label class="cont border-t1">
-									<input type="checkbox">
+									<input type="checkbox" name="faith_based_org" value="faith_based_org" />
 									<span class="checkmark"></span>
 								</label>
 							<?php endif; ?>
@@ -97,7 +97,7 @@ $this->load->library('helpers/HtmlHelper');
 						<td class="border-1 width-30 padding-0">
 							<?php if (!$is_pdf) : ?>
 								<label class="cont border-t1">
-									<input type="checkbox">
+									<input type="checkbox" name="profile" value="profile" />
 									<span class="checkmark"></span>
 								</label>
 							<?php endif; ?>
@@ -126,7 +126,7 @@ $this->load->library('helpers/HtmlHelper');
 						<td class="border-1 width-30 padding-0" style="border-left: none">
 							<?php if (!$is_pdf) : ?>
 								<label class="cont border-t1">
-									<input type="checkbox">
+									<input type="checkbox" name="pmc" value="pmc" />
 									<span class="checkmark"></span>
 								</label>
 							<?php endif; ?>
@@ -138,7 +138,7 @@ $this->load->library('helpers/HtmlHelper');
 						<td class="border-1 width-30 padding-0">
 							<?php if (!$is_pdf) : ?>
 								<label class="cont border-t1">
-									<input type="checkbox">
+									<input type="checkbox" name="others_check" value="others_check" />
 									<span class="checkmark"></span>
 								</label>
 							<?php endif; ?>
@@ -178,7 +178,7 @@ $this->load->library('helpers/HtmlHelper');
 						<td class="border-1 width-30 padding-0" style="border-left: none">
 							<?php if (!$is_pdf) : ?>
 								<label class="cont border-t1">
-									<input type="checkbox">
+									<input type="checkbox" name="usapan" value="usapan" />
 									<span class="checkmark"></span>
 								</label>
 							<?php endif; ?>
