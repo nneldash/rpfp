@@ -6,6 +6,9 @@ class Forms extends CI_Controller
 	public function __construct()
     {
         parent::__construct();
+        $this->load->model('FormModel');
+        $this->load->library('form/FormClass');
+        $this->load->library('form/CoupleClass');
     }
 
     public function index()
@@ -19,7 +22,41 @@ class Forms extends CI_Controller
 
     public function saveForm1()
     {
-       echo 1;
+        $form1 = new FormClass();
+
+        $form1->ListCouple = $this->getInputFromSeminar();
+        echo '<pre>';
+        print_r($form1);
+        exit;
+        if(!$this->FormModel->saveForm1()) {
+            $data = ['is_save' => false];
+        } else {
+            $data = ['is_save' => true];
+        }
+
+        $this->output
+            ->set_content_type('application/json')
+            ->set_output(json_encode($data));
+    }
+    
+    public function getInputFromSeminar()
+    {
+        $listCouple = new ListCoupleClass();
+        
+        for ($i = 0; $i < $this->input->post('name_participant1'); $i++) {
+            if (!$this->input->post('name_participant1')[$i] && !$this->input->post('name_participant2')[$i]) {
+                break;
+            }
+
+            $couple = new CoupleClass();
+
+            $couple->Husband = $this->input->post('name_participant1')[$i];
+            $couple->Wife = $this->input->post('name_participant2')[$i];
+
+            $listCouple->append($couple);
+        }
+
+        return $listCouple;
     }
     
     public function formA()

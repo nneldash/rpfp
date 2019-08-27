@@ -7,5 +7,7 @@ $CI->load->iface('form/NameInterface');
 abstract class CoupleInterface extends BaseInterface
 {
     /** @var NameInterface */
-    public $Name;
+    public $Husband;
+    /** @var NameInterface */
+    public $Wife;
 }
