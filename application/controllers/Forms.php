@@ -116,7 +116,16 @@ class Forms extends CI_Controller
         $this->load->view('includes/footer');
     }
 
-    public function viewpdf()
+    public function serviceSlip()
+    {
+        $header['title'] = 'RPFP Online | Service Slip';
+
+        $this->load->view('includes/header', $header);
+        $this->load->view('forms/serviceSlip', array('is_pdf' => false));
+        $this->load->view('includes/footer');
+    }
+
+    public function viewform1()
     {
         $mpdfConfig = array(
                 'format' => 'A4',
@@ -170,5 +179,19 @@ class Forms extends CI_Controller
 
         $mpdf->WriteHTML($html);
         $mpdf->Output('FormC.pdf', 'I');
+    }
+
+    public function viewslip()
+    {
+        $mpdfConfig = array(
+                'format' => 'A4',
+                'orientation' => 'L'
+            );
+        
+        $mpdf = new \Mpdf\Mpdf($mpdfConfig);
+        $html = $this->load->view('forms/serviceSlip', array('is_pdf' => true), true);
+
+        $mpdf->WriteHTML($html);
+        $mpdf->Output('ServiceSlip.pdf', 'I');
     }   
 }
