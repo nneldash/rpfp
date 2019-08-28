@@ -9,6 +9,7 @@ class Forms extends CI_Controller
         $this->load->model('FormModel');
         $this->load->library('form/FormClass');
         $this->load->library('form/CoupleClass');
+        $this->load->library('form/ProfileClass');
     }
 
     public function index()
@@ -20,12 +21,12 @@ class Forms extends CI_Controller
         $this->load->view('includes/footer');
     }
 
-<<<<<<< HEAD
     public function saveForm1()
     {
         $form1 = new FormClass();
 
-        $form1->ListCouple = $this->getInputFromSeminar();
+        $form1->ListCouple = $this->getInputFromCouples();
+        $form1->ListProfile = $this->getInputFromProfiles();
         echo '<pre>';
         print_r($form1);
         exit;
@@ -40,7 +41,7 @@ class Forms extends CI_Controller
             ->set_output(json_encode($data));
     }
     
-    public function getInputFromSeminar()
+    public function getInputFromCouples() 
     {
         $listCouple = new ListCoupleClass();
         
@@ -59,9 +60,35 @@ class Forms extends CI_Controller
 
         return $listCouple;
     }
+
+    public function getInputFromProfiles()
+    {
+        $listProfile = new ListProfileClass();
+
+        for ($i = 0; $i <  $this->input->post('sex1'); $i++) {
+            if (!$this->input->post('sex1')[$i] && !$this->input->post('civil_status1')[$i] && !$this->input->post('age1')[$i] && !$this->input->post('address')[$i] && !$this->input->post('educ1')[$i] && !$this->input->post('no_of_children')[$i]) {
+                break;
+            }
+
+            $profile = new ProfileClass();
+
+            $profile->Sex = $this->input->post('sex1')[$i];
+            $profile->Sex = $this->input->post('sex2')[$i];
+            $profile->CivilStatus = $this->input->post('civil_status1')[$i];
+            $profile->CivilStatus = $this->input->post('civil_status2')[$i];
+            $profile->Age = $this->input->post('age1')[$i];
+            $profile->Age = $this->input->post('age2')[$i];
+            $profile->Address = $this->input->post('address')[$i];
+            $profile->EducationalAttainment = $this->input->post('educ1')[$i];
+            $profile->EducationalAttainment = $this->input->post('educ2')[$i];
+            $profile->NumberOfChildren = $this->input->post('no_of_children')[$i];
+
+            $listProfile->append($profile);
+        }
+
+        return $listProfile;
+    }
     
-=======
->>>>>>> f16198440c1e2638cc65a468734600a068aaf160
     public function formA()
     {
         $header['title'] = 'RPFP Online | Form A';
