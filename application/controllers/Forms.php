@@ -107,6 +107,14 @@ class Forms extends CI_Controller
         $this->load->view('includes/footer');
     }
 
+    public function formC()
+    {
+        $header['title'] = 'RPFP Online | Form C';
+
+        $this->load->view('includes/header', $header);
+        $this->load->view('forms/formc', array('is_pdf' => false));
+        $this->load->view('includes/footer');
+    }
 
     public function viewpdf()
     {
@@ -148,5 +156,19 @@ class Forms extends CI_Controller
 
         $mpdf->WriteHTML($html);
         $mpdf->Output('FormB.pdf', 'I');
-    }    
+    }
+
+    public function viewformc()
+    {
+        $mpdfConfig = array(
+                'format' => 'A4',
+                'orientation' => 'L'
+            );
+        
+        $mpdf = new \Mpdf\Mpdf($mpdfConfig);
+        $html = $this->load->view('forms/formC', array('is_pdf' => true), true);
+
+        $mpdf->WriteHTML($html);
+        $mpdf->Output('FormC.pdf', 'I');
+    }   
 }
