@@ -180,18 +180,4 @@ class Forms extends CI_Controller
         $mpdf->WriteHTML($html);
         $mpdf->Output('FormC.pdf', 'I');
     }
-
-    public function viewslip()
-    {
-        $mpdfConfig = array(
-                'format' => 'A4',
-                'orientation' => 'L'
-            );
-        
-        $mpdf = new \Mpdf\Mpdf($mpdfConfig);
-        $html = $this->load->view('forms/serviceSlip', array('is_pdf' => true), true);
-
-        $mpdf->WriteHTML($html);
-        $mpdf->Output('ServiceSlip.pdf', 'I');
-    }   
 }

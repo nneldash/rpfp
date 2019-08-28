@@ -1,6 +1,7 @@
 var base_url = window.location.origin + '/rpfp';
 $(function() {
 	saveForm1();
+	saveServiceSlip();
 });
 
 function saveForm1()
@@ -35,6 +36,26 @@ function saveForm1()
 
 		
 		
+
+		return false;
+	});
+
+}
+
+function saveServiceSlip()
+{
+	$('.saveServiceSlip').click(function(){
+		const Toast = Swal.mixin({
+			toast: true,
+			position: 'top-end',
+			showConfirmButton: false,
+			timer: 3000
+		});
+
+		Toast.fire({
+			type: 'success',
+			title: 'Service Slip successfully saved!'
+		});
 
 		return false;
 	});

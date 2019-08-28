@@ -30,13 +30,8 @@ $this->load->library('helpers/HtmlHelper');
 			<form id="form_validation" class="form-horizontal">
 				<?php if(!$is_pdf) : ?>
 					<div id="mybutton">					
-			            <input type="submit" class="save saveForm1" value="SAVE" name="saveform1" />
+			            <input type="submit" class="save saveServiceSlip" value="SAVE" name="saveform1" />
 			        </div>
-			        <div id="myPrintButton">
-			        	<a href="<?= base_url('forms/viewslip') ?>" class="save printForm1" target="_blank">
-	                        <span>PRINT</span>
-	                    </a>
-				    </div>
 				<?php endif; ?>
 				<div class="col-md-12">
 					<div class="col-md-6 padding-r3p text-left">
@@ -241,7 +236,7 @@ $this->load->library('helpers/HtmlHelper');
 								<td></td>
 								<td></td>
 								<td>Implant</td>
-								<td class="padding-0 back-eee">
+								<td class="text-center padding-0 back-eee">
 									<?php if (!$is_pdf) : ?>
 										<label class="cont">
 											<input type="radio" name="fp_method" value="implant" />
@@ -255,12 +250,44 @@ $this->load->library('helpers/HtmlHelper');
 						</tbody>
 					</table>
 				</div>
-				<div class="col-md-12 padding-r3p border-t1">
+				<div class="col-md-12 padding-r3p border-b1">
 					<p class="small">
 						<b>
-							1. FP Method
+							2. Counseling
 						</b>
 					</p>
+				</div>
+				<div class="col-md-12 padding-r3p border-b1">
+					<p class="small">
+						<b>
+							3. Other concerns:
+						</b>
+					</p>
+					<p class="small">
+						<b>
+							Client not provided FP service because of the following reason/s:
+						</b>
+					</p>
+				</div>
+				<div class="col-md-12 padding-r3p">
+					<ol>
+						<li>
+							1. Needed FP method is not available in the facility
+						</li>
+						<li>
+							2. No sevice provider available during the visit
+						</li>
+						<li>
+							3. No trained personnel to do the needed FP service
+						</li>
+						<li>
+							4. Client is not qualified to use preferred method, <br>
+							counseled to use ____________________ but client is undecided
+						</li>
+						<li>
+							5. Other reasons, please specify: ____________________
+						</li>
+					</ol>
 				</div>
 			</form>
 		</div>
