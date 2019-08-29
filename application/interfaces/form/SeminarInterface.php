@@ -5,11 +5,12 @@ $CI->load->iface('base/BaseInterface');
 
 abstract class SeminarInterface extends BaseInterface
 {
-    public $Location;
-    public $ClassNumber;
-	public $Province;
-	public $Barangay;
-    public $DateConducted;
-    public $ParentLeader;
     public $TypeOfClass;
+    public $ClassNumber;
+    public $Province;
+    public $Barangay;
+    public $DateConducted;
+    // public $Location;
+    // public $ParentLeader;
+    
 }

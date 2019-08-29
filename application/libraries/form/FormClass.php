@@ -5,7 +5,7 @@ $CI->load->iface('form/FormInterface');
 $CI->load->library('form/SeminarClass');
 $CI->load->library('form/lists/ListCoupleClass');
 $CI->load->library('form/lists/ListProfileClass');
-$CI->load->library('form/ModernFpUserClass');
+$CI->load->library('form/lists/ListModernFpUserClass');
 $CI->load->library('form/TraditionalFpUserClass');
 
 
@@ -16,7 +16,7 @@ class FormClass extends FormInterface
 		$this->Seminar = new SeminarClass();
         $this->ListCouple = new ListCoupleClass();
         $this->ListProfile = new ListProfileClass();
-        $this->ModernFpUser = new ModernFpUserClass();
+        $this->ListModernFpUser = new ListModernFpUserClass();
         $this->TraditionalFpUser = new TraditionalFpUserClass();
     }
 

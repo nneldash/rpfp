@@ -5,7 +5,7 @@ $CI->load->iface('base/BaseInterface');
 $CI->load->iface('form/SeminarInterface');
 $CI->load->iface('form/lists/ListCoupleInterface');
 $CI->load->iface('form/lists/ListProfileInterface');
-$CI->load->iface('form/ModernFpUserInterface');
+$CI->load->iface('form/lists/ListModernFpUserInterface');
 $CI->load->iface('form/TraditionalFpUserInterface');
 
 abstract class FormInterface extends BaseInterface
@@ -16,8 +16,8 @@ abstract class FormInterface extends BaseInterface
     public $ListCouple;
     /** @var ListProfileInterface */
     public $ListProfile;
-    /** @var ModernFpUserInterface */
-    public $ModernFpUser;
+    /** @var ListModernFpUserInterface */
+    public $ListModernFpUser;
     /** @var TraditionalFpUserInterface */
     public $TraditionalFpUser;
 }

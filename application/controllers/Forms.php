@@ -10,6 +10,7 @@ class Forms extends CI_Controller
         $this->load->library('form/FormClass');
         $this->load->library('form/CoupleClass');
         $this->load->library('form/ProfileClass');
+        $this->load->library('form/ModernFpUserClass');
     }
 
     public function index()
@@ -25,6 +26,7 @@ class Forms extends CI_Controller
     {
         $form1 = new FormClass();
 
+        $form1->Seminar = $this->getInputFromSeminar();
         $form1->ListCouple = $this->getInputFromCouples();
         $form1->ListProfile = $this->getInputFromProfiles();
         echo '<pre>';
@@ -41,6 +43,19 @@ class Forms extends CI_Controller
             ->set_output(json_encode($data));
     }
     
+    public function getInputFromSeminar()
+    {
+        $seminar = new SeminarClass();
+
+        $seminar->TypeOfClass = $this->input->post('4Ps');
+        $seminar->ClassNumber = $this->input->post('class_no');
+        $seminar->Province = $this->input->post('province');
+        $seminar->Barangay = $this->input->post('barangay');
+        $seminar->DateConducted = $this->input->post('date_conducted');
+
+        return $seminar;
+    }
+
     public function getInputFromCouples() 
     {
         $listCouple = new ListCoupleClass();
