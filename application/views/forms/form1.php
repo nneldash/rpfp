@@ -30,7 +30,7 @@ $this->load->library('helpers/HtmlHelper');
 				<p class="small">RPFP FORM 1</p>
 			</div>
 		</div>
-		<div class="border-t1">
+		<div class="border-t1 flex">
 			<p class="small padding-l5 padding-r30">
 				<b>DISCLAIMER:</b>
 				We hereby certify that we have read and understood the Notice on Privacy's and Disclosure written on the dorsal part 
@@ -38,6 +38,16 @@ $this->load->library('helpers/HtmlHelper');
 				Commission on Population (POPCOM), or any of its authorized agents and partners, the authority to collect, obtain, store 
 				and process the personal information that we provide below for the purpose/s of 
 			</p>
+			<?php
+                echo HtmlHelper::inputPdf(
+                    $is_pdf,
+                    "",
+                    "text",
+                    "purpose",
+                    "padding-l10 underline width-10 text-left",
+                    ""
+                );
+            ?>
 		</div>
 		<form id="form_validation" class="form-horizontal">
 			<?php if(!$is_pdf) : ?>
@@ -45,7 +55,7 @@ $this->load->library('helpers/HtmlHelper');
 		            <input type="submit" class="save saveForm1" value="SAVE" name="saveform1" />
 		        </div>
 		        <div id="myPrintButton">
-		        	<a href="<?= base_url('forms/viewpdf') ?>" class="save printForm1" target="_blank">
+		        	<a href="<?= base_url('forms/viewform1') ?>" class="save printForm1" target="_blank">
                         <span>PRINT</span>
                     </a>
 			    </div>
