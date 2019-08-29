@@ -149,7 +149,7 @@ class Forms extends CI_Controller
     {
         $mpdfConfig = array(
                 'format' => 'A4',
-                'orientation' => 'L'
+                'orientation' => 'L'                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   
             );
         
         $mpdf = new \Mpdf\Mpdf($mpdfConfig);
