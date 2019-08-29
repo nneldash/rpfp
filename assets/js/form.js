@@ -1,7 +1,7 @@
 var base_url = window.location.origin + '/rpfp';
 $(function() {
 	saveForm1();
-	saveFormA();
+	saveServiceSlip();
 });
 
 function saveForm1()
@@ -42,9 +42,9 @@ function saveForm1()
 
 }
 
-function saveFormA()
+function saveServiceSlip()
 {
-	$('.saveFormA').click(function(){
+	$('.saveServiceSlip').click(function(){
 		const Toast = Swal.mixin({
 			toast: true,
 			position: 'top-end',
@@ -54,7 +54,7 @@ function saveFormA()
 
 		Toast.fire({
 			type: 'success',
-			title: 'Form A successfully saved!'
+			title: 'Service Slip successfully saved!'
 		});
 
 		return false;

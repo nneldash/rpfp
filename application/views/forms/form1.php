@@ -3,10 +3,23 @@ defined('BASEPATH') or exit('No direct script access allowed');
 $this->load->library('helpers/HtmlHelper');
 ?>
 
-<?php if($is_pdf): ?>
+<?php if($is_pdf){ ?>
 	<link href="<?= base_url('NewAssets/bootstrapCss') ?>" rel="stylesheet">
 	<link href="<?= base_url('assets/css/style.css') ?>" rel="stylesheet">
-<?php endif?>
+<?php } else { ?>
+	<style>
+		.small {
+			/*font-size: 10px;*/
+		}
+
+		.table-bordered > tbody > tr > td,
+		.table-bordered > thead > tr > th,
+		.table-bordered {
+			border: 1px solid #000;
+		}
+
+	</style>
+<?php } ?>
 
 <link href="<?= base_url('assets/css/form.css') ?>" rel="stylesheet">
 
@@ -41,10 +54,10 @@ $this->load->library('helpers/HtmlHelper');
 				<div style="padding-top: 10px"></div>
 				<table style="float: left" class="table">
 					<tr>
-						<td class="border-1 padding-0" style="border-left: none">
+						<td class="border-1 padding-0 back-eee" style="border-left: none">
 							<?php if (!$is_pdf) : ?>
 								<label class="cont border-t1">
-									<input type="checkbox" name="4Ps" value="4Ps" />
+									<input type="radio" name="type" value="4Ps" />
 									<span class="checkmark"></span>
 								</label>
 							<?php endif; ?>
@@ -53,10 +66,10 @@ $this->load->library('helpers/HtmlHelper');
 							<span class="small padding-l100"><b>&nbsp;&nbsp;4Ps</b></span>
 						</td>
 
-						<td class="border-1 padding-0" style="border: 1px solid">
+						<td class="border-1 padding-0 back-eee" style="border: 1px solid">
 							<?php if (!$is_pdf) : ?>
 								<label class="cont">
-									<input type="checkbox" name="house_to_house" value="house_to_house" />
+									<input type="radio" name="type" value="house_to_house" />
 									<span class="checkmark"></span>
 								</label>
 							<?php endif; ?>
@@ -82,10 +95,10 @@ $this->load->library('helpers/HtmlHelper');
 						</td>
 					</tr>
 					<tr>
-						<td class="border-1 width-30 padding-0" style="border-left: none!important;">
+						<td class="border-1 width-30 padding-0 back-eee" style="border-left: none!important;">
 							<?php if (!$is_pdf) : ?>
 								<label class="cont border-t1">
-									<input type="checkbox" name="faith_based_org" value="faith_based_org" />
+									<input type="radio" name="type" value="faith_based_org" />
 									<span class="checkmark"></span>
 								</label>
 							<?php endif; ?>
@@ -94,10 +107,10 @@ $this->load->library('helpers/HtmlHelper');
 							<span class="small"><b>&nbsp;&nbsp;Faith-Based Organization</b></span>
 						</td>
 
-						<td class="border-1 width-30 padding-0">
+						<td class="border-1 width-30 padding-0 back-eee">
 							<?php if (!$is_pdf) : ?>
 								<label class="cont border-t1">
-									<input type="checkbox" name="profile" value="profile" />
+									<input type="radio" name="type" value="profile" />
 									<span class="checkmark"></span>
 								</label>
 							<?php endif; ?>
@@ -123,10 +136,10 @@ $this->load->library('helpers/HtmlHelper');
 						</td>
 					</tr>
 					<tr>
-						<td class="border-1 width-30 padding-0" style="border-left: none">
+						<td class="border-1 width-30 padding-0 back-eee" style="border-left: none">
 							<?php if (!$is_pdf) : ?>
 								<label class="cont border-t1">
-									<input type="checkbox" name="pmc" value="pmc" />
+									<input type="radio" name="type" value="pmc" />
 									<span class="checkmark"></span>
 								</label>
 							<?php endif; ?>
@@ -135,10 +148,10 @@ $this->load->library('helpers/HtmlHelper');
 							<span class="small"><b>&nbsp;&nbsp;PMC</b></span>
 						</td>
 
-						<td class="border-1 width-30 padding-0">
+						<td class="border-1 width-30 padding-0 back-eee">
 							<?php if (!$is_pdf) : ?>
 								<label class="cont border-t1">
-									<input type="checkbox" name="others_check" value="others_check" />
+									<input type="radio" name="type" value="others_check" />
 									<span class="checkmark"></span>
 								</label>
 							<?php endif; ?>
@@ -175,10 +188,10 @@ $this->load->library('helpers/HtmlHelper');
 						</td>
 					</tr>
 					<tr>
-						<td class="border-1 width-30 padding-0" style="border-left: none">
+						<td class="border-1 width-30 padding-0 back-eee" style="border-left: none">
 							<?php if (!$is_pdf) : ?>
 								<label class="cont border-t1">
-									<input type="checkbox" name="usapan" value="usapan" />
+									<input type="radio" name="type" value="usapan" />
 									<span class="checkmark"></span>
 								</label>
 							<?php endif; ?>
@@ -695,68 +708,52 @@ $this->load->library('helpers/HtmlHelper');
 				</div>
 				<table class="table" style="border: none">
 					<tr>
-						<td style="padding-left: 20px"></td>
-						<td>
+						<td style="padding-left: 20px" class="border-0"></td>
+						<td class="border-0">
 							<p class="small">Prepared by:</p>
 						</td>
-						<td>
+						<td class="border-0">
 							<p class="small">Reviewed by:</p>
 						</td>
-						<td>
+						<td class="border-0">
 							<p class="small">Approved by:</p>
 						</td>
-						<td></td>
+						<td class="border-0"></td>
 					</tr>
 					<tr>
-						<td style="padding: 5px;"></td>
-						<td>
-							
-						</td>
-						<td>
-							
-						</td>
-						<td>
-							
-						</td>
-						<td></td>
+						<td style="padding: 5px;" class="border-0"></td>
+						<td class="border-0"></td>
+						<td class="border-0"></td>
+						<td class="border-0"></td>
+						<td class="border-0"></td>
 					</tr>
 					<tr>
-						<td style="padding-left: 20px"></td>
-						<td>
+						<td style="padding-left: 20px" class="border-0"></td>
+						<td class="border-0">
 							_______________________________
 						</td>
-						<td>
+						<td class="border-0">
 							_______________________________
 						</td>
-						<td>
+						<td class="border-0">
 							_______________________________
 						</td>
-						<td></td>
+						<td class="border-0"></td>
 					</tr>
 					<tr>
-						<td style="padding-left: 20px"></td>
-						<td style="padding-left: 20px; border-top: ">
+						<td style="padding-left: 20px" class="border-0"></td>
+						<td style="padding-left: 20px;" class="border-0">
 							<p class="small">Name/Signature of RPM Team Member/s</p>
 						</td>
-						<td style="padding-left: 60px">
+						<td style="padding-left: 60px" class="border-0">
 							<p class="small">Name & Signature</p>
 						</td>
-						<td>
+						<td class="border-0">
 							<p class="small">Name & Signature of Provincial/City Population Officer</p>
 						</td>
-						<td></td>
+						<td class="border-0"></td>
 					</tr>
 				</table>
-				<!-- <div class="flex">
-					<p class="small padding-l10p">Prepared by:</p>
-					<p class="small padding-l30p">Reviewed by:</p>
-					<p class="small padding-l28p">Approved by:</p>
-				</div>
-				<div class="padding-t3p flex">
-					<p class="small padding-l15p">Name/Signature of RPM Team Member/s</p>
-					<p class="small padding-l20p">Name & Signature</p>
-					<p class="small padding-l25p">Name & Signature of Provincial/City Population Officer</p>
-				</div> -->
 			</div>
 		</form>
 	</div>
