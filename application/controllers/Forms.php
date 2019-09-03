@@ -11,6 +11,7 @@ class Forms extends CI_Controller
         $this->load->library('form/CoupleClass');
         $this->load->library('form/ProfileClass');
         $this->load->library('form/ModernFpUserClass');
+        $this->load->library('form/TraditionalFpUserClass');
     }
 
     public function index()
@@ -27,8 +28,10 @@ class Forms extends CI_Controller
         $form1 = new FormClass();
 
         $form1->Seminar = $this->getInputFromSeminar();
-        $form1->ListCouple = $this->getInputFromCouples();
-        $form1->ListProfile = $this->getInputFromProfiles();
+        $form1->ListCouple = $this->getInputFromListCouples();
+        $form1->ListProfile = $this->getInputFromListProfiles();
+        $form1->ListModernFpUser = $this->getInputFromListModernFpUser();
+        // $form1->ListTraditionalFpUser;
         echo '<pre>';
         print_r($form1);
         exit;
@@ -47,7 +50,7 @@ class Forms extends CI_Controller
     {
         $seminar = new SeminarClass();
 
-        $seminar->TypeOfClass = $this->input->post('4Ps');
+        $seminar->TypeOfClass = $this->input->post('type_of_seminar');
         $seminar->ClassNumber = $this->input->post('class_no');
         $seminar->Province = $this->input->post('province');
         $seminar->Barangay = $this->input->post('barangay');
@@ -56,7 +59,7 @@ class Forms extends CI_Controller
         return $seminar;
     }
 
-    public function getInputFromCouples() 
+    public function getInputFromListCouples() 
     {
         $listCouple = new ListCoupleClass();
         
@@ -69,14 +72,33 @@ class Forms extends CI_Controller
 
             $couple->Husband = $this->input->post('name_participant1')[$i];
             $couple->Wife = $this->input->post('name_participant2')[$i];
+            $couple->Address = $this->input->post('address')[$i];
+            $couple->NumberOfChildren = $this->input->post('no_of_children')[$i];
+        
+           
+            $modernFp = new ModernFpUserClass();
 
-            $listCouple->append($couple);
+            $modernFp->MethodUsed = $this->input->post('method')[$i];
+            $modernFp->IntentionForUsing = $this->input->post('fp_method')[$i];
+
+
+            $traditionalFp = new TraditionalFpUserClass();
+
+            $traditionalFp->Type = $this->input->post('type')[$i];
+            $traditionalFp->Status = $this->input->post('status')[$i];
+            $traditionalFp->IntentionForUsing = $this->input->post('reason')[$i];
+
+
+
+            $couple->ListModernFp->append($modernFp);
+            $couple->ListTraditionalFp->append($traditionalFp);
+            $listCouple->append($couple); 
         }
 
         return $listCouple;
     }
 
-    public function getInputFromProfiles()
+    public function getInputFromListProfiles()
     {
         $listProfile = new ListProfileClass();
 
@@ -88,22 +110,21 @@ class Forms extends CI_Controller
             $profile = new ProfileClass();
 
             $profile->Sex = $this->input->post('sex1')[$i];
-            $profile->Sex = $this->input->post('sex2')[$i];
+            // $profile->Sex = $this->input->post('sex2')[$i];
             $profile->CivilStatus = $this->input->post('civil_status1')[$i];
-            $profile->CivilStatus = $this->input->post('civil_status2')[$i];
+            // $profile->CivilStatus = $this->input->post('civil_status2')[$i];
             $profile->Age = $this->input->post('age1')[$i];
-            $profile->Age = $this->input->post('age2')[$i];
-            $profile->Address = $this->input->post('address')[$i];
+            // $profile->Age = $this->input->post('age2')[$i];
+            // $profile->Address = $this->input->post('address')[$i];
             $profile->EducationalAttainment = $this->input->post('educ1')[$i];
-            $profile->EducationalAttainment = $this->input->post('educ2')[$i];
-            $profile->NumberOfChildren = $this->input->post('no_of_children')[$i];
+            // $profile->EducationalAttainment = $this->input->post('educ2')[$i];
 
-            $listProfile->append($profile);
+            $listProfile->append($profile); 
         }
 
         return $listProfile;
     }
-    
+
     public function formA()
     {
         $header['title'] = 'RPFP Online | Form A';

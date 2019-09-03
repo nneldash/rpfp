@@ -9,8 +9,5 @@ abstract class ProfileInterface extends BaseInterface
     public $Sex;
 	public $CivilStatus;
 	public $Age;
-	/** @var AddressInterface */
-	public $Address;
 	public $EducationalAttainment;
-	public $NumberOfChildren;
 }

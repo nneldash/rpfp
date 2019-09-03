@@ -16,8 +16,8 @@ abstract class FormInterface extends BaseInterface
     public $ListCouple;
     /** @var ListProfileInterface */
     public $ListProfile;
-    /** @var ListModernFpUserInterface */
-    public $ListModernFpUser;
-    /** @var TraditionalFpUserInterface */
-    public $TraditionalFpUser;
+    // /** @var ListModernFpUserInterface */
+    // public $ListModernFpUser;
+    // /** @var TraditionalFpUserInterface */
+    // public $TraditionalFpUser;
 }
