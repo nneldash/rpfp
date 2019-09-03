@@ -73,6 +73,12 @@
 	padding-left: 15px!important;
 }
 
+.padding-l2p {
+	padding-left: 2%;
+}
+.padding-l7p {
+	padding-left: 7%;
+}
 .padding-l10p {
 	padding-left: 10%;
 }
@@ -81,6 +87,9 @@
 }
 .padding-l20p {
 	padding-left: 20%;
+}
+.padding-l23p {
+	padding-left: 23%;
 }
 .padding-l25p {
 	padding-left: 25%;
@@ -141,6 +150,9 @@ input:focus {
 }
 
 /*====================== WIDTHS ========================*/
+.width-inherit {
+	width: inherit;
+}
 .width-3 {
 	width: 3%;
 }
@@ -153,11 +165,17 @@ input:focus {
 .width-10 {
 	width: 10%;
 }
+.width-15 {
+	width: 15%;
+}
 .width-20 {
 	width: 20%;
 }
 .width-30 {
 	width: 5%;
+}
+.width-35 {
+	width: 35%;
 }
 .width-45 {
 	width: 45%;
@@ -273,4 +291,43 @@ input:focus {
 }
 .back-eee {
 	background-color: #eee;
+}
+
+/*small*/
+.smolCheck {
+	position: absolute;
+	top: 0;
+	left: 0;
+	height: 23px;
+	width: 100%;
+}
+
+.cont:hover input ~ .smolCheck {
+	background-color: #ccc;
+}
+
+.cont input:checked ~ .smolCheck {
+	background-color: #2196F3;
+}
+
+.smolCheck:after {
+	content: "";
+	position: absolute;
+	display: none;
+}
+
+.cont input:checked ~ .smolCheck:after {
+	display: block;
+}
+
+.cont .smolCheck:after {
+	left: 40%;
+	top: 20%;
+	width: 6px;
+	height: 10px;
+	border: solid white;
+	border-width: 0 3px 3px 0;
+	-webkit-transform: rotate(45deg);
+	-ms-transform: rotate(45deg);
+	transform: rotate(45deg);
 }

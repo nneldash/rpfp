@@ -3,10 +3,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 $this->load->library('helpers/HtmlHelper');
 ?>
 
-<?php if($is_pdf){ ?>
-	<link href="<?= base_url('NewAssets/bootstrapCss') ?>" rel="stylesheet">
-	<link href="<?= base_url('assets/css/style.css') ?>" rel="stylesheet">
-<?php } else { ?>
+
 <style>
 	.table-bordered > tbody > tr > td,
 	.table-bordered > thead > tr > th,
@@ -14,10 +11,6 @@ $this->load->library('helpers/HtmlHelper');
 		border: 1px solid #000;
 	}
 
-</style>
-<?php } ?>
-
-<style>
 	.small {
 		font-size: 15px;
 	}
@@ -135,7 +128,7 @@ $this->load->library('helpers/HtmlHelper');
 								<td class="padding-0 back-eee">
 									<?php if (!$is_pdf) : ?>
 										<label class="cont">
-											<input type="radio" name="fp_method" value="sdm" />
+											<input type="radio" name="method" value="sdm" />
 											<span class="checkmark"></span>
 										</label>
 									<?php endif; ?>
@@ -144,7 +137,7 @@ $this->load->library('helpers/HtmlHelper');
 								<td class="padding-0 back-eee">
 									<?php if (!$is_pdf) : ?>
 										<label class="cont">
-											<input type="radio" name="fp_method" value="pills" />
+											<input type="radio" name="method" value="pills" />
 											<span class="checkmark"></span>
 										</label>
 									<?php endif; ?>
@@ -153,7 +146,7 @@ $this->load->library('helpers/HtmlHelper');
 								<td class="padding-0 back-eee">
 									<?php if (!$is_pdf) : ?>
 										<label class="cont">
-											<input type="radio" name="fp_method" value="ligation" />
+											<input type="radio" name="method" value="ligation" />
 											<span class="checkmark"></span>
 										</label>
 									<?php endif; ?>
@@ -164,7 +157,7 @@ $this->load->library('helpers/HtmlHelper');
 								<td class="padding-0 back-eee">
 									<?php if (!$is_pdf) : ?>
 										<label class="cont">
-											<input type="radio" name="fp_method" value="lam" />
+											<input type="radio" name="method" value="lam" />
 											<span class="checkmark"></span>
 										</label>
 									<?php endif; ?>
@@ -173,7 +166,7 @@ $this->load->library('helpers/HtmlHelper');
 								<td class="padding-0 back-eee">
 									<?php if (!$is_pdf) : ?>
 										<label class="cont">
-											<input type="radio" name="fp_method" value="iud" />
+											<input type="radio" name="method" value="iud" />
 											<span class="checkmark"></span>
 										</label>
 									<?php endif; ?>
@@ -182,7 +175,7 @@ $this->load->library('helpers/HtmlHelper');
 								<td class="padding-0 back-eee">
 									<?php if (!$is_pdf) : ?>
 										<label class="cont">
-											<input type="radio" name="fp_method" value="vasectomy" />
+											<input type="radio" name="method" value="vasectomy" />
 											<span class="checkmark"></span>
 										</label>
 									<?php endif; ?>
@@ -193,7 +186,7 @@ $this->load->library('helpers/HtmlHelper');
 								<td class="padding-0 back-eee">
 									<?php if (!$is_pdf) : ?>
 										<label class="cont">
-											<input type="radio" name="fp_method" value="cmm" />
+											<input type="radio" name="method" value="cmm" />
 											<span class="checkmark"></span>
 										</label>
 									<?php endif; ?>
@@ -202,7 +195,7 @@ $this->load->library('helpers/HtmlHelper');
 								<td class="padding-0 back-eee">
 									<?php if (!$is_pdf) : ?>
 										<label class="cont">
-											<input type="radio" name="fp_method" value="injectable" />
+											<input type="radio" name="method" value="injectable" />
 											<span class="checkmark"></span>
 										</label>
 									<?php endif; ?>
@@ -215,7 +208,7 @@ $this->load->library('helpers/HtmlHelper');
 								<td class="padding-0 back-eee">
 									<?php if (!$is_pdf) : ?>
 										<label class="cont">
-											<input type="radio" name="fp_method" value="stm" />
+											<input type="radio" name="method" value="stm" />
 											<span class="checkmark"></span>
 										</label>
 									<?php endif; ?>
@@ -224,7 +217,7 @@ $this->load->library('helpers/HtmlHelper');
 								<td class="padding-0 back-eee">
 									<?php if (!$is_pdf) : ?>
 										<label class="cont">
-											<input type="radio" name="fp_method" value="condom" />
+											<input type="radio" name="method" value="condom" />
 											<span class="checkmark"></span>
 										</label>
 									<?php endif; ?>
@@ -239,7 +232,7 @@ $this->load->library('helpers/HtmlHelper');
 								<td class="text-center padding-0 back-eee">
 									<?php if (!$is_pdf) : ?>
 										<label class="cont">
-											<input type="radio" name="fp_method" value="implant" />
+											<input type="radio" name="method" value="implant" />
 											<span class="checkmark"></span>
 										</label>
 									<?php endif; ?>
@@ -250,12 +243,20 @@ $this->load->library('helpers/HtmlHelper');
 						</tbody>
 					</table>
 				</div>
-				<div class="col-md-12 padding-r3p border-b1">
+				<div class="col-md-12 padding-r3p border-b1 flex">
 					<p class="small">
 						<b>
-							2. Counseling
+							2. Counseling 
 						</b>
 					</p>
+					<p><b> &nbsp; (</b></p>
+					<?php if (!$is_pdf) : ?>
+						<label class="cont">
+							<input type="radio" name="method" value="counseling" />
+							<span class="smolCheck back-eee"></span>
+						</label>
+					<?php endif; ?>
+					<p><b>)</b></p>
 				</div>
 				<div class="col-md-12 padding-r3p border-b1">
 					<p class="small">
@@ -271,23 +272,148 @@ $this->load->library('helpers/HtmlHelper');
 				</div>
 				<div class="col-md-12 padding-r3p">
 					<ol>
-						<li>
+						<li class="flex">
 							1. Needed FP method is not available in the facility
+							<p> &nbsp; (</p>
+							<label class="cont">
+								<input type="radio" name="method" value="need fp method" />
+								<span class="smolCheck back-eee"></span>
+							</label>
+							<p>)</p>
 						</li>
-						<li>
+						<li class="flex">
 							2. No sevice provider available during the visit
+							<p> &nbsp; (</p>
+							<label class="cont">
+								<input type="radio" name="method" value="no service provider" />
+								<span class="smolCheck back-eee"></span>
+							</label>
+							<p>)</p>
 						</li>
-						<li>
+						<li class="flex">
 							3. No trained personnel to do the needed FP service
+							<p> &nbsp; (</p>
+							<label class="cont">
+								<input type="radio" name="method" value="need fp method" />
+								<span class="smolCheck back-eee"></span>
+							</label>
+							<p>)</p>
 						</li>
-						<li>
-							4. Client is not qualified to use preferred method, <br>
-							counseled to use ____________________ but client is undecided
+						<li class="flex">
+							4. Client is not qualified to use preferred method,
+	                    </li>
+	                    <li class="flex padding-l2p">
+							counseled to use &nbsp;
+							<?php
+	                            echo HtmlHelper::inputPdf(
+	                                $is_pdf,
+	                                "",
+	                                "text",
+	                                "counseled_to_use",
+	                                "padding-l10 underline width-20",
+	                                ""
+	                            );
+	                        ?> 
+	                        &nbsp; &nbsp; but client is undecided
+							<p> &nbsp; (</p>
+							<label class="cont">
+								<input type="radio" name="method" value="need fp method" />
+								<span class="smolCheck back-eee"></span>
+							</label>
+							<p>)</p>
 						</li>
-						<li>
-							5. Other reasons, please specify: ____________________
+						<br>
+						<li class="flex">
+							5. Other reasons, please specify: 
+							<?php
+	                            echo HtmlHelper::inputPdf(
+	                                $is_pdf,
+	                                "",
+	                                "text",
+	                                "other_reason",
+	                                "padding-l10 underline width-45",
+	                                ""
+	                            );
+	                        ?>
 						</li>
 					</ol>
+				</div>
+				<div class="col-md-12 flex">
+					<div class="col-md-2">
+						<p class="small">
+							<b>ACTION NEEDED:</b>
+						</p>
+					</div>
+					<div class="col-md-10">
+						<div class="flex">
+							<p class="small">
+								1. Client has been provided a method
+							</p>
+							<p> &nbsp; (</p>
+							<label class="cont">
+								<input type="radio" name="method" value="client has method provided" />
+								<span class="smolCheck back-eee"></span>
+							</label>
+							<p>)</p>
+						</div>
+						<div class="flex">
+							<p class="small">
+								Date of accepting the method: &nbsp;
+							</p>
+							<?php
+		                        echo HtmlHelper::inputPdf(
+		                            $is_pdf,
+		                            "",
+		                            "date",
+		                            "date_of_method",
+		                            "padding-l10 underline width-20",
+		                            ""
+		                        );
+		                    ?>
+						</div>
+						<div class="flex">
+							<p class="small">
+								2. Client is advised to go to: &nbsp;
+							</p>
+							<?php
+		                        echo HtmlHelper::inputPdf(
+		                            $is_pdf,
+		                            "",
+		                            "text",
+		                            "client_advised",
+		                            "padding-l10 underline width-20",
+		                            ""
+		                        );
+		                    ?>
+						</div>
+					</div>	
+				</div>
+				<div class="col-md-12 padding-l7p flex">
+					<p class="small">Name & address of referral facility :</p>
+					<?php
+                        echo HtmlHelper::inputPdf(
+                            $is_pdf,
+                            "",
+                            "text",
+                            "referral_facility",
+                            "padding-l10 underline width-35",
+                            ""
+                        );
+                    ?>
+				</div>
+				<div class="col-md-12 padding-l7p text-center">
+					<br><br>
+					<?php
+                        echo HtmlHelper::inputPdf(
+                            $is_pdf,
+                            "",
+                            "text",
+                            "referral_facility",
+                            "padding-l10 underline width-70 text-center",
+                            ""
+                        );
+                    ?>
+					<p class="small text-center">Name, Position and Signature of attending Health Service Provider</p>
 				</div>
 			</form>
 		</div>
