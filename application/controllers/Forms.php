@@ -30,7 +30,6 @@ class Forms extends CI_Controller
         $form1->Seminar = $this->getInputFromSeminar();
         $form1->ListCouple = $this->getInputFromListCouples();
         $form1->ListProfile = $this->getInputFromListProfiles();
-        $form1->ListModernFpUser = $this->getInputFromListModernFpUser();
         // $form1->ListTraditionalFpUser;
         echo '<pre>';
         print_r($form1);
