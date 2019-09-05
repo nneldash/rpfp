@@ -9,6 +9,8 @@ class Forms extends CI_Controller
         $this->load->model('FormModel');
         $this->load->library('form/FormClass');
         $this->load->library('form/CoupleClass');
+        $this->load->library('form/HusbandClass');
+        $this->load->library('form/WifeClass');
         $this->load->library('form/ProfileClass');
         $this->load->library('form/ModernFpUserClass');
         $this->load->library('form/TraditionalFpUserClass');
@@ -29,12 +31,8 @@ class Forms extends CI_Controller
 
         $form1->Seminar = $this->getInputFromSeminar();
         $form1->ListCouple = $this->getInputFromListCouples();
-        $form1->ListProfile = $this->getInputFromListProfiles();
-        // $form1->ListTraditionalFpUser;
-        echo '<pre>';
-        print_r($form1);
-        exit;
-        if(!$this->FormModel->saveForm1()) {
+        
+        if(!$this->FormModel->saveForm1($form1)) {
             $data = ['is_save' => false];
         } else {
             $data = ['is_save' => true];
@@ -69,12 +67,30 @@ class Forms extends CI_Controller
 
             $couple = new CoupleClass();
 
-            $couple->Husband = $this->input->post('name_participant1')[$i];
-            $couple->Wife = $this->input->post('name_participant2')[$i];
             $couple->Address = $this->input->post('address')[$i];
             $couple->NumberOfChildren = $this->input->post('no_of_children')[$i];
         
+
+            $husband = new HusbandClass();
+
+            $husband->Name = $this->input->post('name_participant1')[$i];
+            $husband->Sex = $this->input->post('sex1')[$i];
+            $husband->CivilStatus = $this->input->post('civil_status1')[$i];
+            $husband->Age = $this->input->post('age1')[$i];
+            $husband->EducationalAttainment = $this->input->post('educ1')[$i];
+            $husband->HasAttended = 'Yes';
+
+
+            $wife = new WifeClass();
+
+            $wife->Name = $this->input->post('name_participant2')[$i];
+            $wife->Sex = $this->input->post('sex2')[$i];
+            $wife->CivilStatus = $this->input->post('civil_status2')[$i];
+            $wife->Age = $this->input->post('age2')[$i];
+            $wife->EducationalAttainment = $this->input->post('educ2')[$i];
+            $wife->HasAttended = 'Yes';
            
+
             $modernFp = new ModernFpUserClass();
 
             $modernFp->MethodUsed = $this->input->post('method')[$i];
@@ -88,40 +104,14 @@ class Forms extends CI_Controller
             $traditionalFp->IntentionForUsing = $this->input->post('reason')[$i];
 
 
-
+            $couple->ListHusband->append($husband);
+            $couple->ListWife->append($wife);
             $couple->ListModernFp->append($modernFp);
             $couple->ListTraditionalFp->append($traditionalFp);
             $listCouple->append($couple); 
         }
 
         return $listCouple;
-    }
-
-    public function getInputFromListProfiles()
-    {
-        $listProfile = new ListProfileClass();
-
-        for ($i = 0; $i <  $this->input->post('sex1'); $i++) {
-            if (!$this->input->post('sex1')[$i] && !$this->input->post('civil_status1')[$i] && !$this->input->post('age1')[$i] && !$this->input->post('address')[$i] && !$this->input->post('educ1')[$i] && !$this->input->post('no_of_children')[$i]) {
-                break;
-            }
-
-            $profile = new ProfileClass();
-
-            $profile->Sex = $this->input->post('sex1')[$i];
-            // $profile->Sex = $this->input->post('sex2')[$i];
-            $profile->CivilStatus = $this->input->post('civil_status1')[$i];
-            // $profile->CivilStatus = $this->input->post('civil_status2')[$i];
-            $profile->Age = $this->input->post('age1')[$i];
-            // $profile->Age = $this->input->post('age2')[$i];
-            // $profile->Address = $this->input->post('address')[$i];
-            $profile->EducationalAttainment = $this->input->post('educ1')[$i];
-            // $profile->EducationalAttainment = $this->input->post('educ2')[$i];
-
-            $listProfile->append($profile); 
-        }
-
-        return $listProfile;
     }
 
     public function formA()
