@@ -186,16 +186,19 @@ input:focus {
 
 /*====================== SAVE BUTTON ========================*/
 .save {
-    color: white;
+	color: #fff;
     padding: 12px 37px;
-    border-radius: 35px;
-
-    background: green;
-	background: -webkit-linear-gradient(-135deg, #1a635c, #5dbd61);
-	background: -webkit-linear-gradient(-135deg, #1a635c, #5dbd61);
-	background: -o-linear-gradient(-135deg, #1a635c, #5dbd61);
-	background: -moz-linear-gradient(-135deg, #1a635c, #5dbd61);
-	background: linear-gradient(-135deg, #1a635c, #5dbd61);
+	border-radius: 0;
+	border: 2px solid #74b9ff;
+	background: #74b9ff;
+}
+.save:hover {
+	background: #fff;
+	color: #333;
+}
+a:hover {
+    text-decoration: none;
+    color: #57b846;
 }
 #mybutton {
     position: fixed;
@@ -206,7 +209,7 @@ input:focus {
 	position: fixed;
 	top: 3%;
 	left: 2%;
-	z-index: 99999999;
+	z-index: 999;
 }
 
 
