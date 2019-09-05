@@ -11,19 +11,21 @@
                         <h4>RPFP Online Login</h4>
                     </span>
                     <div class="form-group wrap-input100 validate-input">
-                        <input class="input100 form-control" type="text" name="username" placeholder="Username" required />
+                        <input class="input100 form-control" type="text" name="<?=POST_USERNAME?>" placeholder="Username" required />
                         <span class="focus-input100"></span>
                         <span class="symbol-input100">
                             <i class="material-icons">mood</i>
                         </span>
                     </div>
                     <div class="form-group wrap-input100 validate-input">
-                        <input class="input100 form-control" type="password" name="password" placeholder="Password" required />
+                        <input class="input100 form-control" type="password" name="<?=POST_USERPASSWORD?>" placeholder="Password" required />
                         <span class="focus-input100"></span>
                         <span class="symbol-input100">
                             <i class="material-icons">lock</i>
                         </span>
                     </div>
+                    <script src="<?=CAPTCHA_API?>" async defer></script>
+                    <div class="g-recaptcha" data-sitekey="<?=CAPTCHA_CLIENT?>"></div>
                     <div class="container-login100-form-btn">
                         <button type="submit" class="login100-form-btn">
                             Login
