@@ -8,35 +8,94 @@ class Login extends CI_Controller
         redirect(site_url());
     }
 
+    private function captcha($captcha_response)
+    {
+        $client_response = $this->input->post(CAPTCHA_RESPONSE);
+        if(!$client_response) {
+            return false;
+        }
+
+        $api_client = new GuzzleHttp\Client();
+        $response = $api_client->request(
+            $method = 'POST',
+            $uri = CAPTCHA_VERIFY,
+            $options = [
+                'form_params' => [
+                    'secret' => CAPTCHA_SECRET,
+                    'response' => $client_response,
+                ]
+            ]
+        );
+
+        $success = 'success';
+        $message = [$success => false];
+    
+        $header = $response->getHeader('content-type')[0];
+        if (substr_compare($header, 'application/json', 0) >= 0) {
+            $output = $response->getBody()->getContents();
+            $message = json_decode($output);
+        }
+        
+        if ($message->$success) {
+            return true;
+        }
+        
+        return false;
+    }
+
+    private function loadLoginPage($header)
+    {
+        $this->load->view("includes/header", $header);
+        $this->load->view("login/login_page");
+        $this->load->view("includes/footer");
+        return;
+    }
+
     public function loginUser()
     {
-	
         $header['title'] = 'RPFP - Login';
+        if ($this->input->server('REQUEST_METHOD') != 'POST') {
+            $this->loadLoginPage($header);
+            return;
+        }
 
         if ($this->LoginModel->isLoggedIn()) {
             redirect(site_url());
             return;
         }
-		
+
+        $this->load->library('form_validation');
+        
+        /* CAPTCHA  */
+        if (!$this->captcha($this->input->post(CAPTCHA_RESPONSE))) {
+            $this->form_validation->set_rules(CAPTCHA_FIELD, 'Captcha', [REQUIRED, ['invalid_captcha', function () {
+                $this->form_validation->set_message('invalid_captcha', 'Prove you are not a robot.');
+                return false;
+            }]]);
+
+            if ($this->form_validation->run() == false) {
+                $this->loadLoginPage($header);
+                return;
+            }
+        }
+
+
         /* GET USER INPUT */
         $this->load->library('login/BasicUserCredentials');
         $cred = $this->basicusercredentials;
-		
+        
         $cred->UserName = $this->input->post(POST_USERNAME);
         $cred->Password = $this->input->post(POST_USERPASSWORD);
 
         /* VALIDATE INPUT */
-        $this->load->library('form_validation');
         $this->form_validation->set_rules(POST_USERNAME, 'Username', REQUIRED);
         $this->form_validation->set_rules(POST_USERPASSWORD, 'Password', REQUIRED);
 
         if ($this->form_validation->run() == false) {
-            $this->load->view("includes/header", $header);
-            $this->load->view("login/login_page");
-            $this->load->view("includes/footer");
+            $this->loadLoginPage($header);
             return;
         }
-		
+        
         /* CHECK DATABASE PASSWORD */
         if (!$this->LoginModel->login($cred)) {
             $this->form_validation->set_rules(POST_USERNAME, 'User Name', [REQUIRED, ['invalid_password', function () {
@@ -45,9 +104,7 @@ class Login extends CI_Controller
             }]]);
 
             if ($this->form_validation->run() == false) {
-                $this->load->view("includes/header", $header);
-                $this->load->view("login/login_page");
-                $this->load->view("includes/footer");
+                $this->loadLoginPage($header);
                 return;
             }
         }
@@ -65,9 +122,7 @@ class Login extends CI_Controller
         $header['title'] = 'RPFP - Login';
 
         if ($this->input->get('timeout') == 1) {
-            $this->load->view("includes/header", $header);
-            $this->load->view("login/login_page");
-            $this->load->view("includes/footer");
+            $this->loadLoginPage($header);
         } elseif ($this->input->get('timeout') == 2) {
             $this->LoginModel->clearCredentials();
             redirect(site_url());

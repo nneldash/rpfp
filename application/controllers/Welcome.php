@@ -39,7 +39,7 @@ class Welcome extends CI_Controller
         }
 
 
-        $this->load->view("homepage.php");
+        $this->load->view("login/homepage.php");
         return;
     }
 }

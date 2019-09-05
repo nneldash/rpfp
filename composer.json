@@ -1,18 +1,16 @@
 {
-	"description": "The CodeIgniter framework",
-	"name": "codeigniter/framework",
+	"description": "RPFP Online v.3",
+	"name": "popcom/rpfp",
 	"type": "project",
-	"homepage": "https://codeigniter.com",
+	"homepage": "https://online.popcom.gov.ph",
 	"license": "MIT",
 	"support": {
-		"forum": "http://forum.codeigniter.com/",
-		"wiki": "https://github.com/bcit-ci/CodeIgniter/wiki",
-		"slack": "https://codeigniterchat.slack.com",
-		"source": "https://github.com/bcit-ci/CodeIgniter"
+		"source": "https://bitbucket.org/welerz/rpfp"
 	},
 	"require": {
 		"php": ">=5.3.7",
-		"mpdf/mpdf": "^8.0"
+		"mpdf/mpdf": "^8.0",
+		"guzzlehttp/guzzle": "^6.3"
 	},
 	"suggest": {
 		"paragonie/random_compat": "Provides better randomness in PHP 5.x"

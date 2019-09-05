@@ -29,21 +29,20 @@ class LoginModel extends CI_Model
 
     public function login(UserCredentialsInterface $credentials)
     {
-		return true;
-        //if (!$credentials->validate()) {
-        //    return false;
-        //}
+        if (!$credentials->validate()) {
+            return false;
+        }
 
-        //$connection = $this->connect($credentials);
-        //$connected = $connection->connected;
-        //$db = &$connection->database;
-        //$db->close();
+        $connection = $this->connect($credentials);
+        $connected = $connection->connected;
+        $db = &$connection->database;
+        $db->close();
 
-        //if (!$connected) {
-          //  return false;
-        //}
+        if (!$connected) {
+            return false;
+        }
 
-        //return $this->saveCredentials($credentials);
+        return $this->saveCredentials($credentials);
     }
 
     private function saveCredentials(UserCredentialsInterface $credentials)
@@ -91,6 +90,9 @@ class LoginModel extends CI_Model
 
     public function isLoggedIn()
     {
+        //for testing
+        return false;
+
         $credentials = $this->getCredentials();
         if ($credentials->UserName == '') {
             return false;
@@ -164,7 +166,7 @@ class LoginModel extends CI_Model
         if (!$this->isLoggedIn()) {
             return false;
         }
-        /* TODO: Check if user is an employee call hrmis.emp_check_if_employee()*/
+        /* TODO: Check if user is an employee call rpfp.emp_check_if_employee()*/
         return true;
     }
 
@@ -173,7 +175,7 @@ class LoginModel extends CI_Model
         if (!$this->isLoggedIn()) {
             return false;
         }
-        /* TODO: Check if user is an hr call hrmis.emp_check_if_hr()*/
+        /* TODO: Check if user is an hr call rpfp.emp_check_if_hr()*/
         return true;
     }
 
@@ -202,7 +204,7 @@ class LoginModel extends CI_Model
 
     private function runTrueFalseQuery($stored_function, $params = false)
     {
-        $customQuery = 'SELECT hrmis.' . $stored_function . ' as myresult;';
+        $customQuery = 'SELECT rpfp.' . $stored_function . ' as myresult;';
         $result = $this->runQuery($customQuery, $params);
 
         if ($result == false || (count($result) < 1) || (!$result[0]->myresult)) {
@@ -214,7 +216,7 @@ class LoginModel extends CI_Model
     public function runStoredProc($stored_proc, $params = false)
     {
         
-        $customQuery = 'CALL hrmis.' . $stored_proc;
+        $customQuery = 'CALL rpfp.' . $stored_proc;
         $result = $this->runQuery($customQuery, $params);
         
         if ($result[0]->MESSAGE == false) {
@@ -232,7 +234,8 @@ class LoginModel extends CI_Model
     public function changePassword(PasswordsInterface $credentials)
     {
         return $this->runStoredProc(
-            'emp_login_change_own_password(?, ?)', [
+            'emp_login_change_own_password(?, ?)',
+            [
                 $credentials->OldPassword,
                 $credentials->NewPassword
             ]

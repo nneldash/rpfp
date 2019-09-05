@@ -1,5 +1,5 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') or exit('No direct script access allowed');
 
 /*
 |--------------------------------------------------------------------------
@@ -11,7 +11,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | of this setting
 |
 */
-defined('SHOW_DEBUG_BACKTRACE') OR define('SHOW_DEBUG_BACKTRACE', TRUE);
+defined('SHOW_DEBUG_BACKTRACE') or define('SHOW_DEBUG_BACKTRACE', true);
 
 /*
 |--------------------------------------------------------------------------
@@ -26,10 +26,10 @@ defined('SHOW_DEBUG_BACKTRACE') OR define('SHOW_DEBUG_BACKTRACE', TRUE);
 | always be used to set the mode correctly.
 |
 */
-defined('FILE_READ_MODE')  OR define('FILE_READ_MODE', 0644);
-defined('FILE_WRITE_MODE') OR define('FILE_WRITE_MODE', 0666);
-defined('DIR_READ_MODE')   OR define('DIR_READ_MODE', 0755);
-defined('DIR_WRITE_MODE')  OR define('DIR_WRITE_MODE', 0755);
+defined('FILE_READ_MODE') or define('FILE_READ_MODE', 0644);
+defined('FILE_WRITE_MODE') or define('FILE_WRITE_MODE', 0666);
+defined('DIR_READ_MODE') or define('DIR_READ_MODE', 0755);
+defined('DIR_WRITE_MODE') or define('DIR_WRITE_MODE', 0755);
 
 /*
 |--------------------------------------------------------------------------
@@ -39,14 +39,18 @@ defined('DIR_WRITE_MODE')  OR define('DIR_WRITE_MODE', 0755);
 | These modes are used when working with fopen()/popen()
 |
 */
-defined('FOPEN_READ')                           OR define('FOPEN_READ', 'rb');
-defined('FOPEN_READ_WRITE')                     OR define('FOPEN_READ_WRITE', 'r+b');
-defined('FOPEN_WRITE_CREATE_DESTRUCTIVE')       OR define('FOPEN_WRITE_CREATE_DESTRUCTIVE', 'wb'); // truncates existing file data, use with care
-defined('FOPEN_READ_WRITE_CREATE_DESTRUCTIVE')  OR define('FOPEN_READ_WRITE_CREATE_DESTRUCTIVE', 'w+b'); // truncates existing file data, use with care
-defined('FOPEN_WRITE_CREATE')                   OR define('FOPEN_WRITE_CREATE', 'ab');
-defined('FOPEN_READ_WRITE_CREATE')              OR define('FOPEN_READ_WRITE_CREATE', 'a+b');
-defined('FOPEN_WRITE_CREATE_STRICT')            OR define('FOPEN_WRITE_CREATE_STRICT', 'xb');
-defined('FOPEN_READ_WRITE_CREATE_STRICT')       OR define('FOPEN_READ_WRITE_CREATE_STRICT', 'x+b');
+defined('FOPEN_READ') or define('FOPEN_READ', 'rb');
+defined('FOPEN_READ_WRITE') or define('FOPEN_READ_WRITE', 'r+b');
+
+ // truncates existing file data, use with care
+defined('FOPEN_WRITE_CREATE_DESTRUCTIVE') or define('FOPEN_WRITE_CREATE_DESTRUCTIVE', 'wb');
+
+ // truncates existing file data, use with care
+defined('FOPEN_READ_WRITE_CREATE_DESTRUCTIVE') or define('FOPEN_READ_WRITE_CREATE_DESTRUCTIVE', 'w+b');
+defined('FOPEN_WRITE_CREATE') or define('FOPEN_WRITE_CREATE', 'ab');
+defined('FOPEN_READ_WRITE_CREATE') or define('FOPEN_READ_WRITE_CREATE', 'a+b');
+defined('FOPEN_WRITE_CREATE_STRICT') or define('FOPEN_WRITE_CREATE_STRICT', 'xb');
+defined('FOPEN_READ_WRITE_CREATE_STRICT') or define('FOPEN_READ_WRITE_CREATE_STRICT', 'x+b');
 
 /*
 |--------------------------------------------------------------------------
@@ -73,16 +77,16 @@ defined('FOPEN_READ_WRITE_CREATE_STRICT')       OR define('FOPEN_READ_WRITE_CREA
 |       http://tldp.org/LDP/abs/html/exitcodes.html
 |
 */
-defined('EXIT_SUCCESS') OR define('EXIT_SUCCESS', 0); // no errors
-defined('EXIT_ERROR') OR define('EXIT_ERROR', 1); // generic error
-defined('EXIT_CONFIG') OR define('EXIT_CONFIG', 3); // configuration error
-defined('EXIT_UNKNOWN_FILE') OR define('EXIT_UNKNOWN_FILE', 4); // file not found
-defined('EXIT_UNKNOWN_CLASS') OR define('EXIT_UNKNOWN_CLASS', 5); // unknown class
-defined('EXIT_UNKNOWN_METHOD') OR define('EXIT_UNKNOWN_METHOD', 6); // unknown class member
-defined('EXIT_USER_INPUT') OR define('EXIT_USER_INPUT', 7); // invalid user input
-defined('EXIT_DATABASE') OR define('EXIT_DATABASE', 8); // database error
-defined('EXIT__AUTO_MIN') OR define('EXIT__AUTO_MIN', 9); // lowest automatically-assigned error code
-defined('EXIT__AUTO_MAX') OR define('EXIT__AUTO_MAX', 125); // highest automatically-assigned error code
+defined('EXIT_SUCCESS') or define('EXIT_SUCCESS', 0); // no errors
+defined('EXIT_ERROR') or define('EXIT_ERROR', 1); // generic error
+defined('EXIT_CONFIG') or define('EXIT_CONFIG', 3); // configuration error
+defined('EXIT_UNKNOWN_FILE') or define('EXIT_UNKNOWN_FILE', 4); // file not found
+defined('EXIT_UNKNOWN_CLASS') or define('EXIT_UNKNOWN_CLASS', 5); // unknown class
+defined('EXIT_UNKNOWN_METHOD') or define('EXIT_UNKNOWN_METHOD', 6); // unknown class member
+defined('EXIT_USER_INPUT') or define('EXIT_USER_INPUT', 7); // invalid user input
+defined('EXIT_DATABASE') or define('EXIT_DATABASE', 8); // database error
+defined('EXIT__AUTO_MIN') or define('EXIT__AUTO_MIN', 9); // lowest automatically-assigned error code
+defined('EXIT__AUTO_MAX') or define('EXIT__AUTO_MAX', 125); // highest automatically-assigned error code
 
 defined('THEUSERPASSWORD') or define('THEUSERPASSWORD', 'theuserpassword');
 defined('THEUSERNAME') or define('THEUSERNAME', 'theusername');
@@ -102,15 +106,21 @@ defined('DB_INSTANCE') or define('DB_INSTANCE', 'db');
 defined('CON_STATUS') or define('CON_STATUS', 'connected_status');
 defined('_TYPE') or define('_TYPE', 'type');
 defined('_VALUE') or define('_VALUE', 'value');
-defined('NO_OUTPUT') or define('NO_OUTPUT', 'no_output');
 defined('N_A') or define('N_A', 'N/A');
 defined('NOT_FOUND') or define('NOT_FOUND', ' NOT FOUND!!!');
 defined('BLANK') or define('BLANK', '');
 
-defined('BOOTSRAP_CSS')         or define('BOOTSRAP_CSS', '/../node_modules/bootstrap/dist/css/bootstrap.min.css');
-defined('BOOTSRAP_JS')          or define('BOOTSRAP_JS', '/../node_modules/bootstrap/dist/js/bootstrap.min.js');
-defined('JQUERY_JS')            or define('JQUERY_JS', '/../node_modules/jquery/dist/jquery.min.js');
-defined('POPPER_JS')            or define('POPPER_JS', '/../node_modules/popper.js/dist/popper.js');
+defined('BOOTSRAP_CSS') or define('BOOTSRAP_CSS', '/../node_modules/bootstrap/dist/css/bootstrap.min.css');
+defined('BOOTSRAP_JS') or define('BOOTSRAP_JS', '/../node_modules/bootstrap/dist/js/bootstrap.min.js');
+defined('JQUERY_JS') or define('JQUERY_JS', '/../node_modules/jquery/dist/jquery.min.js');
+defined('POPPER_JS') or define('POPPER_JS', '/../node_modules/popper.js/dist/umd/popper.js');
 
-defined('SWEETALERT_CSS')       or define('SWEETALERT_CSS', '/../node_modules/sweetalert2/dist/sweetalert2.min.css');
-defined('SWEETALERT_JS')        or define('SWEETALERT_JS', '/../node_modules/sweetalert2/dist/sweetalert2.min.js');
+defined('SWEETALERT_CSS') or define('SWEETALERT_CSS', '/../node_modules/sweetalert2/dist/sweetalert2.min.css');
+defined('SWEETALERT_JS') or define('SWEETALERT_JS', '/../node_modules/sweetalert2/dist/sweetalert2.min.js');
+
+defined('CAPTCHA_FIELD') or define('CAPTCHA_FIELD', 'g-recaptcha');
+defined('CAPTCHA_RESPONSE') or define('CAPTCHA_RESPONSE', 'g-recaptcha-response');
+defined('CAPTCHA_SECRET') or define('CAPTCHA_SECRET', '6Ld1jLYUAAAAAG5MkkdSqkZSXoIKF5tIrjEd2LA4');
+defined('CAPTCHA_CLIENT') or define('CAPTCHA_CLIENT', '6Ld1jLYUAAAAAM6BbI8c4khB0KbqHBjVY231cA7U');
+defined('CAPTCHA_API') or define('CAPTCHA_API', 'https://www.google.com/recaptcha/api.js');
+defined('CAPTCHA_VERIFY') or define('CAPTCHA_VERIFY', 'https://www.google.com/recaptcha/api/siteverify');

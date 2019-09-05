@@ -17,7 +17,17 @@ $this->load->library('helpers/HtmlHelper');
 		.table-bordered {
 			border: 1px solid #000;
 		}
-
+		.dropdown-menu {
+			border-radius: 0;
+			box-shadow: 0 5px 11px 0 rgb(111, 127, 143), 0 4px 15px 0 rgba(0,0,0,.15);
+		}
+		.dropdown-menu>li>a{
+			padding: 10px;
+		}
+		.dropdown-menu>li>a:hover {
+			background: #74b9ff;
+			color: #fff;
+		}
 	</style>
 <?php } ?>
 
@@ -55,9 +65,18 @@ $this->load->library('helpers/HtmlHelper');
 		            <input type="submit" class="save saveForm1" value="SAVE" name="saveform1" />
 		        </div>
 		        <div id="myPrintButton">
-		        	<a href="<?= base_url('forms/viewform1') ?>" class="save printForm1" target="_blank">
-                        <span>PRINT</span>
-                    </a>
+		        	<div class="dropdown save">
+						<button class="dropdown-toggle" type="button" data-toggle="dropdown">
+							Menu
+							<span class="caret"></span>
+						</button>
+						<ul class="dropdown-menu">
+							<li><a href="#">Pending</a></li>
+							<li><a href="#">Approved</a></li>
+							<li><a href="#">Import Excel</a></li>
+							<li><a href="#">Summary</a></li>
+						</ul>
+					</div>
 			    </div>
 			<?php endif; ?>
 			<div class="border-t1 table-responsive">
