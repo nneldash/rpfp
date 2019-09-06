@@ -1,4 +1,4 @@
-
+    <link href="<?= base_url('assets/css/main.css') ?>" rel="stylesheet">
     <div class="limiter">
         <div class="container-login100">
             <div class="wrap-login100">

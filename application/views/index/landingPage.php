@@ -1,4 +1,4 @@
-
+    <link href="<?= base_url('assets/css/main.css') ?>" rel="stylesheet">
     <nav class="navbar navbar-default navbar-fixed-top" id="myScrollspy">
         <div class="container">
             <div class="navbar-header">

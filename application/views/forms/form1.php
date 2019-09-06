@@ -181,7 +181,7 @@ $this->load->library('helpers/HtmlHelper');
 						<td class="border-1 width-30 padding-0 back-eee">
 							<?php if (!$is_pdf) : ?>
 								<label class="cont border-t1">
-									<input type="radio" name="type" value="others_check" />
+									<input id="others" type="radio" name="type" value="others_check" />
 									<span class="checkmark"></span>
 								</label>
 							<?php endif; ?>
@@ -194,7 +194,7 @@ $this->load->library('helpers/HtmlHelper');
 		                                "",
 		                                "text",
 		                                "others",
-		                                "padding-l10 underline width-20",
+		                                "padding-l10 underline width-20 disabled-others",
 		                                ""
 		                            );
 		                        ?>
