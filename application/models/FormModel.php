@@ -27,7 +27,7 @@ class FormModel extends BaseModel
         if (!$this->saveModernFpUser($form->ListCouple)) {
             return;
         }
-        if ($this->saveTraditionalFpUser($form->ListCouple)) {
+        if (!$this->saveTraditionalFpUser($form->ListCouple)) {
             return;
         }
 
@@ -47,12 +47,14 @@ class FormModel extends BaseModel
             $data->DateConducted == N_A ? BLANK : $data->DateConducted
         ];
 
-        // return $this->saveToDb($method, $params);
-        return $params;
+        return $this->saveToDb($method, $params);
     }
 
     public function saveHusband(ListCoupleInterface $data)
     {
+        $method = "rpfp_form1_save_husband";
+        $with_id = [];
+
         foreach ($data as $newData)
         {
            foreach ($newData->ListHusband as $husband)
@@ -68,11 +70,14 @@ class FormModel extends BaseModel
            }
         }
 
-        return $params;
+        return $this->saveToDb($method, $params);
     }
 
     public function saveWife(ListCoupleInterface $data)
     {
+        $method = "rpfp_form1_save_wife";
+        $with_id = [];
+
         foreach ($data as $newData)
         {
            foreach ($newData->ListWife as $wife)
@@ -88,11 +93,14 @@ class FormModel extends BaseModel
            }
         }
 
-        return $params;
+        return $this->saveToDb($method, $params);
     }
 
     public function saveModernFpUser(ListCoupleInterface $data)
     {
+        $method = "rpfp_form1_save_modern_fp_user";
+        $with_id = [];
+
         foreach ($data as $newData)
         {
            foreach ($newData->ListModernFp as $modernFp)
@@ -104,11 +112,14 @@ class FormModel extends BaseModel
            }
         }
 
-        return $params;
+        return $this->saveToDb($method, $params);
     }
 
     public function saveTraditionalFpUser(ListCoupleInterface $data)
     {
+        $method = "rpfp_form1_save_traditional_fp_user";
+        $with_id = [];
+
         foreach ($data as $newData)
         {
            foreach ($newData->ListTraditionalFp as $traditionalFp)
@@ -121,7 +132,7 @@ class FormModel extends BaseModel
            }
         }
 
-        return $params;
+        return $this->saveToDb($method, $params);
     }
 }
 ?>

@@ -60,17 +60,17 @@ class BaseModel extends CI_Model
         $method = self::NO_METHOD;
         switch ($type) {
             case self::OWN_PDS:
-                $method = 'CALL hrmis.' . $procsArrray[self::OWN_PDS];
+                $method = 'CALL rpfp.' . $procsArrray[self::OWN_PDS];
                 break;
             case self::EMPLOYEE:
-                $method = 'CALL hrmis.' . $procsArrray[self::EMPLOYEE];
+                $method = 'CALL rpfp.' . $procsArrray[self::EMPLOYEE];
                 if (!isset($id)) {
                     return $list;
                 }
                 $params = array($id);
                 break;
             case self::APPLICANT:
-                $method = 'CALL hrmis.' . $procsArrray[self::APPLICANT];
+                $method = 'CALL rpfp.' . $procsArrray[self::APPLICANT];
                 if (!isset($id)) {
                     return $list;
                 }
@@ -161,7 +161,7 @@ class BaseModel extends CI_Model
             }
         }
 
-        $method = (empty($is_function) ? 'CALL' : 'SELECT') .' hrmis.' . $proc;
+        $method = (empty($is_function) ? 'CALL' : 'SELECT') .' rpfp.' . $proc;
         
         $numParams = count($params);
         $method .= '(';
@@ -199,6 +199,8 @@ class BaseModel extends CI_Model
 
     protected function saveToDb($proc, $params, DbInstance &$db = null)
     {
+        return true;
+        exit;
         $rows = $this->runStoredProcAndGetResults($proc, $params, $db);
         if (!empty($rows)) {
             $message = $rows[0]->MESSAGE;
