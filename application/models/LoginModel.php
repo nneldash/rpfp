@@ -90,9 +90,6 @@ class LoginModel extends CI_Model
 
     public function isLoggedIn()
     {
-        //for testing
-        return false;
-
         $credentials = $this->getCredentials();
         if ($credentials->UserName == '') {
             return false;
@@ -127,26 +124,12 @@ class LoginModel extends CI_Model
         return true;
     }
 
-    public function getEmpId(): string
+    public function getProfileId(): string
     {
-        $this->CI->load->model('PdsModel');
-        $pds = $this->PdsModel->getOwnPds();
-
-        $empNo = $pds->PersonalInfo->EmployeeNo;
-        
-        return $empNo;
     }
 
     public function getCurrentUser(): string
     {
-        $this->CI->load->model('PdsModel');
-        $pds = $this->PdsModel->getOwnPds();
-
-        $firstName = $pds->PersonalInfo->Name->Firstname;
-        $lastName = $pds->PersonalInfo->Name->Surname;
-        $fullName = $firstName.' '.$lastName;
-        
-        return $fullName;
     }
 
     public function reconnect(): DbInstance
@@ -161,21 +144,21 @@ class LoginModel extends CI_Model
         return $this->connect($cred);
     }
 
-    public function isEmployee()
+    public function isEncoder()
     {
         if (!$this->isLoggedIn()) {
             return false;
         }
-        /* TODO: Check if user is an employee call rpfp.emp_check_if_employee()*/
+        /* TODO: Check if user is an employee call rpfp.enc_check_if_encoder()*/
         return true;
     }
 
-    public function isHr()
+    public function isRegionalManager()
     {
         if (!$this->isLoggedIn()) {
             return false;
         }
-        /* TODO: Check if user is an hr call rpfp.emp_check_if_hr()*/
+        /* TODO: Check if user is an hr call rpfp.enc_check_if_rm()*/
         return true;
     }
 
@@ -192,7 +175,6 @@ class LoginModel extends CI_Model
         
         if (!$queryResult) {
             // database error!!!
-            // return false;
             return $x;
         }
 
@@ -215,7 +197,6 @@ class LoginModel extends CI_Model
 
     public function runStoredProc($stored_proc, $params = false)
     {
-        
         $customQuery = 'CALL rpfp.' . $stored_proc;
         $result = $this->runQuery($customQuery, $params);
         
@@ -228,13 +209,13 @@ class LoginModel extends CI_Model
 
     public function firstLoggedIn()
     {
-        return $this->runTrueFalseQuery('emp_login_check_first_login()');
+        return $this->runTrueFalseQuery('login_check_first_login()');
     }
 
     public function changePassword(PasswordsInterface $credentials)
     {
         return $this->runStoredProc(
-            'emp_login_change_own_password(?, ?)',
+            'login_change_own_password(?, ?)',
             [
                 $credentials->OldPassword,
                 $credentials->NewPassword
@@ -245,11 +226,10 @@ class LoginModel extends CI_Model
     public function changeInitialPassword(PasswordsInterface $credentials)
     {
         return $this->runStoredProc(
-            'emp_login_change_initial_password(?)',
+            'login_change_initial_password(?)',
             [
                 $credentials->NewPassword
             ]
         );
     }
-
 }
