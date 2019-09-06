@@ -25,7 +25,8 @@ $this->load->library('helpers/HtmlHelper');
 			padding: 10px;
 		}
 		.dropdown-menu>li>a:hover {
-			background: #74b9ff;
+			/*background: #74b9ff;*/
+			background: #4493a5;
 			color: #fff;
 		}
 	</style>
@@ -285,6 +286,13 @@ $this->load->library('helpers/HtmlHelper');
 										<b>PARTICIPANT'S SIGNATURE <br>(13)</b>
 									</p>
 								</th>
+								<?php if(!$is_pdf): ?>
+									<th rowspan="2" class="text-center" style="border-right: none">
+										<p class="small">
+											<b>Service Slip</b>
+										</p>
+									</th>
+								<?php endif; ?>
 							</tr>
 							<tr>
 								<th class="text-center" style="width: 5%">
@@ -514,7 +522,19 @@ $this->load->library('helpers/HtmlHelper');
 				                            );
 				                        ?>
 									</td>
-									<td class="small" style="border-right: none"></td>
+									<td class="small" style="border-right: none; padding: 0">
+										<?php if (!$is_pdf) : ?>
+											<label class="cont">
+												<input type="checkbox" name="type" value="attended" />
+												<span class="checkmark"></span>
+											</label>
+										<?php endif; ?>
+									</td>
+									<?php if(!$is_pdf): ?>
+										<td class="small text-center" rowspan="2">
+											<button class="btn-slip">Service Slip</button>
+										</td>
+									<?php endif; ?>
 								</tr>
 									<tr>
 										<td class="small" style="padding: 5px;">
@@ -577,7 +597,14 @@ $this->load->library('helpers/HtmlHelper');
 				                            );
 				                        ?>
 										</td>
-										<td class="small" style="border-right: none"></td>
+										<td class="small" style="border-right: none; padding: 0">
+											<?php if (!$is_pdf) : ?>
+												<label class="cont">
+													<input type="checkbox" name="type" value="attended" />
+													<span class="checkmark"></span>
+												</label>
+											<?php endif; ?>
+										</td>
 								</tr>
 							<?php endfor; ?>
 						</tbody>
@@ -657,7 +684,7 @@ $this->load->library('helpers/HtmlHelper');
 								<td style="border-right: none; padding-left: 5px;">
 									<p class="small">
 										1 - No Education  <br>
-										2 - Elemantary Level <br>
+										2 - Elementary Level <br>
 										3 - Elementary Graduate <br>
 										4 - High School Level <br>
 										5 - High School Graduate 
@@ -787,6 +814,7 @@ $this->load->library('helpers/HtmlHelper');
 		</form>
 	</div>
 </div>
+
 <?php if(!$is_pdf) : ?>
 	<script type="text/javascript" src="<?= base_url('assets/js/form.js')?>"></script>
 <?php endif; ?>

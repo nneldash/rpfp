@@ -137,7 +137,7 @@ input {
 }
 input:focus {
   border-color: #777!important;
-  border-bottom: 1.5px solid #2196F3!important;
+  border-bottom: 1px solid #2196F3!important;
   color: #000!important;
 }
 
@@ -189,12 +189,12 @@ input:focus {
 	color: #fff;
     padding: 12px 37px;
 	border-radius: 0;
-	border: 2px solid #74b9ff;
-	background: #74b9ff;
+	border: 2px solid #336e7b;
+	background: #336e7b;
 }
 .save:hover {
 	background: #fff;
-	color: #333;
+	color: #336e7b;
 }
 a:hover {
     text-decoration: none;
@@ -265,7 +265,8 @@ a:hover {
 }
 
 .cont input:checked ~ .checkmark {
-	background-color: #2196F3;
+	/*background-color: #2196F3;*/
+	background-color: #57a7b9;
 }
 
 .checkmark:after {
@@ -310,7 +311,8 @@ a:hover {
 }
 
 .cont input:checked ~ .smolCheck {
-	background-color: #2196F3;
+	/*background-color: #2196F3;*/
+	background-color: #57a7b9;
 }
 
 .smolCheck:after {
@@ -333,4 +335,24 @@ a:hover {
 	-webkit-transform: rotate(45deg);
 	-ms-transform: rotate(45deg);
 	transform: rotate(45deg);
+}
+
+.btn-slip {
+	border: 0;
+    background: #336e7b;
+    padding: 10px;
+    width: 100%;
+    color: #fff;
+}
+
+.btn-slip:hover {
+
+}
+
+.modal-content {
+	border-radius: 0!important;
+}
+.modal-header {
+	background: #336e7b;
+	color: #fff;
 }

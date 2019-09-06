@@ -2,6 +2,14 @@ var base_url = window.location.origin + '/rpfp';
 $(function() {
 	saveForm1();
 	saveServiceSlip();
+	
+	$('.btn-slip').click(function(){
+		$.post(base_url + '/forms/serviceSlip')
+		.done(function(html){
+			$('#menuModal').modal();
+			$('#menuModal').find('.modal-body').html(html);
+		});
+	});
 });
 
 function saveForm1()
@@ -33,9 +41,6 @@ function saveForm1()
 				});
 			}
 		});
-
-		
-		
 
 		return false;
 	});
