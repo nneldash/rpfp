@@ -21,7 +21,7 @@ function saveForm1()
 			data: formData,
 			url: base_url + '/forms/saveForm1'
 		}).done(function(result){
-			if(result == '1') {
+			if(result.is_save == true) {
 				Toast.fire({
 					type: 'success',
 					title: 'Form 1 successfully saved!'
