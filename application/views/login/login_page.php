@@ -5,20 +5,32 @@
                 <div class="login100-pic js-tilt p-top40" data-tilt>
                     <img src="<?= base_url('assets/images/popcom_logo.png') ?>" alt="IMG">
                 </div>
-
-                <form class="login100-form needs-validation" url="<?= base_url('login/loginUser')?>" method="post" novalidate>
+                <?php
+                    echo form_open(
+                        $action = 'Login/loginUser',
+                        $params = array(
+                            'id' => 'login_form',
+                            'class'=>'login100-form needs-validation',
+                            'method' => 'post'
+                        )
+                    );
+                    ?>
                     <span class="login100-form-title">
                         <h4>RPFP Online Login</h4>
                     </span>
                     <div class="form-group wrap-input100 validate-input">
-                        <input class="input100 form-control" type="text" name="<?=POST_USERNAME?>" placeholder="Username" required />
+                        <input class="input100 form-control" type="text"
+                                name="<?=POST_USERNAME?>" placeholder="Username"
+                        required />
                         <span class="focus-input100"></span>
                         <span class="symbol-input100">
                             <i class="material-icons">mood</i>
                         </span>
                     </div>
                     <div class="form-group wrap-input100 validate-input">
-                        <input class="input100 form-control" type="password" name="<?=POST_USERPASSWORD?>" placeholder="Password" required />
+                        <input class="input100 form-control" type="password"
+                            name="<?=POST_USERPASSWORD?>" placeholder="Password"
+                        required />
                         <span class="focus-input100"></span>
                         <span class="symbol-input100">
                             <i class="material-icons">lock</i>
