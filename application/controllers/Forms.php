@@ -14,6 +14,7 @@ class Forms extends CI_Controller
         $this->load->library('form/ProfileClass');
         $this->load->library('form/ModernFpUserClass');
         $this->load->library('form/TraditionalFpUserClass');
+        $this->load->library('service_slip/ServiceSlipClass');
     }
 
     public function index()
@@ -112,6 +113,30 @@ class Forms extends CI_Controller
         }
 
         return $listCouple;
+    }
+
+    public function saveServiceSlip()
+    {
+        $slip = new ServiceSlipClass();
+
+        $slip->DateOfVisit = $this->input->post('date_of_visit');
+        $slip->ClientName = $this->input->post('client_name');
+        $slip->ClientAddress = $this->input->post('client_address');
+        $slip->MethodUsed = $this->input->post('method');
+        $slip->DateOfMethod = $this->input->post('date_of_method');
+        $slip->ClientAdvised = $this->input->post('client_advised');
+        $slip->ReferralFacility = $this->input->post('referral_facility');
+        $slip->Name = 'NA';
+
+        if (!$this->FormModel->saveServiceSlip($slip)) {
+            $data = ['is_save' => false];
+        } else {
+            $data = ['is_save' => true];
+        }
+
+        $this->output
+            ->set_content_type('application/json')
+            ->set_output(json_encode($data));
     }
 
     public function formA()

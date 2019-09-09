@@ -9,6 +9,7 @@ class FormModel extends BaseModel
         parent::__construct();
         $this->CI->load->library('login/DbInstance');
         $this->CI->load->library('form/FormClass');
+        $this->CI->load->library('service_slip/ServiceSlipClass');
     }
 
     public function saveForm1(FormInterface $form)
@@ -131,6 +132,24 @@ class FormModel extends BaseModel
             ];
            }
         }
+
+        return $this->saveToDb($method, $params);
+    }
+
+    public function saveServiceSlip(ServiceSlipInterface $data)
+    {
+        $method = "rpfp_save_service_slip";
+        $with_id = [];
+
+        $params = [
+            $data->DateOfVisit == N_A ? BLANK : $data->DateOfVisit,
+            $data->ClientName == N_A ? BLANK : $data->ClientName,
+            $data->ClientAddress == N_A ? BLANK : $data->ClientAddress,
+            $data->Method == N_A ? BLANK : $data->Method,
+            $data->DateOfMethod == N_A ? BLANK : $data->DateOfMethod,
+            $data->ReferralFacility == N_A ? BLANK : $data->ReferralFacility,
+            $data->Name == N_A ? BLANK : $data->Name
+        ];
 
         return $this->saveToDb($method, $params);
     }

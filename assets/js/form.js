@@ -1,9 +1,5 @@
 var base_url = window.location.origin + '/rpfp';
 $(function() {
-	saveForm1();
-	saveServiceSlip();
-	inputValid();
-
 	$('.btn-slip').click(function(){
 		$.post(base_url + '/forms/serviceSlip')
 		.done(function(html){
@@ -11,6 +7,13 @@ $(function() {
 			$('#menuModal').find('.modal-body').html(html);
 		});
 	});
+
+	saveForm1();
+	saveServiceSlip();
+	inputValid();
+
+	
+
 });
 
 function inputValid() {
@@ -62,25 +65,27 @@ function saveForm1()
 
 		return false;
 	});
+	
 
 }
 
 function saveServiceSlip()
 {
-	$('.saveServiceSlip').click(function(){
-		const Toast = Swal.mixin({
-			toast: true,
-			position: 'top-end',
-			showConfirmButton: false,
-			timer: 3000
+	$('#service_slip').submit(function(){
+		var formData = $(this).serialize();
+		
+		$.ajax({
+			type: 'POST',
+			data: formData,
+			url: base_url + '/forms/saveServiceSlip'
+		}).done(function(result){
+			if(result.is_save == true) {
+				alert('Nixie, ayaw gumana nung Toast.fire');
+			} else {
+				alert('Nixie, ayaw gumana nung Toast.fire');
+			}
 		});
-
-		Toast.fire({
-			type: 'success',
-			title: 'Service Slip successfully saved!'
-		});
-
 		return false;
-	});
+	})
 
 }

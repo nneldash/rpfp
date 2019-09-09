@@ -19,7 +19,7 @@ $this->load->library('helpers/HtmlHelper');
 
 <div class="body-padding" style="padding-top: 0">
 	<!-- <div class="col-md-offset-2 col-md-8"> -->
-	<form id="form_validation" class="form-horizontal">
+	<form id="service_slip" class="form-horizontal">
 		<div class="row">
 			<div class="col-md-12 text-right">
 	            <input type="submit" class="save saveServiceSlip" value="SAVE" name="saveSlip" style="width: 15%; margin-bottom: 1%" />
@@ -419,3 +419,7 @@ $this->load->library('helpers/HtmlHelper');
 	</div>
 	<!-- </div> -->
 </div>
+
+<?php if(!$is_pdf) : ?>
+	<script type="text/javascript" src="<?= base_url('assets/js/form.js')?>"></script>
+<?php endif; ?>
