@@ -1,14 +1,42 @@
-
 * {
 	margin: 0px; 
 	padding: 0px; 
 	box-sizing: border-box;
 }
 
-body, html {
+body,
+html {
 	height: 100%;
 	font-family: sans-serif;
-  color: #333;
+    color: #333;
+}
+
+/*------------------------------------------------------------------
+[ Font Styles ]*/
+@font-face {
+    font-family: aubrey;
+    src: url(../fonts/aubrey/AUBREY.TTF);
+}
+@font-face {
+    font-family: will;
+    src: url(../fonts/will/WILL.TTF);
+}
+@font-face {
+    font-family: ora;
+    src: url(../fonts/oranienbaum/Oranienbaum.ttf);
+}
+
+.aubrey {
+    font-family: aubrey;
+    font-weight: bold;
+}
+.will {
+    font-family: will;
+    font-weight: bold;
+}
+.ora {
+    font-family: ora;
+    font-weight: bold;
 }
 
 /*---------------------------------------------*/
@@ -34,7 +62,12 @@ a:hover {
 }
 
 /*---------------------------------------------*/
-h1,h2,h3,h4,h5,h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
 	margin: 0px;
 }
 
@@ -46,46 +79,48 @@ p {
 	margin: 0px;
 }
 
-ul, li {
+ul,
+li {
 	margin: 0px;
 	list-style-type: none;
 }
 
 
 /*---------------------------------------------*/
-input {
+input,
+textarea {
 	outline: none;
 	border: none;
 }
 
-textarea {
-    outline: none;
-    border: none;
-}
-
-textarea:focus, input:focus {
+textarea:focus,
+input:focus {
     border-color: transparent !important;
 }
 
-input:focus::-webkit-input-placeholder { color:transparent; }
-input:focus:-moz-placeholder { color:transparent; }
-input:focus::-moz-placeholder { color:transparent; }
-input:focus:-ms-input-placeholder { color:transparent; }
+input:focus::-webkit-input-placeholder, 
+input:focus:-moz-placeholder,
+input:focus::-moz-placeholder,
+input:focus:-ms-input-placeholder,
 
-textarea:focus::-webkit-input-placeholder { color:transparent; }
-textarea:focus:-moz-placeholder { color:transparent; }
-textarea:focus::-moz-placeholder { color:transparent; }
-textarea:focus:-ms-input-placeholder { color:transparent; }
+textarea:focus::-webkit-input-placeholder,
+textarea:focus:-moz-placeholder,
+textarea:focus::-moz-placeholder,
+textarea:focus:-ms-input-placeholder { 
+    color:transparent; 
+}
 
-input::-webkit-input-placeholder { color: #999999; }
-input:-moz-placeholder { color: #999999; }
-input::-moz-placeholder { color: #999999; }
-input:-ms-input-placeholder { color: #999999; }
+input::-webkit-input-placeholder,
+input:-moz-placeholder,
+input::-moz-placeholder,
+input:-ms-input-placeholder,
 
-textarea::-webkit-input-placeholder { color: #999999; }
-textarea:-moz-placeholder { color: #999999; }
-textarea::-moz-placeholder { color: #999999; }
-textarea:-ms-input-placeholder { color: #999999; }
+textarea::-webkit-input-placeholder,
+textarea:-moz-placeholder,
+textarea::-moz-placeholder,
+textarea:-ms-input-placeholder { 
+    color: #999999; 
+}
 
 /*---------------------------------------------*/
 button {
@@ -103,7 +138,7 @@ iframe {
 }
 
 
-/*//////////////////////////////////////////////////////////////////
+/*------------------------------------------------------------------
 [ Utility ]*/
 .txt1 {
   font-family: inherit;
@@ -120,7 +155,7 @@ iframe {
 }
 
 
-/*//////////////////////////////////////////////////////////////////
+/*------------------------------------------------------------------
 [ login ]*/
 
 .limiter {
@@ -165,7 +200,7 @@ iframe {
 }
 
 /*------------------------------------------------------------------
-[  ]*/
+[ Login Form ]*/
 .login100-pic {
     width: 400px;
 }
@@ -174,9 +209,6 @@ iframe {
     max-width: 100%;
 }
 
-
-/*------------------------------------------------------------------
-[  ]*/
 .login100-form {
     width: 290px;
 }
@@ -236,7 +268,6 @@ iframe {
     width: 100%;
     height: 100%;
     box-shadow: 0px 0px 0px 0px;
-    /*color: rgba(87,184,70, 0.8);*/
     color: #57a7b9;
 }
 
@@ -285,7 +316,6 @@ iframe {
 }
 
 .input100:focus + .focus-input100 + .symbol-input100 {
-    /*color: #57b846;*/
     color: #57a7b9;
     padding-left: 28px;
 }
@@ -334,8 +364,6 @@ iframe {
     background: #333333;
 }
 
-
-
 /*------------------------------------------------------------------
 [ Responsive ]*/
 @media (max-width: 992px) {
@@ -375,7 +403,6 @@ iframe {
 
 /*------------------------------------------------------------------
 [ Alert validate ]*/
-
 .validate-input {
     position: relative;
 }
@@ -439,21 +466,20 @@ iframe {
     }
 }
 
-/*=============== NAV STYLES ================*/
+/*------------------------------------------------------------------
+[ Nav Styles ]*/
 .navbar {
     background: #00b894;
     border-bottom: none;
     transition-duration: 0.6s;
 }
 .navbar-default .navbar-brand,
-.navbar-default .navbar-nav>li>a {
+.navbar-default .navbar-nav > li > a {
     color: #fff;
 }
-
-.navbar-scroll .navbar-nav>li>a {
+.navbar-scroll .navbar-nav > li > a {
     color: #183532;
 }
-
 .navbar-scroll {
     background: #ffffff;
     padding: 0;
@@ -465,34 +491,8 @@ iframe {
     box-shadow: 0px 10px 9px rgba(0, 0, 0, 0.4);
 }
 
-/*=============== FONT STYLES ================*/
-@font-face {
-    font-family: aubrey;
-    src: url(../fonts/aubrey/AUBREY.TTF);
-}
-@font-face {
-    font-family: will;
-    src: url(../fonts/will/WILL.TTF);
-}
-@font-face {
-    font-family: ora;
-    src: url(../fonts/oranienbaum/Oranienbaum.ttf);
-}
-
-.aubrey {
-    font-family: aubrey;
-    font-weight: bold;
-}
-.will {
-    font-family: will;
-    font-weight: bold;
-}
-.ora {
-    font-family: ora;
-    font-weight: bold;
-}
-
-/* CUSTOM CSS */
+/*------------------------------------------------------------------
+[ Custom CSS ]*/
 .bg-img {
     background-image: url(../images/family.png); 
     background-repeat: repeat-x; 
@@ -523,7 +523,7 @@ iframe {
 .padding-b5p {
     padding-bottom: 5%;
 }
-.p-top40{
+.p-top40 {
     padding-top: 40px;
 }
 .footer {
@@ -531,6 +531,6 @@ iframe {
     color: #333;
     font-size: xx-small;
 }
-.small{
-    font-size: 14px;
+.small {
+    font-size: 12px;
 }

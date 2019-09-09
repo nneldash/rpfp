@@ -15,10 +15,8 @@ $this->load->library('helpers/HtmlHelper');
 		font-size: 15px;
 	}
 </style>
-<!-- <link href="</?= base_url('assets/css/form.css') ?>" rel="stylesheet"> -->
 
 <div class="body-padding" style="padding-top: 0">
-	<!-- <div class="col-md-offset-2 col-md-8"> -->
 	<form id="service_slip" class="form-horizontal">
 		<div class="row">
 			<div class="col-md-12 text-right">
@@ -417,7 +415,6 @@ $this->load->library('helpers/HtmlHelper');
 			</div>
 		</form>
 	</div>
-	<!-- </div> -->
 </div>
 
 <?php if(!$is_pdf) : ?>

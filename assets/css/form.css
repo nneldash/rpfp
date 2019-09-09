@@ -7,27 +7,33 @@
 .small-12 {
 	font-size: 12px;
 }
+.text-bold {
+	font-weight: 700;
+}
+.underline {
+	border-bottom: solid 1px;
+}
+.back-eee {
+	background-color: #eee;
+}
 
-/*====================== BORDERS ========================*/
+/*------------------------------------------------------------------
+[ Borders ]*/
 .border-l0 {
-	border-left: 0!important;
+	border-left: none!important;
 }
-
 .border-r0 {
-	border-right: 0!important;
+	border-right: none!important;
 }
-
 .border-t1 {
 	border-top: 1px solid!important;
 }
-
 .border-b0 {
 	border-bottom: 0;
 }
 .border-b1 {
 	border-bottom: 1px solid!important;
 }
-
 .border-0 {
 	border: none!important;
 }
@@ -38,7 +44,8 @@
 	border: 2px solid;
 }
 
-/*====================== MARGINS ========================*/
+/*------------------------------------------------------------------
+[ Margins ]*/
 .margin-b0 {
 	margin-bottom: 0;
 }
@@ -46,9 +53,13 @@
 	margin-right: 5px;
 }
 
-/*====================== PADDINGS ========================*/
+/*------------------------------------------------------------------
+[ Paddings ]*/
 .padding-0 {
 	padding: 0!important;
+}
+.padding-5 {
+	padding: 5px;
 }
 .padding-b8 {
 	padding-bottom: 8px;
@@ -59,7 +70,6 @@
 .padding-b15 {
 	padding-bottom: 15px;
 }
-
 .padding-l0 {
 	padding-left: 0;
 }
@@ -72,7 +82,9 @@
 .padding-l15 {
 	padding-left: 15px!important;
 }
-
+.padding-l20 {
+	padding-left: 20px;
+}
 .padding-l2p {
 	padding-left: 2%;
 }
@@ -100,14 +112,30 @@
 .padding-l30p {
 	padding-left: 30%;
 }
-
+.padding-l60 {
+	padding-left: 60px;
+}
+.padding-l100 {
+	padding-left: 100px; 
+}
 .padding-r3p {
 	padding-right: 3%;
+}
+.padding-r8p {
+	padding-right: 8%;
+}
+.padding-r15p {
+	padding-right: 15%;
+}
+.padding-r20p {
+	padding-right: 20%;
+}
+.padding-r30p {
+	padding-right: 30%;
 }
 .padding-r30 {
 	padding-right: 30px;
 }
-
 .padding-t3p {
 	padding-top: 3%;
 }
@@ -115,33 +143,36 @@
 	padding-top: 20px;
 }
 
-/*====================== TABLES ========================*/
+/*------------------------------------------------------------------
+[ Tables ]*/
 .table-bordered td {
 	padding: 0;
 }
-
-.table-bordered td, .table-bordered th,
+.table-bordered td, 
+.table-bordered th,
 .table thead th {
 	border: 1px solid #333;
 }
-
-.table-bordered th, .table thead th {
+.table-bordered th, 
+.table thead th {
 	padding: 0;
 }
 
-/*====================== INPUTS ========================*/
+/*------------------------------------------------------------------
+[ Inputs ]*/
 input {
 	width: 100%;
 	font-size: 12px;	
 	text-transform: uppercase;
 }
 input:focus {
-  border-color: #777!important;
-  border-bottom: 1px solid #2196F3!important;
-  color: #000!important;
+	border-color: #777!important;
+	border-bottom: 1px solid #2196F3!important;
+	color: #000!important;
 }
 
-/*====================== HEIGHTS ========================*/
+/*------------------------------------------------------------------
+[ Heights ]*/
 .height-20 {
 	height: 20px;
 }
@@ -149,7 +180,8 @@ input:focus {
 	height: 50px;
 }
 
-/*====================== WIDTHS ========================*/
+/*------------------------------------------------------------------
+[ Widths ]*/
 .width-inherit {
 	width: inherit;
 }
@@ -184,7 +216,84 @@ input:focus {
 	width: 70%;
 }
 
-/*====================== SAVE BUTTON ========================*/
+/*------------------------------------------------------------------
+[ Checkmark ]*/
+.cont {
+	display: block;
+	position: relative;
+	padding-left: 35px;
+	margin-bottom: 12px;
+	cursor: pointer;
+	font-size: 22px;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+.cont input {
+	position: absolute;
+	opacity: 0;
+	cursor: pointer;
+	height: 0;
+	width: 0;
+}
+.smolCheck {
+	position: absolute;
+	top: 0;
+	left: 0;
+	height: 23px;
+	width: 100%;
+}
+.checkmark {
+	position: absolute;
+	top: 0;
+	left: 0;
+	height: 37px;
+	width: 100%;
+}
+.cont:hover input ~ .checkmark,
+.cont:hover input ~ .smolCheck {
+	background-color: #ccc;
+}
+.cont input:checked ~ .checkmark,
+.cont input:checked ~ .smolCheck {
+	background-color: #57a7b9;
+}
+.checkmark:after,
+.smolCheck:after {
+	content: "";
+	position: absolute;
+	display: none;
+}
+.cont input:checked ~ .checkmark:after,
+.cont input:checked ~ .smolCheck:after {
+	display: block;
+}
+.cont .checkmark:after {
+	left: 34px;
+	top: 13px;
+	width: 6px;
+	height: 10px;
+	border: solid white;
+	border-width: 0 3px 3px 0;
+	-webkit-transform: rotate(45deg);
+	-ms-transform: rotate(45deg);
+	transform: rotate(45deg);
+}
+.cont .smolCheck:after {
+	left: 40%;
+	top: 20%;
+	width: 6px;
+	height: 10px;
+	border: solid white;
+	border-width: 0 3px 3px 0;
+	-webkit-transform: rotate(45deg);
+	-ms-transform: rotate(45deg);
+	transform: rotate(45deg);
+}
+
+/*------------------------------------------------------------------
+[ Buttons ]*/
 .save {
 	color: #fff;
     padding: 12px 37px;
@@ -212,131 +321,6 @@ a:hover {
 	z-index: 999;
 }
 
-
-@page {
-	font-family: inherit;
-	font-size: 12px;
-	/*margin-top: 0;*/
-	margin: 0;
-}
-
-.text-bold {
-	font-weight: 700;
-}
-
-.underline {
-	border-bottom: solid 1px;
-}
-
-.cont {
-	display: block;
-	position: relative;
-	padding-left: 35px;
-	margin-bottom: 12px;
-	cursor: pointer;
-	font-size: 22px;
-	-webkit-user-select: none;
-	-moz-user-select: none;
-	-ms-user-select: none;
-	user-select: none;
-}
-
-.cont input {
-	position: absolute;
-	opacity: 0;
-	cursor: pointer;
-	height: 0;
-	width: 0;
-}
-
-.checkmark {
-	position: absolute;
-	top: 0;
-	left: 0;
-	/*height: 25px;
-	width: 25px;*/
-	height: 37px;
-	width: 100%;
-	/*background-color: #eee;*/
-}
-
-.cont:hover input ~ .checkmark {
-	background-color: #ccc;
-}
-
-.cont input:checked ~ .checkmark {
-	/*background-color: #2196F3;*/
-	background-color: #57a7b9;
-}
-
-.checkmark:after {
-	content: "";
-	position: absolute;
-	display: none;
-}
-
-.cont input:checked ~ .checkmark:after {
-	display: block;
-}
-
-.cont .checkmark:after {
-	left: 34px;
-	top: 13px;
-	width: 6px;
-	/* left: 9px;
-	top: 5px;
-	width: 5px;*/
-	height: 10px;
-	border: solid white;
-	border-width: 0 3px 3px 0;
-	-webkit-transform: rotate(45deg);
-	-ms-transform: rotate(45deg);
-	transform: rotate(45deg);
-}
-.back-eee {
-	background-color: #eee;
-}
-
-/*small*/
-.smolCheck {
-	position: absolute;
-	top: 0;
-	left: 0;
-	height: 23px;
-	width: 100%;
-}
-
-.cont:hover input ~ .smolCheck {
-	background-color: #ccc;
-}
-
-.cont input:checked ~ .smolCheck {
-	/*background-color: #2196F3;*/
-	background-color: #57a7b9;
-}
-
-.smolCheck:after {
-	content: "";
-	position: absolute;
-	display: none;
-}
-
-.cont input:checked ~ .smolCheck:after {
-	display: block;
-}
-
-.cont .smolCheck:after {
-	left: 40%;
-	top: 20%;
-	width: 6px;
-	height: 10px;
-	border: solid white;
-	border-width: 0 3px 3px 0;
-	-webkit-transform: rotate(45deg);
-	-ms-transform: rotate(45deg);
-	transform: rotate(45deg);
-}
-
 .btn-slip {
 	border: 0;
     background: #336e7b;
@@ -344,11 +328,13 @@ a:hover {
     width: 100%;
     color: #fff;
 }
-
 .btn-slip:hover {
     color: #336e7b;
     background: #fff;
 }
+
+/*------------------------------------------------------------------
+[ Modal ]*/
 
 .modal-content {
 	border-radius: 0!important;
@@ -356,4 +342,27 @@ a:hover {
 .modal-header {
 	background: #336e7b;
 	color: #fff;
+}
+
+/*------------------------------------------------------------------
+[ Dropdown ]*/
+
+.dropdown-menu {
+	border-radius: 0;
+	box-shadow: 0 5px 11px 0 rgb(111, 127, 143), 0 4px 15px 0 rgba(0,0,0,.15);
+}
+.dropdown-menu > li > a {
+	padding: 10px;
+}
+.dropdown-menu > li > a:hover {
+	background: #4493a5;
+	color: #fff;
+}
+
+/*------------------------------------------------------------------
+[ Responsive ]*/
+@page {
+	font-family: inherit;
+	font-size: 12px;
+	margin: 0;
 }

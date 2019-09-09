@@ -3,17 +3,19 @@ defined('BASEPATH') or exit('No direct script access allowed');
 $this->load->library('helpers/HtmlHelper');
 ?>
 
-<?php if($is_pdf): ?>
+<?php if($is_pdf){ ?>
 	<link href="<?= base_url('NewAssets/bootstrapCss') ?>" rel="stylesheet">
-	<link href="<?= base_url('assets/css/style.css') ?>" rel="stylesheet">
+<?php } else { ?>
 	<style>
-		.small {
-			font-size: 12px!important;
-		}
+		.table-bordered > tbody > tr > td,
+		.table-bordered > thead > tr > th,
+		.table-bordered {
+			border: 1px solid #000;
+		}		
 	</style>
-<?php endif?>
-<link href="<?= base_url('assets/css/form.css') ?>" rel="stylesheet">
+<?php } ?>
 
+<link href="<?= base_url('assets/css/form.css') ?>" rel="stylesheet">
 
 <div class="body-padding">	
 	<div class="">
@@ -330,5 +332,3 @@ $this->load->library('helpers/HtmlHelper');
 	    </form>
 	</div>
 </div>
-
-<script type="text/javascript" src="<?= base_url('assets/js/form.js')?>"></script>

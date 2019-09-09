@@ -5,36 +5,27 @@ $this->load->library('helpers/HtmlHelper');
 
 <?php if($is_pdf){ ?>
 	<link href="<?= base_url('NewAssets/bootstrapCss') ?>" rel="stylesheet">
-	<link href="<?= base_url('assets/css/style.css') ?>" rel="stylesheet">
+	<style>
+		b {
+			font-weight: bold;
+		}
+		.small {
+			font-size: 8px;
+		}
+	</style>
 <?php } else { ?>
 	<style>
-		.small {
-			/*font-size: 10px;*/
-		}
-
 		.table-bordered > tbody > tr > td,
 		.table-bordered > thead > tr > th,
 		.table-bordered {
 			border: 1px solid #000;
-		}
-		.dropdown-menu {
-			border-radius: 0;
-			box-shadow: 0 5px 11px 0 rgb(111, 127, 143), 0 4px 15px 0 rgba(0,0,0,.15);
-		}
-		.dropdown-menu>li>a{
-			padding: 10px;
-		}
-		.dropdown-menu>li>a:hover {
-			/*background: #74b9ff;*/
-			background: #4493a5;
-			color: #fff;
-		}
+		}		
 	</style>
 <?php } ?>
 
 <link href="<?= base_url('assets/css/form.css') ?>" rel="stylesheet">
 
-<div class="body-padding">	
+<div class="body-padding">
 	<div class="border-2">
 		<div class="row">
 			<div class="col-md-12 padding-r3p text-right">
@@ -65,6 +56,7 @@ $this->load->library('helpers/HtmlHelper');
 				<div id="mybutton">					
 		            <input type="submit" class="save saveForm1" value="SAVE" name="saveform1" />
 		        </div>
+
 		        <div id="myPrintButton">
 		        	<div class="dropdown save">
 						<button class="dropdown-toggle" type="button" data-toggle="dropdown">
@@ -76,6 +68,7 @@ $this->load->library('helpers/HtmlHelper');
 							<li><a href="#">Approved</a></li>
 							<li><a href="#">Import Excel</a></li>
 							<li><a href="#">Summary</a></li>
+							<li><a href="<?= base_url('login/logoffUser')?>">Logout</a></li>
 						</ul>
 					</div>
 			    </div>
@@ -252,7 +245,7 @@ $this->load->library('helpers/HtmlHelper');
 				</table>
 			</div>
 			<div class="padding-t20" style="page-break-inside: avoid">
-				<div class="table-responsive">	
+				<div class="table-responsive" style="overflow: hidden;">	
 					<table class="table table-bordered margin-b0">
 						<thead>
 							<tr>
@@ -377,7 +370,9 @@ $this->load->library('helpers/HtmlHelper');
 						<tbody>
 							<?php for($i = 0; $i <= 9; $i++): ?>
 								<tr>
-									<td class="text-center" style="border-left: none" rowspan="2"><p class="small"><?= $i + 1; ?></p></td>
+									<td class="text-center" style="border-left: none" rowspan="2">
+										<p class="small"><?= $i + 1; ?></p>
+									</td>
 									<td class="small" style="padding: 5px;">
 										<?php
 				                            echo HtmlHelper::inputPdf(
@@ -762,9 +757,9 @@ $this->load->library('helpers/HtmlHelper');
 						</tbody>
 					</table>
 				</div>
-				<table class="table" style="border: none">
+				<table class="table border-0">
 					<tr>
-						<td style="padding-left: 20px" class="border-0"></td>
+						<td class="border-0 padding-l20"></td>
 						<td class="border-0">
 							<p class="small">Prepared by:</p>
 						</td>
@@ -777,14 +772,14 @@ $this->load->library('helpers/HtmlHelper');
 						<td class="border-0"></td>
 					</tr>
 					<tr>
-						<td style="padding: 5px;" class="border-0"></td>
+						<td class="border-0 padding-5"></td>
 						<td class="border-0"></td>
 						<td class="border-0"></td>
 						<td class="border-0"></td>
 						<td class="border-0"></td>
 					</tr>
 					<tr>
-						<td style="padding-left: 20px" class="border-0"></td>
+						<td class="border-0 padding-l20"></td>
 						<td class="border-0">
 							_______________________________
 						</td>
@@ -797,11 +792,11 @@ $this->load->library('helpers/HtmlHelper');
 						<td class="border-0"></td>
 					</tr>
 					<tr>
-						<td style="padding-left: 20px" class="border-0"></td>
-						<td style="padding-left: 20px;" class="border-0">
+						<td class="border-0 padding-l20"></td>
+						<td class="border-0 padding-l20">
 							<p class="small">Name/Signature of RPM Team Member/s</p>
 						</td>
-						<td style="padding-left: 60px" class="border-0">
+						<td class="border-0 padding-l60">
 							<p class="small">Name & Signature</p>
 						</td>
 						<td class="border-0">
