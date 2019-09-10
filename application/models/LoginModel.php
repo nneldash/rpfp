@@ -124,14 +124,6 @@ class LoginModel extends CI_Model
         return true;
     }
 
-    public function getProfileId(): string
-    {
-    }
-
-    public function getCurrentUser(): string
-    {
-    }
-
     public function reconnect(): DbInstance
     {
         $cred = $this->getCredentials();
@@ -142,24 +134,6 @@ class LoginModel extends CI_Model
         }
 
         return $this->connect($cred);
-    }
-
-    public function isEncoder()
-    {
-        if (!$this->isLoggedIn()) {
-            return false;
-        }
-        /* TODO: Check if user is an employee call rpfp.enc_check_if_encoder()*/
-        return true;
-    }
-
-    public function isRegionalManager()
-    {
-        if (!$this->isLoggedIn()) {
-            return false;
-        }
-        /* TODO: Check if user is an hr call rpfp.enc_check_if_rm()*/
-        return true;
     }
 
     private function runQuery($customQuery, $params = false)
@@ -231,5 +205,32 @@ class LoginModel extends CI_Model
                 $credentials->NewPassword
             ]
         );
+    }
+
+    public function getProfileId(): string
+    {
+    }
+
+    public function getCurrentUser(): string
+    {
+        $this->CI->session->get_userdata(USERNAME);
+    }
+
+    public function isEncoder()
+    {
+        if (!$this->isLoggedIn()) {
+            return false;
+        }
+        /* TODO: Check if user is an encoder call rpfp.enc_check_if_encoder()*/
+        return true;
+    }
+
+    public function isRegionalManager()
+    {
+        if (!$this->isLoggedIn()) {
+            return false;
+        }
+        /* TODO: Check if user is an hr call rpfp.enc_check_if_rm()*/
+        return true;
     }
 }

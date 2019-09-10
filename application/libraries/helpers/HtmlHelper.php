@@ -48,6 +48,4 @@ class HtmlHelper
             return "{$state}<span class='padding-l5'>{$value}</span>";
         }
     }
-
-
 }

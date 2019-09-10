@@ -29,7 +29,58 @@ DELIMITER $$
 --
 
 /* USER MANAGEMENT */
-CREATE DEFINER=root@localhost PROCEDURE itdmu_create_rpfp_user (
+CREATE DEFINER=root@localhost FUNCTION select_role( role_num INT(11) )
+    RETURNS VARCHAR(25) CONTAINS SQL
+BEGIN
+    DECLARE default_role VARCHAR(25);
+    IF role_num IS NOT NULL THEN
+        CASE role_num
+            WHEN 100 THEN
+                SET default_role = "itdmu";
+
+            WHEN 90 THEN
+                SET default_role = "pmed";
+
+            WHEN 80 THEN
+                SET default_role = "regional_data_manager";
+
+            WHEN 70 THEN
+                SET default_role = "focal_person";
+
+            WHEN 60 THEN
+                SET default_role = "encoder";
+            ELSE 
+                SET default_role = "rpfp_login";
+        END CASE;
+    END IF;
+    RETURN default_role;
+END$$
+
+CREATE DEFINER=root@localhost FUNCTION select_scope( scope_num INT(11) )
+    RETURNS VARCHAR(25) CONTAINS SQL
+BEGIN
+    DECLARE default_scope VARCHAR(25) DEFAULT "no_scope";
+    IF scope_num IS NOT NULL THEN
+        CASE scope_num
+            WHEN 50 THEN
+                SET default_scope = "national";
+
+            WHEN 40 THEN
+                SET default_scope = "regional";
+
+            WHEN 30 THEN
+                SET default_scope = "provincial";
+
+            WHEN 20 THEN
+                SET default_scope = "citiwide";
+            ELSE
+                SET default_scope = "no_scope";
+        END CASE;
+    END IF;
+    RETURN default_scope;
+END$$
+
+CREATE DEFINER=root@localhost PROCEDURE itdmu_create_rpfp_user(
     IN lastname VARCHAR(50) CHARSET utf8 COLLATE utf8_unicode_ci,
     IN firstname VARCHAR(50) CHARSET utf8 COLLATE utf8_unicode_ci,
     IN db_user VARCHAR(50) CHARSET utf8 COLLATE utf8_unicode_ci,
@@ -52,23 +103,7 @@ BEGIN
     SET @sql_stmt3 = CONCAT("SELECT 1 FROM DUAL");
     SET @sql_stmt4 = CONCAT("SET DEFAULT ROLE rpfp_login FOR ", QUOTE(db_user), "@localhost");
     IF my_role IS NOT NULL THEN
-        CASE my_role
-            WHEN 100 THEN
-                SET @default_role = "itdmu";
-
-            WHEN 90 THEN
-                SET @default_role = "pmed";
-
-            WHEN 80 THEN
-                SET @default_role = "regional_data_manager";
-
-            WHEN 70 THEN
-                SET @default_role = "focal_person";
-
-            WHEN 60 THEN
-                SET @default_role = "encoder";
-
-        END CASE;
+        SET @default_role := select_role(my_role);
         SET @sql_stmt3 = CONCAT("GRANT ", @default_role, " TO ", QUOTE(db_user), "@localhost");
         SET @sql_stmt4 = CONCAT("SET DEFAULT ROLE ", @default_role, " FOR ", QUOTE(db_user), "@localhost");
     END IF;
@@ -80,20 +115,7 @@ BEGIN
 
     SET @sql_stmt6 = CONCAT("SELECT 1 FROM DUAL");
     IF scope_reg_prov_or_muni IS NOT NULL THEN
-        CASE scope_reg_prov_or_muni
-            WHEN 60 THEN
-                SET @scope_role = "national";
-
-            WHEN 50 THEN
-                SET @scope_role = "regional";
-
-            WHEN 40 THEN
-                SET @scope_role = "provincial";
-
-            WHEN 30 THEN
-                SET @scope_role = "citiwide";
-
-        END CASE;
+        @scope_role := select_scope( scope_reg_prov_or_muni );
         SET @sql_stmt6 = CONCAT("GRANT ", @scope_role, " TO ", QUOTE(db_user), "@localhost");
 
     END IF;
@@ -130,7 +152,7 @@ BEGIN
     END IF;
 END$$
 
-CREATE DEFINER=root@localhost PROCEDURE itdmu_update_first_login (IN db_user VARCHAR(50))  MODIFIES SQL DATA
+CREATE DEFINER=root@localhost PROCEDURE itdmu_update_first_login(IN db_user VARCHAR(50))  MODIFIES SQL DATA
 BEGIN
      UPDATE rpfp.user_profile up
         SET up.INITIAL_PASS_COLUMN = 0
@@ -148,13 +170,13 @@ BEGIN
     PREPARE stmt1 FROM @sql_stmt;
     EXECUTE stmt1;
     CALL rpfp.itdmu_update_first_login(db_user);
-    FLUSH PRIVILEGES;
 END$$
 /* END OF USER MANAGEMENT */
 
 
 /* LOGIN PROCS */
-CREATE DEFINER=root@localhost FUNCTION login_check_own_password (
+
+CREATE DEFINER=root@localhost FUNCTION login_check_own_password(
     old_passwd VARCHAR(50) CHARSET utf8 COLLATE utf8_unicode_ci
     ) RETURNS INT(1) READS SQL DATA
 BEGIN
@@ -166,7 +188,7 @@ BEGIN
     return @ret;
 END$$
 
-CREATE DEFINER=root@localhost FUNCTION login_check_first_login () RETURNS INT(1) READS SQL DATA
+CREATE DEFINER=root@localhost FUNCTION login_check_first_login() RETURNS INT(1) READS SQL DATA
 BEGIN
      SELECT TRUE INTO @ret
        FROM rpfp.user_profile up
@@ -176,7 +198,7 @@ BEGIN
     RETURN @ret;
 END$$
 
-CREATE DEFINER=root@localhost PROCEDURE login_change_initial_password (
+CREATE DEFINER=root@localhost PROCEDURE login_change_initial_password(
     IN new_passwd VARCHAR(50)
     )  CONTAINS SQL
 BEGIN
@@ -191,7 +213,7 @@ BEGIN
     END IF;
 END$$
 
-CREATE DEFINER=root@localhost PROCEDURE login_change_own_password (
+CREATE DEFINER=root@localhost PROCEDURE login_change_own_password(
     IN old_passwd VARCHAR(50) CHARSET utf8 COLLATE utf8_unicode_ci,
     IN new_passwd VARCHAR(50) CHARSET utf8 COLLATE utf8_unicode_ci
     ) CONTAINS SQL
@@ -211,12 +233,91 @@ BEGIN
     END IF;
 END$$
 
-CREATE DEFINER=root@localhost PROCEDURE login_update_first_login () CONTAINS SQL
+CREATE DEFINER=root@localhost PROCEDURE login_update_first_login() CONTAINS SQL
 BEGIN
     CALL rpfp.itdmu_update_first_login(USER());
 END$$
 /* END OF LOGIN PROCS */
 
+
+/* PROFILE PROCS */
+CREATE DEFINER=root@localhost FUNCTION get_scope() RETURNS INT(11)
+    READS SQL DATA
+    SQL SECURITY INVOKER
+BEGIN    
+    IF EXISTS check_role(50) THEN
+        RETURN 50;
+    END IF;
+    
+    IF EXISTS check_role(40) THEN
+        RETURN 40;
+    END IF;
+
+    IF EXISTS check_role(30) THEN
+        RETURN 30;
+    END IF;
+
+    IF EXISTS check_role(20) THEN
+        RETURN 20;
+    END IF;
+
+    RETURN 0;
+END$$
+
+CREATE DEFINER=root@localhost FUNCTION check_role(role_num INT(11)) RETURNS INT(1)
+    READS SQL DATA
+    SQL SECURITY INVOKER
+BEGIN
+    SELECT TRUE INTO @ret
+      FROM information_schema.APPLICABLE_ROLES
+     where ROLE_NAME = select_role( role_num )
+       AND GRANTEE = USER();
+    
+    RETURN @ret;
+END$$
+
+CREATE DEFINER=root@localhost FUNCTION check_if_encoder() RETURNS INT(1)
+    READS SQL DATA
+BEGIN
+    DECLARE ret_val INT(1) DEFAULT NULL;
+    SET ret_val := check_role(60);
+    RETURN ret_val;
+END$$
+
+CREATE DEFINER=root@localhost FUNCTION check_if_focal() RETURNS INT(1)
+    READS SQL DATA
+BEGIN
+    DECLARE ret_val INT(1) DEFAULT NULL;
+    SET ret_val := check_role(70);
+    RETURN ret_val;
+END$$
+
+CREATE DEFINER=root@localhost FUNCTION check_if_data_manager() RETURNS INT(1)
+    READS SQL DATA
+BEGIN
+    DECLARE ret_val INT(1) DEFAULT NULL;
+    SET ret_val := check_role(80);
+    RETURN ret_val;
+END$$
+
+CREATE DEFINER=root@localhost FUNCTION check_if_pmed() RETURNS INT(1)
+    READS SQL DATA
+BEGIN
+    DECLARE ret_val INT(1) DEFAULT NULL;
+    SET ret_val := check_role(90);
+    RETURN ret_val;
+END$$
+
+CREATE DEFINER=root@localhost FUNCTION check_if_itdmu() RETURNS INT(1)
+    READS SQL DATA
+BEGIN
+    DECLARE ret_val INT(1) DEFAULT NULL;
+    SET ret_val := check_role(100);
+    RETURN ret_val;
+END$$
+/* END OF PROFILE PROCS */
+
+DELIMITER ;
 
 --
 -- Table structure for table user_profile
@@ -236,3 +337,76 @@ CREATE TABLE user_profile (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
+
+
+/* RPFP ROLES */
+/*
+        ROLES
+            100 = itdmu
+             90 = pmed
+             80 = regional_data_manager
+             70 = focal_person
+             60 = encoder
+
+        SCOPE
+             50 = national
+             40 = regional
+             30 = provincial
+             20 = citiwide
+
+*/
+
+CREATE OR REPLACE ROLE no_scope;
+
+CREATE OR REPLACE ROLE rpfp_login;
+ GRANT EXECUTE ON FUNCTION rpfp.login_check_own_password TO 'rpfp_login';
+ GRANT EXECUTE ON FUNCTION rpfp.login_check_first_login TO 'rpfp_login';
+GRANT EXECUTE ON PROCEDURE rpfp.login_change_initial_password TO 'rpfp_login';
+GRANT EXECUTE ON PROCEDURE rpfp.login_change_own_password TO 'rpfp_login';
+GRANT EXECUTE ON PROCEDURE rpfp.login_update_first_login TO 'rpfp_login';
+
+ GRANT EXECUTE ON FUNCTION rpfp.check_if_encoder TO 'rpfp_login';
+ GRANT EXECUTE ON FUNCTION rpfp.check_if_focal TO 'rpfp_login';
+ GRANT EXECUTE ON FUNCTION rpfp.check_if_data_manager TO 'rpfp_login';
+ GRANT EXECUTE ON FUNCTION rpfp.check_if_pmed TO 'rpfp_login';
+ GRANT EXECUTE ON FUNCTION rpfp.check_if_itdmu TO 'rpfp_login';
+
+
+CREATE OR REPLACE ROLE itdmu;
+   GRANT rpfp_login to itdmu;
+GRANT EXECUTE ON PROCEDURE rpfp.itdmu_create_rpfp_user TO 'itdmu';
+GRANT EXECUTE ON PROCEDURE rpfp.itdmu_update_first_login TO 'itdmu';
+GRANT EXECUTE ON PROCEDURE rpfp.itdmu_change_user_password TO 'itdmu';
+
+
+CREATE OR REPLACE ROLE pmed;
+   GRANT rpfp_login to pmed;
+
+
+CREATE OR REPLACE ROLE regional_data_manager;
+   GRANT rpfp_login to regional_data_manager;
+
+
+CREATE OR REPLACE ROLE focal_person;
+   GRANT rpfp_login to focal_person;
+
+
+CREATE OR REPLACE ROLE encoder;
+   GRANT rpfp_login to encoder;
+
+
+
+
+CREATE OR REPLACE ROLE citiwide;
+
+
+CREATE OR REPLACE ROLE provincial;
+     GRANT citiwide to provincial;
+
+
+CREATE OR REPLACE ROLE regional;
+   GRANT provincial to regional;
+
+
+CREATE OR REPLACE ROLE national;
+     GRANT regional to national;

@@ -18,16 +18,5 @@ class Passwords extends PasswordsInterface
         $this->OldPassword = $params[OLDPASSWORD];
         $this->NewPassword = $params[NEWPASSWORD];
         $this->ConfirmPassword = $params[CONFIRMPASSWORD];
-        
     }
-
-    
-    // public function validate()
-    // {
-    //     if (!$this->UserName || !$this->Password || trim($this->UserName) == '' || trim($this->Password) == '') {
-    //         return false;
-    //     }
-
-    //     return true;
-    // }
 }
