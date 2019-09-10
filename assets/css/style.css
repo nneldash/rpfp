@@ -1,0 +1,26 @@
+th {
+	text-align: center;
+}
+
+/*------------------------------------------------------------------
+[ Btn Styles ]*/
+.btn {
+	border: 2px solid #2a3f54;
+    border-radius: 0;
+}
+.btn-primary {
+    background: #2a3f54;
+}
+.btn-primary:hover {
+	background: #fff;
+	border: 2px solid #2a3f54;
+	color: #333;
+}
+.btn-info {
+    background: #31b0d5;
+}
+.btn-info:hover {
+	background: #fff;
+	border: 2px solid #2a3f54;
+	color: #333;
+}
