@@ -115,7 +115,7 @@ BEGIN
 
     SET @sql_stmt6 = CONCAT("SELECT 1 FROM DUAL");
     IF scope_reg_prov_or_muni IS NOT NULL THEN
-        @scope_role := select_scope( scope_reg_prov_or_muni );
+        SET @scope_role := select_scope( scope_reg_prov_or_muni );
         SET @sql_stmt6 = CONCAT("GRANT ", @scope_role, " TO ", QUOTE(db_user), "@localhost");
 
     END IF;
@@ -245,19 +245,19 @@ CREATE DEFINER=root@localhost FUNCTION get_scope() RETURNS INT(11)
     READS SQL DATA
     SQL SECURITY INVOKER
 BEGIN    
-    IF EXISTS check_role(50) THEN
-        RETURN 50;
+    IF EXISTS (SELECT check_role(50)) THEN
+        RETURN 50; 
     END IF;
     
-    IF EXISTS check_role(40) THEN
+    IF EXISTS (SELECT check_role(40)) THEN
         RETURN 40;
     END IF;
 
-    IF EXISTS check_role(30) THEN
+    IF EXISTS (SELECT check_role(30)) THEN
         RETURN 30;
     END IF;
 
-    IF EXISTS check_role(20) THEN
+    IF EXISTS (SELECT check_role(20)) THEN
         RETURN 20;
     END IF;
 
