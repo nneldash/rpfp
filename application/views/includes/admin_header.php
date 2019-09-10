@@ -44,12 +44,12 @@
                             <div class="menu_section">
                                 <ul class="nav side-menu">
                                     <li>
-                                        <a href="<?= base_url('pending')?>">
+                                        <a href="<?= base_url('menu')?>">
                                             <i class="fa fa-hourglass-start"></i> Pending
                                         </a>
                                     </li>
                                     <li>
-                                        <a>
+                                        <a href="<?= base_url('menu/approve')?>">
                                             <i class="fa fa-thumbs-o-up"></i> Approved
                                         </a>
                                     </li>

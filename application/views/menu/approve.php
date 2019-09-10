@@ -1,10 +1,11 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 ?>
+
+<link href="../node_modules/gentelella/vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
 <link href="<?= base_url('assets/css/style.css') ?>" rel="stylesheet">
 <link href="<?= base_url('NewAssets/datatablesBootstrap') ?>" rel="stylesheet">
 <link href="<?= base_url('NewAssets/datatablesResponsive') ?>" rel="stylesheet">
-<link href="<?= base_url('NewAssets/fontAwesome') ?>" rel="stylesheet">
 
 <div class="right_col" role="main">
 	<div class="clearfix"></div>
@@ -38,8 +39,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
 									</ul>
 								</td>
 								<td class="text-center">
-									<button class="btn btn-primary">Edit</button>
-									<button class="btn btn-info">Approve</button>
+									<a href="<?= base_url('forms'); ?>" target="_blank">
+										<button class="btn btn-primary">View</button>
+									</a>
 								</td>
 							</tr>
 							<tr>
@@ -54,8 +56,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
 									</ul>
 								</td>
 								<td class="text-center">
-									<button class="btn btn-primary">Edit</button>
-									<button class="btn btn-info">Approve</button>
+									<a href="<?= base_url('forms'); ?>" target="_blank">
+										<button class="btn btn-primary">View</button>
+									</a>
 								</td>
 							</tr>
 							<tr>
@@ -70,8 +73,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
 									</ul>
 								</td>
 								<td class="text-center">
-									<button class="btn btn-primary">Edit</button>
-									<button class="btn btn-info">Approve</button>
+									<a href="<?= base_url('forms'); ?>" target="_blank">
+										<button class="btn btn-primary">View</button>
+									</a>
 								</td>
 							</tr>
 							<tr>
@@ -86,8 +90,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
 									</ul>
 								</td>
 								<td class="text-center">
-									<button class="btn btn-primary">Edit</button>
-									<button class="btn btn-info">Approve</button>
+									<a href="<?= base_url('forms'); ?>" target="_blank">
+										<button class="btn btn-primary">View</button>
+									</a>
 								</td>
 							</tr>
 							<tr>
@@ -102,8 +107,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
 									</ul>
 								</td>
 								<td class="text-center">
-									<button class="btn btn-primary">Edit</button>
-									<button class="btn btn-info">Approve</button>
+									<a href="<?= base_url('forms'); ?>" target="_blank">
+										<button class="btn btn-primary">View</button>
+									</a>
 								</td>
 							</tr>
 							<tr>
@@ -118,8 +124,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
 									</ul>
 								</td>
 								<td class="text-center">
-									<button class="btn btn-primary">Edit</button>
-									<button class="btn btn-info">Approve</button>
+									<a href="<?= base_url('forms'); ?>" target="_blank">
+										<button class="btn btn-primary">View</button>
+									</a>
 								</td>
 							</tr>
 							<tr>
@@ -134,8 +141,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
 									</ul>
 								</td>
 								<td class="text-center">
-									<button class="btn btn-primary">Edit</button>
-									<button class="btn btn-info">Approve</button>
+									<a href="<?= base_url('forms'); ?>" target="_blank">
+										<button class="btn btn-primary">View</button>
+									</a>
 								</td>
 							</tr>
 						</tbody>

@@ -1,8 +1,6 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 $this->load->library('helpers/HtmlHelper');
-echo '<pre>';
-print_r($form1);exit;
 ?>
 
 <?php if($is_pdf){ ?>
@@ -66,8 +64,8 @@ print_r($form1);exit;
 							<span class="caret"></span>
 						</button>
 						<ul class="dropdown-menu">
-							<li><a href="#">Pending</a></li>
-							<li><a href="#">Approved</a></li>
+							<li><a href="<?= base_url('menu')?>">Pending</a></li>
+							<li><a href="<?= base_url('menu/approve')?>">Approved</a></li>
 							<li><a href="#">Import Excel</a></li>
 							<li><a href="#">Summary</a></li>
 							<li><a href="<?= base_url('login/logoffUser')?>">Logout</a></li>
@@ -251,6 +249,13 @@ print_r($form1);exit;
 					<table class="table table-bordered margin-b0">
 						<thead>
 							<tr>
+								<?php if (!$is_pdf): ?>
+									<th rowspan="2" class="text-center">
+										<p class="small">
+											<b>Approve Couple</b>
+										</p>
+									</th>
+								<?php endif; ?>
 								<th rowspan="2" style="border-left: none; width: 2%;"></th>
 								<th rowspan="2" class="text-center padding-0" style="width: 18%">
 									<p class="small">
@@ -372,6 +377,14 @@ print_r($form1);exit;
 						<tbody>
 							<?php for($i = 0; $i <= 9; $i++): ?>
 								<tr>
+									<?php if (!$is_pdf): ?>
+										<td rowspan="2">
+											<label class="cont">
+												<input type="checkbox" name="type" value="attended" />
+												<span class="checkmark"></span>
+											</label>
+										</td>
+									<?php endif; ?>
 									<td class="text-center" style="border-left: none" rowspan="2">
 										<p class="small"><?= $i + 1; ?></p>
 									</td>
