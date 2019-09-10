@@ -124,3 +124,18 @@ defined('CAPTCHA_SECRET') or define('CAPTCHA_SECRET', '6Ld1jLYUAAAAAG5MkkdSqkZSX
 defined('CAPTCHA_CLIENT') or define('CAPTCHA_CLIENT', '6Ld1jLYUAAAAAM6BbI8c4khB0KbqHBjVY231cA7U');
 defined('CAPTCHA_API') or define('CAPTCHA_API', 'https://www.google.com/recaptcha/api.js');
 defined('CAPTCHA_VERIFY') or define('CAPTCHA_VERIFY', 'https://www.google.com/recaptcha/api/siteverify');
+
+defined('FONT_AWESOME') or define('FONT_AWESOME', '/../node_modules/gentelella/vendors/font-awesome/css/font-awesome.min.css');
+defined('NPROGRESS') or define('NPROGRESS', '/../node_modules/gentelella/vendors/nprogress/nprogress.css');
+defined('CUSTOM') or define('CUSTOM', '/../node_modules/gentelella/build/css/custom.min.css');
+defined('TEMPLATE_JS') or define('TEMPLATE_JS', '/../node_modules/gentelella/vendors/jquery/dist/jquery.min.js');
+defined('NPROGRESS_JS') or define('NPROGRESS_JS', '/../node_modules/gentelella/vendors/nprogress/nprogress.js');
+defined('PROGRESSBAR_JS') or define('PROGRESSBAR_JS', '/../node_modules/gentelella/vendors/bootstrap-progressbar/bootstrap-progressbar.min.js');
+defined('CUSTOM_JS') or define('CUSTOM_JS', '/../node_modules/gentelella/build/js/custom.min.js');
+
+defined('DATATABLES_BOOTSTRAP') or define('DATATABLES_BOOTSTRAP', '/../node_modules/gentelella/vendors/datatables.net-bs/css/dataTables.bootstrap.min.css');
+defined('DATATABLES_RESPONSIVE') or define('DATATABLES_RESPONSIVE', '/../node_modules/gentelella/vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css');
+defined('DATATABLES_JS') or define('DATATABLES_JS', '/../node_modules/gentelella/vendors/datatables.net/js/jquery.dataTables.min.js');
+defined('DATATABLES_BOOTSTRAP_JS') or define('DATATABLES_BOOTSTRAP_JS', '/../node_modules/gentelella/vendors/datatables.net-bs/js/dataTables.bootstrap.min.js');
+defined('DATATABLES_RESPONSIVE_JS') or define('DATATABLES_RESPONSIVE_JS', '/../node_modules/gentelella/vendors/datatables.net-responsive/js/dataTables.responsive.min.js');
+defined('DATATABLES_BTRP_JS') or define('DATATABLES_BTRP_JS', '/../node_modules/gentelella/vendors/datatables.net-responsive-bs/js/responsive.bootstrap.js');
