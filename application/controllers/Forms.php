@@ -21,8 +21,12 @@ class Forms extends CI_Controller
     {
         $header['title'] = 'RPFP Online | Form 1';
 
+        $this->load->model('FormModel');
+
+        $form1 = $this->FormModel->getForm1();
+
         $this->load->view('includes/header', $header);
-        $this->load->view('forms/form1', array('is_pdf' => false));
+        $this->load->view('forms/form1', array('form1' => $form1, 'is_pdf' => false));
         $this->load->view('includes/footer');
     }
 

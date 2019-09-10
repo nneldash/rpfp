@@ -153,5 +153,27 @@ class FormModel extends BaseModel
 
         return $this->saveToDb($method, $params);
     }
+
+    public function getForm1(): FormInterface
+    {
+        $form1 = new FormClass();
+
+        $form1->Seminar = $this->getForm1Seminar();
+        return $form1;
+    }
+
+    public function getForm1Seminar()
+    {
+        return $data = [
+            'SeminarClass',
+            array (
+                'TypeOfClass' => '4ps',
+                'ClassNumber' => '12345',
+                'Province' => 'Bulacan',
+                'Barangay' => 'Sta.Ana',
+                'DateConducted' => '09/10/2019'
+            )
+        ];
+    }
 }
 ?>
