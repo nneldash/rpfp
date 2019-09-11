@@ -19,7 +19,13 @@ $this->load->library('helpers/HtmlHelper');
 		.table-bordered > thead > tr > th,
 		.table-bordered {
 			border: 1px solid #000;
-		}		
+		}
+		.highlight {
+		  	background: rgba(38, 185, 154, 0.16);
+		}
+		.highlight > td > input {
+			background: rgb(220, 244, 239);
+		}
 	</style>
 <?php } ?>
 
@@ -53,11 +59,11 @@ $this->load->library('helpers/HtmlHelper');
 		</div>
 		<form id="form_validation" class="form-horizontal">
 			<?php if(!$is_pdf) : ?>
-				<div id="mybutton">					
+				<div id="rightButton">					
 		            <input type="submit" class="save saveForm1" value="SAVE" name="saveform1" />
 		        </div>
 
-		        <div id="myPrintButton">
+		        <div id="leftButton">
 		        	<div class="dropdown save">
 						<button class="dropdown-toggle" type="button" data-toggle="dropdown">
 							Menu
@@ -66,7 +72,7 @@ $this->load->library('helpers/HtmlHelper');
 						<ul class="dropdown-menu">
 							<li><a href="<?= base_url('menu')?>">Pending</a></li>
 							<li><a href="<?= base_url('menu/approve')?>">Approved</a></li>
-							<li><a href="#">Import Excel</a></li>
+							<li><a href="<?= base_url('menu/importExcel')?>">Import Excel</a></li>
 							<li><a href="#">Summary</a></li>
 							<li><a href="<?= base_url('login/logoffUser')?>">Logout</a></li>
 						</ul>
@@ -546,75 +552,75 @@ $this->load->library('helpers/HtmlHelper');
 										</td>
 									<?php endif; ?>
 								</tr>
-									<tr>
-										<td class="small" style="padding: 5px;">
-											<?php
-					                            echo HtmlHelper::inputPdf(
-					                            	$is_pdf,
-					                                "",
-					                                "text",
-					                                "name_participant2[".$i."]",
-					                                "padding-l10",
-					                                ""
-					                            );
-					                        ?>
-										</td>
-										<td class="small text-center">
-											<?php
-					                            echo HtmlHelper::inputPdf(
-					                            	$is_pdf,
-					                                "",
-					                                "text",
-					                                "sex2[".$i."]",
-					                                "text-center",
-					                                "1"
-					                            );
-					                        ?>
-										</td>
-										<td class="small text-center">
-											<?php
-					                            echo HtmlHelper::inputPdf(
-					                            	$is_pdf,
-					                            	"",
-					                                "text",
-					                                "civil_status2[".$i."]",
-					                                "text-center",
-					                                "1"
-					                            );
-					                        ?>
-										</td>
-										<td class="small text-center">
-											<?php
+								<tr>
+									<td class="small" style="padding: 5px;">
+										<?php
 				                            echo HtmlHelper::inputPdf(
 				                            	$is_pdf,
-				                            	"",
+				                                "",
 				                                "text",
-				                                "age2[".$i."]",
-				                                "text-center",
+				                                "name_participant2[".$i."]",
+				                                "padding-l10",
 				                                ""
 				                            );
 				                        ?>
-										</td>
-										<td class="small text-center">
-											<?php
+									</td>
+									<td class="small text-center">
+										<?php
 				                            echo HtmlHelper::inputPdf(
 				                            	$is_pdf,
-				                            	"",
+				                                "",
 				                                "text",
-				                                "educ2[".$i."]",
+				                                "sex2[".$i."]",
 				                                "text-center",
 				                                "1"
 				                            );
 				                        ?>
-										</td>
-										<td class="small" style="border-right: none; padding: 0">
-											<?php if (!$is_pdf) : ?>
-												<label class="cont">
-													<input type="checkbox" name="type" value="attended" />
-													<span class="checkmark"></span>
-												</label>
-											<?php endif; ?>
-										</td>
+									</td>
+									<td class="small text-center">
+										<?php
+				                            echo HtmlHelper::inputPdf(
+				                            	$is_pdf,
+				                            	"",
+				                                "text",
+				                                "civil_status2[".$i."]",
+				                                "text-center",
+				                                "1"
+				                            );
+				                        ?>
+									</td>
+									<td class="small text-center">
+										<?php
+			                            echo HtmlHelper::inputPdf(
+			                            	$is_pdf,
+			                            	"",
+			                                "text",
+			                                "age2[".$i."]",
+			                                "text-center",
+			                                ""
+			                            );
+			                        ?>
+									</td>
+									<td class="small text-center">
+										<?php
+			                            echo HtmlHelper::inputPdf(
+			                            	$is_pdf,
+			                            	"",
+			                                "text",
+			                                "educ2[".$i."]",
+			                                "text-center",
+			                                "1"
+			                            );
+			                        ?>
+									</td>
+									<td class="small" style="border-right: none; padding: 0">
+										<?php if (!$is_pdf) : ?>
+											<label class="cont">
+												<input type="checkbox" name="type" value="attended" />
+												<span class="checkmark"></span>
+											</label>
+										<?php endif; ?>
+									</td>
 								</tr>
 							<?php endfor; ?>
 						</tbody>

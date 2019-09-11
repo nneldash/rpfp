@@ -1,6 +1,6 @@
 var base_url = window.location.origin + '/rpfp';
 $(function() {
-	$('.btn-slip').click(function(){
+	$('.btn-slip').click(function() {
 		$.post(base_url + '/forms/serviceSlip')
 		.done(function(html){
 			$('#menuModal').modal();
@@ -8,12 +8,14 @@ $(function() {
 		});
 	});
 
+  	$('td:first-child input').change(function() {
+    	$(this).closest('tr').toggleClass("highlight", this.checked);
+    	$(this).closest('tr').next('tr').toggleClass("highlight", this.checked);
+  	});
+
 	saveForm1();
 	saveServiceSlip();
 	inputValid();
-
-	
-
 });
 
 function inputValid() {
@@ -35,7 +37,7 @@ function inputValid() {
 
 function saveForm1()
 {
-	$('#form_validation').submit(function(){
+	$('#form_validation').submit(function() {
 		const Toast = Swal.mixin({
 			toast: true,
 			position: 'top-end',
@@ -65,13 +67,11 @@ function saveForm1()
 
 		return false;
 	});
-	
-
 }
 
 function saveServiceSlip()
 {
-	$('#service_slip').submit(function(){
+	$('#service_slip').submit(function() {
 		var formData = $(this).serialize();
 		
 		$.ajax({
@@ -86,6 +86,6 @@ function saveServiceSlip()
 			}
 		});
 		return false;
-	})
+	});
 
 }

@@ -3,19 +3,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
 $this->load->library('helpers/HtmlHelper');
 ?>
 
-
-<style>
-	.table-bordered > tbody > tr > td,
-	.table-bordered > thead > tr > th,
-	.table-bordered {
-		border: 1px solid #000;
-	}
-
-	.small {
-		font-size: 15px;
-	}
-</style>
-
 <div class="body-padding" style="padding-top: 0">
 	<form id="service_slip" class="form-horizontal">
 		<div class="row">
@@ -349,7 +336,7 @@ $this->load->library('helpers/HtmlHelper');
 						</p>
 						<p> &nbsp; (</p>
 						<label class="cont">
-							<input type="radio" name="method" value="client has method provided" />
+							<input type="radio" name="action" value="client has method provided" />
 							<span class="smolCheck back-eee"></span>
 						</label>
 						<p>)</p>
@@ -416,7 +403,3 @@ $this->load->library('helpers/HtmlHelper');
 		</form>
 	</div>
 </div>
-
-<?php if(!$is_pdf) : ?>
-	<script type="text/javascript" src="<?= base_url('assets/js/form.js')?>"></script>
-<?php endif; ?>
