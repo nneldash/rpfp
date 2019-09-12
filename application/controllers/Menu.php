@@ -28,10 +28,29 @@ class Menu extends CI_Controller
 
     public function importExcel()
     {
-        $header['title'] = 'RPFP Online | Import Excel';
-
-        $this->load->view('includes/header', $header);
         $this->load->view('menu/import');
-        $this->load->view('includes/footer');
+    }
+
+    public function summary()
+    {
+        $header['title'] = 'RPFP Online | Accomplishment Report';
+
+        $this->load->view('includes/admin_header', $header);
+        $this->load->view('menu/summary', array('is_pdf' => false), false);
+        $this->load->view('includes/admin_footer');
+    }
+
+    public function printSummary()
+    {
+        $mpdfConfig = array(
+                'format' => 'A4',
+                'orientation' => 'P'
+            );
+        
+        $mpdf = new \Mpdf\Mpdf($mpdfConfig);
+        $html = $this->load->view('menu/summary', array('is_pdf' => true), true);
+
+        $mpdf->WriteHTML($html);
+        $mpdf->Output('Summary.pdf', 'I');
     }
 }

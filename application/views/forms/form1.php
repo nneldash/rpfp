@@ -72,7 +72,7 @@ $this->load->library('helpers/HtmlHelper');
 						<ul class="dropdown-menu">
 							<li><a href="<?= base_url('menu')?>">Pending</a></li>
 							<li><a href="<?= base_url('menu/approve')?>">Approved</a></li>
-							<li><a href="<?= base_url('menu/importExcel')?>">Import Excel</a></li>
+							<li><a class="btn-import">Import Excel</a></li>
 							<li><a href="#">Summary</a></li>
 							<li><a href="<?= base_url('login/logoffUser')?>">Logout</a></li>
 						</ul>
@@ -92,7 +92,7 @@ $this->load->library('helpers/HtmlHelper');
 							<?php endif; ?>
 						</td>
 						<td class="padding-r20p border-0">
-							<span class="small padding-l100"><b>&nbsp;&nbsp;4Ps</b></span>
+							<span class="small"><b>&nbsp;&nbsp;4Ps</b></span>
 						</td>
 
 						<td class="border-1 padding-0 back-eee" style="border: 1px solid">
@@ -104,7 +104,7 @@ $this->load->library('helpers/HtmlHelper');
 							<?php endif; ?>
 						</td>
 						<td class="padding-r20p border-0">
-							<span class="small padding-l100"><b>&nbsp;&nbsp;House-to-House</b></span>
+							<span class="small"><b>&nbsp;&nbsp;House-to-House</b></span>
 						</td>
 
 						<td class="padding-r8p border-0">
