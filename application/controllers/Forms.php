@@ -7,13 +7,13 @@ class Forms extends CI_Controller
     {
         parent::__construct();
         $this->load->model('FormModel');
-        $this->load->library('form/FormClass');
-        $this->load->library('form/CoupleClass');
-        $this->load->library('form/HusbandClass');
-        $this->load->library('form/WifeClass');
-        $this->load->library('form/ProfileClass');
-        $this->load->library('form/ModernFpUserClass');
-        $this->load->library('form/TraditionalFpUserClass');
+        $this->load->library('form1/FormClass');
+        $this->load->library('form1/CoupleClass');
+        $this->load->library('form1/HusbandClass');
+        $this->load->library('form1/WifeClass');
+        $this->load->library('form1/ProfileClass');
+        $this->load->library('form1/ModernFpUserClass');
+        $this->load->library('form1/TraditionalFpUserClass');
         $this->load->library('service_slip/ServiceSlipClass');
     }
 

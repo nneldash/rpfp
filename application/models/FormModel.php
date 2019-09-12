@@ -8,7 +8,7 @@ class FormModel extends BaseModel
     {
         parent::__construct();
         $this->CI->load->library('login/DbInstance');
-        $this->CI->load->library('form/FormClass');
+        $this->CI->load->library('form1/FormClass');
         $this->CI->load->library('service_slip/ServiceSlipClass');
     }
 
