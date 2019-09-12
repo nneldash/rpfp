@@ -1,8 +1,6 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 $this->load->library('helpers/HtmlHelper');
-echo '<pre>';
-print_r($form1);exit;
 ?>
 
 <?php if($is_pdf){ ?>
@@ -110,7 +108,7 @@ print_r($form1);exit;
 							<?php
 	                            echo HtmlHelper::inputPdf(
 	                                $is_pdf,
-	                                "",
+	                                $form1->Seminar->ClassNumber,
 	                                "text",
 	                                "class_no",
 	                                "padding-l10 underline width-70",
@@ -151,14 +149,14 @@ print_r($form1);exit;
 							<?php
 	                            echo HtmlHelper::inputPdf(
 	                                $is_pdf,
-	                                "",
+	                                $form1->Seminar->Province,
 	                                "text",
 	                                "province",
 	                                "padding-l10 underline width-70",
 	                                ""
 	                            );
 	                        ?>
-						</td>
+						</td> 
 					</tr>
 					<tr>
 						<td class="border-1 width-30 padding-0 back-eee" style="border-left: none">
@@ -203,7 +201,7 @@ print_r($form1);exit;
 							<?php
 	                            echo HtmlHelper::inputPdf(
 	                                $is_pdf,
-	                                "",
+	                                $form1->Seminar->Barangay,
 	                                "text",
 	                                "barangay",
 	                                "padding-l10 underline width-70",
@@ -235,7 +233,7 @@ print_r($form1);exit;
 							<?php
 	                            echo HtmlHelper::inputPdf(
 	                                $is_pdf,
-	                                "",
+	                                $form1->Seminar->DateConducted,
 	                                "date",
 	                                "date_conducted",
 	                                "padding-l10 underline width-70",

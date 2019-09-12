@@ -159,21 +159,55 @@ class FormModel extends BaseModel
         $form1 = new FormClass();
 
         $form1->Seminar = $this->getForm1Seminar();
+        $form1->ListCouple = $this->getForm1Couple();
         return $form1;
     }
 
-    public function getForm1Seminar()
+    public function getForm1Seminar() : SeminarInterface
     {
-        return $data = [
-            'SeminarClass',
-            array (
-                'TypeOfClass' => '4ps',
-                'ClassNumber' => '12345',
-                'Province' => 'Bulacan',
-                'Barangay' => 'Sta.Ana',
-                'DateConducted' => '09/10/2019'
-            )
-        ];
+       $seminar = new SeminarClass();
+
+       $seminar->TypeOfClass = '4ps';
+       $seminar->ClassNumber = '12345';
+       $seminar->Province = 'Bulacan';
+       $seminar->Barangay = 'Sta.Ana';
+       $seminar->DateConducted = '09/10/2019';
+
+       return $seminar;
+    }
+
+    public function getForm1Couple() : ListCoupleInterface
+    {
+        $listCouple = new ListCoupleClass();
+
+            $couple = new CoupleClass();
+
+            $couple->Address = 'Bulacan';
+            $couple->NumberOfChildren = '12';
+
+            $husband = new HusbandClass();
+
+            $husband->Name = 'Chou Fan';
+            $husband->Sex = 'M';
+            $husband->CivilStatus = 'Married';
+            $husband->Age = '31';
+            $husband->EducationalAttainment = '1';
+            $husband->HasAttended = 'Yes';
+
+            $wife = new WifeClass();
+                         
+            $wife->Name = 'Hanabi Montana';
+            $wife->Sex = 'F';
+            $wife->CivilStatus = 'Married';
+            $wife->Age = '31';
+            $wife->EducationalAttainment = '1';
+            $wife->HasAttended = 'Yes';
+
+            $couple->ListHusband->append($husband);
+            $couple->ListWife->append($wife);
+            $listCouple->append($couple);
+
+        return $listCouple;
     }
 }
 ?>
