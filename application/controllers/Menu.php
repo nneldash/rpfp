@@ -35,17 +35,17 @@ class Menu extends CI_Controller
     {
         $header['title'] = 'RPFP Online | Accomplishment Report';
 
-        $this->load->view('includes/admin_header', $header);
+        $this->load->view('includes/header', $header);
         $this->load->view('menu/summary', array('is_pdf' => false), false);
-        $this->load->view('includes/admin_footer');
+        $this->load->view('includes/footer');
     }
 
     public function printSummary()
     {
         $mpdfConfig = array(
-                'format' => 'A4',
-                'orientation' => 'P'
-            );
+            'format' => 'A4',
+            'orientation' => 'P'
+        );
         
         $mpdf = new \Mpdf\Mpdf($mpdfConfig);
         $html = $this->load->view('menu/summary', array('is_pdf' => true), true);
