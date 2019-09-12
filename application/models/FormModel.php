@@ -203,8 +203,21 @@ class FormModel extends BaseModel
             $wife->EducationalAttainment = '1';
             $wife->HasAttended = 'Yes';
 
+            $modernFp = new ModernFpUserClass();
+
+            $modernFp->MethodUsed = '1';
+            $modernFp->IntentionForUsing = '2';
+
+            $traditionalFp = new TraditionalFpUserClass();
+
+            $traditionalFp->Type = '1';
+            $traditionalFp->Status = '2';
+            $traditionalFp->IntentionForUsing = '3';
+
             $couple->ListHusband->append($husband);
             $couple->ListWife->append($wife);
+            $couple->ListModernFp->append($modernFp);
+            $couple->ListTraditionalFp->append($traditionalFp);
             $listCouple->append($couple);
 
         return $listCouple;
