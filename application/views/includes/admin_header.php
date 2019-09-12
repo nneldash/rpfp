@@ -12,7 +12,7 @@
         <link href="<?= base_url('NewAssets/nProgress') ?>" rel="stylesheet">
         <link href="<?= base_url('NewAssets/customCss') ?>" rel="stylesheet">
 
-        <link href="node_modules/gentelella/vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+        <link href="<?= base_url('node_modules/gentelella/vendors/font-awesome/css/font-awesome.min.css'); ?>" rel="stylesheet">
 
         <script type="text/javascript" src="<?= base_url('NewAssets/templateJs')?>"></script>
         <script type="text/javascript" src="<?= base_url('NewAssets/bootstrapJs')?>"></script>
@@ -44,6 +44,11 @@
                             <div class="menu_section">
                                 <ul class="nav side-menu">
                                     <li>
+                                        <a href="<?= base_url('forms')?>">
+                                            <i class="fa fa-plus"></i> Add Couple
+                                        </a>
+                                    </li>
+                                    <li>
                                         <a href="<?= base_url('menu')?>">
                                             <i class="fa fa-hourglass-start"></i> Pending
                                         </a>
@@ -57,9 +62,15 @@
                                         <a>
                                             <i class="fa fa-file-text-o"></i> Summary
                                         </a>
+                                        <ul class="nav child_menu">
+                                            <li><a href="<?= base_url('menu/summary')?>">Accomplishment Report</a></li>
+                                            <li><a href="<?= base_url('forms/formA')?>">Form A</a></li>
+                                            <li><a href="<?= base_url('forms/formB')?>">Form B</a></li>
+                                            <li><a href="<?= base_url('forms/formC')?>">Form C</a></li>
+                                        </ul>
                                     </li>
                                     <li>
-                                        <a href="<?= base_url('logoffUser')?>">
+                                        <a href="<?= base_url('login/logoffUser')?>">
                                             <i class="fa fa-sign-out"></i> Logout
                                         </a>
                                     </li>

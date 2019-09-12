@@ -8,7 +8,10 @@
 	font-size: 12px;
 }
 .text-bold {
-	font-weight: 700;
+	font-weight: bold;
+}
+.text-italic {
+	font-style: italic;
 }
 .underline {
 	border-bottom: solid 1px;
@@ -123,6 +126,9 @@
 }
 .padding-r8p {
 	padding-right: 8%;
+}
+.padding-r10 {
+	padding-right: 10px;
 }
 .padding-r15p {
 	padding-right: 15%;
@@ -331,6 +337,9 @@ a:hover {
 .btn-slip:hover {
     color: #2A3F54;
     background: #fff;
+}
+.btn-import {
+	cursor: pointer;
 }
 
 /*------------------------------------------------------------------

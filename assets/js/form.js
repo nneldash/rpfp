@@ -8,7 +8,15 @@ $(function() {
 		});
 	});
 
-  	$('td:first-child input').change(function() {
+	$('.btn-import').click(function() {
+		$.post(base_url + '/menu/importExcel')
+		.done(function(html){
+			$('#importModal').modal();
+			$('#importModal').find('.modal-body').html();
+		});
+	});
+
+  	$('td:first-child input[value="attended"]').change(function() {
     	$(this).closest('tr').toggleClass("highlight", this.checked);
     	$(this).closest('tr').next('tr').toggleClass("highlight", this.checked);
   	});
