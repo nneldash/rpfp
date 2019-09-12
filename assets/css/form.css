@@ -309,12 +309,12 @@ a:hover {
     text-decoration: none;
     color: #57b846;
 }
-#mybutton {
+#rightButton {
     position: fixed;
     top: 3%;
     right: 2%;
 }
-#myPrintButton {
+#leftButton {
 	position: fixed;
 	top: 3%;
 	left: 2%;

@@ -42,7 +42,7 @@ $this->load->library('helpers/HtmlHelper');
 		</div>
 		<form id="form_validation" class="form-horizontal">
 			<?php if(!$is_pdf) : ?>
-		        <div id="myPrintButton">
+		        <div id="leftButton">
 		        	<a href="<?= base_url('forms/viewforma') ?>" class="save printForm1" target="_blank">
                         <span>PRINT</span>
                     </a>
