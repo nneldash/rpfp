@@ -1,5 +1,17 @@
 var base_url = window.location.origin + '/rpfp';
 $(function() {
+  	serviceModal();
+  	importModal();
+  	highlight();
+	saveForm1();
+	saveServiceSlip();
+	inputValid();
+	inputValidations();
+	checkBox();
+});
+
+function serviceModal()
+{
 	$('.btn-slip').click(function() {
 		$.post(base_url + '/forms/serviceSlip')
 		.done(function(html){
@@ -7,7 +19,10 @@ $(function() {
 			$('#menuModal').find('.modal-body').html(html);
 		});
 	});
+}
 
+function importModal() 
+{
 	$('.btn-import').click(function() {
 		$.post(base_url + '/menu/importExcel')
 		.done(function(html){
@@ -15,18 +30,18 @@ $(function() {
 			$('#importModal').find('.modal-body').html();
 		});
 	});
+}
 
-  	$('td:first-child input[value="attended"]').change(function() {
+function highlight()
+{
+	$('td:first-child input[value="aproveCouple"]').change(function() {
     	$(this).closest('tr').toggleClass("highlight", this.checked);
     	$(this).closest('tr').next('tr').toggleClass("highlight", this.checked);
   	});
+}
 
-	saveForm1();
-	saveServiceSlip();
-	inputValid();
-});
-
-function inputValid() {
+function inputValid() 
+{
 	if ($('#others').is(':checked')) {
 		$('.disabled-others').removeAttr('disabled');
 	} else {
@@ -96,4 +111,27 @@ function saveServiceSlip()
 		return false;
 	});
 
+}
+
+function inputValidations()
+{
+	$('.sexValid').keyup(function(){
+		var input = this.value;
+		// console.log(input);
+		if(input != 'm' || input != 'f' || input != 'M' || input != 'F') {
+			alert('huhu');
+		} else {
+			alert('okay');
+		}
+	});
+}
+
+function checkBox()
+{
+	$('#checkAll').click(function() {
+        var checked = $(this).prop('checked');
+        $('.approveCheck').find('.check').prop('checked', checked);
+    	$('td:first-child input[value="aproveCouple"]').closest('tr').toggleClass("highlight", this.checked);
+    	$('td:first-child input[value="aproveCouple"]').closest('tr').next('tr').toggleClass("highlight", this.checked);
+    });
 }

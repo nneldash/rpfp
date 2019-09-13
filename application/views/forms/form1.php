@@ -111,16 +111,18 @@ $this->load->library('helpers/HtmlHelper');
 							<span class="small">Class No.:</span>
 						</td>
 						<td class="padding-r15p border-0">
-							<?php
-	                            echo HtmlHelper::inputPdf(
-	                                $is_pdf,
-	                                $form1->Seminar->ClassNumber,
-	                                "text",
-	                                "class_no",
-	                                "padding-l10 underline width-70",
-	                                ""
-	                            );
-	                        ?>
+							<span class="small">
+								<?php
+		                            echo HtmlHelper::inputPdf(
+		                                $is_pdf,
+		                                $form1->Seminar->ClassNumber,
+		                                "text",
+		                                "class_no",
+		                                "padding-l10 underline width-70",
+		                                ""
+		                            );
+		                        ?>
+	                        </span>
 						</td>
 					</tr>
 					<tr>
@@ -152,16 +154,18 @@ $this->load->library('helpers/HtmlHelper');
 							<span class="small">Prov/City/Mun.:</span>
 						</td>
 						<td class="border-0">
-							<?php
-	                            echo HtmlHelper::inputPdf(
-	                                $is_pdf,
-	                                $form1->Seminar->Province,
-	                                "text",
-	                                "province",
-	                                "padding-l10 underline width-70",
-	                                ""
-	                            );
-	                        ?>
+							<span class="small">
+								<?php
+		                            echo HtmlHelper::inputPdf(
+		                                $is_pdf,
+		                                $form1->Seminar->Province,
+		                                "text",
+		                                "province",
+		                                "padding-l10 underline width-70",
+		                                ""
+		                            );
+		                        ?>
+		                    </span>
 						</td> 
 					</tr>
 					<tr>
@@ -204,16 +208,18 @@ $this->load->library('helpers/HtmlHelper');
 							<span class="small">Barangay:</span>
 						</td>
 						<td class="border-0">
-							<?php
-	                            echo HtmlHelper::inputPdf(
-	                                $is_pdf,
-	                                $form1->Seminar->Barangay,
-	                                "text",
-	                                "barangay",
-	                                "padding-l10 underline width-70",
-	                                ""
-	                            );
-	                        ?>
+							<span class="small">
+								<?php
+		                            echo HtmlHelper::inputPdf(
+		                                $is_pdf,
+		                                $form1->Seminar->Barangay,
+		                                "text",
+		                                "barangay",
+		                                "padding-l10 underline width-70",
+		                                ""
+		                            );
+		                        ?>
+		                    </span>
 						</td>
 					</tr>
 					<tr>
@@ -236,16 +242,18 @@ $this->load->library('helpers/HtmlHelper');
 							<span class="small">Date Conducted:</span>
 						</td>
 						<td class="border-0">
-							<?php
-	                            echo HtmlHelper::inputPdf(
-	                                $is_pdf,
-	                                $form1->Seminar->DateConducted,
-	                                "date",
-	                                "date_conducted",
-	                                "padding-l10 underline width-70",
-	                                ""
-	                            );
-	                        ?>
+							<span class="small">
+								<?php
+		                            echo HtmlHelper::inputPdf(
+		                                $is_pdf,
+		                                $form1->Seminar->DateConducted,
+		                                "date",
+		                                "date_conducted",
+		                                "padding-l10 underline width-70",
+		                                ""
+		                            );
+		                        ?>
+		                    </span>
 						</td>
 					</tr>
 				</table>
@@ -257,9 +265,10 @@ $this->load->library('helpers/HtmlHelper');
 							<tr>
 								<?php if (!$is_pdf): ?>
 									<th rowspan="2" class="text-center">
-										<p class="small">
-											<b>Approve Couple</b>
-										</p>
+										<label class="cont back-eee checkApprove" style="height: 37px;">
+											<input type="checkbox" name="type" id="checkAll" />
+											<span class="checkmark"></span>
+										</label>
 									</th>
 								<?php endif; ?>
 								<th rowspan="2" style="border-left: none; width: 2%;"></th>
@@ -382,11 +391,11 @@ $this->load->library('helpers/HtmlHelper');
 						</thead>
 						<tbody>
 							<?php for($i = 0; $i <= 9; $i++): ?>
-								<tr>
+								<tr class="approveCheck">
 									<?php if (!$is_pdf): ?>
-										<td rowspan="2">
+										<td rowspan="2" class="back-eee">
 											<label class="cont">
-												<input type="checkbox" name="type" value="attended" />
+												<input class="check" type="checkbox" name="type" value="aproveCouple" />
 												<span class="checkmark"></span>
 											</label>
 										</td>
@@ -413,7 +422,7 @@ $this->load->library('helpers/HtmlHelper');
 				                                "",
 				                                "text",
 				                                "sex1[".$i."]",
-				                                "text-center",
+				                                "text-center sexValid",
 				                                "1"
 				                            );
 				                        ?>
@@ -538,7 +547,7 @@ $this->load->library('helpers/HtmlHelper');
 				                            );
 				                        ?>
 									</td>
-									<td class="small" style="border-right: none; padding: 0">
+									<td class="small <?php if (!$is_pdf): ?> back-eee <?php endif;?>" style="border-right: none; padding: 0">
 										<?php if (!$is_pdf) : ?>
 											<label class="cont">
 												<input type="checkbox" name="type" value="attended" />
@@ -613,7 +622,7 @@ $this->load->library('helpers/HtmlHelper');
 			                            );
 			                        ?>
 									</td>
-									<td class="small" style="border-right: none; padding: 0">
+									<td class="small back-eee" style="border-right: none; padding: 0">
 										<?php if (!$is_pdf) : ?>
 											<label class="cont">
 												<input type="checkbox" name="type" value="attended" />
