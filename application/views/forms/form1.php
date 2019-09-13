@@ -38,14 +38,12 @@ $this->load->library('helpers/HtmlHelper');
 				<p class="small">RPFP FORM 1</p>
 			</div>
 		</div>
-		<div class="border-t1 flex">
-			<p class="small padding-l5 padding-r30">
-				<b>DISCLAIMER:</b>
-				We hereby certify that we have read and understood the Notice on Privacy's and Disclosure written on the dorsal part 
-				of this Responsible Parenthood and Family Planning (RPFP) Form and by signing and submitting this, we hereby grant the 
-				Commission on Population (POPCOM), or any of its authorized agents and partners, the authority to collect, obtain, store 
-				and process the personal information that we provide below for the purpose/s of 
-			</p>
+		<div class="border-t1 block small padding-l5 padding-r30">
+			<b>DISCLAIMER:</b>
+			We hereby certify that we have read and understood the Notice on Privacy's and Disclosure written on the dorsal part 
+			of this Responsible Parenthood and Family Planning (RPFP) Form and by signing and submitting this, we hereby grant the 
+			Commission on Population (POPCOM), or any of its authorized agents and partners, the authority to collect, obtain, store 
+			and process the personal information that we provide below for the purpose/s of
 			<?php
                 echo HtmlHelper::inputPdf(
                     $is_pdf,
@@ -393,7 +391,7 @@ $this->load->library('helpers/HtmlHelper');
 							<?php for($i = 0; $i <= 9; $i++): ?>
 								<tr class="approveCheck">
 									<?php if (!$is_pdf): ?>
-										<td rowspan="2" class="back-eee">
+										<td rowspan="2" class="back-eee padding-0">
 											<label class="cont">
 												<input class="check" type="checkbox" name="type" value="aproveCouple" />
 												<span class="checkmark"></span>
@@ -551,7 +549,7 @@ $this->load->library('helpers/HtmlHelper');
 										<?php if (!$is_pdf) : ?>
 											<label class="cont">
 												<input type="checkbox" name="type" value="attended" />
-												<span class="checkmark"></span>
+												<span class="checkmark height-34"></span>
 											</label>
 										<?php endif; ?>
 									</td>
@@ -626,7 +624,7 @@ $this->load->library('helpers/HtmlHelper');
 										<?php if (!$is_pdf) : ?>
 											<label class="cont">
 												<input type="checkbox" name="type" value="attended" />
-												<span class="checkmark"></span>
+												<span class="checkmark height-35"></span>
 											</label>
 										<?php endif; ?>
 									</td>
