@@ -178,13 +178,16 @@ class Forms extends CI_Controller
 
     public function viewform1()
     {
+        $this->load->model('FormModel');
+        $form1 = $this->FormModel->getForm1();
+        
         $mpdfConfig = array(
                 'format' => 'A4',
                 'orientation' => 'L'
             );
         
         $mpdf = new \Mpdf\Mpdf($mpdfConfig);
-        $html = $this->load->view('forms/form1', array('is_pdf' => true), true);
+        $html = $this->load->view('forms/form1', array('form1' => $form1, 'is_pdf' => true), true);
 
         $mpdf->WriteHTML($html);
         $mpdf->Output('Form1.pdf', 'I');

@@ -161,7 +161,7 @@
 }
 .table-bordered th, 
 .table thead th {
-	padding: 0;
+	padding: 0!important;
 }
 
 /*------------------------------------------------------------------
@@ -276,7 +276,8 @@ input:focus {
 	display: block;
 }
 .cont .checkmark:after {
-	left: 34px;
+	/*left: 34px;*/
+	left: 45%;
 	top: 13px;
 	width: 6px;
 	height: 10px;
@@ -297,6 +298,10 @@ input:focus {
 	-ms-transform: rotate(45deg);
 	transform: rotate(45deg);
 }
+
+/*.signature {
+	border: 1px solid #2a3e53;
+}*/
 
 /*------------------------------------------------------------------
 [ Buttons ]*/
