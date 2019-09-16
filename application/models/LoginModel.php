@@ -58,7 +58,7 @@ class LoginModel extends CI_Model
         return true;
     }
 
-    public function getCredentials(): UserCredentialsInterface
+    private function getCredentials(): UserCredentialsInterface
     {
         $credentials = new BasicUserCredentials();
 
@@ -75,7 +75,7 @@ class LoginModel extends CI_Model
         return $credentials;
     }
 
-    public function clearCredentials()
+    private function clearCredentials()
     {
         unset($_SESSION[THEUSERNAME]);
         unset($_SESSION[THEUSERPASSWORD]);
@@ -169,7 +169,7 @@ class LoginModel extends CI_Model
         return true;
     }
 
-    public function runStoredProc($stored_proc, $params = false)
+    private function runStoredProc($stored_proc, $params = false)
     {
         $customQuery = 'CALL rpfp.' . $stored_proc;
         $result = $this->runQuery($customQuery, $params);
@@ -207,30 +207,16 @@ class LoginModel extends CI_Model
         );
     }
 
-    public function getProfileId(): string
+    public function isDeactivated()
     {
+        if (!$this->isLoggedIn()) {
+            return true;
+        }
+        return !$this->runTrueFalseQuery('check_if_active', array());
     }
 
-    public function getCurrentUser(): string
+    public function getCurrentUser()
     {
         $this->CI->session->get_userdata(USERNAME);
-    }
-
-    public function isEncoder()
-    {
-        if (!$this->isLoggedIn()) {
-            return false;
-        }
-        /* TODO: Check if user is an encoder call rpfp.enc_check_if_encoder()*/
-        return true;
-    }
-
-    public function isRegionalManager()
-    {
-        if (!$this->isLoggedIn()) {
-            return false;
-        }
-        /* TODO: Check if user is an hr call rpfp.enc_check_if_rm()*/
-        return true;
     }
 }

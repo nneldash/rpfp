@@ -10,6 +10,10 @@ class Login extends CI_Controller
 
     private function captcha($captcha_response)
     {
+        /** DURING DEVELOPMENT, CAPTCHA WILL SHOULD RETURN TRUE
+         *  Remove the following line before deployment
+         * */
+        return true; // remove this
         $client_response = $this->input->post(CAPTCHA_RESPONSE);
         if(!$client_response) {
             return false;
@@ -79,7 +83,6 @@ class Login extends CI_Controller
             }
         }
 
-
         /* GET USER INPUT */
         $this->load->library('login/BasicUserCredentials');
         $cred = $this->basicusercredentials;
@@ -108,7 +111,14 @@ class Login extends CI_Controller
                 return;
             }
         }
-        redirect(site_url('forms'));
+
+        /* CHECK IF ACTIVE */
+        if (!$this->LoginModel->isDeactivated()) {
+            $this->logoffUser();
+            return;
+        }
+
+        redirect(site_url());
     }
 
     public function logoffUser()
