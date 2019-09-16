@@ -118,10 +118,10 @@ function inputValidations()
 	$('.sexValid').keyup(function(){
 		var input = this.value;
 		// console.log(input);
-		if(input != 'm' || input != 'f' || input != 'M' || input != 'F') {
-			alert('huhu');
+		if(input != 'm') {
+			// alert('huhu');
 		} else {
-			alert('okay');
+			// alert('okay');
 		}
 	});
 }
