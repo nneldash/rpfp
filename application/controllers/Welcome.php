@@ -23,6 +23,12 @@ class Welcome extends CI_Controller
             return;
         }
 
+        $this->load->Model('ProfileModel');
+        if ($this->ProfileModel->isEncoder()) {
+            redirect(site_url('Forms'));
+            return;
+        }
+
         $this->load->view("login/homepage.php");
         return;
     }

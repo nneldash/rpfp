@@ -295,14 +295,14 @@ $this->load->library('helpers/HtmlHelper');
                                 "",
                                 "text",
                                 "counseled_to_use",
-                                "padding-l10 underline width-20",
+                                "padding-l10 underline width-20 no4-input",
                                 ""
                             );
                         ?> 
                         &nbsp; &nbsp; but client is undecided
 						<p> &nbsp; (</p>
 						<label class="cont">
-							<input type="radio" name="method" value="need fp method" />
+							<input class="no4-check" type="radio" name="method" value="need fp method" />
 							<span class="smolCheck back-eee"></span>
 						</label>
 						<p>)</p>
@@ -316,7 +316,7 @@ $this->load->library('helpers/HtmlHelper');
                                 "",
                                 "text",
                                 "other_reason",
-                                "padding-l10 underline width-45",
+                                "padding-l10 underline width-45 no5-input",
                                 ""
                             );
                         ?>
@@ -403,3 +403,5 @@ $this->load->library('helpers/HtmlHelper');
 		</form>
 	</div>
 </div>
+
+<script type="text/javascript" src="<?= base_url('assets/js/serviceSlip.js')?>"></script>
