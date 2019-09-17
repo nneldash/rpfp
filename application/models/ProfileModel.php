@@ -12,12 +12,11 @@ class ProfileModel extends BaseModel
         $this->CI =& get_instance();
         $this->CI->load->library('login/DbInstance');
         $this->CI->load->library('profile/UserProfile');
-        $this->CI->load->model('LoginModel');
     }
 
     public function getProfile()
     {
-        // asdf
+        //profile_get_profile
     }
 
     public function getOwnProfile() : UserProfile
@@ -41,10 +40,12 @@ class ProfileModel extends BaseModel
                         'Code' => 'location_code',
                         'Description' => 'location_name'
                     )
-                )
+                ),
+                'Role' => 'my_role',
+                'ScopeOfWork' => 'my_scope'
             ),
-            'get_own_profile',
-            $params = array(),
+            'profile_get_own_profile',
+            array(),
             'profile'
         );
     }
@@ -54,7 +55,7 @@ class ProfileModel extends BaseModel
         if (!$this->LoginModel->isLoggedIn()) {
             return false;
         }
-        return $this->getFunctionResult('check_if_encoder');
+        return $this->getFunctionResult('profile_check_if_encoder');
     }
 
     public function isFocalPerson()
@@ -62,7 +63,7 @@ class ProfileModel extends BaseModel
         if (!$this->LoginModel->isLoggedIn()) {
             return false;
         }
-        return $this->getFunctionResult('check_if_focal');
+        return $this->getFunctionResult('profile_check_if_focal');
     }
 
     public function isRegionalDataManager()
@@ -70,7 +71,7 @@ class ProfileModel extends BaseModel
         if (!$this->LoginModel->isLoggedIn()) {
             return false;
         }
-        return $this->getFunctionResult('check_if_data_manager');
+        return $this->getFunctionResult('profile_check_if_data_manager');
     }
 
     public function isPMED()
@@ -78,7 +79,7 @@ class ProfileModel extends BaseModel
         if (!$this->LoginModel->isLoggedIn()) {
             return false;
         }
-        return $this->getFunctionResult('check_if_pmed');
+        return $this->getFunctionResult('profile_check_if_pmed');
     }
 
     public function isITDMU()
@@ -86,6 +87,6 @@ class ProfileModel extends BaseModel
         if (!$this->LoginModel->isLoggedIn()) {
             return false;
         }
-        return $this->getFunctionResult('check_if_itdmu');
+        return $this->getFunctionResult('profile_check_if_itdmu');
     }
 }

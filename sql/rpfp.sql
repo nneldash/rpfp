@@ -88,9 +88,9 @@ BEGIN
 
     CALL rpfp.itdmu_change_user_password(db_user, passwd);
 
-    CALL rpfp.profile_set_role(my_role, db_user);
+    CALL rpfp.profile_set_role(db_user, my_role);
 
-    CALL rpfp.profile_set_scope(scope_reg_prov_or_muni, db_user);
+    CALL rpfp.profile_set_scope(db_user, scope_reg_prov_or_muni);
 
      SELECT prof.PROFILE_ID INTO record_id_no
        FROM rpfp.user_profile prof
@@ -98,12 +98,14 @@ BEGIN
     ;
     IF record_id_no IS NULL THEN
         INSERT INTO rpfp.user_profile (
+                    DB_USER_ID,
                     LAST_NAME, 
                     FIRST_NAME,
                     REGION,
                     PSGC_CODE
         )
             VALUES (
+                    db_user,
                     surname,
                     firstname,
                     region_id,
@@ -168,7 +170,9 @@ BEGIN
     RETURN ret_val;
 END$$
 
-CREATE DEFINER=root@localhost FUNCTION login_check_first_login() RETURNS INT(1) READS SQL DATA
+CREATE DEFINER=root@localhost FUNCTION login_check_first_login()
+        RETURNS INT(1)
+        READS SQL DATA
 BEGIN
     DECLARE ret_val INT(1) DEFAULT NULL;
      SELECT TRUE INTO ret_val
@@ -216,12 +220,15 @@ BEGIN
     END IF;
 END$$
 
-CREATE DEFINER=root@localhost PROCEDURE login_update_first_login() CONTAINS SQL
+CREATE DEFINER=root@localhost PROCEDURE login_update_first_login()
+        CONTAINS SQL
 BEGIN
     CALL rpfp.itdmu_update_first_login(USER());
 END$$
 
-CREATE DEFINER=root@localhost FUNCTION login_check_if_active()  RETURNS INT(1) READS SQL DATA
+CREATE DEFINER=root@localhost FUNCTION login_check_if_active()
+        RETURNS INT(1)
+        READS SQL DATA
 BEGIN
     DECLARE ret_val INT(1) DEFAULT NULL;
      SELECT TRUE INTO ret_val
@@ -289,31 +296,106 @@ BEGIN
     RETURN default_scope;
 END$$
 
-CREATE DEFINER=root@localhost FUNCTION profile_get_scope() RETURNS INT(11)
+CREATE DEFINER=root@localhost FUNCTION profile_num_scope(
+    scope_word VARCHAR(25)
+    )   RETURNS INT(11) CONTAINS SQL
+BEGIN
+    DECLARE default_num INT(11) DEFAULT 0;
+    IF scope_word IS NOT NULL AND scope_word != "" THEN
+        CASE scope_word
+            WHEN "national" THEN
+                SET default_num := 50;
+
+            WHEN "regional" THEN
+                SET default_num := 40;
+
+            WHEN "provincial" THEN
+                SET default_num := 30;
+
+            WHEN "citiwide" THEN
+                SET default_num := 20;
+            ELSE
+                SET default_num := "0";
+        END CASE;
+    END IF;
+    RETURN default_num;
+END$$
+
+CREATE DEFINER=root@localhost FUNCTION profile_num_role(
+    role_word VARCHAR(25)
+    )   RETURNS INT(11) CONTAINS SQL
+BEGIN
+    DECLARE default_num INT(11) DEFAULT 0;
+    IF role_word IS NOT NULL THEN
+        CASE role_word
+            WHEN "itdmu" THEN
+                SET default_num := 100;
+
+            WHEN "pmed" THEN
+                SET default_num := 90;
+
+            WHEN "regional_data_manager" THEN
+                SET default_num := 80;
+
+            WHEN "focal_person" THEN
+                SET default_num := 70;
+
+            WHEN "encoder" THEN
+                SET default_num := 60;
+            ELSE 
+                SET default_num := 0;
+        END CASE;
+    END IF;
+    RETURN default_num;
+END$$
+
+CREATE DEFINER=root@localhost FUNCTION profile_get_role(
+    db_user VARCHAR(50)
+    )   RETURNS INT(11)
         CONTAINS SQL
-BEGIN    
-    IF EXISTS (SELECT rpfp.profile_check_role(USER(), 50)) THEN
-        RETURN 50; 
-    END IF;
-    
-    IF EXISTS (SELECT rpfp.profile_check_role(USER(), 40)) THEN
-        RETURN 40;
+BEGIN
+    DECLARE ret_val INT(11);
+    DECLARE role_word VARCHAR(50);
+
+     SELECT rm.ROLE INTO role_word
+       FROM mysql.ROLES_MAPPING rm
+      WHERE CONCAT(rm.USER, '@', rm.HOST) = db_user
+        AND rm.ROLE IN ('itdmu', 'pmed', 'regional_data_manager', 'focal_person', 'encoder')
+      LIMIT 1
+    ;
+
+    IF role_word IS NOT NULL THEN
+        RETURN rpfp.profile_num_role(role_word);
     END IF;
 
-    IF EXISTS (SELECT rpfp.profile_check_role(USER(), 30)) THEN
-        RETURN 30;
-    END IF;
+    RETURN 0;
+END$$
 
-    IF EXISTS (SELECT rpfp.profile_check_role(USER(), 20)) THEN
-        RETURN 20;
+CREATE DEFINER=root@localhost FUNCTION profile_get_scope(
+    db_user VARCHAR(50)
+    )   RETURNS INT(11)
+        CONTAINS SQL
+BEGIN
+    DECLARE ret_val INT(11);
+    DECLARE scope_word VARCHAR(50);
+
+     SELECT rm.ROLE INTO scope_word
+       FROM mysql.ROLES_MAPPING rm
+      WHERE CONCAT(rm.USER, '@', rm.HOST) = db_user
+        AND rm.ROLE IN ('national', 'regional', 'provincial', 'citiwide')
+      LIMIT 1
+    ;
+
+    IF scope_word IS NOT NULL THEN
+        RETURN rpfp.profile_num_scope(scope_word);
     END IF;
 
     RETURN 0;
 END$$
 
 CREATE DEFINER=root@localhost PROCEDURE profile_set_role(
-    role_num INT(11),
-    db_user VARCHAR(50)
+    db_user VARCHAR(50),
+    role_num INT(11)
     )   CONTAINS SQL
 proc_exit_point :
 BEGIN
@@ -324,7 +406,7 @@ BEGIN
     END IF;
 
     IF role_num NOT IN (60, 70, 80, 90, 100) THEN
-        SELECT "INVALID ROLE" AS MESSAGE;
+        SELECT concat("INVALID ROLE: ", role_num) AS MESSAGE;
         LEAVE proc_exit_point;
     END IF;
 
@@ -339,8 +421,8 @@ BEGIN
 END$$
 
 CREATE DEFINER=root@localhost PROCEDURE profile_set_scope(
-    scope_reg_prov_or_muni INT(11),
-    db_user VARCHAR(50)
+    db_user VARCHAR(50),
+    scope_reg_prov_or_muni INT(11)
     )   CONTAINS SQL
 proc_exit_point :    
 BEGIN
@@ -355,7 +437,6 @@ BEGIN
         SELECT "INVALID SCOPE" AS MESSAGE;
         LEAVE proc_exit_point;
     END IF;
-
 
     SET scope_role := rpfp.profile_select_scope( scope_reg_prov_or_muni );
     SET @sql_stmt6 := CONCAT("GRANT ", scope_role, " TO ", QUOTE(db_user), "@localhost");
@@ -373,7 +454,7 @@ BEGIN
 
     SELECT TRUE INTO ret_val
       FROM mysql.ROLES_MAPPING rm
-     WHERE rm.ROLE = select_role( role_num )
+     WHERE rm.ROLE = rpfp.profile_select_role( role_num )
        AND CONCAT(rm.USER, '@', rm.HOST) = db_user
      LIMIT 1  
     ;
@@ -430,6 +511,17 @@ CREATE DEFINER=root@localhost PROCEDURE profile_get_profile(
     db_user VARCHAR(50)
     )   READS SQL DATA
 BEGIN
+    DECLARE name_len INT(11);
+    DECLARE name_user VARCHAR(50);
+
+    SET name_user := db_user;
+    SET name_len := LOCATE('@', db_user, 1);
+    IF name_len > 0 THEN
+        SET name_user := SUBSTRING(db_user, 1, name_len - 1);
+    ELSE
+        SET db_user := CONCAT(db_user, '@localhost');
+    END IF;
+
      SELECT prof.PROFILE_ID id,
             prof.DB_USER_ID username,
             prof.E_MAIL email,
@@ -438,14 +530,16 @@ BEGIN
             prof.REGION region_id,
             reg.LOCATION_DESCRIPTION region_name,
             prof.PSGC_CODE location_code,
-            loc.LOCATION_DESCRIPTION location_name
+            loc.LOCATION_DESCRIPTION location_name,
+            rpfp.profile_get_role(db_user) my_role,
+            rpfp.profile_get_scope(db_user) my_scope
        FROM rpfp.user_profile prof
   LEFT JOIN rpfp.psgc_locations loc
          ON prof.PSGC_CODE = loc.PSGC_CODE
         AND prof.REGION = loc.REGION_CODE
   LEFT JOIN rpfp.psgc_locations reg
          ON reg.PSGC_CODE = (prof.REGION * POWER(10, 7))
-      WHERE prof.DB_USER_ID = db_user
+      WHERE prof.DB_USER_ID = name_user
     ;
 END$$
 
