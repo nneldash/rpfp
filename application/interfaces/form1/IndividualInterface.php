@@ -5,7 +5,7 @@ $CI->load->iface('form1/NameInterface');
 // $CI->load->iface('form/CitizenshipInterface');
 $CI->load->iface('form1/AddressInterface');
 
-abstract class IndividualInterface extends BaseInterface
+abstract class IndividualsInterface extends BaseInterface
 {
     public $Id;
     /** @var NameInterface */

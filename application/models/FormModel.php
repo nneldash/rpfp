@@ -10,6 +10,10 @@ class FormModel extends BaseModel
         $this->CI->load->library('login/DbInstance');
         $this->CI->load->library('form1/FormClass');
         $this->CI->load->library('service_slip/ServiceSlipClass');
+        $this->CI->load->library('formA/FormAClass');
+        $this->CI->load->library('formA/SessionsHeldClass');
+        $this->CI->load->library('formA/MonthsClass');
+        $this->CI->load->library('formA/IndividualsReproductiveAgeClass');
     }
 
     public function saveForm1(FormInterface $form)
@@ -211,7 +215,7 @@ class FormModel extends BaseModel
             $traditionalFp = new TraditionalFpUserClass();
 
             $traditionalFp->Type = '1';
-            $traditionalFp->Status = '2';
+            $traditionalFp->Status = '2'; 
             $traditionalFp->IntentionForUsing = '3';
 
             $couple->ListHusband->append($husband);
@@ -221,6 +225,46 @@ class FormModel extends BaseModel
             $listCouple->append($couple);
 
         return $listCouple;
+    }
+
+    public function getFormA(): FormAInterface
+    {
+        $formA = new FormAClass();
+       
+        $formA->ListMonth = $this->getMonthlyData();
+        return $formA;
+    }
+
+    public function getMonthlyData(): ListMonthsInterface
+    {
+        $listMonth = new ListMonthsClass();
+
+            $month = new MonthsClass();
+
+            $sessions = new SessionsHeldClass();
+            $sessions->SubModule = '1';
+            $sessions->Non4ps = '1';
+            $sessions->Usapan = '1';
+            $sessions->Pmc = '1';
+            $sessions->H2h = '1';
+            $sessions->ProfitedOnly = '1';
+            $sessions->Total = '1';
+
+            $individuals = new IndividualsReproductiveAgeClass();
+            $individuals->SubModule = '2';
+            $individuals->Non4ps = '2';
+            $individuals->Usapan = '2';
+            $individuals->Pmc = '2';
+            $individuals->H2h = '2';
+            $individuals->ProfitedOnly = '2';
+            $individuals->Total = '2';
+
+
+            $month->ListSessionsHeld->append($sessions);
+            $month->ListIndividualsReproductiveAge->append($individuals);
+            $listMonth->append($month);
+
+        return $listMonth;
     }
 }
 ?>

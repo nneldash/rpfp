@@ -1,6 +1,9 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 $this->load->library('helpers/HtmlHelper');
+echo '<pre>';
+print_r($forma);
+exit;
 ?>
 
 <?php if($is_pdf) { ?>
