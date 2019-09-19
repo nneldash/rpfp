@@ -13,7 +13,7 @@
         <link href="<?= base_url('NewAssets/customCss') ?>" rel="stylesheet">
 
         <link href="<?= base_url('node_modules/gentelella/vendors/font-awesome/css/font-awesome.min.css'); ?>" rel="stylesheet">
-
+        
         <script type="text/javascript" src="<?= base_url('NewAssets/templateJs')?>"></script>
         <script type="text/javascript" src="<?= base_url('NewAssets/bootstrapJs')?>"></script>
     </head>
@@ -43,6 +43,11 @@
                         <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
                             <div class="menu_section">
                                 <ul class="nav side-menu">
+                                    <li>
+                                        <a href="<?= base_url('menu/dashboard')?>">
+                                            <i class="fa fa-dashboard"></i> Dashboard
+                                        </a>
+                                    </li>
                                     <li>
                                         <a href="<?= base_url('forms')?>">
                                             <i class="fa fa-plus"></i> Add Couple
@@ -79,3 +84,9 @@
                         </div>
                     </div>
                 </div>
+                <div class="right_col" role="main">
+                    <div class="clearfix"></div>
+                    <div class="row">
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+                            <div class="x_panel">
+                                <div class="x_content">

@@ -28,7 +28,11 @@ class Menu extends CI_Controller
 
     public function importExcel()
     {
+        // $header['title'] = 'RPFP Online | Approve';
+
+        // $this->load->view('includes/header', $header);
         $this->load->view('menu/import');
+        // $this->load->view('includes/footer');
     }
 
     public function summary()
@@ -52,5 +56,14 @@ class Menu extends CI_Controller
 
         $mpdf->WriteHTML($html);
         $mpdf->Output('Summary.pdf', 'I');
+    }
+
+    public function dashboard()
+    {
+        $header['title'] = 'RPFP Online | Dashboard';
+
+        $this->load->view('includes/admin_header', $header);
+        $this->load->view('menu/dashboard');
+        $this->load->view('includes/admin_footer');
     }
 }

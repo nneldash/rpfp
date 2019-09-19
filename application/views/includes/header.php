@@ -15,6 +15,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
     <link href="<?= base_url('NewAssets/sweetalertCss') ?>" rel="stylesheet">
     <link href="<?= base_url('assets/css/main.css') ?>" rel="stylesheet">
     
-    <script type="text/javascript" src="<?= base_url('NewAssets/jquery')?>"></script>
+    <script type="text/javascript" src="</?= base_url('NewAssets/jquery')?>"></script>
 </head>
 <body>
