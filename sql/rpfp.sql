@@ -332,12 +332,19 @@ BEGIN
         SELECT concat("INVALID ROLE: ", role_num) AS MESSAGE;
         LEAVE proc_exit_point;
     END IF;
+    SELECT concat("VALID ROLE: ", role_num) AS MESSAGE;
 
+    SELECT concat("GETTING ROLE TEXT: ") AS MESSAGE;
     SET default_role := rpfp.profile_select_role(role_num);
+    SELECT concat("ROLE TEXT: ", default_role) AS MESSAGE;
+
+    SELECT concat("GRANTING ROLE: ", default_role, " TO ", db_user_name) AS MESSAGE;
+
     SET @sql_stmt4 := CONCAT("GRANT ", default_role, " TO ", db_user_name);
     PREPARE stmt4 FROM @sql_stmt4;
     EXECUTE stmt4;
 
+    SELECT concat("SETTING DEFAULT ROLE: ") AS MESSAGE;
     SET @sql_stmt5 := CONCAT("SET DEFAULT ROLE ", default_role, " FOR ", db_user_name);
     PREPARE stmt5 FROM @sql_stmt5;
     EXECUTE stmt5;
@@ -398,7 +405,7 @@ CREATE DEFINER=root@localhost FUNCTION profile_check_if_encoder() RETURNS INT(1)
 BEGIN
     DECLARE ret_val INT(1) DEFAULT NULL;
 
-    SET ret_val := rpfp.profile_check_role(USER(), 60);
+    SET ret_val := rpfp.profile_check_role(QUOTE(USER()), 60);
     RETURN ret_val;
 END$$
 
@@ -601,10 +608,10 @@ BEGIN
     SET db_user := TRIM('''' FROM db_user);
     SET db_user_name := QUOTE(db_user);
     SET name_user := db_user_name;
-    SET name_len := LOCATE('@', name_user, 1);
+    SET name_len := LOCATE('@', name_user, 2);
 
     IF name_len > 0 THEN
-        SET name_user := SUBSTRING(db_user_name, 1, name_len - 1);
+        SET name_user := SUBSTRING(db_user_name, 2, name_len - 2);
     ELSE
         SET db_user_name := CONCAT(name_user, '@localhost');
     END IF;
