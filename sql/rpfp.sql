@@ -767,16 +767,16 @@ CREATE TABLE rpfp_class (
                 CITY_ID INT(11) NOT NULL,
             BARANGAY_ID INT(11) NOT NULL,
            CLASS_NUMBER VARCHAR(50) NOT NULL,
-         DATE_CONDUCTED DATE() NOT NULL,
+         DATE_CONDUCTED DATE NOT NULL,
              PROFILE_ID INT(11) NOT NULL,
-            PRIMARY KEY (CLASS_ID)
+            PRIMARY KEY (RPFP_CLASS_ID)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 CREATE TABLE couples_pending (
              COUPLES_ID INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
           RPFP_CLASS_ID INT(11) NOT NULL,
        TYPE_PARTICIPANT VARCHAR(100),
-           DATE_ENCODED DATE(),
+           DATE_ENCODED DATE,
               IS_ACTIVE INT(1) NOT NULL DEFAULT TRUE,
             PRIMARY KEY (COUPLES_ID)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
@@ -785,7 +785,7 @@ CREATE TABLE couples_approved (
              COUPLES_ID INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
           RPFP_CLASS_ID INT(11) NOT NULL,
        TYPE_PARTICIPANT VARCHAR(100),
-           DATE_ENCODED DATE(),
+           DATE_ENCODED DATE,
               IS_ACTIVE INT(1) NOT NULL DEFAULT TRUE,
             PRIMARY KEY (COUPLES_ID)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
@@ -835,7 +835,7 @@ CREATE TABLE individual (
                  EXT_NAME VARCHAR(10),
                       AGE INT(11),
                       SEX INT(1),
-                    BDATE DATE(),
+                    BDATE DATE,
                  CIVIL_ID INT(1),
             ADDRESS_NO_ST VARCHAR(50),
              ADDRESS_BRGY VARCHAR(50),
@@ -864,17 +864,17 @@ REASON_INTENDING_USE_ID INT(11),
 CREATE TABLE fp_service (
           FP_SERVICE_ID INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
              COUPLES_ID INT(11) NOT NULL,
-             DATE_VISIT DATE() UNSIGNED,
+             DATE_VISIT DATE,
            FP_SERVED_ID INT(11),
        PROVIDER_TYPE_ID INT(11),
           IS_COUNSELING INT(1),
           OTHER_CONCERN VARCHAR(100),
     IS_PROVIDED_SERVICE INT(1),
-            DATE_SERVED DATE(),
+            DATE_SERVED DATE,
           CLIENT_ADVISE VARCHAR(100),
           REFERRAL_NAME VARCHAR(100),
           PROVIDER_NAME VARCHAR(100),
-           DATE_ENCODED DATE(),
+           DATE_ENCODED DATE,
             PRIMARY KEY (FP_SERVICE_ID)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
