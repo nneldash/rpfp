@@ -493,7 +493,6 @@ END$$
 
 
 CREATE DEFINER=root@localhost PROCEDURE profile_save_own_profile(
-    IN db_user VARCHAR(50) CHARSET utf8 COLLATE utf8_unicode_ci,
     IN surname VARCHAR(50) CHARSET utf8 COLLATE utf8_unicode_ci,
     IN firstname VARCHAR(50) CHARSET utf8 COLLATE utf8_unicode_ci,
     IN email VARCHAR(100) CHARSET utf8 COLLATE utf8_unicode_ci
