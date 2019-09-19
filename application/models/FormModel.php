@@ -14,6 +14,8 @@ class FormModel extends BaseModel
         $this->CI->load->library('formA/SessionsHeldClass');
         $this->CI->load->library('formA/MonthsClass');
         $this->CI->load->library('formA/IndividualsReproductiveAgeClass');
+        $this->CI->load->library('formA/SoloCoupleDisaggregationClass');
+        $this->CI->load->library('formA/SoloAttendeesClass');
     }
 
     public function saveForm1(FormInterface $form)
@@ -240,6 +242,7 @@ class FormModel extends BaseModel
         $listMonth = new ListMonthsClass();
 
             $month = new MonthsClass();
+            $month->Month = '1';
 
             $sessions = new SessionsHeldClass();
             $sessions->SubModule = '1';
@@ -259,9 +262,16 @@ class FormModel extends BaseModel
             $individuals->ProfitedOnly = '2';
             $individuals->Total = '2';
 
+            $disaggregation = new SoloCoupleDisaggregationClass();
+            $disaggregation->CoupleAttendees = '5';
+            // $disaggregation->ListSoloAttendees->Male = '5';
+            // $disaggregation->ListSoloAttendees->Female = '5';
 
+
+ 
             $month->ListSessionsHeld->append($sessions);
             $month->ListIndividualsReproductiveAge->append($individuals);
+            $month->ListSoloCoupleDisaggregation->append($disaggregation);
             $listMonth->append($month);
 
         return $listMonth;
