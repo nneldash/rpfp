@@ -2,13 +2,13 @@
 defined('BASEPATH') or exit('No direct script access allowed');
 $CI =& get_instance();
 $CI->load->iface('base/ListBase');
-$CI->load->iface('formA/FemaleAttendeesInterface');
+$CI->load->iface('formA/SoloAttendeesInterface');
 
-abstract class ListFemaleAttendeesInterface extends ListBase
+abstract class ListSoloAttendeesInterface extends ListBase
 {
     public function __construct()
     {
         parent::__construct();
-        $this->baseInterface = 'FemaleAttendeesInterface';
+        $this->baseInterface = 'SoloAttendeesInterface';
     }
 }
