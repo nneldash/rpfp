@@ -14,6 +14,7 @@ $this->load->library('helpers/HtmlHelper');
 		}
 	</style>
 <?php } else { ?>
+	<link href="<?= base_url('node_modules/gentelella/vendors/font-awesome/css/font-awesome.min.css'); ?>" rel="stylesheet">
 	<style>
 		.table-bordered > tbody > tr > td,
 		.table-bordered > thead > tr > th,
@@ -56,9 +57,10 @@ $this->load->library('helpers/HtmlHelper');
             ?>
 		</div>
 		<form id="form_validation" class="form-horizontal">
+			<input type="text" value="<?= $status; ?>" class="formStatus" />
 			<?php if(!$is_pdf) : ?>
-				<div id="rightButton">					
-		            <input type="submit" class="save saveForm1" value="SAVE" name="saveform1" />
+				<div id="rightButton" style="text-transform: none; ">					
+		            <input type="submit" class="save saveForm1" value="Save" name="saveform1" />
 		        </div>
 
 		        <div id="leftButton">
@@ -71,7 +73,6 @@ $this->load->library('helpers/HtmlHelper');
 							<li><a href="<?= base_url('menu')?>">Pending</a></li>
 							<li><a href="<?= base_url('menu/approve')?>">Approved</a></li>
 							<li><a class="btn-import">Import Excel</a></li>
-							<li><a href="#">Summary</a></li>
 							<li><a href="<?= base_url('login/logoffUser')?>">Logout</a></li>
 						</ul>
 					</div>
@@ -555,7 +556,9 @@ $this->load->library('helpers/HtmlHelper');
 									</td>
 									<?php if(!$is_pdf): ?>
 										<td class="small text-center" rowspan="2">
-											<button class="btn-slip">Service Slip</button>
+											<button class="btn-slip" data-toggle="tooltip" data-placement="left" title="View Service Slip">
+												<i class="fa fa-file"></i>
+											</button>
 										</td>
 									<?php endif; ?>
 								</tr>

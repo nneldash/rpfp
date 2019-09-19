@@ -22,7 +22,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 								<th>Encoded By</th>
 								<th>Location</th>
 								<th>Couple</th>
-								<th>Action</th>
+								<th style="width: 10%;">Action</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -39,9 +39,15 @@ defined('BASEPATH') or exit('No direct script access allowed');
 								</td>
 								<td class="text-center">
 									<a href="<?= base_url('forms'); ?>" target="_blank">
-										<button class="btn btn-primary">Edit</button>
+										<button class="btn btn-primary" data-toggle="tooltip" data-placement="left" title="Edit">
+											<i class="fa fa-edit"></i>
+										</button>
 									</a>
-									<button class="btn btn-primary">View</button>
+									<a class="viewForm" href="<?= base_url('forms'); ?>" target="_blank">
+										<button class="btn btn-primary" data-toggle="tooltip" data-placement="right" title="View">
+											<i class="fa fa-folder-open-o"></i>
+										</button>
+									</a>
 								</td>
 							</tr>
 							<tr>
@@ -57,9 +63,15 @@ defined('BASEPATH') or exit('No direct script access allowed');
 								</td>
 								<td class="text-center">
 									<a href="<?= base_url('forms'); ?>" target="_blank">
-										<button class="btn btn-primary">Edit</button>
+										<button class="btn btn-primary" data-toggle="tooltip" data-placement="left" title="Edit">
+											<i class="fa fa-edit"></i>
+										</button>
 									</a>
-									<button class="btn btn-primary">View</button>
+									<a class="viewForm" href="<?= base_url('forms'); ?>" target="_blank">
+										<button class="btn btn-primary" data-toggle="tooltip" data-placement="right" title="View">
+											<i class="fa fa-folder-open-o"></i>
+										</button>
+									</a>
 								</td>
 							</tr>
 							<tr>
@@ -75,9 +87,15 @@ defined('BASEPATH') or exit('No direct script access allowed');
 								</td>
 								<td class="text-center">
 									<a href="<?= base_url('forms'); ?>" target="_blank">
-										<button class="btn btn-primary">Edit</button>
+										<button class="btn btn-primary" data-toggle="tooltip" data-placement="left" title="Edit">
+											<i class="fa fa-edit"></i>
+										</button>
 									</a>
-									<button class="btn btn-primary">View</button>
+									<a class="viewForm" href="<?= base_url('forms'); ?>" target="_blank">
+										<button class="btn btn-primary" data-toggle="tooltip" data-placement="right" title="View">
+											<i class="fa fa-folder-open-o"></i>
+										</button>
+									</a>
 								</td>
 							</tr>
 							<tr>
@@ -93,9 +111,15 @@ defined('BASEPATH') or exit('No direct script access allowed');
 								</td>
 								<td class="text-center">
 									<a href="<?= base_url('forms'); ?>" target="_blank">
-										<button class="btn btn-primary">Edit</button>
+										<button class="btn btn-primary" data-toggle="tooltip" data-placement="left" title="Edit">
+											<i class="fa fa-edit"></i>
+										</button>
 									</a>
-									<button class="btn btn-primary">View</button>
+									<a class="viewForm" href="<?= base_url('forms'); ?>" target="_blank">
+										<button class="btn btn-primary" data-toggle="tooltip" data-placement="right" title="View">
+											<i class="fa fa-folder-open-o"></i>
+										</button>
+									</a>
 								</td>
 							</tr>
 							<tr>
@@ -111,9 +135,15 @@ defined('BASEPATH') or exit('No direct script access allowed');
 								</td>
 								<td class="text-center">
 									<a href="<?= base_url('forms'); ?>" target="_blank">
-										<button class="btn btn-primary">Edit</button>
+										<button class="btn btn-primary" data-toggle="tooltip" data-placement="left" title="Edit">
+											<i class="fa fa-edit"></i>
+										</button>
 									</a>
-									<button class="btn btn-primary">View</button>
+									<a class="viewForm" href="<?= base_url('forms'); ?>" target="_blank">
+										<button class="btn btn-primary" data-toggle="tooltip" data-placement="right" title="View">
+											<i class="fa fa-folder-open-o"></i>
+										</button>
+									</a>
 								</td>
 							</tr>
 							<tr>
@@ -129,9 +159,15 @@ defined('BASEPATH') or exit('No direct script access allowed');
 								</td>
 								<td class="text-center">
 									<a href="<?= base_url('forms'); ?>" target="_blank">
-										<button class="btn btn-primary">Edit</button>
+										<button class="btn btn-primary" data-toggle="tooltip" data-placement="left" title="Edit">
+											<i class="fa fa-edit"></i>
+										</button>
 									</a>
-									<button class="btn btn-primary">View</button>
+									<a class="viewForm" href="<?= base_url('forms'); ?>" target="_blank">
+										<button class="btn btn-primary" data-toggle="tooltip" data-placement="right" title="View">
+											<i class="fa fa-folder-open-o"></i>
+										</button>
+									</a>
 								</td>
 							</tr>
 							<tr>
@@ -147,9 +183,15 @@ defined('BASEPATH') or exit('No direct script access allowed');
 								</td>
 								<td class="text-center">
 									<a href="<?= base_url('forms'); ?>" target="_blank">
-										<button class="btn btn-primary">Edit</button>
+										<button class="btn btn-primary" data-toggle="tooltip" data-placement="left" title="Edit">
+											<i class="fa fa-edit"></i>
+										</button>
 									</a>
-									<button class="btn btn-primary">View</button>
+									<a class="viewForm" href="<?= base_url('forms'); ?>" target="_blank">
+										<button class="btn btn-primary" data-toggle="tooltip" data-placement="right" title="View">
+											<i class="fa fa-folder-open-o"></i>
+										</button>
+									</a>
 								</td>
 							</tr>
 						</tbody>
@@ -160,6 +202,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 	</div>
 </div>
 
+<script type="text/javascript" src="<?= base_url('assets/js/form.js')?>"></script>
 <script type="text/javascript" src="<?= base_url('NewAssets/datatableJs')?>"></script>
 <script type="text/javascript" src="<?= base_url('NewAssets/datatableBtJs')?>"></script>
 <script type="text/javascript" src="<?= base_url('NewAssets/datatableRpJs')?>"></script>

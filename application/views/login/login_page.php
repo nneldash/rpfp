@@ -19,6 +19,7 @@
                         <h4>RPFP Online Login</h4>
                     </span>
                     <div class="form-group wrap-input100 validate-input">
+                        
                         <input class="input100 form-control" type="text"
                                 name="<?=POST_USERNAME?>" placeholder="Username"
                         required />
@@ -42,6 +43,9 @@
                         <button type="submit" class="login100-form-btn">
                             Login
                         </button>
+                    </div>
+                    <div class="errors">
+                        <?php echo validation_errors(); ?>
                     </div>
                 </form>
             </div>

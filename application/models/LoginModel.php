@@ -38,7 +38,7 @@ class LoginModel extends CI_Model
         $db = &$connection->database;
         $db->close();
 
-        if (!$connected) {
+        if (!$connected || $connected === N_A) {
             return false;
         }
 
@@ -75,7 +75,7 @@ class LoginModel extends CI_Model
         return $credentials;
     }
 
-    private function clearCredentials()
+    public function clearCredentials()
     {
         unset($_SESSION[THEUSERNAME]);
         unset($_SESSION[THEUSERPASSWORD]);
@@ -212,7 +212,7 @@ class LoginModel extends CI_Model
         if (!$this->isLoggedIn()) {
             return true;
         }
-        return !$this->runTrueFalseQuery('check_if_active', array());
+        return !$this->runTrueFalseQuery('login_check_if_active', array());
     }
 
     public function getCurrentUser()

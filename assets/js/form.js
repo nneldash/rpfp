@@ -8,6 +8,7 @@ $(function() {
 	inputValid();
 	inputValidations();
 	checkBox();
+	status();
 });
 
 function serviceModal()
@@ -27,7 +28,7 @@ function importModal()
 		$.post(base_url + '/menu/importExcel')
 		.done(function(html){
 			$('#importModal').modal();
-			$('#importModal').find('.modal-body').html();
+			$('#importModal').find('.modal-body').html(html);
 		});
 	});
 }
@@ -103,9 +104,17 @@ function saveServiceSlip()
 			url: base_url + '/forms/saveServiceSlip'
 		}).done(function(result){
 			if(result.is_save == true) {
-				alert('Nixie, ayaw gumana nung Toast.fire');
+				Toast.fire({
+					type: 'success',
+					title: 'Service Slip successfully saved!'
+				});
+				// alert('Nixie, ayaw gumana nung Toast.fire');
 			} else {
-				alert('Nixie, ayaw gumana nung Toast.fire');
+				Toast.fire({
+					type: 'error',
+					title: 'An error occurred.'
+				});
+				// alert('Nixie, ayaw gumana nung Toast.fire');
 			}
 		});
 		return false;
@@ -134,4 +143,16 @@ function checkBox()
     	$('td:first-child input[value="aproveCouple"]').closest('tr').toggleClass("highlight", this.checked);
     	$('td:first-child input[value="aproveCouple"]').closest('tr').next('tr').toggleClass("highlight", this.checked);
     });
+}
+
+function status()
+{
+	$('.viewForm').click(function(){
+		var status = 'view';
+		$.post(base_url + '/forms?&status=view', {'status':status})
+		.done(function(html) {
+			// alert(html);
+			$('.formStatus').val(status);
+		});
+	});
 }

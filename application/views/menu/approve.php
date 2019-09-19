@@ -23,7 +23,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 								<th>Encoded By</th>
 								<th>Location</th>
 								<th>Couple</th>
-								<th>Action</th>
+								<th style="width: 10%">Action</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -40,7 +40,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
 								</td>
 								<td class="text-center">
 									<a href="<?= base_url('forms'); ?>" target="_blank">
-										<button class="btn btn-primary">View</button>
+										<button class="btn btn-primary" data-toggle="tooltip" data-placement="right" title="View">
+											<i class="fa fa-folder-open-o"></i>
+										</button>
 									</a>
 								</td>
 							</tr>
@@ -57,7 +59,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
 								</td>
 								<td class="text-center">
 									<a href="<?= base_url('forms'); ?>" target="_blank">
-										<button class="btn btn-primary">View</button>
+										<button class="btn btn-primary" data-toggle="tooltip" data-placement="right" title="View">
+											<i class="fa fa-folder-open-o"></i>
+										</button>
 									</a>
 								</td>
 							</tr>
@@ -74,7 +78,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
 								</td>
 								<td class="text-center">
 									<a href="<?= base_url('forms'); ?>" target="_blank">
-										<button class="btn btn-primary">View</button>
+										<button class="btn btn-primary" data-toggle="tooltip" data-placement="right" title="View">
+											<i class="fa fa-folder-open-o"></i>
+										</button>
 									</a>
 								</td>
 							</tr>
@@ -91,7 +97,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
 								</td>
 								<td class="text-center">
 									<a href="<?= base_url('forms'); ?>" target="_blank">
-										<button class="btn btn-primary">View</button>
+										<button class="btn btn-primary" data-toggle="tooltip" data-placement="right" title="View">
+											<i class="fa fa-folder-open-o"></i>
+										</button>
 									</a>
 								</td>
 							</tr>
@@ -108,7 +116,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
 								</td>
 								<td class="text-center">
 									<a href="<?= base_url('forms'); ?>" target="_blank">
-										<button class="btn btn-primary">View</button>
+										<button class="btn btn-primary" data-toggle="tooltip" data-placement="right" title="View">
+											<i class="fa fa-folder-open-o"></i>
+										</button>
 									</a>
 								</td>
 							</tr>
@@ -125,7 +135,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
 								</td>
 								<td class="text-center">
 									<a href="<?= base_url('forms'); ?>" target="_blank">
-										<button class="btn btn-primary">View</button>
+										<button class="btn btn-primary" data-toggle="tooltip" data-placement="right" title="View">
+											<i class="fa fa-folder-open-o"></i>
+										</button>
 									</a>
 								</td>
 							</tr>
@@ -142,7 +154,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
 								</td>
 								<td class="text-center">
 									<a href="<?= base_url('forms'); ?>" target="_blank">
-										<button class="btn btn-primary">View</button>
+										<button class="btn btn-primary" data-toggle="tooltip" data-placement="right" title="View">
+											<i class="fa fa-folder-open-o"></i>
+										</button>
 									</a>
 								</td>
 							</tr>
