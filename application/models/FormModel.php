@@ -173,60 +173,149 @@ class FormModel extends BaseModel
     {
        $seminar = new SeminarClass();
 
-       $seminar->TypeOfClass = '4ps';
-       $seminar->ClassNumber = '12345';
-       $seminar->Province = 'Bulacan';
-       $seminar->Barangay = 'Sta.Ana';
-       $seminar->DateConducted = '09/10/2019';
+       return $this->fromDbGetSpecific(
+           'SeminarClass',
+           array(
+                'TypeOfClass' => 'type_of_class',
+                'ClassNumber' => 'class_number',
+                'Province' => 'province',
+                'Barangay' => 'barangay',
+                'DateConducted' => 'date_conducted'
+           ),
+           'rpfp_form1_get_seminar',
+           array(),
+           'seminar'
+        );
 
-       return $seminar;
     }
 
     public function getForm1Couple() : ListCoupleInterface
     {
-        $listCouple = new ListCoupleClass();
+        $couple = new CoupleClass();
 
-            $couple = new CoupleClass();
+        return $this->fromDbGetList(
+            'ListCoupleClass',
+            'CoupleClass',
+            array(
+                'Address' => 'address',
+                'NumberOfChildren' => 'no_of_children'
+            ),
+            'rpfp_form1_get_couple',
+            array(),
+            'couple'
+        );
 
-            $couple->Address = 'Bulacan';
-            $couple->NumberOfChildren = '12';
+        // $listCouple = new ListCoupleClass();
 
-            $husband = new HusbandClass();
+        //     $couple = new CoupleClass();
 
-            $husband->Name = 'Chou Fan';
-            $husband->Sex = 'M';
-            $husband->CivilStatus = 'Married';
-            $husband->Age = '31';
-            $husband->EducationalAttainment = '1';
-            $husband->HasAttended = 'Yes';
+        //     $couple->Address = 'Bulacan';
+        //     $couple->NumberOfChildren = '12';
 
-            $wife = new WifeClass();
+        //     $husband = new HusbandClass();
+
+        //     $husband->Name = 'Chou Fan';
+        //     $husband->Sex = 'M';
+        //     $husband->CivilStatus = 'Married';
+        //     $husband->Age = '31';
+        //     $husband->EducationalAttainment = '1';
+        //     $husband->HasAttended = 'Yes';
+
+        //     $wife = new WifeClass();
                          
-            $wife->Name = 'Hanabi Montana';
-            $wife->Sex = 'F';
-            $wife->CivilStatus = 'Married';
-            $wife->Age = '31';
-            $wife->EducationalAttainment = '1';
-            $wife->HasAttended = 'Yes';
+        //     $wife->Name = 'Hanabi Montana';
+        //     $wife->Sex = 'F';
+        //     $wife->CivilStatus = 'Married';
+        //     $wife->Age = '31';
+        //     $wife->EducationalAttainment = '1';
+        //     $wife->HasAttended = 'Yes';
 
-            $modernFp = new ModernFpUserClass();
+        //     $modernFp = new ModernFpUserClass();
 
-            $modernFp->MethodUsed = '1';
-            $modernFp->IntentionForUsing = '2';
+        //     $modernFp->MethodUsed = '1';
+        //     $modernFp->IntentionForUsing = '2';
 
-            $traditionalFp = new TraditionalFpUserClass();
+        //     $traditionalFp = new TraditionalFpUserClass();
 
-            $traditionalFp->Type = '1';
-            $traditionalFp->Status = '2'; 
-            $traditionalFp->IntentionForUsing = '3';
+        //     $traditionalFp->Type = '1';
+        //     $traditionalFp->Status = '2'; 
+        //     $traditionalFp->IntentionForUsing = '3';
 
-            $couple->ListHusband->append($husband);
-            $couple->ListWife->append($wife);
-            $couple->ListModernFp->append($modernFp);
-            $couple->ListTraditionalFp->append($traditionalFp);
-            $listCouple->append($couple);
+        $couple->ListHusband = $this->getForm1Husband();
+        $couple->ListWife = $this->getForm1Wife();
+        $couple->ListModernFp = $this->getForm1ModernFpUser();
+        $couple->ListTraditionalFp = $this->getForm1TraditionalFpUser();
 
-        return $listCouple;
+        return $couple;
+    }
+
+    public function getForm1Husband() : ListCoupleInterface
+    {
+        return $this->fromDbGetList(
+            'ListHusbandClass',
+            'HusbandClass',
+            array(
+                'Name' => 'name',
+                'Sex' => 'sex',
+                'CivilStatus' => 'civil_status',
+                'Age' => 'age',
+                'EducationalAttainment' => 'educationa_attainment',
+                'HasAttended' => 'has_attended'
+            ),
+            'rpfp_form1_get_husband',
+            array(),
+            'husband'
+        );
+    }
+
+    public function getForm1Wife() : ListCoupleInterface
+    {
+        return $this->fromDbGetList(
+            'ListwifeClass',
+            'WifeClass',
+            array(
+                'Name' => 'name',
+                'Sex' => 'sex',
+                'CivilStatus' => 'civil_status',
+                'Age' => 'age',
+                'EducationalAttainment' => 'educationa_attainment',
+                'HasAttended' => 'has_attended'
+            ),
+            'rpfp_form1_get_wife',
+            array(),
+            'wife'
+        );
+    }
+
+    public function getForm1ModernFpUser() : ListCoupleInterface
+    {
+        return $this->fromDbGetList(
+            'ListModernFpUserClass',
+            'ModernFpUserClass',
+            array(
+                'MethodUsed' => 'method',
+                'IntentionForUsing' => 'intention_for_using'
+            ),
+            'rpfp_form1_get_modern_fp_user',
+            array(),
+            'modern_fp_user'
+        );
+    }
+
+    public function getForm1TraditionalFpUser() : ListCoupleInterface
+    {
+        return $this->fromDbGetList(
+            'ListTraditionalFpUserClass',
+            'TraditionalFpUserClass',
+            array(
+                'Type' => 'type',
+                'Status' => 'status',
+                'IntentionForUsing' => 'intention_for_using'
+            ),
+            'rpfp_form1_get_traditional_fp_user',
+            array(),
+            'traditional_fp_user'
+        );
     }
 
     public function getFormA(): FormAInterface
