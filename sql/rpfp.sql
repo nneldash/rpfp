@@ -399,7 +399,7 @@ CREATE DEFINER=root@localhost FUNCTION profile_check_if_encoder() RETURNS INT(1)
 BEGIN
     DECLARE ret_val INT(1) DEFAULT NULL;
 
-    SET ret_val := rpfp.profile_check_role(QUOTE(USER()), 60);
+    SET ret_val := rpfp.profile_check_role(USER(), 60);
     RETURN ret_val;
 END$$
 
@@ -599,7 +599,7 @@ CREATE DEFINER=root@localhost PROCEDURE lib_extract_user_name(
     )   CONTAINS SQL
 BEGIN
     DECLARE name_len INT(11);
-    SET db_user_name := TRIM('''' FROM db_user);
+    SET db_user_name := TRIM("\'" FROM db_user);
     SET name_user := db_user;
     SET name_len := LOCATE('@', name_user, 1);
 
