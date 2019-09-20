@@ -213,7 +213,7 @@ BEGIN
             CALL rpfp.itdmu_update_first_login(USER());
         END;
     ELSE
-         SELECT "NOT FIRST LOGIN" AS MESSAGE;
+         SELECT "NOT FIRST LOGIN" MESSAGE;
     END IF;
 END$$
 
@@ -224,7 +224,7 @@ CREATE DEFINER=root@localhost PROCEDURE login_change_own_password(
 proc_exit_point :
 BEGIN
     IF old_passwd = new_passwd THEN
-         SELECT "INVALID NEW PASSWORD" AS MESSAGE;
+         SELECT "INVALID NEW PASSWORD" MESSAGE;
         LEAVE proc_exit_point;
     END IF;
 
@@ -233,7 +233,7 @@ BEGIN
     ) THEN
            CALL rpfp.itdmu_login_change_user_password(USER(), new_passwd);
     ELSE
-         SELECT "INVALID PASSWORD!" AS MESSAGE;
+         SELECT "INVALID PASSWORD!" MESSAGE;
     END IF;
 END$$
 
@@ -273,7 +273,7 @@ BEGIN
 
      SELECT rm.ROLE INTO role_word
        FROM mysql.ROLES_MAPPING rm
-      WHERE rm.USER = name_user
+      WHERE QUOTE(rm.USER) = QUOTE(name_user)
         AND rm.ROLE IN ('itdmu', 'pmed', 'regional_data_manager', 'focal_person', 'encoder')
       LIMIT 1
     ;
@@ -299,7 +299,7 @@ BEGIN
 
      SELECT rm.ROLE INTO scope_word
        FROM mysql.ROLES_MAPPING rm
-      WHERE rm.USER = name_user
+      WHERE QUOTE(rm.USER) = QUOTE(name_user)
         AND rm.ROLE IN ('national', 'regional', 'provincial', 'citiwide')
       LIMIT 1
     ;
@@ -324,27 +324,21 @@ BEGIN
     CALL rpfp.lib_extract_user_name(db_user, name_user, db_user_name);
 
     IF role_num IS NULL THEN
-        SELECT "ROLE IS EMPTY" AS MESSAGE;
+        SELECT "ROLE IS EMPTY" MESSAGE;
         LEAVE proc_exit_point;
     END IF;
 
     IF role_num NOT IN (60, 70, 80, 90, 100) THEN
-        SELECT concat("INVALID ROLE: ", role_num) AS MESSAGE;
+        SELECT concat("INVALID ROLE: ", role_num) MESSAGE;
         LEAVE proc_exit_point;
     END IF;
-    SELECT concat("VALID ROLE: ", role_num) AS MESSAGE;
 
-    SELECT concat("GETTING ROLE TEXT: ") AS MESSAGE;
     SET default_role := rpfp.profile_select_role(role_num);
-    SELECT concat("ROLE TEXT: ", default_role) AS MESSAGE;
-
-    SELECT concat("GRANTING ROLE: ", default_role, " TO ", db_user_name) AS MESSAGE;
 
     SET @sql_stmt4 := CONCAT("GRANT ", default_role, " TO ", db_user_name);
     PREPARE stmt4 FROM @sql_stmt4;
     EXECUTE stmt4;
 
-    SELECT concat("SETTING DEFAULT ROLE: ") AS MESSAGE;
     SET @sql_stmt5 := CONCAT("SET DEFAULT ROLE ", default_role, " FOR ", db_user_name);
     PREPARE stmt5 FROM @sql_stmt5;
     EXECUTE stmt5;
@@ -363,12 +357,12 @@ BEGIN
     CALL rpfp.lib_extract_user_name(db_user, name_user, db_user_name);
 
     IF scope_reg_prov_or_muni IS NULL THEN
-        SELECT "SCOPE IS EMPTY" AS MESSAGE;
+        SELECT "SCOPE IS EMPTY" MESSAGE;
         LEAVE proc_exit_point;
     END IF;
 
     IF scope_reg_prov_or_muni NOT IN (10, 20, 30, 40, 50) THEN
-        SELECT "INVALID SCOPE" AS MESSAGE;
+        SELECT "INVALID SCOPE" MESSAGE;
         LEAVE proc_exit_point;
     END IF;
 
@@ -605,13 +599,12 @@ CREATE DEFINER=root@localhost PROCEDURE lib_extract_user_name(
     )   CONTAINS SQL
 BEGIN
     DECLARE name_len INT(11);
-    SET db_user := TRIM('''' FROM db_user);
-    SET db_user_name := QUOTE(db_user);
-    SET name_user := db_user_name;
-    SET name_len := LOCATE('@', name_user, 2);
+    SET db_user_name := TRIM('''' FROM db_user);
+    SET name_user := db_user;
+    SET name_len := LOCATE('@', name_user, 1);
 
     IF name_len > 0 THEN
-        SET name_user := SUBSTRING(db_user_name, 2, name_len - 2);
+        SET name_user := SUBSTRING(db_user_name, 1, name_len - 1);
     ELSE
         SET db_user_name := CONCAT(name_user, '@localhost');
     END IF;
