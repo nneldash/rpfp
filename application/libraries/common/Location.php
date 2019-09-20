@@ -12,6 +12,6 @@ class Location extends LocationInterface
         $this->Region = new PSGC();
         $this->Province = new PSGC();
         $this->Municipality = new PSGC();
-        $this->Barangay = new PSGC();
+        $this->SpecificLocation = new PSGC();
     }
 }
