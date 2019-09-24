@@ -3,12 +3,10 @@ $(function() {
   	serviceModal();
   	importModal();
   	highlight();
+	inputValid();
 	saveForm1();
 	saveServiceSlip();
-	inputValid();
-	inputValidations();
 	checkBox();
-	status();
 });
 
 function serviceModal()
@@ -97,6 +95,12 @@ function saveServiceSlip()
 {
 	$('#service_slip').submit(function() {
 		var formData = $(this).serialize();
+		const Toast = Swal.mixin({
+			toast: true,
+			position: 'top-end',
+			showConfirmButton: false,
+			timer: 3000
+		});
 		
 		$.ajax({
 			type: 'POST',
@@ -122,19 +126,6 @@ function saveServiceSlip()
 
 }
 
-function inputValidations()
-{
-	$('.sexValid').keyup(function(){
-		var input = this.value;
-		// console.log(input);
-		if(input != 'm') {
-			// alert('huhu');
-		} else {
-			// alert('okay');
-		}
-	});
-}
-
 function checkBox()
 {
 	$('#checkAll').click(function() {
@@ -143,16 +134,4 @@ function checkBox()
     	$('td:first-child input[value="aproveCouple"]').closest('tr').toggleClass("highlight", this.checked);
     	$('td:first-child input[value="aproveCouple"]').closest('tr').next('tr').toggleClass("highlight", this.checked);
     });
-}
-
-function status()
-{
-	$('.viewForm').click(function(){
-		var status = 'view';
-		$.post(base_url + '/forms?&status=view', {'status':status})
-		.done(function(html) {
-			// alert(html);
-			$('.formStatus').val(status);
-		});
-	});
 }

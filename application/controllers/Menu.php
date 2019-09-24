@@ -28,11 +28,7 @@ class Menu extends CI_Controller
 
     public function importExcel()
     {
-        // $header['title'] = 'RPFP Online | Approve';
-
-        // $this->load->view('includes/header', $header);
         $this->load->view('menu/import');
-        // $this->load->view('includes/footer');
     }
 
     public function summary()
