@@ -14,6 +14,7 @@ drop role itdmu;
 drop role pmed;
 drop role regional_data_manager;
 drop role focal_person;
+drop role partners;
 drop role encoder;
 drop role citiwide;
 drop role provincial;

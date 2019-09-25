@@ -33,8 +33,8 @@ SET time_zone = "+00:00";
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
 /*!40101 SET NAMES utf8mb4 */;
 
-CREATE DATABASE RPFP;
-USE RPFP;
+CREATE DATABASE TESTING;
+USE TESTING;
 --
 -- Database: rpfp
 --
@@ -48,6 +48,7 @@ USE RPFP;
     CREATE OR REPLACE ROLE pmed;
     CREATE OR REPLACE ROLE regional_data_manager;
     CREATE OR REPLACE ROLE focal_person;
+	CREATE OR REPLACE ROLE partners;
     CREATE OR REPLACE ROLE encoder;
     CREATE OR REPLACE ROLE citiwide;
     CREATE OR REPLACE ROLE provincial;
@@ -718,6 +719,721 @@ BEGIN
 END$$
 /** END OF LIBRARIES */
 
+/** GET PENDING CLASS LIST */
+CREATE DEFINER=root@localhost PROCEDURE user_get_pending_class_list ()  READS SQL DATA
+BEGIN
+    IF NOT EXISTS (
+         SELECT rc.RPFP_CLASS_ID
+           FROM rpfp.RPFP_CLASS rc
+      LEFT JOIN rpfp.PENDING_COUPLES pc
+             ON (pc.RPFP_CLASS_ID = rc.RPFP_CLASS_ID)
+          WHERE (pc.IS_ACTIVE = 2)
+    
+       ORDER BY rc.DATE_CONDUCTED DESC
+    ) THEN
+        BEGIN
+             SELECT NULL AS RPFPCLASS,
+                    NULL AS TYPECLASS,
+                    NULL AS OTHERS_SPECIFY,
+                    NULL AS CITY,
+                    NULL AS BARANGAY,
+                    NULL AS CLASS_NO,
+                    NULL AS DATE_CONDUCT,
+                    NULL AS PROFILEID
+            ;
+        END;
+    ELSE
+        BEGIN
+             SELECT rc.RPFP_CLASS_ID AS RPFPCLASS,
+                    rc.TYPE_CLASS_ID AS TYPECLASS,
+                    rc.OTHERS_SPECIFY AS OTHERS_SPECIFY,
+                    rc.CITY_ID AS CITY,
+                    rc.BARANGAY_ID AS BARANGAY,
+                    rc.CLASS_NUMBER AS CLASS_NO,
+                    rc.DATE_CONDUCTED AS DATE_CONDUCT
+               FROM rpfp.rpfp_class rc
+                    LEFT JOIN rpfp.pending_couples pc
+                    ON (pc.RPFP_CLASS_ID = rc.RPFP_CLASS_ID)
+           ORDER BY rc.DATE_CONDUCTED DESC
+            ;
+        END;
+    END IF;
+END$$
+/** END GET PENDING CLASS LIST */
+
+/** GET APPROVED CLASS LIST */
+CREATE DEFINER=root@localhost PROCEDURE user_get_approved_class_list ()  READS SQL DATA
+BEGIN
+    IF NOT EXISTS (
+         SELECT rc.RPFP_CLASS_ID
+           FROM rpfp.RPFP_CLASS rc
+      LEFT JOIN rpfp.PENDING_COUPLES pc
+             ON (ac.RPFP_CLASS_ID = rc.RPFP_CLASS_ID)
+          WHERE (ac.IS_ACTIVE = 0)
+    
+       ORDER BY rc.DATE_CONDUCTED DESC
+    ) THEN
+        BEGIN
+             SELECT NULL AS RPFPCLASS,
+                    NULL AS TYPECLASS,
+                    NULL AS OTHERS_SPECIFY,
+                    NULL AS CITY,
+                    NULL AS BARANGAY,
+                    NULL AS CLASS_NO,
+                    NULL AS DATE_CONDUCT,
+                    NULL AS PROFILEID
+            ;
+        END;
+    ELSE
+        BEGIN
+             SELECT pc.RPFP_CLASS_ID AS RPFPCLASS,
+                    rc.TYPE_CLASS_ID AS TYPECLASS,
+                    rc.OTHERS_SPECIFY AS OTHERS_SPECIFY,
+                    rc.CITY_ID AS CITY,
+                    rc.BARANGAY_ID AS BARANGAY,
+                    rc.CLASS_NUMBER AS CLASS_NO,
+                    rc.DATE_CONDUCTED AS DATE_CONDUCT
+               FROM rpfp.rpfp_class rc
+                    LEFT JOIN rpfp.pending_couples pc
+                    ON (ac.RPFP_CLASS_ID = rc.RPFP_CLASS_ID)
+           ORDER BY rc.DATE_CONDUCTED DESC
+            ;
+        END;
+    END IF;
+END$$
+/** END GET APPROVED CLASS LIST */
+
+/** GET PENDING COUPLES LIST */
+CREATE DEFINER=root@localhost PROCEDURE user_get_pending_couples_list ()  READS SQL DATA
+BEGIN
+    IF NOT EXISTS (
+         SELECT pc.RPFP_CLASS_ID
+           FROM rpfp.PENDING_COUPLES pc
+      LEFT JOIN rpfp.RPFP_CLASS rc
+             ON (rc.RPFP_CLASS_ID = pc.RPFP_CLASS_ID
+    )
+       ORDER BY pc.COUPLES_ID ASC
+    ) THEN
+        BEGIN
+             SELECT NULL AS COUPLESID,
+                    NULL AS RPFPCLASS,
+                    NULL AS TYPEPARTICIPANT,
+                    NULL AS ISACTIVE,
+                    NULL AS DATE_ENCODE
+            ;
+        END;
+    ELSE
+        BEGIN
+             SELECT rc.RPFP_CLASS_ID AS RPFPCLASS,
+                    pc.COUPLES_ID AS COUPLESID,
+                    pc.TYPE_PARTICIPANT AS TYPEPARTICIPANT,
+                    pc.IS_ACTIVE AS ISACTIVE,
+                    pc.DATE_ENCODED AS DATE_ENCODE
+               FROM rpfp.pending_couples pc
+                    LEFT JOIN rpfp.rpfp_class rc
+                    ON (rc.RPFP_CLASS_ID = pc.RPFP_CLASS_ID)
+           ORDER BY pc.COUPLES_ID ASC
+            ;
+        END;
+    END IF;
+END$$
+/** END PENDING COUPLES LIST */
+
+/** GET APPROVED COUPLES LIST */
+CREATE DEFINER=root@localhost PROCEDURE user_get_approved_couples_list ()  READS SQL DATA
+BEGIN
+    IF NOT EXISTS (
+         SELECT ac.RPFP_CLASS_ID
+           FROM rpfp.APPROVED_COUPLES ac
+      LEFT JOIN rpfp.RPFP_CLASS rc
+             ON (rc.RPFP_CLASS_ID = ac.RPFP_CLASS_ID
+    )
+       ORDER BY pc.COUPLES_ID ASC
+    ) THEN
+        BEGIN
+             SELECT NULL AS COUPLESID,
+                    NULL AS RPFPCLASS,
+                    NULL AS TYPEPARTICIPANT,
+                    NULL AS ISACTIVE,
+                    NULL AS DATE_ENCODE
+            ;
+        END;
+    ELSE
+        BEGIN
+             SELECT rc.RPFP_CLASS_ID AS RPFPCLASS,
+                    ac.COUPLES_ID AS COUPLESID,
+                    ac.TYPE_PARTICIPANT AS TYPEPARTICIPANT,
+                    ac.IS_ACTIVE AS ISACTIVE,
+                    ac.DATE_ENCODED AS DATE_ENCODE
+               FROM rpfp.approved_couples ac
+                    LEFT JOIN rpfp.rpfp_class rc
+                    ON (rc.RPFP_CLASS_ID = ac.RPFP_CLASS_ID)
+           ORDER BY ac.COUPLES_ID ASC
+            ;
+        END;
+    END IF;
+END$$
+/** END APPROVED COUPLES LIST */
+
+/** GET PENDING COUPLES DETAILS */
+CREATE DEFINER=root@localhost PROCEDURE user_get_pending_couples_details ()  READS SQL DATA
+BEGIN
+    IF NOT EXISTS (
+         SELECT pc.COUPLES_ID
+           FROM rpfp.PENDING_COUPLES pc
+      LEFT JOIN rpfp.INDIVIDUAL ic
+             ON (ic.COUPLES_ID = pc.COUPLES_ID
+    )
+       ORDER BY ic.INDV_ID ASC
+    ) THEN
+        BEGIN
+             SELECT NULL AS INDVID,
+                    NULL AS COUPLESID,
+                    NULL AS LASTNAME,
+                    NULL AS FIRSTNAME,
+                    NULL AS MIDDLE,
+                    NULL AS EXT,
+                    NULL AS AGE,
+                    NULL AS SEX,
+                    NULL AS BIRTHDATE,
+                    NULL AS CIVIL,
+                    NULL AS ADDRESS_NO_ST,
+                    NULL AS ADDRESS_BRGY,
+                    NULL AS ADDRESS_CITY,
+                    NULL AS HOUSEHOLD_NO,
+                    NULL AS EDUC_BCKGRND,
+                    NULL AS ETNIC,
+                    NULL AS NUMBER_CHILD,
+                    NULL AS IS_ATTENDEE
+            ;
+        END;
+    ELSE
+        BEGIN
+             SELECT pc.COUPLES_ID AS COUPLESID,
+                    ic.INDV_ID AS INDVID,
+                    ic.LNAME AS LASTNAME,
+                    ic.FNAME AS FIRSTNAME,
+                    ic.MNAME AS MIDDLE,
+                    ic.EXT_NAME AS EXT,
+                    ic.AGE AS AGE,
+                    ic.SEX AS SEX,
+                    ic.BDATE AS BIRTHDATE,
+                    ic.CIVIL_ID AS CIVIL,
+                    ic.ADDRESS_NO_ST AS ADDRESS_NO_ST,
+                    ic.ADDRESS_BRGY AS ADDRESS_BRGY,
+                    ic.ADDRESS_CITY AS ADDRESS_CITY,
+                    ic.HH_ID_NO AS HOUSEHOLD_NO,
+                    ic.EDUC_BCKGRND_ID AS EDUC_BCKGRND,
+                    ic.ETNICITY AS ETNIC,
+                    ic.NO_CHILDREN AS NUMBER_CHILD,
+                    ic.ATTENDEE AS IS_ATTENDEE
+               FROM rpfp.individual ic
+                    LEFT JOIN rpfp.pending_couples pc
+                    ON (ic.RPFP_CLASS_ID = pc.RPFP_CLASS_ID)
+           ORDER BY ic.INDV_ID ASC
+            ;
+        END;
+    END IF;
+END$$
+/** END PENDING COUPLES DETAILS */
+
+/** GET PENDING COUPLES FP DETAILS */
+CREATE DEFINER=root@localhost PROCEDURE user_get_pending_couples_fp_details (IN couplesid INT UNSIGNED)  READS SQL DATA
+BEGIN
+    IF NOT EXISTS (
+         SELECT pc.COUPLES_ID
+           FROM rpfp.PENDING_COUPLES pc
+      LEFT JOIN rpfp.FP_DETAILS fd
+             ON (fd.COUPLES_ID = pc.COUPLES_ID)
+
+   WHERE (IFNULL(fd.COUPLES_ID, 0) = couplesid)
+    
+       ORDER BY fd.FP_DETAILS_ID ASC
+    ) THEN
+        BEGIN
+             SELECT NULL AS FPDETAILSID,
+                    NULL AS COUPLESID,
+                    NULL AS MFP_USED,
+                    NULL AS MFP_SHIFT,
+                    NULL AS TFP_TYPE,
+                    NULL AS TFP_STATUS,
+                    NULL AS REASON_USE,
+                    NULL AS FPSTATUS,
+                    NULL AS CURRENT_FP
+            ;
+        END;
+    ELSE
+        BEGIN
+             SELECT pc.COUPLES_ID AS COUPLESID,
+                    fd.FP_DETAILS_ID AS FPDETAILSID,
+                    fd.MFP_METHOD_USED_ID AS MFP_USED,
+                    fd.MFP_INTENTION_SHIFT_ID AS MFP_SHIFT,
+                    fd.TFP_TYPE_ID AS TFP_STATUS,
+                    fd.REASON_INTENDING_USE_ID AS REASON_USE,
+                    fd.FP_STATUS AS FPSTATUS,
+                    fd.CURRENT_FP_METHOD_ID AS CURRENT_FP
+               FROM rpfp.fp_details fd
+                    LEFT JOIN rpfp.pending_couples pc
+                    ON (fd.RPFP_CLASS_ID = pc.RPFP_CLASS_ID)
+           ORDER BY fd.FP_DETAILS_ID ASC
+            ;
+        END;
+    END IF;
+END$$
+/** END PENDING COUPLES FP DETAILS */
+
+/** GET PENDING COUPLES FP SERVICE */
+CREATE DEFINER=root@localhost PROCEDURE user_get_pending_couples_fp_service (IN couplesid INT UNSIGNED)  READS SQL DATA
+BEGIN
+    IF NOT EXISTS (
+         SELECT pc.COUPLES_ID
+           FROM rpfp.PENDING_COUPLES pc
+      LEFT JOIN rpfp.FP_SERVICE fs
+             ON (fs.COUPLES_ID = pc.COUPLES_ID)
+
+   WHERE (IFNULL(fs.COUPLES_ID, 0) = couplesid)
+    
+       ORDER BY fs.FP_SERVICE_ID ASC
+    ) THEN
+        BEGIN
+             SELECT NULL AS FPSERVICEID,
+                    NULL AS COUPLESID,
+                    NULL AS DATEVISIT,
+                    NULL AS FP_SERVED,
+                    NULL AS PROVIDER_TYPE,
+                    NULL AS IS_COUNSELLING,
+                    NULL AS OTHER_CONCERN,
+                    NULL AS IS_PROVIDED_SERVICE,
+                    NULL AS DATESERVED,
+                    NULL AS CLIENT_ADVISE,
+                    NULL AS REFERRALNAME,
+                    NULL AS PROVIDERNAME,
+                    NULL AS DATE_ENCODE
+            ;
+        END;
+    ELSE
+        BEGIN
+             SELECT pc.COUPLES_ID AS COUPLESID,
+                    fd.FP_SERVICE_ID AS FPSERVICEID,
+                    fd.DATE_VISIT AS DATEVISIT,
+                    fd.FP_SERVED_ID AS FP_SERVED,
+                    fd.PROVIDER_TYPE_ID AS PROVIDER_TYPE,
+                    fd.IS_COUNSELLING AS IS_COUNSELLING,
+                    fd.OTHER_CONCERN AS OTHER_CONCERN,
+                    fd.IS_PROVIDED_SERVICE AS IS_PROVIDED_SERVICE,
+                    fs.DATE_SERVED AS DATESERVED,
+                    fs.CLIENT_ADVISE AS CLIENT_ADVISE,
+                    fs.REFERRAL_NAME AS REFERRALNAME,
+                    fs.PROVIDER_NAME AS PROVIDERNAME,
+                    fs.DATE_ENCODED AS DATE_ENCODE
+               FROM rpfp.fp_service fs
+                    LEFT JOIN rpfp.pending_couples pc
+                    ON (fs.RPFP_CLASS_ID = pc.RPFP_CLASS_ID)
+           ORDER BY fs.FP_SERVICE_ID ASC
+            ;
+        END;
+    END IF;
+END$$
+/** END PENDING COUPLES FP SERVICE */
+
+/** GET APPROVED COUPLES DETAILS */
+CREATE DEFINER=root@localhost PROCEDURE user_get_approved_couples_details ()  READS SQL DATA
+BEGIN
+    IF NOT EXISTS (
+         SELECT ac.COUPLES_ID
+           FROM rpfp.APPROVED_COUPLES ac
+      LEFT JOIN rpfp.INDIVIDUAL ic
+             ON (ic.COUPLES_ID = ac.COUPLES_ID
+    )
+       ORDER BY ic.INDV_ID ASC
+    ) THEN
+        BEGIN
+             SELECT NULL AS INDVID,
+                    NULL AS COUPLESID,
+                    NULL AS LASTNAME,
+                    NULL AS FIRSTNAME,
+                    NULL AS MIDDLE,
+                    NULL AS EXT,
+                    NULL AS AGE,
+                    NULL AS SEX,
+                    NULL AS BIRTHDATE,
+                    NULL AS CIVIL,
+                    NULL AS ADDRESS_NO_ST,
+                    NULL AS ADDRESS_BRGY,
+                    NULL AS ADDRESS_CITY,
+                    NULL AS HOUSEHOLD_NO,
+                    NULL AS EDUC_BCKGRND,
+                    NULL AS ETNIC,
+                    NULL AS NUMBER_CHILD,
+                    NULL AS IS_ATTENDEE
+            ;
+        END;
+    ELSE
+        BEGIN
+             SELECT ac.COUPLES_ID AS COUPLESID,
+                    ic.INDV_ID AS INDVID,
+                    ic.LNAME AS LASTNAME,
+                    ic.FNAME AS FIRSTNAME,
+                    ic.MNAME AS MIDDLE,
+                    ic.EXT_NAME AS EXT,
+                    ic.AGE AS AGE,
+                    ic.SEX AS SEX,
+                    ic.BDATE AS BIRTHDATE,
+                    ic.CIVIL_ID AS CIVIL,
+                    ic.ADDRESS_NO_ST AS ADDRESS_NO_ST,
+                    ic.ADDRESS_BRGY AS ADDRESS_BRGY,
+                    ic.ADDRESS_CITY AS ADDRESS_CITY,
+                    ic.HH_ID_NO AS HOUSEHOLD_NO,
+                    ic.EDUC_BCKGRND_ID AS EDUC_BCKGRND,
+                    ic.ETNICITY AS ETNIC,
+                    ic.NO_CHILDREN AS NUMBER_CHILD,
+                    ic.ATTENDEE AS IS_ATTENDEE
+               FROM rpfp.individual ic
+                    LEFT JOIN rpfp.approved_couples ac
+                    ON (ic.RPFP_CLASS_ID = ac.RPFP_CLASS_ID)
+           ORDER BY ic.INDV_ID ASC
+            ;
+        END;
+    END IF;
+END$$
+/** END APPROVED COUPLES DETAILS */
+
+/** GET APPROVED COUPLES FP DETAILS */
+CREATE DEFINER=root@localhost PROCEDURE user_get_approved_couples_fp_details (IN couplesid INT UNSIGNED)  READS SQL DATA
+BEGIN
+    IF NOT EXISTS (
+         SELECT ac.COUPLES_ID
+           FROM rpfp.APPROVED_COUPLES ac
+      LEFT JOIN rpfp.FP_DETAILS fd
+             ON (fd.COUPLES_ID = ac.COUPLES_ID)
+
+   WHERE (IFNULL(fd.COUPLES_ID, 0) = couplesid)
+    
+       ORDER BY fd.FP_DETAILS_ID ASC
+    ) THEN
+        BEGIN
+             SELECT NULL AS FPDETAILSID,
+                    NULL AS COUPLESID,
+                    NULL AS MFP_USED,
+                    NULL AS MFP_SHIFT,
+                    NULL AS TFP_TYPE,
+                    NULL AS TFP_STATUS,
+                    NULL AS REASON_USE,
+                    NULL AS FPSTATUS,
+                    NULL AS CURRENT_FP
+            ;
+        END;
+    ELSE
+        BEGIN
+             SELECT ac.COUPLES_ID AS COUPLESID,
+                    fd.FP_DETAILS_ID AS FPDETAILSID,
+                    fd.MFP_METHOD_USED_ID AS MFP_USED,
+                    fd.MFP_INTENTION_SHIFT_ID AS MFP_SHIFT,
+                    fd.TFP_TYPE_ID AS TFP_STATUS,
+                    fd.REASON_INTENDING_USE_ID AS REASON_USE,
+                    fd.FP_STATUS AS FPSTATUS,
+                    fd.CURRENT_FP_METHOD_ID AS CURRENT_FP
+               FROM rpfp.fp_details fd
+                    LEFT JOIN rpfp.approved_couples ac
+                    ON (fd.RPFP_CLASS_ID = ac.RPFP_CLASS_ID)
+           ORDER BY fd.FP_DETAILS_ID ASC
+            ;
+        END;
+    END IF;
+END$$
+/** END APPROVED COUPLES FP DETAILS */
+
+/** GET APPROVED COUPLES FP SERVICE */
+CREATE DEFINER=root@localhost PROCEDURE user_get_approved_couples_fp_service (IN couplesid INT UNSIGNED)  READS SQL DATA
+BEGIN
+    IF NOT EXISTS (
+         SELECT ac.COUPLES_ID
+           FROM rpfp.APPROVED_COUPLES ac
+      LEFT JOIN rpfp.FP_SERVICE fs
+             ON (fs.COUPLES_ID = ac.COUPLES_ID)
+
+   WHERE (IFNULL(fs.COUPLES_ID, 0) = couplesid)
+    
+       ORDER BY fs.FP_SERVICE_ID ASC
+    ) THEN
+        BEGIN
+             SELECT NULL AS FPSERVICEID,
+                    NULL AS COUPLESID,
+                    NULL AS DATEVISIT,
+                    NULL AS FP_SERVED,
+                    NULL AS PROVIDER_TYPE,
+                    NULL AS IS_COUNSELLING,
+                    NULL AS OTHER_CONCERN,
+                    NULL AS IS_PROVIDED_SERVICE,
+                    NULL AS DATESERVED,
+                    NULL AS CLIENT_ADVISE,
+                    NULL AS REFERRALNAME,
+                    NULL AS PROVIDERNAME,
+                    NULL AS DATE_ENCODE
+            ;
+        END;
+    ELSE
+        BEGIN
+             SELECT ac.COUPLES_ID AS COUPLESID,
+                    fd.FP_SERVICE_ID AS FPSERVICEID,
+                    fd.DATE_VISIT AS DATEVISIT,
+                    fd.FP_SERVED_ID AS FP_SERVED,
+                    fd.PROVIDER_TYPE_ID AS PROVIDER_TYPE,
+                    fd.IS_COUNSELLING AS IS_COUNSELLING,
+                    fd.OTHER_CONCERN AS OTHER_CONCERN,
+                    fd.IS_PROVIDED_SERVICE AS IS_PROVIDED_SERVICE,
+                    fs.DATE_SERVED AS DATESERVED,
+                    fs.CLIENT_ADVISE AS CLIENT_ADVISE,
+                    fs.REFERRAL_NAME AS REFERRALNAME,
+                    fs.PROVIDER_NAME AS PROVIDERNAME,
+                    fs.DATE_ENCODED AS DATE_ENCODE
+               FROM rpfp.fp_service fs
+                    LEFT JOIN rpfp.approved_couples ac
+                    ON (fs.RPFP_CLASS_ID = ac.RPFP_CLASS_ID)
+           ORDER BY fs.FP_SERVICE_ID ASC
+            ;
+        END;
+    END IF;
+END$$
+/** END APPROVED COUPLES FP DETAILS */
+
+/**  SAVE CLASS DETAILS  */
+CREATE DEFINER=root@localhost FUNCTION get_class_id (classid INT UNSIGNED)  RETURNS INT UNSIGNED READS SQL DATA
+BEGIN
+    DECLARE find_class_id INT UNSIGNED;
+
+     SELECT rc.RPFP_CLASS_ID INTO find_class_id
+       FROM rpfp.RPFP_CLASS rc
+      WHERE rc.RPFP_CLASS_ID = classid
+    ;
+    RETURN find_class_id;
+END$$
+
+CREATE DEFINER=root@localhost PROCEDURE user_save_class (
+    IN rpfp_class_id INT UNSIGNED,
+    IN TYPE_CLASS_ID INT,
+    IN OTHERS_SPECIFY VARCHAR(100),
+    IN CITY_ID INT,
+    IN BARANGAY_ID INT,
+    IN CLASS_NUMBER VARCHAR(50),
+    IN DATE_CONDUCTED DATE,
+    IN PROFILE_ID INT
+    )  MODIFIES SQL DATA
+proc_exit_point :
+BEGIN
+    DECLARE rpfp_class_id INT UNSIGNED;
+
+    IF class_number IS NULL THEN
+        SELECT "CANNOT SAVE RECORD WITH GIVEN PARAMETERS" AS MESSAGE;
+        LEAVE proc_exit_point;
+    END IF;
+
+    SET rpfp_class_id = rpfp.user_get_class_list(rpfp_class);
+    IF rpfp_class_id IS NULL THEN
+        SELECT "UNABLE TO GET RECORD WITH GIVEN PARAMETERS" AS MESSAGE;
+        LEAVE proc_exit_point;
+    END IF;
+
+     UPDATE rpfp.rpfp_class rc
+        SET pc.TYPE_CLASS_ID = IF(IFNULL(TYPECLASS, '') = '', pc.TYPE_CLASS_ID, TYPECLASS),
+            pc.OTHERS_SPECIFY = IF(IFNULL(OTHERS_SPECIFY, '') = '', pc.OTHERS_SPECIFY, OTHERS_SPECIFY),
+            pc.CITY_ID = IF(IFNULL(CITY, '') = '', pc.CITY_ID, CITY),
+            pc.BARANGAY_ID = IF(IFNULL(BARANGAY, '') = '', pc.BARANGAY_ID, BARANGAY),
+            pc.CLASS_NUMBER = IF(IFNULL(CLASS_NO, '') = '', pc.CLASS_NUMBER, CLASS_NO),
+            pc.DATE_CONDUCTED = IF(IFNULL(DATE_CONDUCT, '') = '', pc.DATE_CONDUCTED, DATE_CONDUCT),
+            pc.PROFILE_ID = IF(IFNULL(PROFILEID, '') = '', pc.PROFILE_ID, PROFILEID)            
+      WHERE pc.RPFP_CLASS_ID = rpfp_class
+    ;
+
+    SELECT "SUCCESS!" AS MESSAGE;
+END$$
+/** END SAVE CLASS DETAILS */
+
+/**  SAVE COUPLES DETAILS  */
+CREATE DEFINER=root@localhost FUNCTION get_save_couples_id (couplesid INT UNSIGNED)  RETURNS INT UNSIGNED READS SQL DATA
+BEGIN
+    DECLARE find_couples_id INT UNSIGNED;
+
+     SELECT pc.COUPLES_ID INTO find_couples_id
+       FROM rpfp.PENDING_COUPLES pc
+      WHERE pc.COUPLES_ID = couplesid
+    ;
+    RETURN find_couples_id;
+END$$
+
+CREATE DEFINER=root@localhost PROCEDURE user_save_couples (
+    IN couples_id INT UNSIGNED,
+    IN RPFP_CLASS_ID INT,
+    IN TYPE_PARTICIPANT INT,
+    IN IS_ACTIVE INT,
+    IN DATE_ENCODED DATE
+    )  MODIFIES SQL DATA
+proc_exit_point :
+BEGIN
+    DECLARE couples_id INT UNSIGNED;
+
+    IF rpfp_class_id IS NULL THEN
+        SELECT "CANNOT SAVE RECORD WITH GIVEN PARAMETERS" AS MESSAGE;
+        LEAVE proc_exit_point;
+    END IF;
+
+    SET couples_id = rpfp.user_get_pending_couples_list(couples_id);
+    IF couples_id IS NULL THEN
+        SELECT "UNABLE TO GET RECORD WITH GIVEN PARAMETERS" AS MESSAGE;
+        LEAVE proc_exit_point;
+    END IF;
+
+     UPDATE rpfp.pending_couples pc
+        SET pc.RPFP_CLASS_ID = IF(IFNULL(RPFP_CLASS, '') = '', pc.RPFP_CLASS_ID, RPFP_CLASS),
+            pc.TYPE_PARTICIPANT = IF(IFNULL(TYPEPARTICIPANT, '') = '', pc.TYPE_PARTICIPANT, TYPEPARTICIPANT),
+            pc.IS_ACTIVE = 2,
+            pc.DATE_ENCODED = IF(IFNULL(DATE_ENCODE, '') = '', pc.DATE_ENCODED, DATE_ENCODE)
+      WHERE pc.COUPLES_ID = couples_id
+    ;
+
+     UPDATE rpfp.individual ic
+        SET ic.LNAME = IF(IFNULL(LASTNAME, '') = '', ic.LNAME, LASTNAME),
+            ic.FNAME = IF(IFNULL(FIRSTNAME, '') = '', ic.FNAME, FIRSTNAME),
+            ic.MNAME = IF(IFNULL(MIDDLE, '') = '', ic.MNAME, MIDDLE),                            
+            ic.EXT_NAME = IF(IFNULL(EXT_NAME, '') = '', ic.EXT_NAME, EXT_NAME),
+            ic.AGE = IF(IFNULL(AGE, '') = '', ic.AGE, AGE),
+            ic.SEX = IF(IFNULL(SEX, '') = '', ic.SEX, SEX),
+            ic.BDATE = IF(IFNULL(BIRTHDATE, '') = '', ic.BDATE, BIRTHDATE),
+            ic.CIVIL_ID = IF(IFNULL(CIVIL, '') = '', ic.CIVIL_ID, CIVIL),
+            ic.ADDRESS_NO_ST = IF(IFNULL(ADDRESS_NO_ST, '') = '', ic.ADDRESS_NO_ST, ADDRESS_NO_ST),
+            ic.ADDRESS_BRGY = IF(IFNULL(ADDRESS_BRGY, '') = '', ic.ADDRESS_BRGY, ADDRESS_BRGY),
+            ic.ADDRESS_CITY = IF(IFNULL(ADDRESS_CITY, '') = '', ic.ADDRESS_CITY, ADDRESS_CITY),
+            ic.HH_ID_NO = IF(IFNULL(HOUSEHOLD_NO, '') = '', ic.HH_ID_NO, HOUSEHOLD_NO),
+            ic.EDUC_BCKGRND_ID = IF(IFNULL(EDUC_BCKGRND, '') = '', ic.EDUC_BCKGRND_ID, EDUC_BCKGRND),
+            ic.ETNICITY = IF(IFNULL(ETNICITY, '') = '', ic.ETNICITY, ETNICITY),
+            ic.NO_CHILDREN = IF(IFNULL(NUMBER_CHILD, '') = '', ic.NO_CHILDREN, NUMBER_CHILD),
+            ic.IS_ATTENDEE = IF(IFNULL(ATTENDEE, '') = '', ic.IS_ATTENDEE, ATTENDEE)
+      WHERE ic.COUPLES_ID = couples_id
+    ;
+
+     UPDATE rpfp.fp_details fd
+        SET fd.MFP_METHOD_USED_ID = IF(IFNULL(MFP_USED, '') = '', fd.MFP_METHOD_USED_ID, MFP_USED),
+            fd.MFP_INTENTION_SHIFT_ID = IF(IFNULL(MFP_SHIFT, '') = '', fd.MFP_INTENTION_SHIFT_ID, MFP_SHIFT),
+            fd.TFP_TYPE_ID = IF(IFNULL(TFP_TYPE, '') = '', fd.TFP_TYPE_ID, TFP_TYPE),                            
+            fd.TFP_STATUS_ID = IF(IFNULL(TFP_STATUS, '') = '', fd.TFP_STATUS_ID, TFP_STATUS),
+            fd.REASON_INTENDING_USE_ID = IF(IFNULL(REASON_USE, '') = '', fd.REASON_INTENDING_USE_ID, REASON_USE),
+            fd.FP_STATUS = IF(IFNULL(FPSTATUS, '') = '', fd.FP_STATUS, FPSTATUS)
+      WHERE fd.COUPLES_ID = couples_id
+    ;
+
+    SELECT "SUCCESS!" AS MESSAGE;
+END$$
+
+/** END SAVE COUPLES DETAILS */
+
+/**  SAVE FP SERVICE  */
+CREATE DEFINER=root@localhost FUNCTION get_save_fp_service_couples_id (couplesid INT UNSIGNED)  RETURNS INT UNSIGNED READS SQL DATA
+BEGIN
+    DECLARE find_couples_id INT UNSIGNED;
+
+     SELECT pc.COUPLES_ID INTO find_couples_id
+       FROM rpfp.PENDING_COUPLES pc
+      WHERE pc.COUPLES_ID = couplesid
+    ;
+    RETURN find_couples_id;
+END$$
+
+CREATE DEFINER=root@localhost PROCEDURE user_save_fp_service (
+    IN fp_service_id INT UNSIGNED,
+    IN COUPLES_ID INT,
+    IN DATE_VISIT DATE,
+    IN FP_SERVED_ID INT,
+    IN PROVIDER_TYPE_ID INT,
+    IN IS_COUNSELLING INT,
+    IN OTHER_CONCERN VARCHAR(100),
+    IN IS_PROVIDED_SERVICE INT,
+    IN DATE_SERVED DATE,
+    IN CLIENT_ADVISE VARCHAR(100),
+    IN REFERRAL_NAME VARCHAR(50),
+    IN PROVIDER_NAME VARCHAR(50),
+    IN DATE_ENCODED DATE
+    )  MODIFIES SQL DATA
+proc_exit_point :
+BEGIN
+    DECLARE fp_service_id INT UNSIGNED;
+
+    SET couples_id = rpfp.user_get_pending_couples_list(couples_id);
+    IF couples_id IS NULL THEN
+        SELECT "UNABLE TO GET RECORD WITH GIVEN PARAMETERS" AS MESSAGE;
+        LEAVE proc_exit_point;
+    END IF;
+
+     UPDATE rpfp.fp_service fs
+        SET fs.DATE_VISIT = IF(IFNULL(DATEVISIT, '') = '', fs.DATE_VISIT, DATEVISIT),
+            fs.FP_SERVED_ID = IF(IFNULL(FP_SERVED, '') = '', fs.FP_SERVED_ID, FP_SERVED),
+            fs.PROVIDER_TYPE_ID = IF(IFNULL(PROVIDER_TYPE, '') = '', fs.PROVIDER_TYPE_ID, PROVIDER_TYPE),
+            fs.IS_COUNSELLING = IF(IFNULL(IS_COUNSELING, '') = '', fs.IS_COUNSELLING, IS_COUNSELING),
+            fs.OTHER_CONCERN = IF(IFNULL(OTHERS, '') = '', fs.OTHER_CONCERN, OTHERS),
+            fs.IS_PROVIDED_SERVICE = IF(IFNULL(IS_PROVIDED_SERVICE, '') = '', fs.IS_PROVIDED_SERVICE, IS_PROVIDED_SERVICE),
+            fs.DATE_SERVED = IF(IFNULL(DATESERVED, '') = '', fs.DATE_SERVED, DATESERVED),
+            fs.CLIENT_ADVISE = IF(IFNULL(CLIENT_ADVISE, '') = '', fs.CLIENT_ADVISE, CLIENT_ADVISE),
+            fs.REFERRAL_NAME = IF(IFNULL(REFERRALNAME, '') = '', fs.REFERRAL_NAME, REFERRALNAME),
+            fs.PROVIDER_NAME = IF(IFNULL(PROVIDERNAME, '') = '', fs.PROVIDER_NAME, PROVIDERNAME),
+            fs.DATE_ENCODED = IF(IFNULL(DATE_ENCODE, '') = '', fs.DATE_ENCODED, DATE_ENCODE)
+      WHERE fs.COUPLES_ID = couples_id
+    ;
+
+     UPDATE rpfp.fp_details fd
+        SET fd.CURRENT_FP_METHOD_ID = IF(IFNULL(CURRENT_FP, '') = '', fd.CURRENT_FP_METHOD_ID, CURRENT_FP)
+      WHERE fd.COUPLES_ID = couples_id
+    ;
+
+    SELECT "SUCCESS!" AS MESSAGE;
+END$$
+/** END SAVE FP SERVICE */
+
+
+/**  APPROVE COUPLES DETAILS  */
+CREATE DEFINER=root@localhost FUNCTION get_approve_couples_id (couplesid INT UNSIGNED)  RETURNS INT UNSIGNED READS SQL DATA
+BEGIN
+    DECLARE find_couples_id INT UNSIGNED;
+
+     SELECT ac.COUPLES_ID INTO find_couples_id
+       FROM rpfp.APPROVED_COUPLES ac
+      WHERE ac.COUPLES_ID = couplesid
+    ;
+    RETURN find_couples_id;
+END$$
+
+CREATE DEFINER=root@localhost PROCEDURE rdm_approve_couples (
+    IN couples_id INT UNSIGNED,
+    IN RPFP_CLASS_ID INT,
+    IN TYPE_PARTICIPANT INT,
+    IN IS_ACTIVE INT,
+    IN DATE_ENCODED DATE
+    )  MODIFIES SQL DATA
+proc_exit_point :
+BEGIN
+    DECLARE couples_id INT UNSIGNED;
+
+    IF rpfp_class_id IS NULL THEN
+        SELECT "CANNOT SAVE RECORD WITH GIVEN PARAMETERS" AS MESSAGE;
+        LEAVE proc_exit_point;
+    END IF;
+
+    SET couples_id = rpfp.user_get_approved_couples_list(couples_id);
+    IF couples_id IS NULL THEN
+        SELECT "UNABLE TO GET RECORD WITH GIVEN PARAMETERS" AS MESSAGE;
+        LEAVE proc_exit_point;
+    END IF;
+
+     UPDATE rpfp.approved_couples ac
+        SET ac.RPFP_CLASS_ID = IF(IFNULL(RPFP_CLASS, '') = '', ac.RPFP_CLASS_ID, RPFP_CLASS),
+            ac.TYPE_PARTICIPANT = IF(IFNULL(TYPEPARTICIPANT, '') = '', ac.TYPE_PARTICIPANT, TYPEPARTICIPANT),
+            ac.IS_ACTIVE = 2,
+            ac.DATE_ENCODED = IF(IFNULL(DATE_ENCODE, '') = '', ac.DATE_ENCODED, DATE_ENCODE)
+      WHERE ac.COUPLES_ID = couples_id
+    ;
+
+    SELECT "SUCCESS!" AS MESSAGE;
+END$$
+/** END APPROVE COUPLES DETAILS */
+
 DELIMITER ;
 --
 -- END OF STORED ROUTINES
@@ -741,6 +1457,11 @@ CREATE TABLE user_profile (
          PRIMARY KEY (PROFILE_ID)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table psgc_locations
+--
 
 CREATE TABLE psgc_locations (
             LOCATION_ID INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -752,6 +1473,12 @@ CREATE TABLE psgc_locations (
    LOCATION_DESCRIPTION VARCHAR(100),
             PRIMARY KEY (LOCATION_ID)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table type_class
+--
 
 CREATE TABLE type_class (
           TYPE_CLASS_ID INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -772,6 +1499,12 @@ INSERT INTO `type_class` (`TYPE_CLASS_ID`, `TYPE_CLASS_DESC`) VALUES
 (6, 'Profile only'),
 (7, 'Others');
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table rpfp_class
+--
+
 CREATE TABLE rpfp_class (
           RPFP_CLASS_ID INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
           TYPE_CLASS_ID VARCHAR(50) NOT NULL,
@@ -784,6 +1517,12 @@ CREATE TABLE rpfp_class (
             PRIMARY KEY (RPFP_CLASS_ID)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table pending_couples
+--
+
 CREATE TABLE couples_pending (
              COUPLES_ID INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
           RPFP_CLASS_ID INT(11) NOT NULL,
@@ -793,6 +1532,12 @@ CREATE TABLE couples_pending (
             PRIMARY KEY (COUPLES_ID)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table approved_couples
+--
+
 CREATE TABLE couples_approved (
              COUPLES_ID INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
           RPFP_CLASS_ID INT(11) NOT NULL,
@@ -801,6 +1546,12 @@ CREATE TABLE couples_approved (
               IS_ACTIVE INT(1) NOT NULL DEFAULT TRUE,
             PRIMARY KEY (COUPLES_ID)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table civil_status
+--
 
 CREATE TABLE civil_status (
                CIVIL_ID INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -818,6 +1569,12 @@ INSERT INTO `civil_status` (`CIVIL_ID`, `CIVIL_DESC`) VALUES
 (3, 'Widow/Widower'),
 (4, 'Separated'),
 (5, 'Live-in');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table educ_bckgrnd
+--
 
 CREATE TABLE educ_bckgrnd (
         EDUC_BCKGRND_ID INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -839,6 +1596,12 @@ INSERT INTO `educ_bckgrnd` (`EDUC_BCKGRND_ID`, `EDUC_BCKGRND_DESC`) VALUES
 (7, 'College Level'),
 (8, 'College Graduate'),
 (9, 'Post Graduate');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table modern_fp_method
+--
 
 CREATE TABLE modern_fp_method (
            MODERN_FP_ID INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -864,6 +1627,12 @@ INSERT INTO `modern_fp_method` (`MODERN_FP_ID`, `MODERN_FP_DESC`) VALUES
 (11, 'SDM'),
 (12, 'LAM');
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table traditional_fp_method
+--
+
 CREATE TABLE traditional_fp_method (
       TRADITIONAL_FP_ID INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
     TRADITIONAL_FP_DESC VARCHAR(100),
@@ -882,6 +1651,37 @@ INSERT INTO `traditional_fp_method` (`TRADITIONAL_FP_ID`, `TRADITIONAL_FP_DESC`)
 (5, 'Herbal'),
 (6, 'No Method');
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table traditional_fp_status
+--
+
+CREATE TABLE traditional_fp_status (
+          TFP_STATUS_ID INT(1) UNSIGNED NOT NULL AUTO_INCREMENT,
+        TFP_STATUS_DESC VARCHAR(100),
+            PRIMARY KEY (TFP_STATUS_ID)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table traditional_fp_status
+--
+
+INSERT INTO traditional_fp_status 
+    (TFP_STATUS_ID,
+    TFP_STATUS_DESC)
+VALUES
+    (1, 'Expressing Intention to Use Modern FP Method'),
+    (2, 'Undecided'),
+	(3, 'Currently Pregnant'),
+	(4, 'No Intention to Use')
+;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table reason_intending_use
+--
 
 CREATE TABLE reason_intending_use (
   REASON_INTENDING_USE_ID INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -898,11 +1698,23 @@ INSERT INTO `reason_intending_use` (`REASON_INTENDING_USE_ID`, `REASON_INTENDING
 (2, 'Limiting'),
 (3, 'Achieving');
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table provider_type
+--
+
 CREATE TABLE provider_type (
          PROVIDER_TYPE_ID INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
        PROVIDER_TYPE_DESC VARCHAR(100),
               PRIMARY KEY (PROVIDER_TYPE_ID)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table individual
+--
 
 CREATE TABLE individual (
                   INDV_ID INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -952,6 +1764,12 @@ INSERT INTO `individual` (`INDV_ID`, `COUPLES_ID`, `LNAME`, `FNAME`, `MNAME`, `E
 (19, 10, 'Halili', 'Miya', '', NULL, 30, 2, '1989-04-07', 5, NULL, 'Apitong', 'Tacloban', NULL, 5, NULL, 3, 1),
 (20, 10, 'Reyes', 'Miguel', '', NULL, NULL, NULL, NULL, 5, NULL, 'Apitong', 'Tacloban', NULL, NULL, NULL, 3, 0);
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table fp_details
+--
+
 CREATE TABLE fp_details (
           FP_DETAILS_ID INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
              COUPLES_ID INT(11) NOT NULL,
@@ -964,6 +1782,12 @@ REASON_INTENDING_USE_ID INT(11),
    CURRENT_FP_METHOD_ID INT(11),
             PRIMARY KEY (FP_DETAILS_ID)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table fp_service
+--
 
 CREATE TABLE fp_service (
           FP_SERVICE_ID INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -996,7 +1820,8 @@ SOURCE ./psgc.sql;
              90 = pmed
              80 = regional_data_manager
              70 = focal_person
-             60 = encoder
+             60 = partners
+             50 = encoder
 
         SCOPE
              50 = national
@@ -1010,6 +1835,7 @@ SOURCE ./psgc.sql;
        GRANT rpfp_login to pmed;
        GRANT rpfp_login to regional_data_manager;
        GRANT rpfp_login to focal_person;
+       GRANT rpfp_login to partners;
        GRANT rpfp_login to encoder;
 
          GRANT citiwide to provincial;
