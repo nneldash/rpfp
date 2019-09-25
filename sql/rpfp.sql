@@ -759,6 +759,19 @@ CREATE TABLE type_class (
             PRIMARY KEY (TYPE_CLASS_ID)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
+--
+-- Dumping data for table `type_class`
+--
+
+INSERT INTO `type_class` (`TYPE_CLASS_ID`, `TYPE_CLASS_DESC`) VALUES
+(1, '4Ps'),
+(2, 'Faith-Based Organization'),
+(3, 'PMC'),
+(4, 'Usapan'),
+(5, 'House-to-House'),
+(6, 'Profile only'),
+(7, 'Others');
+
 CREATE TABLE rpfp_class (
           RPFP_CLASS_ID INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
           TYPE_CLASS_ID VARCHAR(50) NOT NULL,
@@ -795,11 +808,37 @@ CREATE TABLE civil_status (
             PRIMARY KEY (CIVIL_ID)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
+--
+-- Dumping data for table `civil_status`
+--
+
+INSERT INTO `civil_status` (`CIVIL_ID`, `CIVIL_DESC`) VALUES
+(1, 'Married'),
+(2, 'Single'),
+(3, 'Widow/Widower'),
+(4, 'Separated'),
+(5, 'Live-in');
+
 CREATE TABLE educ_bckgrnd (
         EDUC_BCKGRND_ID INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
       EDUC_BCKGRND_DESC VARCHAR(100),
             PRIMARY KEY (EDUC_BCKGRND_ID)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `educ_bckgrnd`
+--
+
+INSERT INTO `educ_bckgrnd` (`EDUC_BCKGRND_ID`, `EDUC_BCKGRND_DESC`) VALUES
+(1, 'No Education'),
+(2, 'Elementary Level'),
+(3, 'Elementary Graduate'),
+(4, 'High School Level'),
+(5, 'High School Graduate'),
+(6, 'Vocational'),
+(7, 'College Level'),
+(8, 'College Graduate'),
+(9, 'Post Graduate');
 
 CREATE TABLE modern_fp_method (
            MODERN_FP_ID INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -807,17 +846,57 @@ CREATE TABLE modern_fp_method (
             PRIMARY KEY (MODERN_FP_ID)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
+--
+-- Dumping data for table `modern_fp_method`
+--
+
+INSERT INTO `modern_fp_method` (`MODERN_FP_ID`, `MODERN_FP_DESC`) VALUES
+(1, 'Condom'),
+(2, 'IUD'),
+(3, 'Pills'),
+(4, 'Injectable'),
+(5, 'Vasectomy'),
+(6, 'Tubal Ligation'),
+(7, 'Implant'),
+(8, 'CMM/Billings'),
+(9, 'BBT'),
+(10, 'Sympto-Thermal'),
+(11, 'SDM'),
+(12, 'LAM');
+
 CREATE TABLE traditional_fp_method (
       TRADITIONAL_FP_ID INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
     TRADITIONAL_FP_DESC VARCHAR(100),
             PRIMARY KEY (TRADITIONAL_FP_ID)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
+--
+-- Dumping data for table `traditional_fp_method`
+--
+
+INSERT INTO `traditional_fp_method` (`TRADITIONAL_FP_ID`, `TRADITIONAL_FP_DESC`) VALUES
+(1, 'Withdrawal'),
+(2, 'Rhythm'),
+(3, 'Calendar'),
+(4, 'Abstinence'),
+(5, 'Herbal'),
+(6, 'No Method');
+
+
 CREATE TABLE reason_intending_use (
   REASON_INTENDING_USE_ID INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
 REASON_INTENDING_USE_DESC VARCHAR(100),
               PRIMARY KEY (REASON_INTENDING_USE_ID)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `reason_intending_use`
+--
+
+INSERT INTO `reason_intending_use` (`REASON_INTENDING_USE_ID`, `REASON_INTENDING_USE_DESC`) VALUES
+(1, 'Spacing'),
+(2, 'Limiting'),
+(3, 'Achieving');
 
 CREATE TABLE provider_type (
          PROVIDER_TYPE_ID INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,

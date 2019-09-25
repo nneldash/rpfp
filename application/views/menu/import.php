@@ -1,30 +1,4 @@
-<?php
-defined('BASEPATH') or exit('No direct script access allowed');
-$this->load->library('helpers/HtmlHelper');
-?>
-
-
-<!-- <div class="body-padding">
-	<div class="row">
-		<div class="col-md-12">
-			<form id="form1" runat="server" class="form-horizontal">
-				<input type="file" id="excelfile" />
-				<br>
-    			<input class="save" type="button" id="viewfile" value="Export To Table" onclick="ExportToTable()" />
-				<table id="exceltable">
-    			</table>
-			</form>
-		</div>
-	</div>
-</div>
-
-<script type="text/javascript" src="</?= base_url('assets/js/importExcel.js')?>"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.7.7/xlsx.core.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xls/0.7.4-a/xls.core.min.js"></script> -->
-
 <!DOCTYPE html>
-<!-- xlsx.js (C) 2013-present  SheetJS http://sheetjs.com -->
-<!-- vim: set ts=2: -->
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
@@ -47,35 +21,29 @@ a { text-decoration: none }
 </head>
 <body>
 <pre>
-<b><a href="http://sheetjs.com">SheetJS Data Preview Live Demo</a></b>
-(Base64 text works back to IE6; drag and drop works back to IE10)
-
-<a href="https://github.com/SheetJS/js-xlsx">Source Code Repo</a>
-<a href="https://github.com/SheetJS/js-xlsx/issues">Issues?  Something look weird?  Click here and report an issue</a>
-Output Format: <select name="format" onchange="setfmt()">
+<select hidden name="format" onchange="setfmt()">
 <option value="csv" selected> CSV</option>
 <option value="json"> JSON</option>
 <option value="form"> FORMULAE</option>
 <option value="html"> HTML</option>
 </select><br />
-<div id="drop">Drop a spreadsheet file here to see sheet data</div>
-<input type="file" name="xlfile" id="xlf" /> ... or click here to select a file
+<div hidden id="drop">Drop a spreadsheet file here to see sheet data</div>
+<input type="file" name="xlfile" id="xlf" />
 
-<textarea id="b64data">... or paste a base64-encoding here</textarea>
-<input type="button" id="dotext" value="Click here to process the base64 text" onclick="b64it();"/><br />
-<b>Advanced Demo Options:</b>
-Use Web Workers: (when available) <input type="checkbox" name="useworker" checked>
-Use readAsBinaryString: (when available) <input type="checkbox" name="userabs" checked>
+<textarea hidden id="b64data">... or paste a base64-encoding here</textarea>
+<input hidden type="button" id="dotext" value="Click here to process the base64 text" onclick="b64it();"/><br />
+<b hidden>Advanced Demo Options:</b>
+<input hidden type="checkbox" name="useworker" checked>
+<input hidden type="checkbox" name="userabs" checked>
 </pre>
 <pre id="out"></pre>
 <div id="htmlout"></div>
 <br />
 <!-- uncomment the next line here and in xlsxworker.js for encoding support -->
-<script type="text/javascript" src="<?= base_url('node_modules/xlsx/dist/cpexcel.js')?>"></script>
-<script type="text/javascript" src="<?= base_url('node_modules/ssf/shim.js')?>"></script>
-<script type="text/javascript" src="<?= base_url('node_modules/xlsx/dist/jszip.js')?>"></script>
-<script type="text/javascript" src="<?= base_url('node_modules/xlsx/dist/xlsx.js')?>"></script>
-
+<script src="dist/cpexcel.js"></script>
+<script src="shim.js"></script>
+<script src="jszip.js"></script>
+<script src="xlsx.js"></script>
 <script>
 /*jshint browser:true */
 /* eslint-env browser */
@@ -254,4 +222,53 @@ var do_file = (function() {
 
 
 
+<!-- <div class="body-padding">
+	<div class="row">
+		<div class="col-md-12">
+			<form id="form1" runat="server" class="form-horizontal">
+				<input type="file" id="excelfile" />
+				<br>
+    			<input class="save" type="button" id="viewfile" value="Export To Table" onclick="ExportToTable()" />
+				<table id="exceltable">
+    			</table>
+			</form>
+		</div>
+	</div>
+</div>
 
+<script type="text/javascript" src="</?= base_url('assets/js/importExcel.js')?>"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.7.7/xlsx.core.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xls/0.7.4-a/xls.core.min.js"></script> -->
+
+<!-- <form method="POST" enctype="multipart/form-data" id="upload-form">
+	<input type="file" name="file" class="filee"><br>
+    <input type="submit" name="submit" class="btn btn-primary save" value="Import">
+
+    <pre id="out"></pre>
+</form>
+
+<script>
+	$(function(){
+		$('#upload-form').submit(function(e){
+			e.preventDefault();		
+			var formData = new FormData($(this)[0]);
+
+			alert(formData);
+			return false;
+
+			$.ajax({
+			    type: 'POST',
+			    data: formData,
+			    cache: false,
+			    url: </?php echo base_url('menu/sample'); ?>,
+			    contentType: false,
+			    processData: false,
+			    success: function(result){
+
+			    	// $('#out').html(result);
+			    	alert(result);
+			    }
+			});
+		});
+	});
+</script> -->

@@ -113,7 +113,7 @@ $this->load->library('helpers/HtmlHelper');
 								<?php
 		                            echo HtmlHelper::inputPdf(
 		                                $is_pdf,
-		                                $form1->Seminar->ClassNumber,
+		                                '',
 		                                "text",
 		                                "class_no",
 		                                "padding-l10 underline width-70",
@@ -156,7 +156,7 @@ $this->load->library('helpers/HtmlHelper');
 								<?php
 		                            echo HtmlHelper::inputPdf(
 		                                $is_pdf,
-		                                $form1->Seminar->Province,
+		                                '',
 		                                "text",
 		                                "province",
 		                                "padding-l10 underline width-70",
@@ -210,7 +210,7 @@ $this->load->library('helpers/HtmlHelper');
 								<?php
 		                            echo HtmlHelper::inputPdf(
 		                                $is_pdf,
-		                                $form1->Seminar->Barangay,
+		                                '',
 		                                "text",
 		                                "barangay",
 		                                "padding-l10 underline width-70",
@@ -244,7 +244,7 @@ $this->load->library('helpers/HtmlHelper');
 								<?php
 		                            echo HtmlHelper::inputPdf(
 		                                $is_pdf,
-		                                $form1->Seminar->DateConducted,
+		                                '',
 		                                "date",
 		                                "date_conducted",
 		                                "padding-l10 underline width-70",

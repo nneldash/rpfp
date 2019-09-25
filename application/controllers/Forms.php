@@ -19,7 +19,25 @@ class Forms extends CI_Controller
 
     public function index()
     {
-        $header['title'] = 'RPFP Online | Form 1';
+
+        $header['title'] =' RPFP Online | Form 1';
+
+        if (isset($GLOBALS[NO_OUTPUT]) && $GLOBALS[NO_OUTPUT]) {
+            return;
+        }
+
+        if (!$this->LoginModel->isLoggedIn()) {
+            $this->load->view("includes/header", $header);
+            $this->load->view('index/landingPage');
+            $this->load->view("includes/footer");
+            return;
+        }
+
+        $this->load->Model('ProfileModel');
+        if ($this->ProfileModel->isEncoder()) {
+            redirect(site_url('Forms'));
+            return;
+        }
 
         $this->load->model('FormModel');
 
@@ -27,6 +45,16 @@ class Forms extends CI_Controller
 
         $this->load->view('includes/header', $header);
         $this->load->view('forms/form1', array('form1' => $form1, 'is_pdf' => false));
+        $this->load->view('includes/footer');
+        return;
+    }
+
+    public function formsample()
+    {
+        $header['title'] = 'RPFP Online | Form 1';
+
+        $this->load->view('includes/header', $header);
+        $this->load->view('forms/formsample', array('is_pdf' => false));
         $this->load->view('includes/footer');
     }
 
