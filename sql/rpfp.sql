@@ -33,8 +33,8 @@ SET time_zone = "+00:00";
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
 /*!40101 SET NAMES utf8mb4 */;
 
-CREATE DATABASE TESTING;
-USE TESTING;
+CREATE DATABASE RPFP;
+USE RPFP;
 --
 -- Database: rpfp
 --
@@ -768,8 +768,8 @@ BEGIN
          SELECT rc.RPFP_CLASS_ID
            FROM rpfp.RPFP_CLASS rc
       LEFT JOIN rpfp.PENDING_COUPLES pc
-             ON (ac.RPFP_CLASS_ID = rc.RPFP_CLASS_ID)
-          WHERE (ac.IS_ACTIVE = 0)
+             ON (pc.RPFP_CLASS_ID = rc.RPFP_CLASS_ID)
+          WHERE (pc.IS_ACTIVE = 0)
     
        ORDER BY rc.DATE_CONDUCTED DESC
     ) THEN
@@ -795,7 +795,7 @@ BEGIN
                     rc.DATE_CONDUCTED AS DATE_CONDUCT
                FROM rpfp.rpfp_class rc
                     LEFT JOIN rpfp.pending_couples pc
-                    ON (ac.RPFP_CLASS_ID = rc.RPFP_CLASS_ID)
+                    ON (pc.RPFP_CLASS_ID = rc.RPFP_CLASS_ID)
            ORDER BY rc.DATE_CONDUCTED DESC
             ;
         END;
@@ -848,7 +848,7 @@ BEGIN
       LEFT JOIN rpfp.RPFP_CLASS rc
              ON (rc.RPFP_CLASS_ID = ac.RPFP_CLASS_ID
     )
-       ORDER BY pc.COUPLES_ID ASC
+       ORDER BY ac.COUPLES_ID ASC
     ) THEN
         BEGIN
              SELECT NULL AS COUPLESID,

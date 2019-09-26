@@ -38,8 +38,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
 					<i class="fa fa-edit"></i>
 				</button>
 			</a>
-			<a class="viewForm" href="<?= base_url('forms'); ?>" target="_blank">
+			<a class="viewForm folderview" href="<?= base_url('forms'); ?>" target="_blank">
 				<button class="btn btn-primary" data-toggle="tooltip" data-placement="right" title="View">
+					<i class="fa fa-folder-o"></i>
 					<i class="fa fa-folder-open-o"></i>
 				</button>
 			</a>
@@ -62,8 +63,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
 					<i class="fa fa-edit"></i>
 				</button>
 			</a>
-			<a class="viewForm" href="<?= base_url('forms'); ?>" target="_blank">
+			<a class="viewForm folderview" href="<?= base_url('forms'); ?>" target="_blank">
 				<button class="btn btn-primary" data-toggle="tooltip" data-placement="right" title="View">
+					<i class="fa fa-folder-o"></i>
 					<i class="fa fa-folder-open-o"></i>
 				</button>
 			</a>
@@ -86,8 +88,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
 					<i class="fa fa-edit"></i>
 				</button>
 			</a>
-			<a class="viewForm" href="<?= base_url('forms'); ?>" target="_blank">
+			<a class="viewForm folderview" href="<?= base_url('forms'); ?>" target="_blank">
 				<button class="btn btn-primary" data-toggle="tooltip" data-placement="right" title="View">
+					<i class="fa fa-folder-o"></i>
 					<i class="fa fa-folder-open-o"></i>
 				</button>
 			</a>
@@ -110,8 +113,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
 					<i class="fa fa-edit"></i>
 				</button>
 			</a>
-			<a class="viewForm" href="<?= base_url('forms'); ?>" target="_blank">
+			<a class="viewForm folderview" href="<?= base_url('forms'); ?>" target="_blank">
 				<button class="btn btn-primary" data-toggle="tooltip" data-placement="right" title="View">
+					<i class="fa fa-folder-o"></i>
 					<i class="fa fa-folder-open-o"></i>
 				</button>
 			</a>
@@ -134,8 +138,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
 					<i class="fa fa-edit"></i>
 				</button>
 			</a>
-			<a class="viewForm" href="<?= base_url('forms'); ?>" target="_blank">
+			<a class="viewForm folderview" href="<?= base_url('forms'); ?>" target="_blank">
 				<button class="btn btn-primary" data-toggle="tooltip" data-placement="right" title="View">
+					<i class="fa fa-folder-o"></i>
 					<i class="fa fa-folder-open-o"></i>
 				</button>
 			</a>
@@ -158,8 +163,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
 					<i class="fa fa-edit"></i>
 				</button>
 			</a>
-			<a class="viewForm" href="<?= base_url('forms'); ?>" target="_blank">
+			<a class="viewForm folderview" href="<?= base_url('forms'); ?>" target="_blank">
 				<button class="btn btn-primary" data-toggle="tooltip" data-placement="right" title="View">
+					<i class="fa fa-folder-o"></i>
 					<i class="fa fa-folder-open-o"></i>
 				</button>
 			</a>
@@ -182,8 +188,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
 					<i class="fa fa-edit"></i>
 				</button>
 			</a>
-			<a class="viewForm" href="<?= base_url('forms'); ?>" target="_blank">
+			<a class="viewForm folderview" href="<?= base_url('forms'); ?>" target="_blank">
 				<button class="btn btn-primary" data-toggle="tooltip" data-placement="right" title="View">
+					<i class="fa fa-folder-o"></i>
 					<i class="fa fa-folder-open-o"></i>
 				</button>
 			</a>

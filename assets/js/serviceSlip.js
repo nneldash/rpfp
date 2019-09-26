@@ -7,6 +7,7 @@ function checkbox()
 {
 	if ($('.no4-check').is(':checked')) {
 		$('.no4-input').removeAttr('disabled');
+		$('.no5-input').attr('disabled', 'disabled');
 	} else {
 		$('.no4-input').attr('disabled', 'disabled');
 	}
@@ -18,5 +19,8 @@ function checkbox()
 			$('.no4-input').attr('disabled', 'disabled');
 			$(".no4-input").val("");
 		}
+		
+		$('.no5-input').attr('disabled', 'disabled');
+		$(".no5-input").val("");
 	});
 }

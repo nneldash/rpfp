@@ -58,7 +58,7 @@ table.dataTable thead th.sorting_desc:after {
 }
 .btn-primary:hover {
 	background: #fff;
-	border: 2px solid #2a3f54;
+	border: 1px solid #2a3f54;
 	color: #333;
 }
 .btn-info {
@@ -68,4 +68,12 @@ table.dataTable thead th.sorting_desc:after {
 	background: #fff;
 	border: 2px solid #2a3f54;
 	color: #333;
+}
+
+.folderview:hover .fa-folder-o,
+.folderview .fa-folder-open-o {
+    display: none;
+}
+.folderview:hover .fa-folder-open-o {
+    display: inline;
 }
