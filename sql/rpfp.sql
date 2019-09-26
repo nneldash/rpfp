@@ -1210,7 +1210,7 @@ BEGIN
 END$$
 
 CREATE DEFINER=root@localhost PROCEDURE user_save_class (
-    IN rpfp_class_id INT UNSIGNED,
+    IN classid INT UNSIGNED,
     IN TYPE_CLASS_ID INT,
     IN OTHERS_SPECIFY VARCHAR(100),
     IN CITY_ID INT,
@@ -1221,28 +1221,28 @@ CREATE DEFINER=root@localhost PROCEDURE user_save_class (
     )  MODIFIES SQL DATA
 proc_exit_point :
 BEGIN
-    DECLARE rpfp_class_id INT UNSIGNED;
+    DECLARE rpfp_class_no INT UNSIGNED;
 
-    IF class_number IS NULL THEN
+    IF classid IS NULL THEN
         SELECT "CANNOT SAVE RECORD WITH GIVEN PARAMETERS" AS MESSAGE;
         LEAVE proc_exit_point;
     END IF;
 
-    SET rpfp_class_id = rpfp.user_get_class_list(rpfp_class);
-    IF rpfp_class_id IS NULL THEN
+    SET rpfp_class_no = rpfp.get_class_id(classid);
+    IF rpfp_class_no IS NULL THEN
         SELECT "UNABLE TO GET RECORD WITH GIVEN PARAMETERS" AS MESSAGE;
         LEAVE proc_exit_point;
     END IF;
 
      UPDATE rpfp.rpfp_class rc
-        SET pc.TYPE_CLASS_ID = IF(IFNULL(TYPECLASS, '') = '', pc.TYPE_CLASS_ID, TYPECLASS),
-            pc.OTHERS_SPECIFY = IF(IFNULL(OTHERS_SPECIFY, '') = '', pc.OTHERS_SPECIFY, OTHERS_SPECIFY),
-            pc.CITY_ID = IF(IFNULL(CITY, '') = '', pc.CITY_ID, CITY),
-            pc.BARANGAY_ID = IF(IFNULL(BARANGAY, '') = '', pc.BARANGAY_ID, BARANGAY),
-            pc.CLASS_NUMBER = IF(IFNULL(CLASS_NO, '') = '', pc.CLASS_NUMBER, CLASS_NO),
-            pc.DATE_CONDUCTED = IF(IFNULL(DATE_CONDUCT, '') = '', pc.DATE_CONDUCTED, DATE_CONDUCT),
-            pc.PROFILE_ID = IF(IFNULL(PROFILEID, '') = '', pc.PROFILE_ID, PROFILEID)            
-      WHERE pc.RPFP_CLASS_ID = rpfp_class
+        SET rc.TYPE_CLASS_ID = IF(IFNULL(TYPECLASS, '') = '', rc.TYPE_CLASS_ID, TYPECLASS),
+            rc.OTHERS_SPECIFY = IF(IFNULL(OTHERS_SPECIFY, '') = '', rc.OTHERS_SPECIFY, OTHERS_SPECIFY),
+            rc.CITY_ID = IF(IFNULL(CITY, '') = '', rc.CITY_ID, CITY),
+            rc.BARANGAY_ID = IF(IFNULL(BARANGAY, '') = '', rc.BARANGAY_ID, BARANGAY),
+            rc.CLASS_NUMBER = IF(IFNULL(CLASS_NO, '') = '', rc.CLASS_NUMBER, CLASS_NO),
+            rc.DATE_CONDUCTED = IF(IFNULL(DATE_CONDUCT, '') = '', rc.DATE_CONDUCTED, DATE_CONDUCT),
+            rc.PROFILE_ID = IF(IFNULL(PROFILEID, '') = '', rc.PROFILE_ID, PROFILEID)            
+      WHERE rc.RPFP_CLASS_ID = rpfp_class_no
     ;
 
     SELECT "SUCCESS!" AS MESSAGE;
