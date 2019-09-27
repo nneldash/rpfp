@@ -1510,7 +1510,7 @@ INSERT INTO `type_class` (`TYPE_CLASS_ID`, `TYPE_CLASS_DESC`) VALUES
 
 CREATE TABLE rpfp_class (
           RPFP_CLASS_ID INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
-          TYPE_CLASS_ID VARCHAR(50) NOT NULL,
+          TYPE_CLASS_ID INT(11) NOT NULL,
          OTHERS_SPECIFY VARCHAR(100),
                 CITY_ID INT(11) NOT NULL,
             BARANGAY_ID INT(11) NOT NULL,
@@ -1520,25 +1520,51 @@ CREATE TABLE rpfp_class (
             PRIMARY KEY (RPFP_CLASS_ID)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
+--
+-- Dumping data for table `rpfp_class`
+--
+
+INSERT INTO `rpfp_class` (`RPFP_CLASS_ID`, `TYPE_CLASS_ID`,`OTHERS_SPECIFY`,`CITY_ID`,`BARANGAY_ID`,`CLASS_NUMBER`,`DATE_CONDUCTED`,`PROFILE_ID`) VALUES
+(1, 1, NULL, 083747, 083747125, 'RPFP-TAC-2019-00001','02-11-2019', 1);
+
 -- --------------------------------------------------------
 
 --
--- Table structure for table pending_couples
+-- Table structure for table couples_pending
 --
 
 CREATE TABLE couples_pending (
              COUPLES_ID INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
           RPFP_CLASS_ID INT(11) NOT NULL,
-       TYPE_PARTICIPANT VARCHAR(100),
            DATE_ENCODED DATE,
-              IS_ACTIVE INT(1) NOT NULL DEFAULT TRUE,
+              IS_ACTIVE INT(1),
             PRIMARY KEY (COUPLES_ID)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `couples_pending`
+--
+
+INSERT INTO `couples_pending` (`COUPLES_ID`,`RPFP_CLASS_ID`,`DATE_ENCODED`,`IS_ACTIVE`) VALUES
+(1, 1, '03-01-2019', 2),
+(2, 1, '03-01-2019', 2),
+(3, 1, '03-01-2019', 2),
+(4, 1, '03-01-2019', 2),
+(5, 1, '03-01-2019', 2),
+(6, 1, '03-01-2019', 2),
+(7, 1, '03-01-2019', 2),
+(8, 1, '03-01-2019', 2),
+(9, 1, '03-01-2019', 2),
+(10, 1, '03-01-2019', 2),
+(11, 1, '03-01-2019', 2),
+(12, 1, '03-01-2019', 2),
+(13, 1, '03-01-2019', 2),
+(14, 1, '03-01-2019', 2);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table approved_couples
+-- Table structure for table couples_approved
 --
 
 CREATE TABLE couples_approved (
@@ -1546,7 +1572,7 @@ CREATE TABLE couples_approved (
           RPFP_CLASS_ID INT(11) NOT NULL,
        TYPE_PARTICIPANT VARCHAR(100),
            DATE_ENCODED DATE,
-              IS_ACTIVE INT(1) NOT NULL DEFAULT TRUE,
+              IS_ACTIVE INT(1),
             PRIMARY KEY (COUPLES_ID)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
@@ -1781,10 +1807,29 @@ CREATE TABLE fp_details (
             TFP_TYPE_ID INT(11),
           TFP_STATUS_ID INT(11),
 REASON_INTENDING_USE_ID INT(11),
-              FP_STATUS INT(11),
-   CURRENT_FP_METHOD_ID INT(11),
             PRIMARY KEY (FP_DETAILS_ID)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `fp_details`
+--
+
+INSERT INTO `fp_details` (`FP_DETAILS_ID`, `COUPLES_ID`, `MFP_METHOD_USED_ID`, `MFP_INTENTION_SHIFT_ID`, `TFP_TYPE_ID`, `TFP_STATUS_ID`, `REASON_INTENDING_USE_ID`) VALUES
+(1, 1, 3, NULL, NULL, NULL, NULL),
+(2, 2, NULL, NULL, 1, 4, NULL),
+(3, 3, 3, 2, NULL, NULL, NULL),
+(4, 4, NULL, NULL, 6, 4, NULL),
+(5, 5, NULL, NULL, 6, 3, NULL),
+(6, 6, 4, NULL, 6, 1, 1),
+(7, 7, NULL, NULL, 1, 2, NULL),
+(8, 8, 12, NULL, NULL, NULL, NULL),
+(9, 9, 5, NULL, 2, 1, 2),
+(10, 10, 5, NULL, 6, 1, 2),
+(11, 11, NULL, NULL, 6, 4, NULL),
+(12, 12, NULL, NULL, 6, 4, NULL),
+(13, 13, NULL, NULL, 6, 4, NULL),
+(14, 14, NULL, NULL, 6, 4, NULL),
+(15, 15, NULL, NULL, 6, 4, NULL);
 
 -- --------------------------------------------------------
 
