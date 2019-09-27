@@ -332,7 +332,7 @@ BEGIN
         LEAVE proc_exit_point;
     END IF;
 
-    IF role_num NOT IN (60, 70, 80, 90, 100) THEN
+    IF role_num NOT IN (50, 60, 70, 80, 90, 100) THEN
         SELECT concat("INVALID ROLE: ", role_num) MESSAGE;
         LEAVE proc_exit_point;
     END IF;
@@ -399,6 +399,15 @@ BEGIN
 END$$
 
 CREATE DEFINER=root@localhost FUNCTION profile_check_if_encoder() RETURNS INT(1)
+    READS SQL DATA
+BEGIN
+    DECLARE ret_val INT(1) DEFAULT NULL;
+
+    SET ret_val := rpfp.profile_check_role(USER(), 50);
+    RETURN ret_val;
+END$$
+
+CREATE DEFINER=root@localhost FUNCTION profile_check_if_partners() RETURNS INT(1)
     READS SQL DATA
 BEGIN
     DECLARE ret_val INT(1) DEFAULT NULL;
@@ -635,6 +644,9 @@ BEGIN
                 SET default_role := "focal_person";
 
             WHEN 60 THEN
+                SET default_role := "partners";
+
+            WHEN 50 THEN
                 SET default_role := "encoder";
             ELSE 
                 SET default_role := "rpfp_login";
@@ -712,8 +724,11 @@ BEGIN
             WHEN "focal_person" THEN
                 SET default_num := 70;
 
-            WHEN "encoder" THEN
+            WHEN "partners" THEN
                 SET default_num := 60;
+
+            WHEN "encoder" THEN
+                SET default_num := 50;
             ELSE 
                 SET default_num := 0;
         END CASE;
@@ -820,7 +835,6 @@ BEGIN
         BEGIN
              SELECT NULL AS COUPLESID,
                     NULL AS RPFPCLASS,
-                    NULL AS TYPEPARTICIPANT,
                     NULL AS ISACTIVE,
                     NULL AS DATE_ENCODE
             ;
@@ -829,7 +843,6 @@ BEGIN
         BEGIN
              SELECT rc.RPFP_CLASS_ID AS RPFPCLASS,
                     pc.COUPLES_ID AS COUPLESID,
-                    pc.TYPE_PARTICIPANT AS TYPEPARTICIPANT,
                     pc.IS_ACTIVE AS ISACTIVE,
                     pc.DATE_ENCODED AS DATE_ENCODE
                FROM rpfp.pending_couples pc
@@ -856,7 +869,6 @@ BEGIN
         BEGIN
              SELECT NULL AS COUPLESID,
                     NULL AS RPFPCLASS,
-                    NULL AS TYPEPARTICIPANT,
                     NULL AS ISACTIVE,
                     NULL AS DATE_ENCODE
             ;
@@ -865,7 +877,6 @@ BEGIN
         BEGIN
              SELECT rc.RPFP_CLASS_ID AS RPFPCLASS,
                     ac.COUPLES_ID AS COUPLESID,
-                    ac.TYPE_PARTICIPANT AS TYPEPARTICIPANT,
                     ac.IS_ACTIVE AS ISACTIVE,
                     ac.DATE_ENCODED AS DATE_ENCODE
                FROM rpfp.approved_couples ac
@@ -960,9 +971,7 @@ BEGIN
                     NULL AS MFP_SHIFT,
                     NULL AS TFP_TYPE,
                     NULL AS TFP_STATUS,
-                    NULL AS REASON_USE,
-                    NULL AS FPSTATUS,
-                    NULL AS CURRENT_FP
+                    NULL AS REASON_USE
             ;
         END;
     ELSE
@@ -972,9 +981,7 @@ BEGIN
                     fd.MFP_METHOD_USED_ID AS MFP_USED,
                     fd.MFP_INTENTION_SHIFT_ID AS MFP_SHIFT,
                     fd.TFP_TYPE_ID AS TFP_STATUS,
-                    fd.REASON_INTENDING_USE_ID AS REASON_USE,
-                    fd.FP_STATUS AS FPSTATUS,
-                    fd.CURRENT_FP_METHOD_ID AS CURRENT_FP
+                    fd.REASON_INTENDING_USE_ID AS REASON_USE
                FROM rpfp.fp_details fd
                     LEFT JOIN rpfp.pending_couples pc
                     ON (fd.RPFP_CLASS_ID = pc.RPFP_CLASS_ID)
@@ -1006,6 +1013,8 @@ BEGIN
                     NULL AS PROVIDER_TYPE,
                     NULL AS IS_COUNSELLING,
                     NULL AS OTHER_CONCERN,
+                    NULL AS COUNSELED_FP,
+                    NULL AS OTHER_SPECIFY,
                     NULL AS IS_PROVIDED_SERVICE,
                     NULL AS DATESERVED,
                     NULL AS CLIENT_ADVISE,
@@ -1023,6 +1032,8 @@ BEGIN
                     fd.PROVIDER_TYPE_ID AS PROVIDER_TYPE,
                     fd.IS_COUNSELLING AS IS_COUNSELLING,
                     fd.OTHER_CONCERN AS OTHER_CONCERN,
+                    fd.COUNSELED_TO_USE AS COUNSELED_FP,
+                    fd.OTHER_REASONS_SPECIFY AS OTHER_SPECIFY,
                     fd.IS_PROVIDED_SERVICE AS IS_PROVIDED_SERVICE,
                     fs.DATE_SERVED AS DATESERVED,
                     fs.CLIENT_ADVISE AS CLIENT_ADVISE,
@@ -1267,7 +1278,6 @@ END$$
 CREATE DEFINER=root@localhost PROCEDURE user_save_couples (
     IN couples_id INT UNSIGNED,
     IN RPFP_CLASS_ID INT,
-    IN TYPE_PARTICIPANT INT,
     IN IS_ACTIVE INT,
     IN DATE_ENCODED DATE
     )  MODIFIES SQL DATA
@@ -1288,7 +1298,6 @@ BEGIN
 
      UPDATE rpfp.pending_couples pc
         SET pc.RPFP_CLASS_ID = IF(IFNULL(RPFP_CLASS, '') = '', pc.RPFP_CLASS_ID, RPFP_CLASS),
-            pc.TYPE_PARTICIPANT = IF(IFNULL(TYPEPARTICIPANT, '') = '', pc.TYPE_PARTICIPANT, TYPEPARTICIPANT),
             pc.IS_ACTIVE = 2,
             pc.DATE_ENCODED = IF(IFNULL(DATE_ENCODE, '') = '', pc.DATE_ENCODED, DATE_ENCODE)
       WHERE pc.COUPLES_ID = couples_id
@@ -1319,14 +1328,12 @@ BEGIN
             fd.MFP_INTENTION_SHIFT_ID = IF(IFNULL(MFP_SHIFT, '') = '', fd.MFP_INTENTION_SHIFT_ID, MFP_SHIFT),
             fd.TFP_TYPE_ID = IF(IFNULL(TFP_TYPE, '') = '', fd.TFP_TYPE_ID, TFP_TYPE),                            
             fd.TFP_STATUS_ID = IF(IFNULL(TFP_STATUS, '') = '', fd.TFP_STATUS_ID, TFP_STATUS),
-            fd.REASON_INTENDING_USE_ID = IF(IFNULL(REASON_USE, '') = '', fd.REASON_INTENDING_USE_ID, REASON_USE),
-            fd.FP_STATUS = IF(IFNULL(FPSTATUS, '') = '', fd.FP_STATUS, FPSTATUS)
+            fd.REASON_INTENDING_USE_ID = IF(IFNULL(REASON_USE, '') = '', fd.REASON_INTENDING_USE_ID, REASON_USE)
       WHERE fd.COUPLES_ID = couples_id
     ;
 
     SELECT "SUCCESS!" AS MESSAGE;
 END$$
-
 /** END SAVE COUPLES DETAILS */
 
 /**  SAVE FP SERVICE  */
@@ -1349,7 +1356,9 @@ CREATE DEFINER=root@localhost PROCEDURE user_save_fp_service (
     IN PROVIDER_TYPE_ID INT,
     IN IS_COUNSELLING INT,
     IN OTHER_CONCERN VARCHAR(100),
-    IN IS_PROVIDED_SERVICE INT,
+    IN COUNSELED_FP VARCHAR(100),
+    IN OTHER_SPECIFY VARCHAR(100),
+    IN IS_PROVIDED_SERVICE INT(11),
     IN DATE_SERVED DATE,
     IN CLIENT_ADVISE VARCHAR(100),
     IN REFERRAL_NAME VARCHAR(50),
@@ -1372,6 +1381,8 @@ BEGIN
             fs.PROVIDER_TYPE_ID = IF(IFNULL(PROVIDER_TYPE, '') = '', fs.PROVIDER_TYPE_ID, PROVIDER_TYPE),
             fs.IS_COUNSELLING = IF(IFNULL(IS_COUNSELING, '') = '', fs.IS_COUNSELLING, IS_COUNSELING),
             fs.OTHER_CONCERN = IF(IFNULL(OTHERS, '') = '', fs.OTHER_CONCERN, OTHERS),
+            fs.COUNSELED_TO_USE = IF(IFNULL(COUNSELED_FP, '') = '', fs.COUNSELED_TO_USE, COUNSELED_FP),
+            fs.OTHER_REASONS_SPECIFY = IF(IFNULL(OTHER_SPECIFY, '') = '', fs.OTHER_REASONS_SPECIFY, OTHERS_SPECIFY),
             fs.IS_PROVIDED_SERVICE = IF(IFNULL(IS_PROVIDED_SERVICE, '') = '', fs.IS_PROVIDED_SERVICE, IS_PROVIDED_SERVICE),
             fs.DATE_SERVED = IF(IFNULL(DATESERVED, '') = '', fs.DATE_SERVED, DATESERVED),
             fs.CLIENT_ADVISE = IF(IFNULL(CLIENT_ADVISE, '') = '', fs.CLIENT_ADVISE, CLIENT_ADVISE),
@@ -1406,7 +1417,6 @@ END$$
 CREATE DEFINER=root@localhost PROCEDURE rdm_approve_couples (
     IN couples_id INT UNSIGNED,
     IN RPFP_CLASS_ID INT,
-    IN TYPE_PARTICIPANT INT,
     IN IS_ACTIVE INT,
     IN DATE_ENCODED DATE
     )  MODIFIES SQL DATA
@@ -1427,7 +1437,6 @@ BEGIN
 
      UPDATE rpfp.approved_couples ac
         SET ac.RPFP_CLASS_ID = IF(IFNULL(RPFP_CLASS, '') = '', ac.RPFP_CLASS_ID, RPFP_CLASS),
-            ac.TYPE_PARTICIPANT = IF(IFNULL(TYPEPARTICIPANT, '') = '', ac.TYPE_PARTICIPANT, TYPEPARTICIPANT),
             ac.IS_ACTIVE = 2,
             ac.DATE_ENCODED = IF(IFNULL(DATE_ENCODE, '') = '', ac.DATE_ENCODED, DATE_ENCODE)
       WHERE ac.COUPLES_ID = couples_id
