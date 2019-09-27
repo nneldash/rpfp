@@ -1530,10 +1530,10 @@ INSERT INTO `rpfp_class` (`RPFP_CLASS_ID`, `TYPE_CLASS_ID`,`OTHERS_SPECIFY`,`CIT
 -- --------------------------------------------------------
 
 --
--- Table structure for table couples_pending
+-- Table structure for table pending_couples
 --
 
-CREATE TABLE couples_pending (
+CREATE TABLE pending_couples (
              COUPLES_ID INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
           RPFP_CLASS_ID INT(11) NOT NULL,
            DATE_ENCODED DATE,
@@ -1542,10 +1542,10 @@ CREATE TABLE couples_pending (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
--- Dumping data for table `couples_pending`
+-- Dumping data for table `pending_couples`
 --
 
-INSERT INTO `couples_pending` (`COUPLES_ID`,`RPFP_CLASS_ID`,`DATE_ENCODED`,`IS_ACTIVE`) VALUES
+INSERT INTO `pending_couples` (`COUPLES_ID`,`RPFP_CLASS_ID`,`DATE_ENCODED`,`IS_ACTIVE`) VALUES
 (1, 1, '03-01-2019', 2),
 (2, 1, '03-01-2019', 2),
 (3, 1, '03-01-2019', 2),
@@ -1564,10 +1564,10 @@ INSERT INTO `couples_pending` (`COUPLES_ID`,`RPFP_CLASS_ID`,`DATE_ENCODED`,`IS_A
 -- --------------------------------------------------------
 
 --
--- Table structure for table couples_approved
+-- Table structure for table approved_couples
 --
 
-CREATE TABLE couples_approved (
+CREATE TABLE approved_couples (
              COUPLES_ID INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
           RPFP_CLASS_ID INT(11) NOT NULL,
        TYPE_PARTICIPANT VARCHAR(100),
