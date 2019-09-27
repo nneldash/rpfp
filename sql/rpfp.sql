@@ -68,6 +68,7 @@ CREATE DEFINER=root@localhost PROCEDURE itdmu_create_rpfp_user(
     IN passwd VARCHAR(50) CHARSET utf8 COLLATE utf8_unicode_ci,
     IN surname VARCHAR(50) CHARSET utf8 COLLATE utf8_unicode_ci,
     IN firstname VARCHAR(50) CHARSET utf8 COLLATE utf8_unicode_ci,
+    IN email VARCHAR(50) CHARSET utf8 COLLATE utf8_unicode_ci,
     IN region_id INT UNSIGNED,
     IN location_code INT UNSIGNED,
     IN my_role INT UNSIGNED,
@@ -103,6 +104,7 @@ BEGIN
                     DB_USER_ID,
                     LAST_NAME, 
                     FIRST_NAME,
+                    E_MAIL,
                     REGION,
                     PSGC_CODE
         )
@@ -110,6 +112,7 @@ BEGIN
                     name_user,
                     surname,
                     firstname,
+                    email,
                     region_id,
                     location_code
         );
@@ -1235,13 +1238,13 @@ BEGIN
     END IF;
 
      UPDATE rpfp.rpfp_class rc
-        SET rc.TYPE_CLASS_ID = IF(IFNULL(TYPECLASS, '') = '', rc.TYPE_CLASS_ID, TYPECLASS),
+        SET rc.TYPE_CLASS_ID = IF(IFNULL(TYPE_CLASS_ID, '') = '', rc.TYPE_CLASS_ID, TYPE_CLASS_ID),
             rc.OTHERS_SPECIFY = IF(IFNULL(OTHERS_SPECIFY, '') = '', rc.OTHERS_SPECIFY, OTHERS_SPECIFY),
-            rc.CITY_ID = IF(IFNULL(CITY, '') = '', rc.CITY_ID, CITY),
-            rc.BARANGAY_ID = IF(IFNULL(BARANGAY, '') = '', rc.BARANGAY_ID, BARANGAY),
-            rc.CLASS_NUMBER = IF(IFNULL(CLASS_NO, '') = '', rc.CLASS_NUMBER, CLASS_NO),
-            rc.DATE_CONDUCTED = IF(IFNULL(DATE_CONDUCT, '') = '', rc.DATE_CONDUCTED, DATE_CONDUCT),
-            rc.PROFILE_ID = IF(IFNULL(PROFILEID, '') = '', rc.PROFILE_ID, PROFILEID)            
+            rc.CITY_ID = IF(IFNULL(CITY_ID, '') = '', rc.CITY_ID, CITY_ID),
+            rc.BARANGAY_ID = IF(IFNULL(BARANGAY_ID, '') = '', rc.BARANGAY_ID, BARANGAY_ID),
+            rc.CLASS_NUMBER = IF(IFNULL(CLASS_NUMBER, '') = '', rc.CLASS_NUMBER, CLASS_NUMBER),
+            rc.DATE_CONDUCTED = IF(IFNULL(DATE_CONDUCTED, '') = '', rc.DATE_CONDUCTED, DATE_CONDUCTED),
+            rc.PROFILE_ID = IF(IFNULL(PROFILE_ID, '') = '', rc.PROFILE_ID, PROFILE_ID)            
       WHERE rc.RPFP_CLASS_ID = rpfp_class_no
     ;
 
