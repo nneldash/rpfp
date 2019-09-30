@@ -322,8 +322,21 @@ class FormModel extends BaseModel
     {
         $formA = new FormAClass();
        
+        $formA->Period = $this->getPeriodReport();
         $formA->ListMonth = $this->getMonthlyData();
         return $formA;
+    }
+
+    public function getPeriodReport() : PeriodReportInterface
+    {
+        return $this->fromDbGetSpecific(
+            'PeriodReportClass',
+            array(
+                'Month' => 'month'
+            ),
+            'rpfp_forma_get_months',
+            array()
+        );
     }
 
     public function getMonthlyData() : ListMonthsInterface
@@ -332,13 +345,12 @@ class FormModel extends BaseModel
 
         return $this->fromDbGetList(
             'ListMonthsClass',
-            'CoupleClass',
+            'MonthClass',
             array(
                 'Month' => 'month'
             ),
             'rpfp_forma_get_months',
-            array(),
-            'months'
+            array()
         );
         // $listMonth = new ListMonthsClass();
 
