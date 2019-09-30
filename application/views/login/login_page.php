@@ -25,7 +25,7 @@
                         required />
                         <span class="focus-input100"></span>
                         <span class="symbol-input100">
-                            <i class="material-icons">mood</i>
+                            <i class="fa fa-smile-o"></i>
                         </span>
                     </div>
                     <div class="form-group wrap-input100 validate-input">
@@ -34,7 +34,7 @@
                         required />
                         <span class="focus-input100"></span>
                         <span class="symbol-input100">
-                            <i class="material-icons">lock</i>
+                            <i class="fa fa-lock"></i>
                         </span>
                     </div>
                     <script src="<?=CAPTCHA_API?>" async defer></script>

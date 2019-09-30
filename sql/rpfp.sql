@@ -1534,7 +1534,7 @@ CREATE TABLE rpfp_class (
 --
 
 INSERT INTO `rpfp_class` (`RPFP_CLASS_ID`, `TYPE_CLASS_ID`,`OTHERS_SPECIFY`,`CITY_ID`,`BARANGAY_ID`,`CLASS_NUMBER`,`DATE_CONDUCTED`,`PROFILE_ID`) VALUES
-(1, 1, NULL, 083747, 083747125, 'RPFP-TAC-2019-00001','02-11-2019', 1);
+(1, 1, NULL, 083747, 083747125, 'RPFP-TAC-2019-00001','2019-02-11', 1);
 
 -- --------------------------------------------------------
 
@@ -1555,20 +1555,21 @@ CREATE TABLE pending_couples (
 --
 
 INSERT INTO `pending_couples` (`COUPLES_ID`,`RPFP_CLASS_ID`,`DATE_ENCODED`,`IS_ACTIVE`) VALUES
-(1, 1, '03-01-2019', 2),
-(2, 1, '03-01-2019', 2),
-(3, 1, '03-01-2019', 2),
-(4, 1, '03-01-2019', 2),
-(5, 1, '03-01-2019', 2),
-(6, 1, '03-01-2019', 2),
-(7, 1, '03-01-2019', 2),
-(8, 1, '03-01-2019', 2),
-(9, 1, '03-01-2019', 2),
-(10, 1, '03-01-2019', 2),
-(11, 1, '03-01-2019', 2),
-(12, 1, '03-01-2019', 2),
-(13, 1, '03-01-2019', 2),
-(14, 1, '03-01-2019', 2);
+(1, 1, '2019-03-01', 2),
+(2, 1, '2019-03-01', 2),
+(3, 1, '2019-03-01', 2),
+(4, 1, '2019-03-01', 2),
+(5, 1, '2019-03-01', 2),
+(6, 1, '2019-03-01', 2),
+(7, 1, '2019-03-01', 2),
+(8, 1, '2019-03-01', 2),
+(9, 1, '2019-03-01', 2),
+(10, 1, '2019-03-01', 2),
+(11, 1, '2019-03-01', 2),
+(12, 1, '2019-03-01', 2),
+(13, 1, '2019-03-01', 2),
+(14, 1, '2019-03-01', 2),
+(15, 1, '2019-03-01', 2);
 
 -- --------------------------------------------------------
 
@@ -1800,7 +1801,12 @@ INSERT INTO `individual` (`INDV_ID`, `COUPLES_ID`, `LNAME`, `FNAME`, `MNAME`, `E
 (17, 9, 'Gonzaga', 'Alice', '', NULL, 25, 2, '1994-06-07', 5, NULL, 'Apitong', 'Tacloban', NULL, 5, NULL, 3, 1),
 (18, 9, 'Vargas', 'Alexander', '', NULL, NULL, NULL, NULL, NULL, NULL, 'Apitong', 'Tacloban', NULL, NULL, NULL, 3, 0),
 (19, 10, 'Halili', 'Miya', '', NULL, 30, 2, '1989-04-07', 5, NULL, 'Apitong', 'Tacloban', NULL, 5, NULL, 3, 1),
-(20, 10, 'Reyes', 'Miguel', '', NULL, NULL, NULL, NULL, 5, NULL, 'Apitong', 'Tacloban', NULL, NULL, NULL, 3, 0);
+(20, 10, 'Reyes', 'Miguel', '', NULL, NULL, NULL, NULL, 5, NULL, 'Apitong', 'Tacloban', NULL, NULL, NULL, 3, 0),
+(21, 1, 'Gomez', 'Selena', '', NULL, 21, 2, '1998-11-07', 2, NULL, 'Apitong', 'Tacloban', NULL, 8, NULL, 0, 1),
+(22, 1, 'Isip', 'Angela', '', NULL, 18, 2, '2001-10-07', 2, NULL, 'Apitong', 'Tacloban', NULL, 7, NULL, 1, 1),
+(23, 1, 'Jimenez', 'Lylia', '', NULL, 14, 2, '2005-09-07', 1, NULL, 'Apitong', 'Tacloban', NULL, 4, NULL, 0, 1),
+(24, 1, 'Coronel', 'Hilda', '', NULL, 47, 3, '1972-02-07', 3, NULL, 'Apitong', 'Tacloban', NULL, 7, NULL, 3, 1),
+(25, 1, 'Lopez', 'Karina', '', NULL, 40, 2, '1979-11-07', 4, NULL, 'Apitong', 'Tacloban', NULL, 8, NULL, 3, 1);
 
 -- --------------------------------------------------------
 

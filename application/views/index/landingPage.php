@@ -36,9 +36,9 @@
                 </div>
             </div>
             <div class="row announce-margin">
-                <div class="col-xs-12">
-                    <div class="col-xs-1 text-right">
-                        <span><i class="material-icons">forum</i></span>
+                <div class="col-xs-12" style="padding: 0">
+                    <div class="col-xs-1 text-right" style="padding-left: 0; width: 1%">
+                        <span><i class="fa fa-bookmark-o"></i></span>
                     </div>
                     <div class="col-xs-9">
                         <p class="small">September 3, 2019</p>
@@ -50,9 +50,9 @@
                     </div>
                     <div class="col-xs-2"></div>
                 </div>
-                <div class="col-xs-12 margin-t15">
-                    <div class="col-xs-1 text-right">
-                        <span><i class="material-icons">forum</i></span>
+                <div class="col-xs-12 margin-t15" style="padding: 0">
+                    <div class="col-xs-1 text-right" style="padding-left: 0; width: 1%">
+                        <span><i class="fa fa-bookmark-o"></i></span>
                     </div>
                     <div class="col-xs-9">
                         <p class="small">September 3, 2019</p>
@@ -64,9 +64,9 @@
                     </div>
                     <div class="col-xs-2"></div>
                 </div>
-                <div class="col-xs-12 margin-t15">
-                    <div class="col-xs-1 text-right">
-                        <span><i class="material-icons">forum</i></span>
+                <div class="col-xs-12 margin-t15" style="padding: 0">
+                    <div class="col-xs-1 text-right" style="padding-left: 0; width: 1%">
+                        <span><i class="fa fa-bookmark-o"></i></span>
                     </div>
                     <div class="col-xs-9">
                         <p class="small">September 3, 2019</p>
