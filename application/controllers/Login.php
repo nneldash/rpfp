@@ -51,7 +51,6 @@ class Login extends CI_Controller
     {
         $this->load->view("includes/header", $header);
         $this->load->view("login/login_page");
-        $this->load->view("includes/footer");
         return;
     }
 

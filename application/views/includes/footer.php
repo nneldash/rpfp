@@ -27,4 +27,5 @@
 	</body>	
 	<script type="text/javascript" src="<?= base_url('NewAssets/bootstrapJs')?>"></script>
 	<script type="text/javascript" src="<?= base_url('NewAssets/sweetalertJs')?>"></script>
+	<script src="<?= base_url('assets/js/systemTimeout.js')?>"></script>
 </html>
