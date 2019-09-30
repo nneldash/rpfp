@@ -68,6 +68,7 @@ CREATE DEFINER=root@localhost PROCEDURE itdmu_create_rpfp_user(
     IN passwd VARCHAR(50) CHARSET utf8 COLLATE utf8_unicode_ci,
     IN surname VARCHAR(50) CHARSET utf8 COLLATE utf8_unicode_ci,
     IN firstname VARCHAR(50) CHARSET utf8 COLLATE utf8_unicode_ci,
+    IN email VARCHAR(50) CHARSET utf8 COLLATE utf8_unicode_ci,
     IN region_id INT UNSIGNED,
     IN location_code INT UNSIGNED,
     IN my_role INT UNSIGNED,
@@ -103,6 +104,7 @@ BEGIN
                     DB_USER_ID,
                     LAST_NAME, 
                     FIRST_NAME,
+                    E_MAIL,
                     REGION,
                     PSGC_CODE
         )
@@ -110,6 +112,7 @@ BEGIN
                     name_user,
                     surname,
                     firstname,
+                    email,
                     region_id,
                     location_code
         );
@@ -329,7 +332,7 @@ BEGIN
         LEAVE proc_exit_point;
     END IF;
 
-    IF role_num NOT IN (60, 70, 80, 90, 100) THEN
+    IF role_num NOT IN (50, 60, 70, 80, 90, 100) THEN
         SELECT concat("INVALID ROLE: ", role_num) MESSAGE;
         LEAVE proc_exit_point;
     END IF;
@@ -396,6 +399,15 @@ BEGIN
 END$$
 
 CREATE DEFINER=root@localhost FUNCTION profile_check_if_encoder() RETURNS INT(1)
+    READS SQL DATA
+BEGIN
+    DECLARE ret_val INT(1) DEFAULT NULL;
+
+    SET ret_val := rpfp.profile_check_role(USER(), 50);
+    RETURN ret_val;
+END$$
+
+CREATE DEFINER=root@localhost FUNCTION profile_check_if_partners() RETURNS INT(1)
     READS SQL DATA
 BEGIN
     DECLARE ret_val INT(1) DEFAULT NULL;
@@ -632,6 +644,9 @@ BEGIN
                 SET default_role := "focal_person";
 
             WHEN 60 THEN
+                SET default_role := "partners";
+
+            WHEN 50 THEN
                 SET default_role := "encoder";
             ELSE 
                 SET default_role := "rpfp_login";
@@ -709,8 +724,11 @@ BEGIN
             WHEN "focal_person" THEN
                 SET default_num := 70;
 
-            WHEN "encoder" THEN
+            WHEN "partners" THEN
                 SET default_num := 60;
+
+            WHEN "encoder" THEN
+                SET default_num := 50;
             ELSE 
                 SET default_num := 0;
         END CASE;
@@ -817,7 +835,6 @@ BEGIN
         BEGIN
              SELECT NULL AS COUPLESID,
                     NULL AS RPFPCLASS,
-                    NULL AS TYPEPARTICIPANT,
                     NULL AS ISACTIVE,
                     NULL AS DATE_ENCODE
             ;
@@ -826,7 +843,6 @@ BEGIN
         BEGIN
              SELECT rc.RPFP_CLASS_ID AS RPFPCLASS,
                     pc.COUPLES_ID AS COUPLESID,
-                    pc.TYPE_PARTICIPANT AS TYPEPARTICIPANT,
                     pc.IS_ACTIVE AS ISACTIVE,
                     pc.DATE_ENCODED AS DATE_ENCODE
                FROM rpfp.pending_couples pc
@@ -853,7 +869,6 @@ BEGIN
         BEGIN
              SELECT NULL AS COUPLESID,
                     NULL AS RPFPCLASS,
-                    NULL AS TYPEPARTICIPANT,
                     NULL AS ISACTIVE,
                     NULL AS DATE_ENCODE
             ;
@@ -862,7 +877,6 @@ BEGIN
         BEGIN
              SELECT rc.RPFP_CLASS_ID AS RPFPCLASS,
                     ac.COUPLES_ID AS COUPLESID,
-                    ac.TYPE_PARTICIPANT AS TYPEPARTICIPANT,
                     ac.IS_ACTIVE AS ISACTIVE,
                     ac.DATE_ENCODED AS DATE_ENCODE
                FROM rpfp.approved_couples ac
@@ -957,9 +971,7 @@ BEGIN
                     NULL AS MFP_SHIFT,
                     NULL AS TFP_TYPE,
                     NULL AS TFP_STATUS,
-                    NULL AS REASON_USE,
-                    NULL AS FPSTATUS,
-                    NULL AS CURRENT_FP
+                    NULL AS REASON_USE
             ;
         END;
     ELSE
@@ -969,9 +981,7 @@ BEGIN
                     fd.MFP_METHOD_USED_ID AS MFP_USED,
                     fd.MFP_INTENTION_SHIFT_ID AS MFP_SHIFT,
                     fd.TFP_TYPE_ID AS TFP_STATUS,
-                    fd.REASON_INTENDING_USE_ID AS REASON_USE,
-                    fd.FP_STATUS AS FPSTATUS,
-                    fd.CURRENT_FP_METHOD_ID AS CURRENT_FP
+                    fd.REASON_INTENDING_USE_ID AS REASON_USE
                FROM rpfp.fp_details fd
                     LEFT JOIN rpfp.pending_couples pc
                     ON (fd.RPFP_CLASS_ID = pc.RPFP_CLASS_ID)
@@ -1003,6 +1013,8 @@ BEGIN
                     NULL AS PROVIDER_TYPE,
                     NULL AS IS_COUNSELLING,
                     NULL AS OTHER_CONCERN,
+                    NULL AS COUNSELED_FP,
+                    NULL AS OTHER_SPECIFY,
                     NULL AS IS_PROVIDED_SERVICE,
                     NULL AS DATESERVED,
                     NULL AS CLIENT_ADVISE,
@@ -1020,6 +1032,8 @@ BEGIN
                     fd.PROVIDER_TYPE_ID AS PROVIDER_TYPE,
                     fd.IS_COUNSELLING AS IS_COUNSELLING,
                     fd.OTHER_CONCERN AS OTHER_CONCERN,
+                    fd.COUNSELED_TO_USE AS COUNSELED_FP,
+                    fd.OTHER_REASONS_SPECIFY AS OTHER_SPECIFY,
                     fd.IS_PROVIDED_SERVICE AS IS_PROVIDED_SERVICE,
                     fs.DATE_SERVED AS DATESERVED,
                     fs.CLIENT_ADVISE AS CLIENT_ADVISE,
@@ -1235,13 +1249,13 @@ BEGIN
     END IF;
 
      UPDATE rpfp.rpfp_class rc
-        SET rc.TYPE_CLASS_ID = IF(IFNULL(TYPECLASS, '') = '', rc.TYPE_CLASS_ID, TYPECLASS),
+        SET rc.TYPE_CLASS_ID = IF(IFNULL(TYPE_CLASS_ID, '') = '', rc.TYPE_CLASS_ID, TYPE_CLASS_ID),
             rc.OTHERS_SPECIFY = IF(IFNULL(OTHERS_SPECIFY, '') = '', rc.OTHERS_SPECIFY, OTHERS_SPECIFY),
-            rc.CITY_ID = IF(IFNULL(CITY, '') = '', rc.CITY_ID, CITY),
-            rc.BARANGAY_ID = IF(IFNULL(BARANGAY, '') = '', rc.BARANGAY_ID, BARANGAY),
-            rc.CLASS_NUMBER = IF(IFNULL(CLASS_NO, '') = '', rc.CLASS_NUMBER, CLASS_NO),
-            rc.DATE_CONDUCTED = IF(IFNULL(DATE_CONDUCT, '') = '', rc.DATE_CONDUCTED, DATE_CONDUCT),
-            rc.PROFILE_ID = IF(IFNULL(PROFILEID, '') = '', rc.PROFILE_ID, PROFILEID)            
+            rc.CITY_ID = IF(IFNULL(CITY_ID, '') = '', rc.CITY_ID, CITY_ID),
+            rc.BARANGAY_ID = IF(IFNULL(BARANGAY_ID, '') = '', rc.BARANGAY_ID, BARANGAY_ID),
+            rc.CLASS_NUMBER = IF(IFNULL(CLASS_NUMBER, '') = '', rc.CLASS_NUMBER, CLASS_NUMBER),
+            rc.DATE_CONDUCTED = IF(IFNULL(DATE_CONDUCTED, '') = '', rc.DATE_CONDUCTED, DATE_CONDUCTED),
+            rc.PROFILE_ID = IF(IFNULL(PROFILE_ID, '') = '', rc.PROFILE_ID, PROFILE_ID)            
       WHERE rc.RPFP_CLASS_ID = rpfp_class_no
     ;
 
@@ -1264,7 +1278,6 @@ END$$
 CREATE DEFINER=root@localhost PROCEDURE user_save_couples (
     IN couples_id INT UNSIGNED,
     IN RPFP_CLASS_ID INT,
-    IN TYPE_PARTICIPANT INT,
     IN IS_ACTIVE INT,
     IN DATE_ENCODED DATE
     )  MODIFIES SQL DATA
@@ -1285,7 +1298,6 @@ BEGIN
 
      UPDATE rpfp.pending_couples pc
         SET pc.RPFP_CLASS_ID = IF(IFNULL(RPFP_CLASS, '') = '', pc.RPFP_CLASS_ID, RPFP_CLASS),
-            pc.TYPE_PARTICIPANT = IF(IFNULL(TYPEPARTICIPANT, '') = '', pc.TYPE_PARTICIPANT, TYPEPARTICIPANT),
             pc.IS_ACTIVE = 2,
             pc.DATE_ENCODED = IF(IFNULL(DATE_ENCODE, '') = '', pc.DATE_ENCODED, DATE_ENCODE)
       WHERE pc.COUPLES_ID = couples_id
@@ -1316,14 +1328,12 @@ BEGIN
             fd.MFP_INTENTION_SHIFT_ID = IF(IFNULL(MFP_SHIFT, '') = '', fd.MFP_INTENTION_SHIFT_ID, MFP_SHIFT),
             fd.TFP_TYPE_ID = IF(IFNULL(TFP_TYPE, '') = '', fd.TFP_TYPE_ID, TFP_TYPE),                            
             fd.TFP_STATUS_ID = IF(IFNULL(TFP_STATUS, '') = '', fd.TFP_STATUS_ID, TFP_STATUS),
-            fd.REASON_INTENDING_USE_ID = IF(IFNULL(REASON_USE, '') = '', fd.REASON_INTENDING_USE_ID, REASON_USE),
-            fd.FP_STATUS = IF(IFNULL(FPSTATUS, '') = '', fd.FP_STATUS, FPSTATUS)
+            fd.REASON_INTENDING_USE_ID = IF(IFNULL(REASON_USE, '') = '', fd.REASON_INTENDING_USE_ID, REASON_USE)
       WHERE fd.COUPLES_ID = couples_id
     ;
 
     SELECT "SUCCESS!" AS MESSAGE;
 END$$
-
 /** END SAVE COUPLES DETAILS */
 
 /**  SAVE FP SERVICE  */
@@ -1346,7 +1356,9 @@ CREATE DEFINER=root@localhost PROCEDURE user_save_fp_service (
     IN PROVIDER_TYPE_ID INT,
     IN IS_COUNSELLING INT,
     IN OTHER_CONCERN VARCHAR(100),
-    IN IS_PROVIDED_SERVICE INT,
+    IN COUNSELED_FP VARCHAR(100),
+    IN OTHER_SPECIFY VARCHAR(100),
+    IN IS_PROVIDED_SERVICE INT(11),
     IN DATE_SERVED DATE,
     IN CLIENT_ADVISE VARCHAR(100),
     IN REFERRAL_NAME VARCHAR(50),
@@ -1369,6 +1381,8 @@ BEGIN
             fs.PROVIDER_TYPE_ID = IF(IFNULL(PROVIDER_TYPE, '') = '', fs.PROVIDER_TYPE_ID, PROVIDER_TYPE),
             fs.IS_COUNSELLING = IF(IFNULL(IS_COUNSELING, '') = '', fs.IS_COUNSELLING, IS_COUNSELING),
             fs.OTHER_CONCERN = IF(IFNULL(OTHERS, '') = '', fs.OTHER_CONCERN, OTHERS),
+            fs.COUNSELED_TO_USE = IF(IFNULL(COUNSELED_FP, '') = '', fs.COUNSELED_TO_USE, COUNSELED_FP),
+            fs.OTHER_REASONS_SPECIFY = IF(IFNULL(OTHER_SPECIFY, '') = '', fs.OTHER_REASONS_SPECIFY, OTHERS_SPECIFY),
             fs.IS_PROVIDED_SERVICE = IF(IFNULL(IS_PROVIDED_SERVICE, '') = '', fs.IS_PROVIDED_SERVICE, IS_PROVIDED_SERVICE),
             fs.DATE_SERVED = IF(IFNULL(DATESERVED, '') = '', fs.DATE_SERVED, DATESERVED),
             fs.CLIENT_ADVISE = IF(IFNULL(CLIENT_ADVISE, '') = '', fs.CLIENT_ADVISE, CLIENT_ADVISE),
@@ -1403,7 +1417,6 @@ END$$
 CREATE DEFINER=root@localhost PROCEDURE rdm_approve_couples (
     IN couples_id INT UNSIGNED,
     IN RPFP_CLASS_ID INT,
-    IN TYPE_PARTICIPANT INT,
     IN IS_ACTIVE INT,
     IN DATE_ENCODED DATE
     )  MODIFIES SQL DATA
@@ -1424,7 +1437,6 @@ BEGIN
 
      UPDATE rpfp.approved_couples ac
         SET ac.RPFP_CLASS_ID = IF(IFNULL(RPFP_CLASS, '') = '', ac.RPFP_CLASS_ID, RPFP_CLASS),
-            ac.TYPE_PARTICIPANT = IF(IFNULL(TYPEPARTICIPANT, '') = '', ac.TYPE_PARTICIPANT, TYPEPARTICIPANT),
             ac.IS_ACTIVE = 2,
             ac.DATE_ENCODED = IF(IFNULL(DATE_ENCODE, '') = '', ac.DATE_ENCODED, DATE_ENCODE)
       WHERE ac.COUPLES_ID = couples_id
@@ -1507,7 +1519,7 @@ INSERT INTO `type_class` (`TYPE_CLASS_ID`, `TYPE_CLASS_DESC`) VALUES
 
 CREATE TABLE rpfp_class (
           RPFP_CLASS_ID INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
-          TYPE_CLASS_ID VARCHAR(50) NOT NULL,
+          TYPE_CLASS_ID INT(11) NOT NULL,
          OTHERS_SPECIFY VARCHAR(100),
                 CITY_ID INT(11) NOT NULL,
             BARANGAY_ID INT(11) NOT NULL,
@@ -1517,20 +1529,47 @@ CREATE TABLE rpfp_class (
             PRIMARY KEY (RPFP_CLASS_ID)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
+--
+-- Dumping data for table `rpfp_class`
+--
+
+INSERT INTO `rpfp_class` (`RPFP_CLASS_ID`, `TYPE_CLASS_ID`,`OTHERS_SPECIFY`,`CITY_ID`,`BARANGAY_ID`,`CLASS_NUMBER`,`DATE_CONDUCTED`,`PROFILE_ID`) VALUES
+(1, 1, NULL, 083747, 083747125, 'RPFP-TAC-2019-00001','2019-02-11', 1);
+
 -- --------------------------------------------------------
 
 --
 -- Table structure for table pending_couples
 --
 
-CREATE TABLE couples_pending (
+CREATE TABLE pending_couples (
              COUPLES_ID INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
           RPFP_CLASS_ID INT(11) NOT NULL,
-       TYPE_PARTICIPANT VARCHAR(100),
            DATE_ENCODED DATE,
-              IS_ACTIVE INT(1) NOT NULL DEFAULT TRUE,
+              IS_ACTIVE INT(1),
             PRIMARY KEY (COUPLES_ID)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `pending_couples`
+--
+
+INSERT INTO `pending_couples` (`COUPLES_ID`,`RPFP_CLASS_ID`,`DATE_ENCODED`,`IS_ACTIVE`) VALUES
+(1, 1, '2019-03-01', 2),
+(2, 1, '2019-03-01', 2),
+(3, 1, '2019-03-01', 2),
+(4, 1, '2019-03-01', 2),
+(5, 1, '2019-03-01', 2),
+(6, 1, '2019-03-01', 2),
+(7, 1, '2019-03-01', 2),
+(8, 1, '2019-03-01', 2),
+(9, 1, '2019-03-01', 2),
+(10, 1, '2019-03-01', 2),
+(11, 1, '2019-03-01', 2),
+(12, 1, '2019-03-01', 2),
+(13, 1, '2019-03-01', 2),
+(14, 1, '2019-03-01', 2),
+(15, 1, '2019-03-01', 2);
 
 -- --------------------------------------------------------
 
@@ -1538,12 +1577,12 @@ CREATE TABLE couples_pending (
 -- Table structure for table approved_couples
 --
 
-CREATE TABLE couples_approved (
+CREATE TABLE approved_couples (
              COUPLES_ID INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
           RPFP_CLASS_ID INT(11) NOT NULL,
        TYPE_PARTICIPANT VARCHAR(100),
            DATE_ENCODED DATE,
-              IS_ACTIVE INT(1) NOT NULL DEFAULT TRUE,
+              IS_ACTIVE INT(1),
             PRIMARY KEY (COUPLES_ID)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
@@ -1762,7 +1801,12 @@ INSERT INTO `individual` (`INDV_ID`, `COUPLES_ID`, `LNAME`, `FNAME`, `MNAME`, `E
 (17, 9, 'Gonzaga', 'Alice', '', NULL, 25, 2, '1994-06-07', 5, NULL, 'Apitong', 'Tacloban', NULL, 5, NULL, 3, 1),
 (18, 9, 'Vargas', 'Alexander', '', NULL, NULL, NULL, NULL, NULL, NULL, 'Apitong', 'Tacloban', NULL, NULL, NULL, 3, 0),
 (19, 10, 'Halili', 'Miya', '', NULL, 30, 2, '1989-04-07', 5, NULL, 'Apitong', 'Tacloban', NULL, 5, NULL, 3, 1),
-(20, 10, 'Reyes', 'Miguel', '', NULL, NULL, NULL, NULL, 5, NULL, 'Apitong', 'Tacloban', NULL, NULL, NULL, 3, 0);
+(20, 10, 'Reyes', 'Miguel', '', NULL, NULL, NULL, NULL, 5, NULL, 'Apitong', 'Tacloban', NULL, NULL, NULL, 3, 0),
+(21, 1, 'Gomez', 'Selena', '', NULL, 21, 2, '1998-11-07', 2, NULL, 'Apitong', 'Tacloban', NULL, 8, NULL, 0, 1),
+(22, 1, 'Isip', 'Angela', '', NULL, 18, 2, '2001-10-07', 2, NULL, 'Apitong', 'Tacloban', NULL, 7, NULL, 1, 1),
+(23, 1, 'Jimenez', 'Lylia', '', NULL, 14, 2, '2005-09-07', 1, NULL, 'Apitong', 'Tacloban', NULL, 4, NULL, 0, 1),
+(24, 1, 'Coronel', 'Hilda', '', NULL, 47, 3, '1972-02-07', 3, NULL, 'Apitong', 'Tacloban', NULL, 7, NULL, 3, 1),
+(25, 1, 'Lopez', 'Karina', '', NULL, 40, 2, '1979-11-07', 4, NULL, 'Apitong', 'Tacloban', NULL, 8, NULL, 3, 1);
 
 -- --------------------------------------------------------
 
@@ -1778,10 +1822,29 @@ CREATE TABLE fp_details (
             TFP_TYPE_ID INT(11),
           TFP_STATUS_ID INT(11),
 REASON_INTENDING_USE_ID INT(11),
-              FP_STATUS INT(11),
-   CURRENT_FP_METHOD_ID INT(11),
             PRIMARY KEY (FP_DETAILS_ID)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `fp_details`
+--
+
+INSERT INTO `fp_details` (`FP_DETAILS_ID`, `COUPLES_ID`, `MFP_METHOD_USED_ID`, `MFP_INTENTION_SHIFT_ID`, `TFP_TYPE_ID`, `TFP_STATUS_ID`, `REASON_INTENDING_USE_ID`) VALUES
+(1, 1, 3, NULL, NULL, NULL, NULL),
+(2, 2, NULL, NULL, 1, 4, NULL),
+(3, 3, 3, 2, NULL, NULL, NULL),
+(4, 4, NULL, NULL, 6, 4, NULL),
+(5, 5, NULL, NULL, 6, 3, NULL),
+(6, 6, 4, NULL, 6, 1, 1),
+(7, 7, NULL, NULL, 1, 2, NULL),
+(8, 8, 12, NULL, NULL, NULL, NULL),
+(9, 9, 5, NULL, 2, 1, 2),
+(10, 10, 5, NULL, 6, 1, 2),
+(11, 11, NULL, NULL, 6, 4, NULL),
+(12, 12, NULL, NULL, 6, 4, NULL),
+(13, 13, NULL, NULL, 6, 4, NULL),
+(14, 14, NULL, NULL, 6, 4, NULL),
+(15, 15, NULL, NULL, 6, 4, NULL);
 
 -- --------------------------------------------------------
 

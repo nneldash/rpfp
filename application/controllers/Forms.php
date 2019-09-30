@@ -29,7 +29,6 @@ class Forms extends CI_Controller
         if (!$this->LoginModel->isLoggedIn()) {
             $this->load->view("includes/header", $header);
             $this->load->view('index/landingPage');
-            $this->load->view("includes/footer");
             return;
         }
 
@@ -214,56 +213,85 @@ class Forms extends CI_Controller
         $form1 = $this->FormModel->getForm1();
         
         $mpdfConfig = array(
-                'format' => 'A4',
-                'orientation' => 'L'
-            );
-        
-        $mpdf = new \Mpdf\Mpdf($mpdfConfig);
-        $html = $this->load->view('forms/form1', array('form1' => $form1, 'is_pdf' => true), true);
+            'format' => 'A4',
+            'orientation' => 'L'
+        );
 
-        $mpdf->WriteHTML($html);
-        $mpdf->Output('Form1.pdf', 'I');
+        try {
+            $mpdf = new \Mpdf\Mpdf($mpdfConfig);
+            $mpdf->debug = true;
+
+            $html = $this->load->view('forms/form1', array('form1' => $form1, 'is_pdf' => true), true);
+
+            $mpdf->setTitle('RPFP Online | Form 1');
+            $mpdf->WriteHTML($html);
+            $mpdf->Output(date('Ymd') . ' - Form 1.pdf', 'I');
+        } catch (\Mpdf\MpdfException $e) {
+            echo $e->getMessage();
+        }
     }
 
     public function viewforma()
     {
         $mpdfConfig = array(
-                'format' => 'A4',
-                'orientation' => 'L'
-            );
-        
-        $mpdf = new \Mpdf\Mpdf($mpdfConfig);
-        $html = $this->load->view('forms/forma', array('is_pdf' => true), true);
+            'format' => 'A4',
+            'orientation' => 'L'
+        );
 
-        $mpdf->WriteHTML($html);
-        $mpdf->Output('FormA.pdf', 'I');
+        try {
+            $mpdf = new \Mpdf\Mpdf($mpdfConfig);
+            $mpdf->debug = true;
+
+            $html = $this->load->view('forms/forma', array('is_pdf' => true), true);
+
+            $mpdf->setTitle('RPFP Online | Form A');
+            $mpdf->WriteHTML($html);
+            $mpdf->Output(date('Ymd') . ' - Form A.pdf', 'I');
+        } catch (\Mpdf\MpdfException $e) {
+            echo $e->getMessage();
+        }
+        
     }   
 
     public function viewformb()
     {
         $mpdfConfig = array(
-                'format' => 'A4',
-                'orientation' => 'L'
-            );
-        
-        $mpdf = new \Mpdf\Mpdf($mpdfConfig);
-        $html = $this->load->view('forms/formb', array('is_pdf' => true), true);
+            'format' => 'A4',
+            'orientation' => 'L'
+        );
 
-        $mpdf->WriteHTML($html);
-        $mpdf->Output('FormB.pdf', 'I');
+        try {
+            $mpdf = new \Mpdf\Mpdf($mpdfConfig);
+            $mpdf->debug = true;
+
+            $html = $this->load->view('forms/formb', array('is_pdf' => true), true);
+
+            $mpdf->setTitle('RPFP Online | Form B');
+            $mpdf->WriteHTML($html);
+            $mpdf->Output(date('Ymd') . ' - Form B.pdf', 'I');
+        } catch (\Mpdf\MpdfException $e) {
+            echo $e->getMessage();
+        }
     }
 
     public function viewformc()
     {
         $mpdfConfig = array(
-                'format' => 'A4',
-                'orientation' => 'L'
-            );
-        
-        $mpdf = new \Mpdf\Mpdf($mpdfConfig);
-        $html = $this->load->view('forms/formC', array('is_pdf' => true), true);
+            'format' => 'A4',
+            'orientation' => 'L'
+        );
 
-        $mpdf->WriteHTML($html);
-        $mpdf->Output('FormC.pdf', 'I');
+        try {
+            $mpdf = new \Mpdf\Mpdf($mpdfConfig);
+            $mpdf->debug = true;
+            
+            $html = $this->load->view('forms/formC', array('is_pdf' => true), true);
+
+            $mpdf->setTitle('RPFP Online | Form C');
+            $mpdf->WriteHTML($html);
+            $mpdf->Output(date('Ymd') . ' - Form C.pdf', 'I');
+        } catch (\Mpdf\MpdfException $e) {
+            echo $e->getMessage();
+        }
     }
 }

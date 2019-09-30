@@ -47,11 +47,18 @@ class Menu extends CI_Controller
             'orientation' => 'P'
         );
         
-        $mpdf = new \Mpdf\Mpdf($mpdfConfig);
-        $html = $this->load->view('menu/summary', array('is_pdf' => true), true);
+        try {
+            $mpdf = new \Mpdf\Mpdf($mpdfConfig);
+            $mpdf->debug = true;
 
-        $mpdf->WriteHTML($html);
-        $mpdf->Output('Summary.pdf', 'I');
+            $html = $this->load->view('menu/summary', array('is_pdf' => true), true);
+
+            $mpdf->SetTitle('RPFP Online | Accomplishment Report');
+            $mpdf->WriteHTML($html);
+            $mpdf->Output(date('Ymd') . ' - Accomplishment Report.pdf', 'I');
+        } catch (\Mpdf\MpdfException $e) {
+            echo $e->getMessage();
+        }
     }
 
     public function dashboard()
