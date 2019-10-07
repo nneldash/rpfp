@@ -126,4 +126,28 @@ class NewAssets extends CI_Controller
         header('Content-Type: application/javascript');
         readfile(BASEPATH . CUSTOM_JS);
     }
+
+    public function cpExcel()
+    {
+        header('Content-Type: application/javascript');
+        readfile(BASEPATH . CPEXCEL_JS);
+    }
+
+    public function shimJs()
+    {
+        header('Content-Type: application/javascript');
+        readfile(BASEPATH . SHIM_JS);
+    }
+
+    public function jsZip()
+    {
+        header('Content-Type: application/javascript');
+        readfile(BASEPATH . JSZIP_JS);
+    }
+
+    public function xlsxJs()
+    {
+        header('Content-Type: application/javascript');
+        readfile(BASEPATH . XLSX_JS);
+    }
 }

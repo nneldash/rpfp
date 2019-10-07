@@ -44,35 +44,54 @@ var process_wb = (function() {
 	    var array = str.split(",");
 
 	    $('#importModal').modal('hide');
+
+	    if(typeof array[101] !== '') $('#4ps').prop('checked', true);
+	    if(typeof array[104] !== '') $('#house').prop('checked', true);
+	    if(typeof array[117] !== '') $('#faith').prop('checked', true);
+	    if(typeof array[120] !== '') $('#profile').prop('checked', true);
+	    if(typeof array[133] !== '') $('#pmc').prop('checked', true);
+	    if(typeof array[136] !== '') $('#others').prop('checked', true);
+	   	if(typeof array[150] !== '') $('#usapan').prop('checked', true);
+
+	   	if(typeof array[101] == '') $('#4ps').prop('checked', false);
+	    if(typeof array[104] == '') $('#house').prop('checked', false);
+	    if(typeof array[117] == '') $('#faith').prop('checked', false);
+	    if(typeof array[120] == '') $('#profile').prop('checked', false);
+	    if(typeof array[133] == '') $('#pmc').prop('checked', false);
+	    if(typeof array[136] == '') $('#others').prop('checked', false);
+	   	if(typeof array[150] == '') $('#usapan').prop('checked', false);
 	    
-	    if(array[101] !== '')  {
-	    	$('#4ps').prop('checked', true);
-	    } else if(array[104] !== '') {
-			$('#house').prop('checked', true);
-	    } else if(array[117] !== '') {
-	    	$('#faith').prop('checked', true);
-	    } else if(array[120] !== '') {
- 			$('#profile').prop('checked', true);
-	    } else if(array[133] !== '') {
-	    	$('#pmc').prop('checked', true);
-	    } else if(array[136] !== '') {
-	    	$('#others').prop('checked', true);
-	    } else if(array[150] !== '') {
-			$('#usapan').prop('checked', true);
-	    } else {
-	    	$('#4ps').prop('checked', false);
-			$('#house').prop('checked', false);
-	    	$('#faith').prop('checked', false);
- 			$('#profile').prop('checked', false);
-	    	$('#pmc').prop('checked', false);
-	    	$('#others').prop('checked', false);
-			$('#usapan').prop('checked', false);
-	    }
+	  //   if(array[101] !== '')  {
+	  //   	$('#4ps').prop('checked', true);
+	  //   } else if(array[104] !== '') {
+			// $('#house').prop('checked', true);
+	  //   } else if(array[117] !== '') {
+	  //   	$('#faith').prop('checked', true);
+	  //   } else if(array[120] !== '') {
+ 		// 	$('#profile').prop('checked', true);
+	  //   } else if(array[133] !== '') {
+	  //   	$('#pmc').prop('checked', true);
+	  //   } else if(array[136] !== '') {
+	  //   	$('#others').prop('checked', true);
+	  //   } else if(array[150] !== '') {
+			// $('#usapan').prop('checked', true);
+	  //   } else {
+	  //   	$('#4ps').prop('checked', false);
+			// $('#house').prop('checked', false);
+	  //   	$('#faith').prop('checked', false);
+ 		// 	$('#profile').prop('checked', false);
+	  //   	$('#pmc').prop('checked', false);
+	  //   	$('#others').prop('checked', false);
+			// $('#usapan').prop('checked', false);
+	  //   }
 
 	    $('input[name=class_no]').val(array[112]);
 	    $('input[name=province]').val(array[128]);
 	    $('input[name=barangay]').val(array[145]);
-	    $('input[name=date_conducted]').val(array[161]);
+
+
+
+	    $('input[name=date_conducted]').val('2019-02-11');
 
 	    var i;
 	    var inc = 32;
@@ -116,8 +135,6 @@ var process_wb = (function() {
 	    	var a = a + inc;
 	    	var b = b + inc;
 		}
-
-
 
 		if(OUT.innerText === undefined) OUT.textContent = output;
 		else OUT.innerText = output;
@@ -202,3 +219,24 @@ _gaq.push(['_trackPageview']);
 	ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
 	var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
 })();
+
+// UPLOAD LOADER
+function _(el) {
+	return document.getElementById(el);
+	alert(el);
+}
+
+function uploadFile() {
+	var file = _("xlf").files[0];
+	var formdata = new FormData();
+	formdata.append("xlf", file);
+	var ajax = new XMLHttpRequest();
+	ajax.upload.addEventListener("progress", progressHandler, false);
+}
+
+function progressHandler(event) {
+	_("loaded_n_total").innerHTML = "Uploaded " + event.loaded + " bytes of " + event.total;
+	var percent = (event.loaded / event.total) * 100;
+	_("progressBar").value = Math.round(percent);
+	_("status").innerHTML = Math.round(percent) + "% uploaded... please wait";
+}

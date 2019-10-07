@@ -1,10 +1,10 @@
 
 <div hidden id="drop"></div>
-<input type="file" name="xlfile" id="xlf" />
+<input type="file" name="xlfile" id="xlf" onchange="uploadFile()" />
 <br>
-<div class="progress progress_sm">
-	<div class="progress-bar bg-green" role="progressbar" data-transitiongoal="50"></div>
-</div>
+<progress id="progressBar" value="0" max="100" style="width:100%;"></progress>
+<h5 class="text-center" id="status"></h5>
+<p id="loaded_n_total" hidden></p>
 
 <textarea hidden id="b64data"></textarea>
 <input hidden type="button" id="dotext" value="" onclick="b64it();"/><br />
@@ -15,9 +15,9 @@
 <div id="out" hidden></div>
 <div id="htmlout" hidden></div>
 
-<script src="<?= base_url('node_modules/xlsx/dist/cpexcel.js'); ?>"></script>
-<script src="<?=base_url('node_modules/xlsx/dist/shim.min.js'); ?>"></script>
-<script src="<?=base_url('node_modules/xlsx/dist/jszip.js'); ?>"></script>
-<script src="<?=base_url('node_modules/xlsx/dist/xlsx.js'); ?>"></script>
+<script src="<?= base_url('NewAssets/cpExcel'); ?>"></script>
+<script src="<?= base_url('NewAssets/shimJs'); ?>"></script>
+<script src="<?= base_url('NewAssets/jsZip'); ?>"></script>
+<script src="<?= base_url('NewAssets/xlsxJs'); ?>"></script>
 
-<script src="<?=base_url('assets/js/import.js'); ?>"></script>
+<script src="<?= base_url('assets/js/import.js'); ?>"></script>

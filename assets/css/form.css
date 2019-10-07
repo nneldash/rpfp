@@ -336,6 +336,7 @@ a:hover {
     position: fixed;
     top: 3%;
     right: 2%;
+    z-index: 999;
 }
 #leftButton {
 	position: fixed;

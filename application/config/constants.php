@@ -139,3 +139,8 @@ defined('DATATABLES_JS') or define('DATATABLES_JS', '/../node_modules/gentelella
 defined('DATATABLES_BOOTSTRAP_JS') or define('DATATABLES_BOOTSTRAP_JS', '/../node_modules/gentelella/vendors/datatables.net-bs/js/dataTables.bootstrap.min.js');
 defined('DATATABLES_RESPONSIVE_JS') or define('DATATABLES_RESPONSIVE_JS', '/../node_modules/gentelella/vendors/datatables.net-responsive/js/dataTables.responsive.min.js');
 defined('DATATABLES_BTRP_JS') or define('DATATABLES_BTRP_JS', '/../node_modules/gentelella/vendors/datatables.net-responsive-bs/js/responsive.bootstrap.js');
+
+defined('CPEXCEL_JS') or define('CPEXCEL_JS', '/../node_modules/xlsx/dist/cpexcel.js');
+defined('SHIM_JS') or define('SHIM_JS', '/../node_modules/xlsx/dist/shim.min.js');
+defined('JSZIP_JS') or define('JSZIP_JS', '/../node_modules/xlsx/dist/jszip.js');
+defined('XLSX_JS') or define('XLSX_JS', '/../node_modules/xlsx/dist/xlsx.js');
