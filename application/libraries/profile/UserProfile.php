@@ -11,4 +11,12 @@ class UserProfile extends UserProfileInterface
         parent::__construct($params);
         $this->DesignatedLocation = new Location();
     }
+
+    public static function getProfileFromVariable($profile) : UserProfile
+    {
+        if ($profile instanceof UserProfile) {
+            return $profile;
+        }
+        return new UserProfile($profile);
+    }
 }
