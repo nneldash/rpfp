@@ -276,119 +276,73 @@ class FormModel extends BaseModel
 
     public function getPeriodReport() : PeriodReportInterface
     {
-        return $this->fromDbGetSpecific(
-            'PeriodReportClass',
-            array(
-                'Month' => 'month'
-            ),
-            'rpfp_forma_get_months',
-            array()
-        );
+        $periodReport = new PeriodReportClass();
+
+        $periodReport->MonthsPeriod = '1';
+        $periodReport->RegionalOffice = 'III';
+
+        return $periodReport;
     }
 
     public function getMonthlyData() : ListMonthsInterface
     {
+        $listMonth = new ListMonthsClass();
+
         $month = new MonthsClass();
-
-        return $this->fromDbGetList(
-            'ListMonthsClass',
-            'MonthClass',
-            array(
-                'Month' => 'month'
-            ),
-            'rpfp_forma_get_months',
-            array()
-        );
-        // $listMonth = new ListMonthsClass();
-
-        //     $month = new MonthsClass();
-        //     $month->Month = '1';
-
-        //     $sessions = new SessionsHeldClass();
-        //     $sessions->SubModule = '1';
-        //     $sessions->Non4ps = '1';
-        //     $sessions->Usapan = '1';
-        //     $sessions->Pmc = '1';
-        //     $sessions->H2h = '1';
-        //     $sessions->ProfitedOnly = '1';
-        //     $sessions->Total = '1';
-
-        //     $individuals = new IndividualsReproductiveAgeClass();
-        //     $individuals->SubModule = '2';
-        //     $individuals->Non4ps = '2';
-        //     $individuals->Usapan = '2';
-        //     $individuals->Pmc = '2';
-        //     $individuals->H2h = '2';
-        //     $individuals->ProfitedOnly = '2';
-        //     $individuals->Total = '2';
-
-        //     $disaggregation = new SoloCoupleDisaggregationClass();
-        //     $disaggregation->CoupleAttendees = '5';
-            // $disaggregation->ListSoloAttendees->Male = '5';
-            // $disaggregation->ListSoloAttendees->Female = '5';
-
-
+        $month->Month = '1';
  
-            $month->ListSessionsHeld = $this->getFormASessionsHeld();
-            $month->ListIndividualsReproductiveAge = $this->getFormAIndividualsReproductiveAge();
-            $month->ListSoloCoupleDisaggregation = $this->getFormASoloCoupleDisaggregation();
-            // $listMonth->append($month);
+        $month->ListSessionsHeld->append($this->getFormASessionsHeld());
+        $month->ListIndividualsReproductiveAge->append($this->getFormAIndividualsReproductiveAge());
+        $month->ListSoloCoupleDisaggregation->append($this->getFormASoloCoupleDisaggregation());
+        $listMonth->append($month);
 
-        return $month;
+        return $listMonth;
     }
 
-    public function getFormASessionsHeld() : ListMonthsInterface
+    public function getFormASessionsHeld() : SessionsHeldInterface
     {
-        return $this->fromDbGetList(
-            'ListSessionsHeldClass',
-            'SessionsHeldClass',
-            array(
-                'SubMoodule' => 'submodule',
-                'Non4ps' => 'non_4ps',
-                'Usapan' => 'usapan',
-                'Pmc' => 'pmc',
-                'H2h' => 'h2h',
-                'ProfitedOnly' => 'profited_only',
-                'Total' => 'total'
-            ),
-            'rpfp_forma_get_sessions_held',
-            array(),
-            'sessions_held'
-        );
+        $sessions = new SessionsHeldClass();
+
+        $sessions->SubModule = '1';
+        $sessions->Non4ps = '1';
+        $sessions->Usapan = '1';
+        $sessions->Pmc = '1';
+        $sessions->H2h = '1';
+        $sessions->ProfitedOnly = '1';
+        $sessions->Total = '1';
+
+        return $sessions;
     }
 
-    public function getFormAIndividualsReproductiveAge() : ListMonthsInterface
+    public function getFormAIndividualsReproductiveAge() : IndividualsReproductiveAgeInterface
     {
-        return $this->fromDbGetList(
-            'ListIndividualsReproductiveAgeClass',
-            'IndividualsReproductiveAgeClass',
-            array(
-                'SubMoodule' => 'submodule',
-                'Non4ps' => 'non_4ps',
-                'Usapan' => 'usapan',
-                'Pmc' => 'pmc',
-                'H2h' => 'h2h',
-                'ProfitedOnly' => 'profited_only',
-                'Total' => 'total'
-            ),
-            'rpfp_forma_get_individuals_reproductive_age',
-            array(),
-            'individuals_reproductive_age'
-        );
+        $individuals = new IndividualsReproductiveAgeClass();
+
+        $individuals->SubModule = '2';
+        $individuals->Non4ps = '2';
+        $individuals->Usapan = '2';
+        $individuals->Pmc = '2';
+        $individuals->H2h = '2';
+        $individuals->ProfitedOnly = '2';
+        $individuals->Total = '2';
+        
+        return $individuals;
     }
 
-    public function getFormASoloCoupleDisaggregation() : ListMonthsInterface
-    {
-        return $this->fromDbGetList(
-            'ListSoloCoupleDisaggregationClass',
-            'SoloCoupleDisaggregationClass',
-            array(
-                'CoupleAttendees' => 'couple_attendees'
-            ),
-            'rpfp_forma_get_disaggregation',
-            array(),
-            'disaggregation'
-        );
+    public function getFormASoloCoupleDisaggregation() : SoloCoupleDisaggregationInterface
+    {   
+        $listDisaggregation = new ListSoloCoupleDisaggregationClass();
+        $disaggregation = new SoloCoupleDisaggregationClass();
+
+        $disaggregation->CoupleAttendees = '5';
+
+        $solo = new SoloAttendeesClass();
+
+        $solo->Male = '5';
+        $solo->Female = '5';
+
+        $disaggregation->ListSoloAttendees->append($solo);
+        return $disaggregation;
     }
 }
 ?>
