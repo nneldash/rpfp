@@ -13,10 +13,40 @@ class NewAssets extends CI_Controller
         $this->load->view('login/homepage');
     }
 
+    public function _remap($params = null)
+    {
+        if ($params == null) {
+            return $this->index();
+        }
+
+        $newParams = $params;
+        if (is_array($params)) {
+            $newParams = $newParams[0];
+        }
+
+        if (method_exists($this, $newParams)) {
+            return $this->$newParams();
+        }
+
+        $newParams = str_ireplace('.', '', $newParams);
+        $newParams = str_ireplace('_', '', $newParams);
+        if (method_exists($this, $newParams)) {
+            return $this->$newParams();
+        }
+
+        return $this->index();
+    }
+
     public function bootstrapCss()
     {
         header('Content-Type: text/css');
         readfile(BASEPATH . BOOTSRAP_CSS);
+    }
+
+    public function bootstrapMinCssMap()
+    {
+        header('Content-Type: application/json');
+        readfile(BASEPATH . BOOTSRAP_CSS_MAP);
     }
 
     public function datatablesBootstrap()
@@ -54,6 +84,13 @@ class NewAssets extends CI_Controller
         header('Content-Type: application/javascript');
         readfile(BASEPATH . POPPER_JS);
     }
+
+    public function popperJsMap()
+    {
+        header('Content-Type: application/json');
+        readfile(BASEPATH . POPPER_JS_MAP);
+    }
+    
 
     public function sweetalertCss()
     {

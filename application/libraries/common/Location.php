@@ -10,8 +10,6 @@ class Location extends LocationInterface
     {
         parent::__construct($params);
         $this->Region = new PSGC();
-        $this->Province = new PSGC();
-        $this->Municipality = new PSGC();
         $this->SpecificLocation = new PSGC();
     }
 }
