@@ -171,151 +171,98 @@ class FormModel extends BaseModel
 
     public function getForm1Seminar() : SeminarInterface
     {
-       $seminar = new SeminarClass();
+        $seminar = new SeminarClass();
 
-       return $this->fromDbGetSpecific(
-           'SeminarClass',
-           array(
-                'TypeOfClass' => 'type_of_class',
-                'ClassNumber' => 'class_number',
-                'Province' => 'province',
-                'Barangay' => 'barangay',
-                'DateConducted' => 'date_conducted'
-           ),
-           'rpfp_form1_get_seminar',
-           array(),
-           'seminar'
-        );
+        $seminar->TypeOfClass = '4ps';
+        $seminar->ClassNumber = '12345';
+        $seminar->Province = 'Bulacan';
+        $seminar->Barangay = 'Sta.Ana';
+        $seminar->DateConducted = '09/10/2019';
+
+        return $seminar;
 
     }
 
     public function getForm1Couple() : ListCoupleInterface
     {
+        // $couple = new CoupleClass();
+
+        // return $this->fromDbGetList(
+        //     'ListCoupleClass',
+        //     'CoupleClass',
+        //     array(
+        //         'Address' => 'address',
+        //         'NumberOfChildren' => 'no_of_children'
+        //     ),
+        //     'rpfp_form1_get_couple',
+        //     array(),
+        //     'couple'
+        // );
+
+        $listCouple = new ListCoupleClass();
+
         $couple = new CoupleClass();
 
-        return $this->fromDbGetList(
-            'ListCoupleClass',
-            'CoupleClass',
-            array(
-                'Address' => 'address',
-                'NumberOfChildren' => 'no_of_children'
-            ),
-            'rpfp_form1_get_couple',
-            array(),
-            'couple'
-        );
+        $couple->Address = 'Bulacan';
+        $couple->NumberOfChildren = '12';
 
-        // $listCouple = new ListCoupleClass();
+        $couple->ListHusband->append($this->getForm1Husband());
+        $couple->ListWife->append($this->getForm1Wife());
+        $couple->ListModernFp->append($this->getForm1ModernFpUser());
+        $couple->ListTraditionalFp->append($this->getForm1TraditionalFpUser());
+        $listCouple->append($couple);
 
-        //     $couple = new CoupleClass();
-
-        //     $couple->Address = 'Bulacan';
-        //     $couple->NumberOfChildren = '12';
-
-        //     $husband = new HusbandClass();
-
-        //     $husband->Name = 'Chou Fan';
-        //     $husband->Sex = 'M';
-        //     $husband->CivilStatus = 'Married';
-        //     $husband->Age = '31';
-        //     $husband->EducationalAttainment = '1';
-        //     $husband->HasAttended = 'Yes';
-
-        //     $wife = new WifeClass();
-                         
-        //     $wife->Name = 'Hanabi Montana';
-        //     $wife->Sex = 'F';
-        //     $wife->CivilStatus = 'Married';
-        //     $wife->Age = '31';
-        //     $wife->EducationalAttainment = '1';
-        //     $wife->HasAttended = 'Yes';
-
-        //     $modernFp = new ModernFpUserClass();
-
-        //     $modernFp->MethodUsed = '1';
-        //     $modernFp->IntentionForUsing = '2';
-
-        //     $traditionalFp = new TraditionalFpUserClass();
-
-        //     $traditionalFp->Type = '1';
-        //     $traditionalFp->Status = '2'; 
-        //     $traditionalFp->IntentionForUsing = '3';
-
-        $couple->ListHusband = $this->getForm1Husband();
-        $couple->ListWife = $this->getForm1Wife();
-        $couple->ListModernFp = $this->getForm1ModernFpUser();
-        $couple->ListTraditionalFp = $this->getForm1TraditionalFpUser();
-
-        return $couple;
+        return $listCouple;
     }
 
-    public function getForm1Husband() : ListCoupleInterface
-    {
-        return $this->fromDbGetList(
-            'ListHusbandClass',
-            'HusbandClass',
-            array(
-                'Name' => 'name',
-                'Sex' => 'sex',
-                'CivilStatus' => 'civil_status',
-                'Age' => 'age',
-                'EducationalAttainment' => 'educationa_attainment',
-                'HasAttended' => 'has_attended'
-            ),
-            'rpfp_form1_get_husband',
-            array(),
-            'husband'
-        );
+    public function getForm1Husband() : HusbandInterface
+    {   
+        $husband = new HusbandClass();
+
+        $husband->Name = 'Chou Fan';
+        $husband->Sex = 'M';
+        $husband->CivilStatus = 'Married';
+        $husband->Age = '31';
+        $husband->EducationalAttainment = '1';
+        $husband->HasAttended = 'Yes';
+
+        return $husband;
+        
     }
 
-    public function getForm1Wife() : ListCoupleInterface
+    public function getForm1Wife() : WifeInterface
     {
-        return $this->fromDbGetList(
-            'ListwifeClass',
-            'WifeClass',
-            array(
-                'Name' => 'name',
-                'Sex' => 'sex',
-                'CivilStatus' => 'civil_status',
-                'Age' => 'age',
-                'EducationalAttainment' => 'educationa_attainment',
-                'HasAttended' => 'has_attended'
-            ),
-            'rpfp_form1_get_wife',
-            array(),
-            'wife'
-        );
+        $wife = new WifeClass();
+
+        $wife->Name = 'Hanabi Montana';
+        $wife->Sex = 'F';
+        $wife->CivilStatus = 'Married';
+        $wife->Age = '31';
+        $wife->EducationalAttainment = '1';
+        $wife->HasAttended = 'Yes';
+
+        return $wife;
     }
 
-    public function getForm1ModernFpUser() : ListCoupleInterface
+    public function getForm1ModernFpUser() : ModernFpUserInterface
     {
-        return $this->fromDbGetList(
-            'ListModernFpUserClass',
-            'ModernFpUserClass',
-            array(
-                'MethodUsed' => 'method',
-                'IntentionForUsing' => 'intention_for_using'
-            ),
-            'rpfp_form1_get_modern_fp_user',
-            array(),
-            'modern_fp_user'
-        );
+        $modernFp = new ModernFpUserClass();
+        
+        $modernFp->MethodUsed = '1';
+        $modernFp->IntentionForUsing = '2';
+
+        return $modernFp;
     }
 
-    public function getForm1TraditionalFpUser() : ListCoupleInterface
+    public function getForm1TraditionalFpUser() : TraditionalFpUserInterface
     {
-        return $this->fromDbGetList(
-            'ListTraditionalFpUserClass',
-            'TraditionalFpUserClass',
-            array(
-                'Type' => 'type',
-                'Status' => 'status',
-                'IntentionForUsing' => 'intention_for_using'
-            ),
-            'rpfp_form1_get_traditional_fp_user',
-            array(),
-            'traditional_fp_user'
-        );
+        $traditionalFp = new TraditionalFpUserClass();
+        
+        $traditionalFp->Type  = '1';
+        $traditionalFp->Status = '2';
+        $traditionalFp->IntentionForUsing = '3';
+
+        return $traditionalFp;
     }
 
     public function getFormA(): FormAInterface

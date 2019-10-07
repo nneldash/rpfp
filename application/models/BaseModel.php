@@ -165,13 +165,13 @@ class BaseModel extends CI_Model
 
     protected function saveToDb($proc, $params, DbInstance &$db = null)
     {
-        return true;
-        exit;
         $rows = $this->runStoredProcAndGetResults($proc, $params, $db);
+
         if (!empty($rows)) {
             $message = $rows[0]->MESSAGE;
             return $message;
         }
+        
         return false;
     }
 }
