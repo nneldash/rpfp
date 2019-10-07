@@ -6,17 +6,17 @@
     mysql -u root test < rpfp.sql
 */
 
-drop database rpfp;
+DROP DATABASE IF EXISTS rpfp;
 
-drop role no_scope;
-drop role rpfp_login;
-drop role itdmu;
-drop role pmed;
-drop role regional_data_manager;
-drop role focal_person;
-drop role partners;
-drop role encoder;
-drop role citiwide;
-drop role provincial;
-drop role regional;
-drop role national;
+DROP ROLE IF EXISTS no_scope;
+DROP ROLE IF EXISTS rpfp_login;
+DROP ROLE IF EXISTS itdmu;
+DROP ROLE IF EXISTS pmed;
+DROP ROLE IF EXISTS regional_data_manager;
+DROP ROLE IF EXISTS focal_person;
+DROP ROLE IF EXISTS partners;
+DROP ROLE IF EXISTS encoder;
+DROP ROLE IF EXISTS citiwide;
+DROP ROLE IF EXISTS provincial;
+DROP ROLE IF EXISTS regional;
+DROP ROLE IF EXISTS national;
