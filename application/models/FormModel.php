@@ -23,18 +23,23 @@ class FormModel extends BaseModel
         // $db = $this->LoginModel->reconnect();
 
         if (!$this->saveSeminar($form->Seminar)) {
+            /** return exception or error message */
             return;
         }
         if (!$this->saveHusband($form->ListCouple)) {
+            /** return exception or error message */
             return;
         }
         if (!$this->saveWife($form->ListCouple)) {
+            /** return exception or error message */
             return;
         }
         if (!$this->saveModernFpUser($form->ListCouple)) {
+            /** return exception or error message */
             return;
         }
         if (!$this->saveTraditionalFpUser($form->ListCouple)) {
+            /** return exception or error message */
             return;
         }
 
@@ -43,10 +48,17 @@ class FormModel extends BaseModel
 
     public function saveSeminar(SeminarInterface $data)
     {
-        $method = "rpfp_form1_save_seminar";
-        $with_id = [];
+        $method = "encoder_save_class";
+        $with_id = [$data->ClassId == N_A ? BLANK : $data->ClassId];
 
-        $params = [
+        IN classid INT UNSIGNED,
+        IN TYPE_CLASS INT,
+        IN OTHERS_SPEC VARCHAR(100),
+        IN BARANGAYID INT,
+        IN CLASS_NO VARCHAR(50),
+        IN DATECONDUCTED DATE
+
+        $params = $with_id + [
             $data->TypeOfClass == N_A ? BLANK : $data->TypeOfClass,
             $data->ClassNumber == N_A ? BLANK : $data->ClassNumber,
             $data->Province == N_A ? BLANK : $data->Province,
@@ -345,4 +357,3 @@ class FormModel extends BaseModel
         return $disaggregation;
     }
 }
-?>

@@ -7,6 +7,8 @@ class IndividualClass extends IndividualInterface
 {
     public function __construct($params = null)
     {
+        $this->Name = new NameClass();
+        
         parent::__construct($params);
     }
 }

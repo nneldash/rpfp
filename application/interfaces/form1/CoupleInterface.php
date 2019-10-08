@@ -11,14 +11,24 @@ $CI->load->iface('form1/lists/ListTraditionalFpUserInterface');
 
 abstract class CoupleInterface extends BaseInterface
 {
-    /** @var ListHusbandInterface */
-    public $ListHusband;
-    /** @var ListWifeInterface */
-    public $ListWife;
+    /** @var IndividualInterface */
+    public $FirstEntry;
+
+    /** @var IndividualInterface */
+    public $SecondEntry;
+
+    /** @var string */
     public $Address;
+
+    /** @var int */
     public $NumberOfChildren;
-    /** @var ListModernFpUserInterface */
-    public $ListModernFp;
-    /** @var ListTraditionalFpUserInterface */
-    public $ListTraditionalFp;
+
+    /** @var ModernFpUserInterface */
+    public $ModernFp;
+
+    /** @var TraditionalFpUserInterface */
+    public $TraditionalFp;
+
+    abstract public function Wife() : IndividualInterface;
+    abstract public function Husband() : IndividualInterface;
 }

@@ -5,7 +5,8 @@ $CI->load->iface('base/BasicEnum');
 
 abstract class Roles extends BasicEnum
 {
-    const ENCODER = 60;
+    const ENCODER = 50;
+    const PARTNER = 60;
     const FOCAL_PERSON = 70;
     const DATA_MANATER = 80;
     const PMED_STAFF = 90;

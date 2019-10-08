@@ -2,21 +2,34 @@
 defined('BASEPATH') or exit('No direct script access allowed');
 $CI =& get_instance();
 $CI->load->iface('form1/NameInterface');
-// $CI->load->iface('form/CitizenshipInterface');
 $CI->load->iface('form1/AddressInterface');
+$CI->load->iface('common/Sexes');
+$CI->load->iface('common/CivilStatuses');
+$CI->load->iface('common/EducationBackgrounds');
 
-abstract class IndividualsInterface extends BaseInterface
+
+abstract class IndividualInterface extends BaseInterface
 {
     public $Id;
+
     /** @var NameInterface */
     public $Name;
-    public $Birthdate;
-    public $Birthplace;
+    
+    /** @var Sexes */
     public $Sex;
+
+    /** @var CivilStatuses  */
     public $CivilStatus;
-    /** @var AddressInterface */
+
+    /** @var DateTime */
+    public $Birthdate;
+
+    /** @var string */
     public $ResidentialAddress;
-    /** @var AddressInterface */
-    public $PermanentAddress;
-    public $Etnicity;
+
+    /** @var EducationBackgrounds */
+    public $HighestEducation;
+
+    /** @var bool */
+    public $Attendee;
 }
