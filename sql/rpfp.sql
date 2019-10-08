@@ -1006,7 +1006,7 @@ BEGIN
                     NULL AS EDUC_BCKGRND,
                     NULL AS ETNIC,
                     NULL AS NUMBER_CHILD,
-                    NULL AS IS_ATTENDEE
+                    NULL AS ATTENDEE
             ;
         END;
     ELSE
@@ -1028,7 +1028,7 @@ BEGIN
                     ic.EDUC_BCKGRND_ID AS EDUC_BCKGRND,
                     ic.ETNICITY AS ETNIC,
                     ic.NO_CHILDREN AS NUMBER_CHILD,
-                    ic.ATTENDEE AS IS_ATTENDEE
+                    ic.IS_ATTENDEE AS ATTENDEE
                FROM rpfp.rpfp_class rc
           LEFT JOIN rpfp.couples apc
                  ON rc.RPFP_CLASS_ID = pc.RPFP_CLASS_ID
@@ -1218,6 +1218,7 @@ CREATE DEFINER=root@localhost PROCEDURE encoder_save_couples (
     IN rpfp_classid INT UNSIGNED,
     IN couplesid INT UNSIGNED,
     IN typeparticipant INT UNSIGNED,
+    IN date_encode DATE,
     IN address_st_no VARCHAR(50),
     IN address_barangay VARCHAR(50),
     IN address_municipality VARCHAR(50),
@@ -1255,6 +1256,9 @@ CREATE DEFINER=root@localhost PROCEDURE encoder_save_couples (
     )  MODIFIES SQL DATA
 proc_exit_point :
 BEGIN
+
+DECLARE existing_couples INT;
+
     IF IFNULL( rpfp_classid, '' ) = '' THEN
         SELECT "CANNOT SAVE RECORD WITH GIVEN PARAMETERS" AS MESSAGE;
         LEAVE proc_exit_point;
@@ -1265,8 +1269,7 @@ BEGIN
             INSERT FOR NEW DATA
             
         */
-
-        INSERT INTO rpfp.couples apc
+        INSERT INTO rpfp.couples (
                     RPFP_CLASS_ID,
                     TYPE_PARTICIPANT,
                     DATE_ENCODED,
@@ -1277,9 +1280,11 @@ BEGIN
                     NO_CHILDREN,
                     IS_ACTIVE,
                     DB_USER_ID
-             VALUES rpfp_classid,
+            )
+             VALUES (
+                    rpfp_classid,
                     typeparticipant,
-                    DATE(),
+                    date_encode,
                     address_st_no,
                     address_barangay,
                     address_municipality,
@@ -1287,22 +1292,20 @@ BEGIN
                     number_child,
                     2,
                     encoded_by
+            )
     ;
-        LEAVE proc_exit_point;
     ELSE
              UPDATE rpfp.couples apc
-                SET apc.RPFP_CLASS_ID = IF( IFNULL(rpfp_classid, '') = '', apc.RPFP_CLASS_ID, rpfp_classid ),
-                    apc.TYPE_PARTICIPANT = IF( IFNULL(typeparticipant, '') = '', apc.TYPE_PARTICIPANT, typeparticipant )
+                SET apc.RPFP_CLASS_ID = IF( IFNULL( rpfp_classid, '') = '', apc.RPFP_CLASS_ID, rpfp_classid ),
+                    apc.TYPE_PARTICIPANT = IF( IFNULL( typeparticipant, '') = '', apc.TYPE_PARTICIPANT, typeparticipant ),
                     apc.ADDRESS_NO_ST = IF( IFNULL( address_st_no, '') = '', apc.ADDRESS_NO_ST, address_st_no ),
                     apc.ADDRESS_BRGY = IF( IFNULL( address_barangay, '') = '', apc.ADDRESS_BRGY, address_barangay ),
                     apc.ADDRESS_CITY = IF( IFNULL( address_municipality, '') = '', apc.ADDRESS_CITY, address_municipality ),
                     apc.HH_ID_NO = IF( IFNULL( household_no, '') = '', apc.HH_ID_NO, household_no ),
                     apc.NO_CHILDREN = IF( IFNULL( number_child, '') = '', apc.NO_CHILDREN, number_child ),
-                    apc.IS_ACTIVE = 2,
-      WHERE apc.couples_id = couplesid
+                    apc.IS_ACTIVE = 2
+              WHERE apc.couples_id = couplesid
     ;
-
-
     END IF;
 
     /** CHANGE TO COUPLES  */
@@ -1320,82 +1323,84 @@ BEGIN
         ELSE UPDATE THE INDIVIDUALS
     */
 
-    DECLARE existing_couples INT
-
-    SELECT * FROM rpfp.individual ic WHERE ic.COUPLES_ID = couplesid
-    existing_couples = COUPLES_ID
+    SELECT COUNT(*) AS existing_couples FROM rpfp.individual ic WHERE ic.COUPLES_ID = couplesid;
     
-    IF IFNULL( existing_couples, '' ) = '' IS NULL THEN
+    IF existing_couples = 0 THEN BEGIN
+        INSERT INTO rpfp.individual (
+                    COUPLES_ID,
+                    LNAME,
+                    FNAME,
+                    MNAME,
+                    EXT_NAME,
+                    AGE,
+                    SEX,
+                    BDATE,
+                    CIVIL_ID,
+                    EDUC_BCKGRND_ID,
+                    IS_ATTENDEE
+            )
+        VALUES (
+                couplesid,
+                lastname_m,
+                firstname_m,
+                middle_m,
+                extname_m,
+                age_years_m,
+                1,
+                birthdate_m,
+                civil_status_m,
+                educ_bckgrnd_m,
+                attendee_m
+            )
+        ;
 
-    INSERT INTO rpfp.individual ic
-                COUPLES_ID INT NOT NULL,
-                LNAME,
-                FNAME,
-                MNAME,
-                EXT_NAME,
-                AGE,
-                SEX,
-                BDATE,
-                CIVIL_ID,
-                EDUC_BCKGRND_ID,
-                IS_ATTENDEE,
+        INSERT INTO rpfp.individual (
+                    COUPLES_ID,
+                    LNAME,
+                    FNAME,
+                    MNAME,
+                    EXT_NAME,
+                    AGE,
+                    SEX,
+                    BDATE,
+                    CIVIL_ID,
+                    EDUC_BCKGRND_ID,
+                    IS_ATTENDEE
+            )
+        VALUES (
+                couplesid,
+                lastname_f,
+                firstname_f,
+                middle_f,
+                extname_f,
+                age_years_f,
+                2,
+                birthdate_f,
+                civil_status_f,
+                educ_bckgrnd_f,
+                attendee_f
+            )
+        ;
 
-     VALUES couplesid,
-            lastname_m,
-            firstname_m,
-            middle_m,
-            extname_m,
-            age_years_m,
-            1,
-            birthdate_m,
-            civil_status_m,
-            educ_bckgrnd_m,
-            attendee_m
-    ;
-
-    INSERT INTO rpfp.individual ic
-                COUPLES_ID INT NOT NULL,
-                LNAME,
-                FNAME,
-                MNAME,
-                EXT_NAME,
-                AGE,
-                SEX,
-                BDATE,
-                CIVIL_ID,
-                EDUC_BCKGRND_ID,
-                IS_ATTENDEE,
-
-     VALUES couplesid,
-            lastname_f,
-            firstname_f,
-            middle_f,
-            extname_f,
-            age_years_f,
-            2,
-            birthdate_f,
-            civil_status_f,
-            educ_bckgrnd_f,
-            attendee_f
-    ;
-
-    INSERT INTO rpfp.fp_details fd
-            COUPLES_ID,
-            MFP_METHOD_USED_ID,
-            MFP_INTENTION_SHIFT_ID,
-            TFP_TYPE_ID,
-            TFP_STATUS_ID,
-            REASON_INTENDING_USE_ID
-
-     VALUES couplesid,
-            mfp_used,
-            mfp_shift,
-            tfp_type,
-            tfp_status,
-            reason_use
-    ;
-            LEAVE proc_exit_point;
-     ELSE
+        INSERT INTO rpfp.fp_details (
+                COUPLES_ID,
+                MFP_METHOD_USED_ID,
+                MFP_INTENTION_SHIFT_ID,
+                TFP_TYPE_ID,
+                TFP_STATUS_ID,
+                REASON_INTENDING_USE_ID
+            )
+        VALUES (
+                couplesid,
+                mfp_used,
+                mfp_shift,
+                tfp_type,
+                tfp_status,
+                reason_use
+            )
+        ;
+    END;
+    ELSE BEGIN
 
      UPDATE rpfp.individual ic
         SET ic.LNAME = IF( IFNULL( lastname_m, '') = '', ic.LNAME, lastname_m ),
@@ -1433,8 +1438,11 @@ BEGIN
             fd.REASON_INTENDING_USE_ID = IF( IFNULL( rEASON_USE, '') = '', fd.REASON_INTENDING_USE_ID, reason_use)
       WHERE fd.COUPLES_ID = couples_id
     ;
+    END;
+    END IF;
 
     SELECT "SUCCESS!" AS MESSAGE;
+    
 END$$
 
 CREATE DEFINER=root@localhost PROCEDURE encoder_save_fp_service (
@@ -1451,11 +1459,12 @@ CREATE DEFINER=root@localhost PROCEDURE encoder_save_fp_service (
     IN date_served DATE,
     IN client_advise VARCHAR(100),
     IN referral_name VARCHAR(50),
-    IN provider_name VARCHAR(50)
+    IN provider_name VARCHAR(50),
+    IN date_encode DATE
     )  MODIFIES SQL DATA
 proc_exit_point :
 BEGIN
-    DECLARE fp_service_id INT UNSIGNED;
+    DECLARE count_served INT UNSIGNED;
 
     IF IFNULL( couplesid, '') = '' THEN
         SELECT "UNABLE TO GET RECORD WITH GIVEN PARAMETERS" AS MESSAGE;
@@ -1471,13 +1480,11 @@ BEGIN
         LEAVE proc_exit_point;
     END IF;
 
-    SELECT * FROM fp_service WHERE COUPLES_ID = couplesid;
+    SELECT COUNT(*) AS count_served FROM fp_service WHERE COUPLES_ID = couplesid;
 
-    fp_service_id = FP_SERVICE_ID;
+    IF count_served = 0 THEN
 
-    IF IFNULL( fp_service_id, '') = '' THEN
-
-    INSERT INTO fp_service
+    INSERT INTO fp_service (
                 COUPLES_ID,
                 DATE_VISIT,
                 FP_SERVED_ID,
@@ -1490,7 +1497,9 @@ BEGIN
                 REFERRAL_NAME,
                 PROVIDER_NAME,
                 DATE_ENCODED
-         VALUES couplesid,
+        )
+         VALUES (
+                couplesid,
                 date_visit,
                 fp_served_id,
                 provider_type_id,
@@ -1503,11 +1512,11 @@ BEGIN
                 client_advise,
                 referral_name,
                 provider_name,
-                DATE()
+                date_encode
+        )
     ;
 
     ELSE
-
      UPDATE rpfp.fp_service fs
         SET fs.DATE_VISIT = IF( IFNULL( date_visit, '') = '', fs.DATE_VISIT, date_visit ),
             fs.FP_SERVED_ID = IF( IFNULL( fp_served_id, '') = '', fs.FP_SERVED_ID, fp_served_id ),
@@ -1523,14 +1532,16 @@ BEGIN
             fs.PROVIDER_NAME = IF( IFNULL( provider_name, '') = '', fs.PROVIDER_NAME, provider_name )
       WHERE fs.COUPLES_ID = couples_id
     ;
+    END IF;
 
     SELECT "SUCCESS!" AS MESSAGE;
+    
 END$$
 /** END COUPLES DETAILS */
 
 /**  APPROVE COUPLES DETAILS  */
 CREATE DEFINER=root@localhost PROCEDURE rdm_approve_couples (
-    IN couples_id INT UNSIGNED
+    IN couples_id INT UNSIGNED,
     IN IS_ACTIVE INT
     )  MODIFIES SQL DATA
 proc_exit_point :

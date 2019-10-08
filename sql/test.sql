@@ -31,7 +31,8 @@ INSERT INTO `couples`
             (11, 1, '14 ISANG STREET', 'PINAGKAISAHAN', 'MANDALUYONG', '1-000-102453-2', 4, '03-01-2019', 'test', 2 ),
             (12, 1, '13 ISANG STREET', 'PINAGKAISAHAN', 'MANDALUYONG', '1-000-102453-2', 3, '03-01-2019', 'test', 2 ),
             (13, 1, '12 ISANG STREET', 'PINAGKAISAHAN', 'MANDALUYONG', '1-000-102453-2', 7, '03-01-2019', 'test', 2 ),
-            (14, 1, '11 ISANG STREET', 'PINAGKAISAHAN', 'MANDALUYONG', '1-000-102453-2', 2, '03-01-2019', 'test', 2 )
+            (14, 1, '11 ISANG STREET', 'PINAGKAISAHAN', 'MANDALUYONG', '1-000-102453-2', 2, '03-01-2019', 'test', 2 ),
+            (15, 1, '15 ISANG STREET', 'PINAGKAISAHAN', 'MANDALUYONG', '1-000-102453-2', 2, '03-01-2019', 'test', 2 )
 ;
 
 --
@@ -50,28 +51,32 @@ INSERT INTO `individual`
             `BDATE`,
             `CIVIL_ID`,
             `EDUC_BCKGRND_ID`,
-            `ETNICITY`,
-            `ATTENDEE`)
-     VALUES (1, 1, 'Simon', 'Anna Margarette', '', NULL, 35, 2, '1984-02-07', 4, 1, 3, 1 ),
-            (2, 1, 'Simon', 'Carl Edward', '', NULL, 38, 1, '1981-09-09', 4, 1, 3, 1 ),
-            (3, 2, 'Alcantara', 'Gusion', '', NULL, 30, 1, '1989-01-07', NULL, 1, 4, 1 ),
-            (4, 2, 'Alcantara', 'Gueneverre', '', NULL, 30, 2, '1989-12-09', NULL, 1, 4, 1 ),
-            (5, 3, 'Moral', 'Claude Vincent', '', NULL, 28, 1, '1991-05-07', NULL, 1, 4, 1 ),
-            (6, 3, 'Moral', 'Esmeralda', '', NULL, 30, 2, '1989-06-09', NULL, 1, 4, 1 ),
-            (7, 4, 'Broquez', 'Lancelot', '', NULL, 34, 1, '1985-04-07', NULL, 1, 4, 1 ),
-            (8, 4, 'Broquez', 'Odette', '', NULL, 31, 2, '1988-10-09', NULL, 1, 4, 1 ),
-            (9, 5, 'Cervantes', 'Alucard', '', NULL, 27, 1, '1992-11-07', 4, 1, 3, 1 ),
-            (10, 5, 'Cervantes', 'Layla', '', NULL, 25, 2, '1994-12-09', 4, 1, 3, 1 ),
-            (11, 6, 'Montana', 'Hanabi', '', NULL, 28, 2, '1991-07-07', NULL, 1, 4, 1 ),
-            (12, 6, 'Montana', 'Leo', '', NULL, 28, 1, '1991-08-09', NULL, 1, 2, 1 ),
-            (13, 7, 'Rodriguez', 'Ruby', '', NULL, 49, 2, '1970-03-07', 1, 1, 5, 1 ),
-            (14, 7, 'Rodriguez', 'Clint', '', NULL, 47, 1, '1972-03-09', 1, 1, 5, 1 ),
-            (15, 8, 'Fargas', 'Bruno', '', NULL, 50, 1, '1970-03-07', 1, 1, 4, 1 ),
-            (16, 8, 'Fargas', 'Lesley', '', NULL, 50, 2, '1972-03-09', 2, 1, 4, 0 ),
-            (17, 9, 'Gonzaga', 'Alice', '', NULL, 25, 2, '1994-06-07', 2, 5, 3, 1 ),
-            (18, 9, 'Vargas', 'Alexander', '', NULL, NULL, NULL, NULL, NULL, 3, 1, 3, 0 ),
-            (19, 10, 'Halili', 'Miya', '', NULL, 30, 2, '1989-04-07', NULL, 5, 3, 1 ),
-            (20, 10, 'Reyes', 'Miguel', '', NULL, NULL, NULL, NULL, 3, 5, 3, 0)
+            `IS_ATTENDEE`)
+     VALUES (1, 1, 'Simon',        'Anna Margarette',  '', NULL, 35,       2,        '1984-02-07', 1, 8, 1 ),
+            (2, 1, 'Simon',        'Carl Edward',      '', NULL, 38,       1,        '1981-09-09', 1, 8, 1 ),
+            (3, 2, 'Alcantara',    'Gusion',           '', NULL, 30,       1,        '1989-01-07', 1, 7, 1 ),
+            (4, 2, 'Alcantara',    'Gueneverre',       '', NULL, 30,       2,        '1989-12-09', 1, 6, 1 ),
+            (5, 3, 'Moral',        'Claude Vincent',   '', NULL, 28,       1,        '1991-05-07', 1, 5, 1 ),
+            (6, 3, 'Moral',        'Esmeralda',        '', NULL, 30,       2,        '1989-06-09', 1, 6, 1 ),
+            (7, 4, 'Broquez',      'Lancelot',         '', NULL, 34,       1,        '1985-04-07', 1, 6, 1 ),
+            (8, 4, 'Broquez',      'Odette',           '', NULL, 31,       2,        '1988-10-09', 1, 6, 1 ),
+            (9, 5, 'Cervantes',    'Alucard',          '', NULL, 27,       1,        '1992-11-07', 1, 7, 1 ),
+            (10, 5, 'Cervantes',   'Layla',            '', NULL, 25,       2,        '1994-12-09', 1, 8, 1 ),
+            (11, 6, 'Montana',     'Hanabi',           '', NULL, 28,       2,        '1991-07-07', 1, 9, 1 ),
+            (12, 6, 'Montana',     'Leo',              '', NULL, 28,       1,        '1991-08-09', 1, 8, 1 ),
+            (13, 7, 'Rodriguez',   'Ruby',             '', NULL, 49,       2,        '1970-03-07', 1, 7, 1 ),
+            (14, 7, 'Rodriguez',   'Clint',            '', NULL, 47,       1,        '1972-03-09', 1, 7, 1 ),
+            (15, 8, 'Fargas',      'Bruno',            '', NULL, 50,       1,        '1970-03-07', 1, 4, 1 ),
+            (16, 8, 'Fargas',      'Lesley',           '', NULL, 50,       2,        '1972-03-09', 1, 5, 0 ),
+            (17, 9, 'Gonzaga',     'Alice',            '', NULL, 25,       2,        '1994-06-07', 5, 5, 1 ),
+            (18, 9, 'Vargas',      'Alexander',        '', NULL, 29,       1,        '1990-08-07', 5, 3, 0 ),
+            (19, 10, 'Halili',     'Miya',             '', NULL, 30,       2,        '1989-04-07', 5, 5, 1 ),
+            (20, 10, 'Reyes',      'Miguel',           '', NULL, 30,       1,        '1989-01-07', 5, 5, 0 ),
+            (21, 11, 'Gomez',      'Selena',           '', NULL, 21,       2,        '1998-11-05', 2, 8, 1 ),
+            (22, 12, 'Isip',       'Angela',           '', NULL, 18,       2,        '2001-10-10', 2, 7, 1 ),
+            (23, 13, 'Jimenez',    'Lylia',            '', NULL, 14,       2,        '2005-09-19', 2, 4, 1 ),
+            (24, 14, 'Coronel',    'Hilda',            '', NULL, 47,       2,        '1972-02-02', 3, 7, 1 ),
+            (25, 15, 'Lopez',      'Karina',           '', NULL, 40,       2,        '1979-12-10', 4, 8, 1 )
 ;
 
 -- --------------------------------------------------------
