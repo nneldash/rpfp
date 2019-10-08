@@ -163,7 +163,7 @@ class LoginModel extends CI_Model
         $customQuery = 'SELECT rpfp.' . $stored_function . ' as myresult;';
         $result = $this->runQuery($customQuery, $params);
 
-        if ($result == false || (count($result) < 1) || (!$result[0]->myresult)) {
+        if ($result == false || (count($result) < 1) ) {
             return false;
         }
         return true;
