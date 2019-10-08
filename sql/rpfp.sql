@@ -844,9 +844,9 @@ BEGIN
     IF NOT EXISTS (
          SELECT rc.RPFP_CLASS_ID
            FROM rpfp.RPFP_CLASS rc
-      LEFT JOIN rpfp.pending_couples pc
-             ON pc.RPFP_CLASS_ID = rc.RPFP_CLASS_ID
-          WHERE pc.IS_ACTIVE = status_active
+      LEFT JOIN rpfp.couples apc
+             ON apc.RPFP_CLASS_ID = rc.RPFP_CLASS_ID
+          WHERE apc.IS_ACTIVE = status_active
             AND rc.DB_USER_ID = name_user
     ) THEN
          SELECT NULL AS RPFPCLASS,
@@ -876,9 +876,9 @@ BEGIN
                 rc.CLASS_NUMBER AS CLASS_NO,
                 rc.DATE_CONDUCTED AS DATE_CONDUCT
            FROM rpfp.rpfp_class rc
-      LEFT JOIN rpfp.pending_couples pc
-             ON pc.RPFP_CLASS_ID = rc.RPFP_CLASS_ID
-          WHERE pc.IS_ACTIVE = status_active
+      LEFT JOIN rpfp.couples apc
+             ON apc.RPFP_CLASS_ID = rc.RPFP_CLASS_ID
+          WHERE apc.IS_ACTIVE = status_active
             AND rc.DB_USER_ID = name_user
        GROUP BY rc.CLASS_NUMBER
        ORDER BY rc.DATE_CONDUCTED DESC
@@ -929,10 +929,10 @@ BEGIN
     CALL rpfp.lib_extract_user_name( USER(), name_user, db_user_name );
 
     IF NOT EXISTS (
-         SELECT pc.RPFP_CLASS_ID
-           FROM rpfp.pending_couples pc
+         SELECT apc.RPFP_CLASS_ID
+           FROM rpfp.couples apc
       LEFT JOIN rpfp.RPFP_CLASS rc
-             ON rc.RPFP_CLASS_ID = pc.RPFP_CLASS_ID
+             ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
           WHERE rc.DB_USER_ID = name_user
             AND rc.CLASS_NUMBER = class_num
     ) THEN
@@ -950,21 +950,21 @@ BEGIN
     ELSE
         BEGIN
              SELECT rc.CLASS_NUMBER AS CLASS_NO,
-                    pc.COUPLES_ID AS COUPLESID,
-                    pc.IS_ACTIVE AS ISACTIVE,
-                    pc.DATE_ENCODED AS DATE_ENCODE,
+                    apc.COUPLES_ID AS COUPLESID,
+                    apc.IS_ACTIVE AS ISACTIVE,
+                    apc.DATE_ENCODED AS DATE_ENCODE,
                     ic.LNAME AS LASTNAME,
                     ic.FNAME AS FIRSTNAME,
                     ic.MNAME AS MIDDLE,
                     ic.EXT_NAME AS EXT_NAME
-               FROM rpfp.pending_couples pc
+               FROM rpfp.couples apc
           LEFT JOIN rpfp.rpfp_class rc
                  ON rc.RPFP_CLASS_ID = pc.RPFP_CLASS_ID
           LEFT JOIN rpfp.individual ic
                  ON ic.COUPLES_ID = pc.COUPLES_ID
               WHERE rc.CLASS_NUMBER = class_num
                 AND DB_USER_ID = name_user
-           ORDER BY pc.COUPLES_ID ASC
+           ORDER BY apc.COUPLES_ID ASC
             ;
         END;
     END IF;
@@ -981,10 +981,10 @@ BEGIN
     CALL rpfp.lib_extract_user_name( USER(), name_user, db_user_name );
 
     IF NOT EXISTS (
-         SELECT pc.COUPLES_ID
-           FROM rpfp.pending_couples pc
+         SELECT apc.COUPLES_ID
+           FROM rpfp.couples apc
       LEFT JOIN rpfp.rpfp_class rc
-             ON rc.RPFP_CLASS_ID = pc.RPFP_CLASS_ID
+             ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
           WHERE rc.CLASS_NUMBER = class_num
             AND rc.DB_USER_ID = name_user
     ) THEN
@@ -1006,13 +1006,13 @@ BEGIN
                     NULL AS EDUC_BCKGRND,
                     NULL AS ETNIC,
                     NULL AS NUMBER_CHILD,
-                    NULL AS IS_ATTENDEE
+                    NULL AS ATTENDEE
             ;
         END;
     ELSE
         BEGIN
              SELECT ic.INDV_ID AS INDVID,
-                    pc.COUPLES_ID AS COUPLESID,
+                    apc.COUPLES_ID AS COUPLESID,
                     ic.LNAME AS LASTNAME,
                     ic.FNAME AS FIRSTNAME,
                     ic.MNAME AS MIDDLE,
@@ -1028,12 +1028,12 @@ BEGIN
                     ic.EDUC_BCKGRND_ID AS EDUC_BCKGRND,
                     ic.ETNICITY AS ETNIC,
                     ic.NO_CHILDREN AS NUMBER_CHILD,
-                    ic.ATTENDEE AS IS_ATTENDEE
+                    ic.IS_ATTENDEE AS ATTENDEE
                FROM rpfp.rpfp_class rc
-          LEFT JOIN rpfp.pending_couples pc
+          LEFT JOIN rpfp.couples apc
                  ON rc.RPFP_CLASS_ID = pc.RPFP_CLASS_ID
           LEFT JOIN rpfp.individual ic
-                 ON ic.COUPLES_ID = pc.COUPLES_ID
+                 ON ic.COUPLES_ID = apc.COUPLES_ID
               WHERE rc.CLASS_NUMBER = class_num
                 AND rc.DB_USER_ID = name_user
            ORDER BY ic.INDV_ID ASC
@@ -1116,12 +1116,12 @@ BEGIN
     CALL rpfp.lib_extract_user_name( USER(), name_user, db_user_name );
 
     IF NOT EXISTS (
-         SELECT pc.COUPLES_ID
-           FROM rpfp.pending_couples pc
+         SELECT apc.COUPLES_ID
+           FROM rpfp.couples apc
       LEFT JOIN rpfp.fp_details fd
-             ON fd.COUPLES_ID = pc.COUPLES_ID
+             ON fd.COUPLES_ID = apc.COUPLES_ID
           WHERE IFNULL( fd.COUPLES_ID, 0) = couplesid
-            AND pc.DB_USER_ID = name_user
+            AND apc.DB_USER_ID = name_user
     ) THEN
         BEGIN
              SELECT NULL AS FPDETAILSID,
@@ -1136,17 +1136,17 @@ BEGIN
     ELSE
         BEGIN
              SELECT fd.FP_DETAILS_ID AS FPDETAILSID,
-                    pc.COUPLES_ID AS COUPLESID,
+                    apc.COUPLES_ID AS COUPLESID,
                     fd.MFP_METHOD_USED_ID AS MFP_USED,
                     fd.MFP_INTENTION_SHIFT_ID AS MFP_SHIFT,
                     fd.TFP_TYPE_ID AS TFP_TYPE,
                     fd.TFP_STATUS_ID as TFP_STATUS,
                     fd.REASON_INTENDING_USE_ID AS REASON_USE
                FROM rpfp.fp_details fd
-          LEFT JOIN rpfp.pending_couples pc
-                 ON fd.RPFP_CLASS_ID = pc.RPFP_CLASS_ID
+          LEFT JOIN rpfp.couples apc
+                 ON fd.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
               WHERE IFNULL( fd.COUPLES_ID, 0) = couplesid
-                AND pc.DB_USER_ID = name_user
+                AND apc.DB_USER_ID = name_user
            ORDER BY fd.FP_DETAILS_ID ASC
             ;
         END;
@@ -1161,12 +1161,12 @@ BEGIN
     CALL rpfp.lib_extract_user_name( USER(), name_user, db_user_name );
 
     IF NOT EXISTS (
-         SELECT pc.COUPLES_ID
-           FROM rpfp.pending_couples pc
+         SELECT apc.COUPLES_ID
+           FROM rpfp.couples apc
       LEFT JOIN rpfp.FP_SERVICE fs
-             ON fs.COUPLES_ID = pc.COUPLES_ID
+             ON fs.COUPLES_ID = apc.COUPLES_ID
           WHERE IFNULL( fs.COUPLES_ID, 0) = couplesid
-            AND pc.DB_USER_ID = name_user
+            AND apc.DB_USER_ID = name_user
     ) THEN
         BEGIN
              SELECT NULL AS FPSERVICEID,
@@ -1189,7 +1189,7 @@ BEGIN
     ELSE
         BEGIN
              SELECT fs.FP_SERVICE_ID AS FPSERVICEID,
-                    pc.COUPLES_ID AS COUPLESID,
+                    apc.COUPLES_ID AS COUPLESID,
                     fs.DATE_VISIT AS DATEVISIT,
                     fs.FP_SERVED_ID AS FP_SERVED,
                     fs.PROVIDER_TYPE_ID AS PROVIDER_TYPE,
@@ -1204,10 +1204,10 @@ BEGIN
                     fs.PROVIDER_NAME AS PROVIDERNAME,
                     fs.DATE_ENCODED AS DATE_ENCODE
                FROM rpfp.fp_service fs
-          LEFT JOIN rpfp.pending_couples pc
-                 ON fs.RPFP_CLASS_ID = pc.RPFP_CLASS_ID
+          LEFT JOIN rpfp.couples apc
+                 ON fs.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
               WHERE IFNULL( fs.COUPLES_ID, 0 ) = couplesid
-                AND pc.DB_USER_ID = name_user                    
+                AND apc.DB_USER_ID = name_user                    
            ORDER BY fs.FP_SERVICE_ID ASC
             ;
         END;
@@ -1217,7 +1217,16 @@ END$$
 CREATE DEFINER=root@localhost PROCEDURE encoder_save_couples (
     IN rpfp_classid INT UNSIGNED,
     IN couplesid INT UNSIGNED,
+    IN typeparticipant INT UNSIGNED,
+    IN date_encode DATE,
+    IN address_st_no VARCHAR(50),
+    IN address_barangay VARCHAR(50),
+    IN address_municipality VARCHAR(50),
+    IN household_no VARCHAR(50),
+    IN number_child INT,
+    IN encoded_by INT,
     
+    IN indv_id_m INT UNSIGNED,
     IN lastname_m VARCHAR(100),
     IN firstname_m VARCHAR(100),
     IN middle_m VARCHAR(100),
@@ -1226,7 +1235,9 @@ CREATE DEFINER=root@localhost PROCEDURE encoder_save_couples (
     IN birthdate_m DATE,
     IN civil_status_m INT,
     IN educ_bckgrnd_m INT,
+    IN attendee_m INT,
 
+    IN indv_id_f INT UNSIGNED,
     IN lastname_f VARCHAR(100),
     IN firstname_f VARCHAR(100),
     IN middle_f VARCHAR(100),
@@ -1234,15 +1245,20 @@ CREATE DEFINER=root@localhost PROCEDURE encoder_save_couples (
     IN birthdate_f DATE,
     IN civil_status_f INT,
     IN educ_bckgrnd_f INT,
-    
-    IN address_st_no VARCHAR(50),
-    IN address_barangay VARCHAR(50),
-    IN address_municipality VARCHAR(50),
-    IN household_no VARCHAR(50),
-    IN number_child INT
+    IN attendee_f INT,
+
+    IN mfp_used INT,
+    IN mfp_shift INT,
+    IN tfp_type INT,
+    IN tfp_status INT,
+    IN reason_use INT
+
     )  MODIFIES SQL DATA
 proc_exit_point :
 BEGIN
+
+DECLARE existing_couples INT;
+
     IF IFNULL( rpfp_classid, '' ) = '' THEN
         SELECT "CANNOT SAVE RECORD WITH GIVEN PARAMETERS" AS MESSAGE;
         LEAVE proc_exit_point;
@@ -1253,27 +1269,51 @@ BEGIN
             INSERT FOR NEW DATA
             
         */
-
-        LEAVE proc_exit_point;
+        INSERT INTO rpfp.couples (
+                    RPFP_CLASS_ID,
+                    TYPE_PARTICIPANT,
+                    DATE_ENCODED,
+                    ADDRESS_NO_ST,
+                    ADDRESS_BRGY,
+                    ADDRESS_CITY,
+                    HH_ID_NO,
+                    NO_CHILDREN,
+                    IS_ACTIVE,
+                    DB_USER_ID
+            )
+             VALUES (
+                    rpfp_classid,
+                    typeparticipant,
+                    date_encode,
+                    address_st_no,
+                    address_barangay,
+                    address_municipality,
+                    household_no,
+                    number_child,
+                    2,
+                    encoded_by
+            )
+    ;
     ELSE
              UPDATE rpfp.couples apc
-                SET apc.ADDRESS_NO_ST = IF( IFNULL( address_st_no, '') = '', apc.ADDRESS_NO_ST, address_st_no ),
+                SET apc.RPFP_CLASS_ID = IF( IFNULL( rpfp_classid, '') = '', apc.RPFP_CLASS_ID, rpfp_classid ),
+                    apc.TYPE_PARTICIPANT = IF( IFNULL( typeparticipant, '') = '', apc.TYPE_PARTICIPANT, typeparticipant ),
+                    apc.ADDRESS_NO_ST = IF( IFNULL( address_st_no, '') = '', apc.ADDRESS_NO_ST, address_st_no ),
                     apc.ADDRESS_BRGY = IF( IFNULL( address_barangay, '') = '', apc.ADDRESS_BRGY, address_barangay ),
                     apc.ADDRESS_CITY = IF( IFNULL( address_municipality, '') = '', apc.ADDRESS_CITY, address_municipality ),
                     apc.HH_ID_NO = IF( IFNULL( household_no, '') = '', apc.HH_ID_NO, household_no ),
-                    apc.NO_CHILDREN = IF( IFNULL( number_child, '') = '', apc.NO_CHILDREN, number_child )
-      WHERE apc.couples_id = couplesid
+                    apc.NO_CHILDREN = IF( IFNULL( number_child, '') = '', apc.NO_CHILDREN, number_child ),
+                    apc.IS_ACTIVE = 2
+              WHERE apc.couples_id = couplesid
     ;
-
-
     END IF;
 
     /** CHANGE TO COUPLES  */
-     UPDATE rpfp.pending_couples pc
-        SET pc.DATE_ENCODED = CURRENT_DATE(),
-            pc.IS_ACTIVE = 2
-      WHERE pc.COUPLES_ID = couples_id
-        AND pc.RPFP_CLASS_ID = rpfp_classid
+     UPDATE rpfp.couples apc
+        SET apc.DATE_ENCODED = CURRENT_DATE(),
+            apc.IS_ACTIVE = 2
+      WHERE apc.COUPLES_ID = couples_id
+        AND apc.RPFP_CLASS_ID = rpfp_classid
     ;
 
 
@@ -1282,31 +1322,127 @@ BEGIN
         IF NOT EXISTS, INSERT THE INDIVIDUALS
         ELSE UPDATE THE INDIVIDUALS
     */
+
+    SELECT COUNT(*) AS existing_couples FROM rpfp.individual ic WHERE ic.COUPLES_ID = couplesid;
+    
+    IF existing_couples = 0 THEN BEGIN
+        INSERT INTO rpfp.individual (
+                    COUPLES_ID,
+                    LNAME,
+                    FNAME,
+                    MNAME,
+                    EXT_NAME,
+                    AGE,
+                    SEX,
+                    BDATE,
+                    CIVIL_ID,
+                    EDUC_BCKGRND_ID,
+                    IS_ATTENDEE
+            )
+        VALUES (
+                couplesid,
+                lastname_m,
+                firstname_m,
+                middle_m,
+                extname_m,
+                age_years_m,
+                1,
+                birthdate_m,
+                civil_status_m,
+                educ_bckgrnd_m,
+                attendee_m
+            )
+        ;
+
+        INSERT INTO rpfp.individual (
+                    COUPLES_ID,
+                    LNAME,
+                    FNAME,
+                    MNAME,
+                    EXT_NAME,
+                    AGE,
+                    SEX,
+                    BDATE,
+                    CIVIL_ID,
+                    EDUC_BCKGRND_ID,
+                    IS_ATTENDEE
+            )
+        VALUES (
+                couplesid,
+                lastname_f,
+                firstname_f,
+                middle_f,
+                extname_f,
+                age_years_f,
+                2,
+                birthdate_f,
+                civil_status_f,
+                educ_bckgrnd_f,
+                attendee_f
+            )
+        ;
+
+        INSERT INTO rpfp.fp_details (
+                COUPLES_ID,
+                MFP_METHOD_USED_ID,
+                MFP_INTENTION_SHIFT_ID,
+                TFP_TYPE_ID,
+                TFP_STATUS_ID,
+                REASON_INTENDING_USE_ID
+            )
+        VALUES (
+                couplesid,
+                mfp_used,
+                mfp_shift,
+                tfp_type,
+                tfp_status,
+                reason_use
+            )
+        ;
+    END;
+    ELSE BEGIN
+
      UPDATE rpfp.individual ic
-        SET ic.LNAME = IF( IFNULL( lastname_m, '') = '', ic.LNAME, lastname ),
-            ic.FNAME = IF( IFNULL( firstname_m, '') = '', ic.FNAME, firstname ),
-            ic.MNAME = IF( IFNULL( middle_m, '') = '', ic.MNAME, middle ),
-            ic.EXT_NAME = IF( IFNULL( extname_m, '') = '', ic.EXT_NAME, extname ),
-            ic.AGE = IF( IFNULL( age_years_m, '') = '', ic.AGE, age_years ),
-            ic.BDATE = IF( IFNULL( birthdate_m, '') = '', ic.BDATE, birthdate ),
-            ic.CIVIL_ID = IF( IFNULL( civil_status_m, '') = '', ic.CIVIL_ID, civil_status ),
-            ic.EDUC_BCKGRND_ID = IF( IFNULL( educ_bckgrnd, '') = '', ic.EDUC_BCKGRND_ID, educ_bckgrnd ),
-            ic.ETNICITY = IF( IFNULL( etnic, '') = '', ic.ETNICITY, etnic ),
-            ic.IS_ATTENDEE = IF( IFNULL( ATTENDEE, '') = '', ic.IS_ATTENDEE, ATTENDEE )
+        SET ic.LNAME = IF( IFNULL( lastname_m, '') = '', ic.LNAME, lastname_m ),
+            ic.FNAME = IF( IFNULL( firstname_m, '') = '', ic.FNAME, firstname_m ),
+            ic.MNAME = IF( IFNULL( middle_m, '') = '', ic.MNAME, middle_m ),
+            ic.EXT_NAME = IF( IFNULL( extname_m, '') = '', ic.EXT_NAME, extname_m ),
+            ic.AGE = IF( IFNULL( age_years_m, '') = '', ic.AGE, age_years_m ),
+            ic.BDATE = IF( IFNULL( birthdate_m, '') = '', ic.BDATE, birthdate_m ),
+            ic.CIVIL_ID = IF( IFNULL( civil_status_m, '') = '', ic.CIVIL_ID, civil_status_m ),
+            ic.EDUC_BCKGRND_ID = IF( IFNULL( educ_bckgrnd_m, '') = '', ic.EDUC_BCKGRND_ID, educ_bckgrnd_m ),
+            ic.IS_ATTENDEE = IF( IFNULL( attendee_m, '') = '', ic.IS_ATTENDEE, attendee_m )
       WHERE ic.COUPLES_ID = couplesid
         AND ic.SEX = 1
     ;
 
-     UPDATE rpfp.fp_details fd
-        SET fd.MFP_METHOD_USED_ID = IF( IFNULL( MFP_USED, '') = '', fd.MFP_METHOD_USED_ID, MFP_USED ),
-            fd.MFP_INTENTION_SHIFT_ID = IF( IFNULL( MFP_SHIFT, '') = '', fd.MFP_INTENTION_SHIFT_ID, MFP_SHIFT ),
-            fd.TFP_TYPE_ID = IF( IFNULL( TFP_TYPE, '') = '', fd.TFP_TYPE_ID, TFP_TYPE ),                            
-            fd.TFP_STATUS_ID = IF( IFNULL( TFP_STATUS, '') = '', fd.TFP_STATUS_ID, TFP_STATUS ),
-            fd.REASON_INTENDING_USE_ID = IF( IFNULL( rEASON_USE, '') = '', fd.REASON_INTENDING_USE_ID, REASON_USE)
-      WHERE fd.COUPLES_ID = couples_id
+     UPDATE rpfp.individual ic
+        SET ic.LNAME = IF( IFNULL( lastname_f, '') = '', ic.LNAME, lastname_f ),
+            ic.FNAME = IF( IFNULL( firstname_f, '') = '', ic.FNAME, firstname_f ),
+            ic.MNAME = IF( IFNULL( middle_f, '') = '', ic.MNAME, middle_f ),
+            ic.EXT_NAME = IF( IFNULL( extname_f, '') = '', ic.EXT_NAME, extname_f ),
+            ic.AGE = IF( IFNULL( age_years_f, '') = '', ic.AGE, age_years_f ),
+            ic.BDATE = IF( IFNULL( birthdate_f, '') = '', ic.BDATE, birthdate_f ),
+            ic.CIVIL_ID = IF( IFNULL( civil_status_f, '') = '', ic.CIVIL_ID, civil_status_f ),
+            ic.EDUC_BCKGRND_ID = IF( IFNULL( educ_bckgrnd_f, '') = '', ic.EDUC_BCKGRND_ID, educ_bckgrnd_f ),
+            ic.IS_ATTENDEE = IF( IFNULL( attendee_f, '') = '', ic.IS_ATTENDEE, attendee_f )
+      WHERE ic.COUPLES_ID = couplesid
+        AND ic.SEX = 2
     ;
 
+     UPDATE rpfp.fp_details fd
+        SET fd.MFP_METHOD_USED_ID = IF( IFNULL( MFP_USED, '') = '', fd.MFP_METHOD_USED_ID, mfp_used ),
+            fd.MFP_INTENTION_SHIFT_ID = IF( IFNULL( MFP_SHIFT, '') = '', fd.MFP_INTENTION_SHIFT_ID, mfp_shift ),
+            fd.TFP_TYPE_ID = IF( IFNULL( TFP_TYPE, '') = '', fd.TFP_TYPE_ID, tfp_type ),                            
+            fd.TFP_STATUS_ID = IF( IFNULL( TFP_STATUS, '') = '', fd.TFP_STATUS_ID, tfp_status ),
+            fd.REASON_INTENDING_USE_ID = IF( IFNULL( rEASON_USE, '') = '', fd.REASON_INTENDING_USE_ID, reason_use)
+      WHERE fd.COUPLES_ID = couples_id
+    ;
+    END;
+    END IF;
+
     SELECT "SUCCESS!" AS MESSAGE;
+    
 END$$
 
 CREATE DEFINER=root@localhost PROCEDURE encoder_save_fp_service (
@@ -1324,11 +1460,11 @@ CREATE DEFINER=root@localhost PROCEDURE encoder_save_fp_service (
     IN client_advise VARCHAR(100),
     IN referral_name VARCHAR(50),
     IN provider_name VARCHAR(50),
-    IN date_encoded DATE
+    IN date_encode DATE
     )  MODIFIES SQL DATA
 proc_exit_point :
 BEGIN
-    DECLARE fp_service_id INT UNSIGNED;
+    DECLARE count_served INT UNSIGNED;
 
     IF IFNULL( couplesid, '') = '' THEN
         SELECT "UNABLE TO GET RECORD WITH GIVEN PARAMETERS" AS MESSAGE;
@@ -1344,60 +1480,82 @@ BEGIN
         LEAVE proc_exit_point;
     END IF;
 
+    SELECT COUNT(*) AS count_served FROM fp_service WHERE COUPLES_ID = couplesid;
 
+    IF count_served = 0 THEN
+
+    INSERT INTO fp_service (
+                COUPLES_ID,
+                DATE_VISIT,
+                FP_SERVED_ID,
+                PROVIDER_TYPE_ID,
+                IS_COUNSELING,
+                OTHER_CONCERN,
+                IS_PROVIDED_SERVICE,
+                DATE_SERVED,
+                CLIENT_ADVISE,
+                REFERRAL_NAME,
+                PROVIDER_NAME,
+                DATE_ENCODED
+        )
+         VALUES (
+                couplesid,
+                date_visit,
+                fp_served_id,
+                provider_type_id,
+                is_counselling,
+                other_concern,
+                counseled_fp,
+                other_specify,
+                is_provided_service,
+                date_served,
+                client_advise,
+                referral_name,
+                provider_name,
+                date_encode
+        )
+    ;
+
+    ELSE
      UPDATE rpfp.fp_service fs
-        SET fs.DATE_VISIT = IF( IFNULL( DATEVISIT, '') = '', fs.DATE_VISIT, DATEVISIT ),
-            fs.FP_SERVED_ID = IF( IFNULL( FP_SERVED, '') = '', fs.FP_SERVED_ID, FP_SERVED ),
-            fs.PROVIDER_TYPE_ID = IF( IFNULL( PROVIDER_TYPE, '') = '', fs.PROVIDER_TYPE_ID, PROVIDER_TYPE ),
-            fs.IS_COUNSELLING = IF( IFNULL( IS_COUNSELING, '') = '', fs.IS_COUNSELLING, IS_COUNSELING ),
-            fs.OTHER_CONCERN = IF( IFNULL( OTHERS, '') = '', fs.OTHER_CONCERN, OTHERS ),
-            fs.COUNSELED_TO_USE = IF( IFNULL( COUNSELED_FP, '') = '', fs.COUNSELED_TO_USE, COUNSELED_FP ),
-            fs.OTHER_REASONS_SPECIFY = IF( IFNULL( OTHER_SPECIFY, '') = '', fs.OTHER_REASONS_SPECIFY, OTHERS_SPECIFY ),
-            fs.IS_PROVIDED_SERVICE = IF( IFNULL( IS_PROVIDED_SERVICE, '') = '', fs.IS_PROVIDED_SERVICE, IS_PROVIDED_SERVICE ),
-            fs.DATE_SERVED = IF( IFNULL( DATESERVED, '') = '', fs.DATE_SERVED, DATESERVED ),
-            fs.CLIENT_ADVISE = IF( IFNULL( CLIENT_ADVISE, '') = '', fs.CLIENT_ADVISE, CLIENT_ADVISE ),
-            fs.REFERRAL_NAME = IF( IFNULL( rEFERRALNAME, '') = '', fs.REFERRAL_NAME, REFERRALNAME ),
-            fs.PROVIDER_NAME = IF( IFNULL( PROVIDERNAME, '') = '', fs.PROVIDER_NAME, PROVIDERNAME ),
-            fs.DATE_ENCODED = IF( IFNULL( DATE_ENCODE, '') = '', fs.DATE_ENCODED, DATE_ENCODE)
+        SET fs.DATE_VISIT = IF( IFNULL( date_visit, '') = '', fs.DATE_VISIT, date_visit ),
+            fs.FP_SERVED_ID = IF( IFNULL( fp_served_id, '') = '', fs.FP_SERVED_ID, fp_served_id ),
+            fs.PROVIDER_TYPE_ID = IF( IFNULL( provider_type_id, '') = '', fs.PROVIDER_TYPE_ID, provider_type_id ),
+            fs.IS_COUNSELLING = IF( IFNULL( is_counselling, '') = '', fs.IS_COUNSELLING, is_counselling ),
+            fs.OTHER_CONCERN = IF( IFNULL( other_concern, '') = '', fs.OTHER_CONCERN, other_concern ),
+            fs.COUNSELED_TO_USE = IF( IFNULL( counseled_fp, '') = '', fs.COUNSELED_TO_USE, counseled_fp ),
+            fs.OTHER_REASONS_SPECIFY = IF( IFNULL( other_specify, '') = '', fs.OTHER_REASONS_SPECIFY, other_specify ),
+            fs.IS_PROVIDED_SERVICE = IF( IFNULL( is_provided_service, '') = '', fs.IS_PROVIDED_SERVICE, is_provided_service ),
+            fs.DATE_SERVED = IF( IFNULL( date_served, '') = '', fs.DATE_SERVED, date_served ),
+            fs.CLIENT_ADVISE = IF( IFNULL( client_advise, '') = '', fs.CLIENT_ADVISE, client_advise ),
+            fs.REFERRAL_NAME = IF( IFNULL( referral_name, '') = '', fs.REFERRAL_NAME, referral_name ),
+            fs.PROVIDER_NAME = IF( IFNULL( provider_name, '') = '', fs.PROVIDER_NAME, provider_name )
       WHERE fs.COUPLES_ID = couples_id
     ;
-
-     UPDATE rpfp.fp_details fd
-        SET fd.CURRENT_FP_METHOD_ID = IF( IFNULL( CURRENT_FP, '') = '', fd.CURRENT_FP_METHOD_ID, CURRENT_FP)
-      WHERE fd.COUPLES_ID = couples_id
-    ;
+    END IF;
 
     SELECT "SUCCESS!" AS MESSAGE;
+    
 END$$
 /** END COUPLES DETAILS */
 
 /**  APPROVE COUPLES DETAILS  */
 CREATE DEFINER=root@localhost PROCEDURE rdm_approve_couples (
     IN couples_id INT UNSIGNED,
-    IN RPFP_CLASS_ID INT,
-    IN IS_ACTIVE INT,
-    IN DATE_ENCODED DATE
+    IN IS_ACTIVE INT
     )  MODIFIES SQL DATA
 proc_exit_point :
 BEGIN
     DECLARE couples_id INT UNSIGNED;
 
-    IF rpfp_class_id IS NULL THEN
+    IF couples_id IS NULL THEN
         SELECT "CANNOT SAVE RECORD WITH GIVEN PARAMETERS" AS MESSAGE;
         LEAVE proc_exit_point;
     END IF;
 
-    SET couples_id = rpfp.user_get_approved_couples_list(couples_id);
-    IF couples_id IS NULL THEN
-        SELECT "UNABLE TO GET RECORD WITH GIVEN PARAMETERS" AS MESSAGE;
-        LEAVE proc_exit_point;
-    END IF;
-
-     UPDATE rpfp.approved_couples ac
-        SET ac.RPFP_CLASS_ID = IF( IFNULL( RPFP_CLASS, '') = '', ac.RPFP_CLASS_ID, RPFP_CLASS ),
-            ac.IS_ACTIVE = 2,
-            ac.DATE_ENCODED = IF( IFNULL( DATE_ENCODE, '') = '', ac.DATE_ENCODED, DATE_ENCODE)
-      WHERE ac.COUPLES_ID = couples_id
+     UPDATE rpfp.couples apc
+        SET apc.IS_ACTIVE = 2
+      WHERE apc.COUPLES_ID = couples_id
     ;
 
     SELECT "SUCCESS!" AS MESSAGE;
@@ -1592,7 +1750,7 @@ CREATE TABLE individual (
                  CIVIL_ID INT,
           EDUC_BCKGRND_ID INT,
                  ETNICITY VARCHAR(50),
-                 ATTENDEE INT(1),
+              IS_ATTENDEE INT(1),
               PRIMARY KEY (INDV_ID)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
