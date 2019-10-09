@@ -5,6 +5,9 @@ $CI->load->iface('base/BaseInterface');
 
 abstract class ModernFpUserInterface extends BaseInterface
 {
+    /** @var ModernMethods */
     public $MethodUsed;
-	public $IntentionForUsing;
+
+    /** @var ModernMethods */
+	public $IntentionToShift;
 }

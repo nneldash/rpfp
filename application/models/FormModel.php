@@ -20,27 +20,17 @@ class FormModel extends BaseModel
 
     public function saveForm1(FormInterface $form)
     {
-        // $db = $this->LoginModel->reconnect();
+        $class_id = $this->saveSeminar($form->Seminar);
+        if (!$class_id) {
+            /** return exception or error message */
+            return;
+        }
 
-        if (!$this->saveSeminar($form->Seminar)) {
-            /** return exception or error message */
-            return;
-        }
-        if (!$this->saveHusband($form->ListCouple)) {
-            /** return exception or error message */
-            return;
-        }
-        if (!$this->saveWife($form->ListCouple)) {
-            /** return exception or error message */
-            return;
-        }
-        if (!$this->saveModernFpUser($form->ListCouple)) {
-            /** return exception or error message */
-            return;
-        }
-        if (!$this->saveTraditionalFpUser($form->ListCouple)) {
-            /** return exception or error message */
-            return;
+        foreach ($form->ListCouple as $current_couple) {
+            $current_couple = CoupleClass::getFromVariable($current_couple);
+            if (!$this->saveCouple($class_id, $current_couple)) {
+                return "yehey!!!";
+            }
         }
 
         return true;
@@ -51,105 +41,63 @@ class FormModel extends BaseModel
         $method = "encoder_save_class";
         $with_id = [$data->ClassId == N_A ? BLANK : $data->ClassId];
 
-        IN classid INT UNSIGNED,
-        IN TYPE_CLASS INT,
-        IN OTHERS_SPEC VARCHAR(100),
-        IN BARANGAYID INT,
-        IN CLASS_NO VARCHAR(50),
-        IN DATECONDUCTED DATE
-
         $params = $with_id + [
-            $data->TypeOfClass == N_A ? BLANK : $data->TypeOfClass,
+            $data->TypeOfClass->Type == N_A ? BLANK : $data->TypeOfClass->Type,
+            $data->TypeOfClass->Others == N_A ? BLANK : $data->TypeOfClass->Others,
+            $data->Location->SpecificLocation->Code  == N_A ? BLANK : $data->Location->SpecificLocation->Code,
             $data->ClassNumber == N_A ? BLANK : $data->ClassNumber,
-            $data->Province == N_A ? BLANK : $data->Province,
-            $data->Barangay == N_A ? BLANK : $data->Barangay,
             $data->DateConducted == N_A ? BLANK : $data->DateConducted
         ];
 
         return $this->saveToDb($method, $params);
     }
 
-    public function saveHusband(ListCoupleInterface $data)
+    public function saveCouple(int $class_id, CoupleInterface $couple)
     {
-        $method = "rpfp_form1_save_husband";
-        $with_id = [];
+        $method = "encoder_save_couple";
+        $husband = $couple->Husband();
+        $wife = $couple->Wife();
+        $traditional = $couple->TraditionalFp;
+        $modern = $couple->ModernFp;
 
-        foreach ($data as $newData)
-        {
-           foreach ($newData->ListHusband as $husband)
-           {
-              $params = [
-                  $husband->Name == N_A ? BLANK : $husband->Name,
-                  $husband->Sex == N_A ? BLANK : $husband->Sex,
-                  $husband->CivilStatus == N_A ? BLANK : $husband->CivilStatus,
-                  $husband->Age == N_A ? BLANK : $husband->Age,
-                  $husband->EducationalAttainment == N_A ? BLANK : $husband->EducationalAttainment,
-                  $husband->HasAttended == N_A ? BLANK : $husband->HasAttended
-              ];
-           }
-        }
+        $params = [
+            $class_id == 0 ? BLANK : $class_id,
+            $couple->Id == N_A ? BLANK : $couple->Id,
 
-        return $this->saveToDb($method, $params);
-    }
+            $couple->Address_St == N_A ? BLANK : $couple->Address_St,
+            $couple->Address_Brgy == N_A ? BLANK : $couple->Address_Brgy,
+            $couple->Address_City == N_A ? BLANK : $couple->Address_City,
+            $couple->Address_HH_No == N_A ? BLANK : $couple->Address_HH_No,
+            $couple->NumberOfChildren == N_A ? BLANK : $couple->NumberOfChildren,
 
-    public function saveWife(ListCoupleInterface $data)
-    {
-        $method = "rpfp_form1_save_wife";
-        $with_id = [];
+            $husband->Id == N_A ? BLANK : $husband->Id,
+            $husband->Name->Surname == N_A ? BLANK : $husband->Name->Surname,
+            $husband->Name->Firstname == N_A ? BLANK : $husband->Name->Firstname,
+            $husband->Name->Middlename == N_A ? BLANK : $husband->Name->Middlename,
+            $husband->Name->Extname == N_A ? BLANK : $husband->Name->Extname,
+            $husband->Age == N_A ? BLANK : $husband->Age,
+            $husband->Birthdate == N_A ? BLANK : $husband->Birthdate->format('Y-m-d'),
+            $husband->CivilStatus == N_A ? BLANK : $husband->CivilStatus,
+            $husband->HighestEducation == N_A ? BLANK : $husband->HighestEducation,
+            $husband->Attendee == N_A ? BLANK : $husband->Attendee,
 
-        foreach ($data as $newData)
-        {
-           foreach ($newData->ListWife as $wife)
-           {
-              $params = [
-                  $wife->Name == N_A ? BLANK : $wife->Name,
-                  $wife->Sex == N_A ? BLANK : $wife->Sex,
-                  $wife->CivilStatus == N_A ? BLANK : $wife->CivilStatus,
-                  $wife->Age == N_A ? BLANK : $wife->Age,
-                  $wife->EducationalAttainment == N_A ? BLANK : $wife->EducationalAttainment,
-                  $wife->HasAttended == N_A ? BLANK : $wife->HasAttended
-              ];
-           }
-        }
+            $wife->Id == N_A ? BLANK : $wife->Id,
+            $wife->Name->Surname == N_A ? BLANK : $wife->Name->Surname,
+            $wife->Name->Firstname == N_A ? BLANK : $wife->Name->Firstname,
+            $wife->Name->Middlename == N_A ? BLANK : $wife->Name->Middlename,
+            $wife->Age == N_A ? BLANK : $wife->Age,
+            $wife->Birthdate == N_A ? BLANK : $wife->Birthdate->format('Y-m-d'),
+            $wife->CivilStatus == N_A ? BLANK : $wife->CivilStatus,
+            $wife->HighestEducation == N_A ? BLANK : $wife->HighestEducation,
+            $wife->Attendee == N_A ? BLANK : $wife->Attendee,
 
-        return $this->saveToDb($method, $params);
-    }
+            $modern->MethodUsed == N_A ? BLANK : $modern->MethodUsed,
+            $modern->IntentionToShift == N_A ? BLANK : $modern->IntentionToShift,
 
-    public function saveModernFpUser(ListCoupleInterface $data)
-    {
-        $method = "rpfp_form1_save_modern_fp_user";
-        $with_id = [];
-
-        foreach ($data as $newData)
-        {
-           foreach ($newData->ListModernFp as $modernFp)
-           {
-            $params = [
-                $modernFp->MethodUsed == N_A ? BLANK : $modernFp->MethodUsed,
-                $modernFp->IntentionForUsing == N_A ? BLANK : $modernFp->IntentionForUsing
-            ];
-           }
-        }
-
-        return $this->saveToDb($method, $params);
-    }
-
-    public function saveTraditionalFpUser(ListCoupleInterface $data)
-    {
-        $method = "rpfp_form1_save_traditional_fp_user";
-        $with_id = [];
-
-        foreach ($data as $newData)
-        {
-           foreach ($newData->ListTraditionalFp as $traditionalFp)
-           {
-            $params = [
-                $traditionalFp->Type == N_A ? BLANK : $traditionalFp->Type,
-                $traditionalFp->Status == N_A ? BLANK : $traditionalFp->Status,
-                $traditionalFp->IntentionForUsing == N_A ? BLANK : $traditionalFp->IntentionForUsing
-            ];
-           }
-        }
+            $traditional->Type == N_A ? BLANK : $traditional->Id,
+            $traditional->Status == N_A ? BLANK : $traditional->Status,
+            $traditional->ReasonForUse == N_A ? BLANK : $traditional->ReasonForUse        
+        ];
 
         return $this->saveToDb($method, $params);
     }
@@ -227,9 +175,9 @@ class FormModel extends BaseModel
         return $listCouple;
     }
 
-    public function getForm1Husband() : HusbandInterface
+    public function getForm1Husband() : IndividualInterface
     {   
-        $husband = new HusbandClass();
+        $husband = new IndividualClass();
 
         $husband->Name = 'Chou Fan';
         $husband->Sex = 'M';
@@ -242,9 +190,9 @@ class FormModel extends BaseModel
         
     }
 
-    public function getForm1Wife() : WifeInterface
+    public function getForm1Wife() : IndividualInterface
     {
-        $wife = new WifeClass();
+        $wife = new IndividualClass();
 
         $wife->Name = 'Hanabi Montana';
         $wife->Sex = 'F';

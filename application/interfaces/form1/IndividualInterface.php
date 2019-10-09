@@ -10,6 +10,7 @@ $CI->load->iface('common/EducationBackgrounds');
 
 abstract class IndividualInterface extends BaseInterface
 {
+    /** @var int */
     public $Id;
 
     /** @var NameInterface */
@@ -23,6 +24,9 @@ abstract class IndividualInterface extends BaseInterface
 
     /** @var DateTime */
     public $Birthdate;
+
+    /** @var int */
+    public $Age;
 
     /** @var string */
     public $ResidentialAddress;

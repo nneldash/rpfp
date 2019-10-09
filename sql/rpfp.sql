@@ -1214,17 +1214,14 @@ BEGIN
     END IF;
 END$$
 
-CREATE DEFINER=root@localhost PROCEDURE encoder_save_couples (
+CREATE DEFINER=root@localhost PROCEDURE encoder_save_couple (
     IN rpfp_classid INT UNSIGNED,
     IN couplesid INT UNSIGNED,
-    IN typeparticipant INT UNSIGNED,
-    IN date_encode DATE,
     IN address_st_no VARCHAR(50),
     IN address_barangay VARCHAR(50),
     IN address_municipality VARCHAR(50),
     IN household_no VARCHAR(50),
     IN number_child INT,
-    IN encoded_by INT,
     
     IN indv_id_m INT UNSIGNED,
     IN lastname_m VARCHAR(100),
@@ -1271,8 +1268,8 @@ DECLARE existing_couples INT;
         */
         INSERT INTO rpfp.couples (
                     RPFP_CLASS_ID,
-                    TYPE_PARTICIPANT,
                     DATE_ENCODED,
+                    DATE_MODIFIED,
                     ADDRESS_NO_ST,
                     ADDRESS_BRGY,
                     ADDRESS_CITY,
@@ -1283,21 +1280,20 @@ DECLARE existing_couples INT;
             )
              VALUES (
                     rpfp_classid,
-                    typeparticipant,
-                    date_encode,
+                    CURRENT_DATE(),
+                    CURRENT_DATE(),
                     address_st_no,
                     address_barangay,
                     address_municipality,
                     household_no,
                     number_child,
                     2,
-                    encoded_by
+                    USER()
             )
     ;
     ELSE
              UPDATE rpfp.couples apc
                 SET apc.RPFP_CLASS_ID = IF( IFNULL( rpfp_classid, '') = '', apc.RPFP_CLASS_ID, rpfp_classid ),
-                    apc.TYPE_PARTICIPANT = IF( IFNULL( typeparticipant, '') = '', apc.TYPE_PARTICIPANT, typeparticipant ),
                     apc.ADDRESS_NO_ST = IF( IFNULL( address_st_no, '') = '', apc.ADDRESS_NO_ST, address_st_no ),
                     apc.ADDRESS_BRGY = IF( IFNULL( address_barangay, '') = '', apc.ADDRESS_BRGY, address_barangay ),
                     apc.ADDRESS_CITY = IF( IFNULL( address_municipality, '') = '', apc.ADDRESS_CITY, address_municipality ),
@@ -1310,7 +1306,7 @@ DECLARE existing_couples INT;
 
     /** CHANGE TO COUPLES  */
      UPDATE rpfp.couples apc
-        SET apc.DATE_ENCODED = CURRENT_DATE(),
+        SET apc.DATE_MODIFIED = CURRENT_DATE(),
             apc.IS_ACTIVE = 2
       WHERE apc.COUPLES_ID = couples_id
         AND apc.RPFP_CLASS_ID = rpfp_classid
@@ -1719,8 +1715,8 @@ CREATE TABLE rpfp_class (
 CREATE TABLE couples (
              COUPLES_ID INT UNSIGNED NOT NULL AUTO_INCREMENT,
           RPFP_CLASS_ID INT NOT NULL,
-       TYPE_PARTICIPANT VARCHAR(100),
            DATE_ENCODED DATE,
+          DATE_MODIFIED DATE,
           ADDRESS_NO_ST VARCHAR(50),
            ADDRESS_BRGY VARCHAR(50),
            ADDRESS_CITY VARCHAR(50),

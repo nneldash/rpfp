@@ -35,5 +35,13 @@ class CoupleClass extends CoupleInterface
         }
         return $this->SecondEntry;
     }
+
+    public static function getFromVariable($variable) : CoupleInterface
+    {
+        if ($variable instanceof CoupleInterface) {
+            return $variable;
+        }
+        return new CoupleClass();
+    }
 }
     
