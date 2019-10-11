@@ -1,13 +1,14 @@
 
 call rpfp.itdmu_create_rpfp_user('test', 'test', 'rojo', 'rowell', 'x@com.com', 13, 130000000, 60, 40);
+call rpfp.itdmu_create_rpfp_user('root', '', 'root', 'root', 'y@com.com', 08, 080000000, 50, 40);
 
 --
 -- Dumping data for table `rpfp_class`
 --
 
-INSERT INTO `rpfp_class`
-            (`RPFP_CLASS_ID`, `TYPE_CLASS_ID`, `OTHERS_SPECIFY`,`REGION_CODE`,`PSGC_CODE`,`CLASS_NUMBER`,`DATE_CONDUCTED`,`DB_USER_ID`)
-     VALUES (1, 1, NULL, 12, 083747125, 'RPFP-TAC-2019-00001','02-11-2019', 'test')
+INSERT INTO rpfp.`rpfp_class`
+            (`RPFP_CLASS_ID`, `TYPE_CLASS_ID`, `OTHERS_SPECIFY`,`BARANGAY_ID`,`CLASS_NUMBER`,`DATE_CONDUCTED`,`DB_USER_ID`)
+     VALUES (1, 1, NULL, 083747125, 'RPFP-TAC-2019-00001','2019-02-11', 'test')
 ;
 
 -- --------------------------------------------------------
@@ -16,30 +17,30 @@ INSERT INTO `rpfp_class`
 -- Dumping data for table `couples`
 --
 
-INSERT INTO `couples`
-            (`COUPLES_ID`, `RPFP_CLASS_ID`, `ADDRESS_NO_ST`, `ADDRESS_BRGY`, `ADDRESS_CITY`, `HH_ID_NO`,  `NO_CHILDREN`, `DATE_ENCODED`, `DB_USER_ID`, `IS_ACTIVE`)
-     VALUES (1, 1, '5 ISANG STREET', 'PINAGKAISAHAN', 'MANDALUYONG', '1-000-102453-2', 8,  '03-01-2019',  'test', 2 ),
-            (2, 1, '2 ISANG STREET', 'PINAGKAISAHAN', 'MANDALUYONG', '1-000-102453-2', 5, '03-01-2019', 'test', 2 ),
-            (3, 1, '3 ISANG STREET', 'PINAGKAISAHAN', 'MANDALUYONG', '1-000-102453-2', 4, '03-01-2019', 'test', 2 ),
-            (4, 1, '4 ISANG STREET', 'PINAGKAISAHAN', 'MANDALUYONG', '1-000-102453-2', 3, '03-01-2019', 'test', 2 ),
-            (5, 1, '1 ISANG STREET', 'PINAGKAISAHAN', 'MANDALUYONG', '1-000-102453-2', 2, '03-01-2019', 'test', 2 ),
-            (6, 1, '7 ISANG STREET', 'PINAGKAISAHAN', 'MANDALUYONG', '1-000-102453-2', 6, '03-01-2019', 'test', 2 ),
-            (7, 1, '6 ISANG STREET', 'PINAGKAISAHAN', 'MANDALUYONG', '1-000-102453-2', 2, '03-01-2019', 'test', 2 ),
-            (8, 1, '9 ISANG STREET', 'PINAGKAISAHAN', 'MANDALUYONG', '1-000-102453-2', 1, '03-01-2019', 'test', 2 ),
-            (9, 1, '8 ISANG STREET', 'PINAGKAISAHAN', 'MANDALUYONG', '1-000-102453-2', 0, '03-01-2019', 'test', 2 ),
-            (10, 1, '10 ISANG STREET', 'PINAGKAISAHAN', 'MANDALUYONG', '1-000-102453-2', 5, '03-01-2019', 'test', 2 ),
-            (11, 1, '14 ISANG STREET', 'PINAGKAISAHAN', 'MANDALUYONG', '1-000-102453-2', 4, '03-01-2019', 'test', 2 ),
-            (12, 1, '13 ISANG STREET', 'PINAGKAISAHAN', 'MANDALUYONG', '1-000-102453-2', 3, '03-01-2019', 'test', 2 ),
-            (13, 1, '12 ISANG STREET', 'PINAGKAISAHAN', 'MANDALUYONG', '1-000-102453-2', 7, '03-01-2019', 'test', 2 ),
-            (14, 1, '11 ISANG STREET', 'PINAGKAISAHAN', 'MANDALUYONG', '1-000-102453-2', 2, '03-01-2019', 'test', 2 ),
-            (15, 1, '15 ISANG STREET', 'PINAGKAISAHAN', 'MANDALUYONG', '1-000-102453-2', 2, '03-01-2019', 'test', 2 )
+INSERT INTO rpfp.`couples`
+            (`COUPLES_ID`, `RPFP_CLASS_ID`, `ADDRESS_NO_ST`, `ADDRESS_BRGY`, `ADDRESS_CITY`, `HH_ID_NO`,  `NO_CHILDREN`, `DATE_ENCODED`,`IS_ACTIVE`)
+     VALUES (1, 1, '5 ISANG STREET', 'PINAGKAISAHAN', 'MANDALUYONG', '1-000-102453-2', 8,  '2019-03-01', 2 ),
+            (2, 1, '2 ISANG STREET', 'PINAGKAISAHAN', 'MANDALUYONG', '1-000-102453-2', 5, '2019-03-01', 2 ),
+            (3, 1, '3 ISANG STREET', 'PINAGKAISAHAN', 'MANDALUYONG', '1-000-102453-2', 4, '2019-03-01', 2 ),
+            (4, 1, '4 ISANG STREET', 'PINAGKAISAHAN', 'MANDALUYONG', '1-000-102453-2', 3, '2019-03-01', 2 ),
+            (5, 1, '1 ISANG STREET', 'PINAGKAISAHAN', 'MANDALUYONG', '1-000-102453-2', 2, '2019-03-01', 2 ),
+            (6, 1, '7 ISANG STREET', 'PINAGKAISAHAN', 'MANDALUYONG', '1-000-102453-2', 6, '2019-03-01', 2 ),
+            (7, 1, '6 ISANG STREET', 'PINAGKAISAHAN', 'MANDALUYONG', '1-000-102453-2', 2, '2019-03-01', 2 ),
+            (8, 1, '9 ISANG STREET', 'PINAGKAISAHAN', 'MANDALUYONG', '1-000-102453-2', 1, '2019-03-01', 2 ),
+            (9, 1, '8 ISANG STREET', 'PINAGKAISAHAN', 'MANDALUYONG', '1-000-102453-2', 0, '2019-03-01', 2 ),
+            (10, 1, '10 ISANG STREET', 'PINAGKAISAHAN', 'MANDALUYONG', '1-000-102453-2', 5, '2019-03-01', 2 ),
+            (11, 1, '14 ISANG STREET', 'PINAGKAISAHAN', 'MANDALUYONG', '1-000-102453-2', 4, '2019-03-01', 2 ),
+            (12, 1, '13 ISANG STREET', 'PINAGKAISAHAN', 'MANDALUYONG', '1-000-102453-2', 3, '2019-03-01', 2 ),
+            (13, 1, '12 ISANG STREET', 'PINAGKAISAHAN', 'MANDALUYONG', '1-000-102453-2', 7, '2019-03-01', 2 ),
+            (14, 1, '11 ISANG STREET', 'PINAGKAISAHAN', 'MANDALUYONG', '1-000-102453-2', 2, '2019-03-01', 2 ),
+            (15, 1, '15 ISANG STREET', 'PINAGKAISAHAN', 'MANDALUYONG', '1-000-102453-2', 2, '2019-03-01', 2 )
 ;
 
 --
 -- Dumping data for table `individual`
 --
 
-INSERT INTO `individual`
+INSERT INTO rpfp.`individual`
             (`INDV_ID`,
             `COUPLES_ID`,
             `LNAME`,
@@ -84,7 +85,7 @@ INSERT INTO `individual`
 -- Dumping data for table `fp_details`
 --
 
-INSERT INTO `fp_details`
+INSERT INTO rpfp.`fp_details`
             (`FP_DETAILS_ID`, `COUPLES_ID`, `MFP_METHOD_USED_ID`, `MFP_INTENTION_SHIFT_ID`, `TFP_TYPE_ID`, `TFP_STATUS_ID`, `REASON_INTENDING_USE_ID`)
      VALUES (1, 1, 3, NULL, NULL, NULL, NULL),
             (2, 2, NULL, NULL, 1, 4, NULL),
