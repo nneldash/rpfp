@@ -4,10 +4,9 @@ $CI =& get_instance();
 $CI->load->iface('base/BaseInterface');
 $CI->load->iface('form1/NameInterface');
 // $CI->load->iface('form/AddressInterface');
-$CI->load->iface('form1/lists/ListHusbandInterface');
-$CI->load->iface('form1/lists/ListWifeInterface');
-$CI->load->iface('form1/lists/ListModernFpUserInterface');
-$CI->load->iface('form1/lists/ListTraditionalFpUserInterface');
+$CI->load->iface('form1/IndividualInterface');
+$CI->load->iface('form1/ModernFpUserInterface');
+$CI->load->iface('form1/TraditionalFpUserInterface');
 
 abstract class CoupleInterface extends BaseInterface
 {

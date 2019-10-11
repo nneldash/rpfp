@@ -2,9 +2,9 @@
 defined('BASEPATH') or exit('No direct script access allowed');
 $CI =& get_instance();
 $CI->load->iface('form1/CoupleInterface');
-$CI->load->library('form1/lists/IndividualClass');
-$CI->load->library('form1/lists/ModernFpUserClass');
-$CI->load->library('form1/lists/TraditionalFpUserClass');
+$CI->load->library('form1/IndividualClass');
+$CI->load->library('form1/ModernFpUserClass');
+$CI->load->library('form1/TraditionalFpUserClass');
 
 
 class CoupleClass extends CoupleInterface

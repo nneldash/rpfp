@@ -9,8 +9,8 @@ class Forms extends CI_Controller
         $this->load->model('FormModel');
         $this->load->library('form1/FormClass');
         $this->load->library('form1/CoupleClass');
-        $this->load->library('form1/HusbandClass');
-        $this->load->library('form1/WifeClass');
+        // $this->load->library('form1/HusbandClass');
+        // $this->load->library('form1/WifeClass');
         $this->load->library('form1/ProfileClass');
         $this->load->library('form1/ModernFpUserClass');
         $this->load->library('form1/TraditionalFpUserClass');
@@ -148,6 +148,8 @@ class Forms extends CI_Controller
 
     public function saveServiceSlip()
     {
+        $couple_id = $this->input->post('couple_id');
+        
         $slip = new ServiceSlipClass();
 
         $slip->DateOfVisit = $this->input->post('date_of_visit');
@@ -159,7 +161,7 @@ class Forms extends CI_Controller
         $slip->ReferralFacility = $this->input->post('referral_facility');
         $slip->Name = 'NA';
 
-        if (!$this->FormModel->saveServiceSlip($slip)) {
+        if (!$this->FormModel->saveServiceSlip($couple_id, $slip)) {
             $data = ['is_save' => false];
         } else {
             $data = ['is_save' => true];

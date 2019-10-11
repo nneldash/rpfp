@@ -15,9 +15,6 @@ class FormClass extends FormInterface
     {
 		$this->Seminar = new SeminarClass();
         $this->ListCouple = new ListCoupleClass();
-        $this->ListProfile = new ListProfileClass();
-        $this->ListModernFpUser = new ListModernFpUserClass();
-        $this->TraditionalFpUser = new TraditionalFpUserClass();
     }
 
     /* If needed in the future */

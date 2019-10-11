@@ -102,19 +102,25 @@ class FormModel extends BaseModel
         return $this->saveToDb($method, $params);
     }
 
-    public function saveServiceSlip(ServiceSlipInterface $data)
+    public function saveServiceSlip(int $couple_id, ServiceSlipInterface $data)
     {
-        $method = "rpfp_save_service_slip";
-        $with_id = [];
+        $method = "encoder_save_service_slip";
 
         $params = [
-            $data->DateOfVisit == N_A ? BLANK : $data->DateOfVisit,
+            $couple_id == 0 ? BLANK : $couple_id,
+            $data->Id == N_A ? BLANK : $data->Id,
+
+            $data->DateOfVisit == N_A ? BLANK : $data->DateOfVisit->format('Y-m-d'),
             $data->ClientName == N_A ? BLANK : $data->ClientName,
             $data->ClientAddress == N_A ? BLANK : $data->ClientAddress,
             $data->Method == N_A ? BLANK : $data->Method,
-            $data->DateOfMethod == N_A ? BLANK : $data->DateOfMethod,
+            $data->DateOfMethod == N_A ? BLANK : $data->DateOfMethod->format('Y-m-d'),
             $data->ReferralFacility == N_A ? BLANK : $data->ReferralFacility,
-            $data->Name == N_A ? BLANK : $data->Name
+
+            $data->Name->Surname == N_A ? BLANK : $data->Name->Surname,
+            $data->Name->Firstname == N_A ? BLANK : $data->Name->Firstname,
+            $data->Name->Middlename == N_A ? BLANK : $data->Name->Middlename,
+            $data->Name->Extname == N_A ? BLANK : $data->Name->Extname
         ];
 
         return $this->saveToDb($method, $params);
@@ -166,10 +172,10 @@ class FormModel extends BaseModel
         $couple->Address = 'Bulacan';
         $couple->NumberOfChildren = '12';
 
-        $couple->ListHusband->append($this->getForm1Husband());
-        $couple->ListWife->append($this->getForm1Wife());
-        $couple->ListModernFp->append($this->getForm1ModernFpUser());
-        $couple->ListTraditionalFp->append($this->getForm1TraditionalFpUser());
+        // $couple->ListHusband->append($this->getForm1Husband());
+        // $couple->ListWife->append($this->getForm1Wife());
+        // $couple->ListModernFp->append($this->getForm1ModernFpUser());
+        // $couple->ListTraditionalFp->append($this->getForm1TraditionalFpUser());
         $listCouple->append($couple);
 
         return $listCouple;
