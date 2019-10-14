@@ -14,7 +14,7 @@ $this->load->library('helpers/HtmlHelper');
 		}
 	</style>
 <?php } else { ?>
-	<link href="<?= base_url('node_modules/gentelella/vendors/font-awesome/css/font-awesome.min.css'); ?>" rel="stylesheet">
+	<link href="<?= base_url('NewAssets/FontAwesome'); ?>" rel="stylesheet">
 	<style>
 		.table-bordered > tbody > tr > td,
 		.table-bordered > thead > tr > th,

@@ -255,7 +255,7 @@ BEGIN
     DECLARE ret_val INT(1) DEFAULT NULL;
      SELECT TRUE INTO ret_val
        FROM rpfp.user_profile prof
-      WHERE prof.DB_USER_ID = USER()
+      WHERE CONCAT( prof.DB_USER_ID, "@localhost" ) = USER()
         AND prof.IS_ACTIVE = TRUE
     ;
     RETURN ret_val;
@@ -1831,6 +1831,7 @@ CREATE TABLE fp_service (
 GRANT EXECUTE ON PROCEDURE rpfp.login_change_initial_password TO 'rpfp_login';
 GRANT EXECUTE ON PROCEDURE rpfp.login_change_own_password TO 'rpfp_login';
 GRANT EXECUTE ON PROCEDURE rpfp.login_update_first_login TO 'rpfp_login';
+ GRANT EXECUTE ON FUNCTION rpfp.login_check_if_active TO 'rpfp_login';
 
  GRANT EXECUTE ON FUNCTION rpfp.profile_check_if_encoder TO 'rpfp_login';
  GRANT EXECUTE ON FUNCTION rpfp.profile_check_if_focal TO 'rpfp_login';
