@@ -338,6 +338,12 @@ BEGIN
         LEAVE proc_exit_point;
     END IF;
 
+    IF NOT (name_user = 'root') THEN
+        SET @sql_stmt_role := CONCAT( "REVOKE ALL PRIVILEGES, GRANT OPTION FROM  ", db_user_name );
+        PREPARE stmt_role FROM @sql_stmt_role;
+        EXECUTE stmt_role;
+    END IF;
+
     SET default_role := rpfp.profile_select_role( role_num );
 
     SET @sql_stmt4 := CONCAT( "GRANT ", default_role, " TO ", db_user_name );
@@ -546,6 +552,7 @@ BEGIN
     CALL rpfp.lib_extract_user_name( db_user, name_user, db_user_name );
 
      SELECT prof.REGION_CODE INTO ret_val
+       FROM rpfp.user_profile prof
       WHERE prof.DB_USER_ID = name_user
     ;
 
