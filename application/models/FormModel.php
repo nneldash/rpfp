@@ -61,9 +61,9 @@ class FormModel extends BaseModel
         $modern = $couple->ModernFp;
 
         $params = [
-            $class_id == 0 ? BLANK : $class_id,
             $couple->Id == N_A ? BLANK : $couple->Id,
-
+            $class_id == 0 ? BLANK : $class_id,
+            
             $couple->Address_St == N_A ? BLANK : $couple->Address_St,
             $couple->Address_Brgy == N_A ? BLANK : $couple->Address_Brgy,
             $couple->Address_City == N_A ? BLANK : $couple->Address_City,
@@ -139,75 +139,75 @@ class FormModel extends BaseModel
     {
         $seminar = new SeminarClass();
 
+        $seminar->ClassId = '1';
         $seminar->TypeOfClass = '4ps';
         $seminar->ClassNumber = '12345';
-        $seminar->Province = 'Bulacan';
-        $seminar->Barangay = 'Sta.Ana';
+        $seminar->Location = '3';
+        $seminar->Location = '1';
         $seminar->DateConducted = '09/10/2019';
 
         return $seminar;
 
     }
 
-    public function getForm1Couple() : ListCoupleInterface
+    public function getForm1Couple() : CoupleInterface
     {
-        // $couple = new CoupleClass();
-
-        // return $this->fromDbGetList(
-        //     'ListCoupleClass',
-        //     'CoupleClass',
-        //     array(
-        //         'Address' => 'address',
-        //         'NumberOfChildren' => 'no_of_children'
-        //     ),
-        //     'rpfp_form1_get_couple',
-        //     array(),
-        //     'couple'
-        // );
-
-        $listCouple = new ListCoupleClass();
-
         $couple = new CoupleClass();
-
-        $couple->Address = 'Bulacan';
+        
+        $couple->Id = '1';
+        $couple->Address_St = 'Bulacan St';
+        $couple->Address_Brgy = 'Barangay Bulacan';
+        $couple->Address_City = 'Bulacan City';
+        $couple->Address_HH_No = '0000';
         $couple->NumberOfChildren = '12';
 
-        // $couple->ListHusband->append($this->getForm1Husband());
-        // $couple->ListWife->append($this->getForm1Wife());
-        // $couple->ListModernFp->append($this->getForm1ModernFpUser());
-        // $couple->ListTraditionalFp->append($this->getForm1TraditionalFpUser());
-        $listCouple->append($couple);
 
-        return $listCouple;
+        $couple->FirstEntry = $this->getForm1Husband();
+        $couple->SecondEntry = $this->getForm1Wife();
+        $couple->ModernFp = $this->getForm1ModernFpUser();
+        $couple->TraditionalFp = $this->getForm1TraditionalFpUser();
+
+        return $couple;
     }
 
     public function getForm1Husband() : IndividualInterface
     {   
-        $husband = new IndividualClass();
+        $individual = new IndividualClass();
 
-        $husband->Name = 'Chou Fan';
-        $husband->Sex = 'M';
-        $husband->CivilStatus = 'Married';
-        $husband->Age = '31';
-        $husband->EducationalAttainment = '1';
-        $husband->HasAttended = 'Yes';
+        $individual->Id = '1';
+        $individual->Name->Surname = 'Fan';
+        $individual->Name->Firstname = 'Chou';
+        $individual->Name->Middlename = '';
+        $individual->Name->Extname = '';
+        $individual->Sex = 'M';
+        $individual->CivilStatus = 'Married';
+        $individual->Birthdate = '12/31/1996';
+        $individual->Age = '22';
+        $individual->ResidentialAddress = 'Mandaluyong City, Metro Manila';
+        $individual->HighestEducation = '5';
+        $individual->Attendee = 'Yes';
 
-        return $husband;
-        
+        return $individual;
     }
 
     public function getForm1Wife() : IndividualInterface
     {
-        $wife = new IndividualClass();
+        $individual = new IndividualClass();
 
-        $wife->Name = 'Hanabi Montana';
-        $wife->Sex = 'F';
-        $wife->CivilStatus = 'Married';
-        $wife->Age = '31';
-        $wife->EducationalAttainment = '1';
-        $wife->HasAttended = 'Yes';
+        $individual->Id = '2';
+        $individual->Name->Surname = 'Montana';
+        $individual->Name->Firstname = 'Hanabi';
+        $individual->Name->Middlename = '';
+        $individual->Name->Extname = '';
+        $individual->Sex = 'F';
+        $individual->CivilStatus = 'Married';
+        $individual->Birthdate = '12/31/1996';
+        $individual->Age = '22';
+        $individual->ResidentialAddress = 'Mandaluyong City, Metro Manila';
+        $individual->HighestEducation = '5';
+        $individual->Attendee = 'Yes';
 
-        return $wife;
+        return $individual;
     }
 
     public function getForm1ModernFpUser() : ModernFpUserInterface
@@ -215,7 +215,7 @@ class FormModel extends BaseModel
         $modernFp = new ModernFpUserClass();
         
         $modernFp->MethodUsed = '1';
-        $modernFp->IntentionForUsing = '2';
+        $modernFp->IntentionToShift = '2';
 
         return $modernFp;
     }
@@ -226,7 +226,7 @@ class FormModel extends BaseModel
         
         $traditionalFp->Type  = '1';
         $traditionalFp->Status = '2';
-        $traditionalFp->IntentionForUsing = '3';
+        $traditionalFp->ReasonForUse = '3';
 
         return $traditionalFp;
     }

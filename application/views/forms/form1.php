@@ -1,6 +1,8 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 $this->load->library('helpers/HtmlHelper');
+// echo '<pre>';
+// print_r($form1);exit;
 ?>
 
 <?php if($is_pdf){ ?>
@@ -77,6 +79,7 @@ $this->load->library('helpers/HtmlHelper');
 					</div>
 			    </div>
 			<?php endif; ?>
+			<input type="hidden" name="class_id" />
 			<div class="border-t1 table-responsive">
 				<div style="padding-top: 10px"></div>
 				<table style="float: left" class="table">
@@ -84,7 +87,7 @@ $this->load->library('helpers/HtmlHelper');
 						<td class="border-1 padding-0 back-eee" style="border-left: none">
 							<?php if (!$is_pdf) : ?>
 								<label class="cont border-t1">
-									<input id="4ps" type="radio" name="type" value="4Ps" />
+									<input id="4ps" type="radio" name="type_of_class" value="4Ps" />
 									<span class="checkmark"></span>
 								</label>
 							<?php endif; ?>
@@ -96,7 +99,7 @@ $this->load->library('helpers/HtmlHelper');
 						<td class="border-1 padding-0 back-eee" style="border: 1px solid">
 							<?php if (!$is_pdf) : ?>
 								<label class="cont">
-									<input id="house" type="radio" name="type" value="house_to_house" />
+									<input id="house" type="radio" name="type_of_class" value="house_to_house" />
 									<span class="checkmark"></span>
 								</label>
 							<?php endif; ?>
@@ -127,7 +130,7 @@ $this->load->library('helpers/HtmlHelper');
 						<td class="border-1 width-30 padding-0 back-eee" style="border-left: none!important;">
 							<?php if (!$is_pdf) : ?>
 								<label class="cont border-t1">
-									<input id="faith" type="radio" name="type" value="faith_based_org" />
+									<input id="faith" type="radio" name="type_of_class" value="faith_based_org" />
 									<span class="checkmark"></span>
 								</label>
 							<?php endif; ?>
@@ -139,7 +142,7 @@ $this->load->library('helpers/HtmlHelper');
 						<td class="border-1 width-30 padding-0 back-eee">
 							<?php if (!$is_pdf) : ?>
 								<label class="cont border-t1">
-									<input id="profile" type="radio" name="type" value="profile" />
+									<input id="profile" type="radio" name="type_of_class" value="profile" />
 									<span class="checkmark"></span>
 								</label>
 							<?php endif; ?>
@@ -156,7 +159,7 @@ $this->load->library('helpers/HtmlHelper');
 								<?php
 		                            echo HtmlHelper::inputPdf(
 		                                $is_pdf,
-		                                $form1->Seminar->Province,
+		                                $form1->Seminar->Location,
 		                                "text",
 		                                "province",
 		                                "padding-l10 underline width-70",
@@ -170,7 +173,7 @@ $this->load->library('helpers/HtmlHelper');
 						<td class="border-1 width-30 padding-0 back-eee" style="border-left: none">
 							<?php if (!$is_pdf) : ?>
 								<label class="cont border-t1">
-									<input id="pmc" type="radio" name="type" value="pmc" />
+									<input id="pmc" type="radio" name="type_of_class" value="pmc" />
 									<span class="checkmark"></span>
 								</label>
 							<?php endif; ?>
@@ -182,7 +185,7 @@ $this->load->library('helpers/HtmlHelper');
 						<td class="border-1 width-30 padding-0 back-eee">
 							<?php if (!$is_pdf) : ?>
 								<label class="cont border-t1">
-									<input id="others" type="radio" name="type" value="others_check" />
+									<input id="others" type="radio" name="type_of_class" value="others_check" />
 									<span class="checkmark"></span>
 								</label>
 							<?php endif; ?>
@@ -210,7 +213,7 @@ $this->load->library('helpers/HtmlHelper');
 								<?php
 		                            echo HtmlHelper::inputPdf(
 		                                $is_pdf,
-		                                $form1->Seminar->Barangay,
+		                                $form1->Seminar->Location,
 		                                "text",
 		                                "barangay",
 		                                "padding-l10 underline width-70",
@@ -224,7 +227,7 @@ $this->load->library('helpers/HtmlHelper');
 						<td class="border-1 width-30 padding-0 back-eee" style="border-left: none">
 							<?php if (!$is_pdf) : ?>
 								<label class="cont border-t1">
-									<input id="usapan" type="radio" name="type" value="usapan" />
+									<input id="usapan" type="radio" name="type_of_class" value="usapan" />
 									<span class="checkmark"></span>
 								</label>
 							<?php endif; ?>
@@ -264,7 +267,7 @@ $this->load->library('helpers/HtmlHelper');
 								<?php if (!$is_pdf): ?>
 									<th rowspan="2" class="text-center">
 										<label class="cont back-eee checkApprove" style="height: 37px;">
-											<input type="checkbox" name="type" id="checkAll" />
+											<input type="checkbox" name="type_of_class" id="checkAll" />
 											<span class="checkmark"></span>
 										</label>
 									</th>
@@ -393,15 +396,18 @@ $this->load->library('helpers/HtmlHelper');
 									<?php if (!$is_pdf): ?>
 										<td rowspan="2" class="back-eee padding-0">
 											<label class="cont">
-												<input class="check" type="checkbox" name="type" value="aproveCouple" />
+												<input class="check" type="checkbox" name="type_of_class" value="aproveCouple" />
 												<span class="checkmark"></span>
 											</label>
+											<input type="hidden" name="couple_id" />
 										</td>
 									<?php endif; ?>
-									<td class="text-center" style="border-left: none" rowspan="2">
+									<td class="text-center" style="border-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      left: none" rowspan="2">
 										<p class="small"><?= $i + 1; ?></p>
 									</td>
+									
 									<td class="small" style="padding: 5px;">
+									<input type="hidden" name="individual_id1['.$i.']"/>
 										<?php
 				                            echo HtmlHelper::inputPdf(
 				                                $is_pdf,
@@ -563,6 +569,7 @@ $this->load->library('helpers/HtmlHelper');
 								</tr>
 								<tr>
 									<td class="small" style="padding: 5px;">
+									<input type="hidden" name="individual_id2['.$i.']"/>
 										<?php
 				                            echo HtmlHelper::inputPdf(
 				                            	$is_pdf,

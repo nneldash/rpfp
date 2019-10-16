@@ -26,17 +26,17 @@ class Forms extends CI_Controller
             return;
         }
 
-        if (!$this->LoginModel->isLoggedIn()) {
-            $this->load->view("includes/header", $header);
-            $this->load->view('index/landingPage');
-            return;
-        }
+        // if (!$this->LoginModel->isLoggedIn()) {
+        //     $this->load->view("includes/header", $header);
+        //     $this->load->view('index/landingPage');
+        //     return;
+        // }
 
-        $this->load->Model('ProfileModel');
-        if ($this->ProfileModel->isEncoder()) {
-            redirect(site_url('Forms'));
-            return;
-        }
+        // $this->load->Model('ProfileModel');
+        // if ($this->ProfileModel->isEncoder()) {
+        //     redirect(site_url('Forms'));
+        //     return;
+        // }
 
         $this->load->model('FormModel');
 
@@ -79,10 +79,11 @@ class Forms extends CI_Controller
     {
         $seminar = new SeminarClass();
 
-        $seminar->TypeOfClass = $this->input->post('type_of_seminar');
+        $seminar->ClassId = $this->input->post('class_id');
+        $seminar->TypeOfClass->Type = $this->input->post('type_of_class');
+        $seminar->TypeOfClass->Others = $this->input->post('others');
         $seminar->ClassNumber = $this->input->post('class_no');
-        $seminar->Province = $this->input->post('province');
-        $seminar->Barangay = $this->input->post('barangay');
+        $seminar->Location->SpecificLocation->Code = $this->input->post('location');
         $seminar->DateConducted = $this->input->post('date_conducted');
 
         return $seminar;
@@ -99,51 +100,98 @@ class Forms extends CI_Controller
 
             $couple = new CoupleClass();
 
-            $couple->Address = $this->input->post('address')[$i];
+            $couple->Id = $this->input->post('couple_id')[$i];
+            $couple->Address_St = $this->input->post('address')[$i];
+            $couple->Address_Brgy = $this->input->post('address')[$i];
+            $couple->Address_City = $this->input->post('address')[$i];
+            $couple->Address_HH_No = $this->input->post('address')[$i];
             $couple->NumberOfChildren = $this->input->post('no_of_children')[$i];
+
+            $couple->FirstEntry = $this->getFirstEntry();
+            $couple->SecondEntry = $this->getSecondEntry();
+            $couple->ModernFp = $this->getModernFp ();
+            $couple->TraditionalFp = $this->getTraditionalFp();
+            $listCouple->append($couple);
+        }
+
+        return $listCouple;
+    }
+
+    public function getFirstEntry()
+    {
+        for ($i = 0; $i < $this->input->post('individual_id1'); $i++) {
+            
+            if (!$this->input->post('name_participant1')[$i]) {
+                break;
+            }
+
+            $individual = new IndividualClass();
+
+            $individual->Id = $this->input->post('individual_id1')[$i];
+            $individual->Name = $this->input->post('name_participant1')[$i];
+            $individual->Sex = $this->input->post('sex1')[$i];
+            $individual->CivilStatus = $this->input->post('civil_status1')[$i];
+            $individual->Birthdate = $this->input->post('birthdate')[$i];
+            $individual->Age = $this->input->post('age1')[$i];
+            $individual->HighestEducation = $this->input->post('educ1')[$i];
+            $individual->Attendee = 'Yes';
+
+            return $individual;
+        }
         
+    }
 
-            $husband = new HusbandClass();
+    public function getSecondEntry()
+    {
+        for ($i = 0; $i < $this->input->post('individual_id2'); $i++) {
+            
+            if (!$this->input->post('name_participant2')[$i]) {
+                break;
+            }
 
-            $husband->Name = $this->input->post('name_participant1')[$i];
-            $husband->Sex = $this->input->post('sex1')[$i];
-            $husband->CivilStatus = $this->input->post('civil_status1')[$i];
-            $husband->Age = $this->input->post('age1')[$i];
-            $husband->EducationalAttainment = $this->input->post('educ1')[$i];
-            $husband->HasAttended = 'Yes';
+            $individual = new IndividualClass();
 
+            $individual->Id = $this->input->post('individual_id2')[$i];
+            $individual->Name = $this->input->post('name_participant2')[$i];
+            $individual->Sex = $this->input->post('sex2')[$i];
+            $individual->CivilStatus = $this->input->post('civil_status2')[$i];
+            $individual->Birthdate = $this->input->post('birthdate')[$i];
+            $individual->Age = $this->input->post('age2')[$i];
+            $individual->HighestEducation = $this->input->post('educ2')[$i];
+            $individual->Attendee = 'Yes';
 
-            $wife = new WifeClass();
+            return $individual;
+        }
+        
+    }
 
-            $wife->Name = $this->input->post('name_participant2')[$i];
-            $wife->Sex = $this->input->post('sex2')[$i];
-            $wife->CivilStatus = $this->input->post('civil_status2')[$i];
-            $wife->Age = $this->input->post('age2')[$i];
-            $wife->EducationalAttainment = $this->input->post('educ2')[$i];
-            $wife->HasAttended = 'Yes';
-           
+    public function getModernFp()
+    {
+        for ($i = 0; $i < $this->input->post('method'); $i++) {
 
             $modernFp = new ModernFpUserClass();
 
             $modernFp->MethodUsed = $this->input->post('method')[$i];
-            $modernFp->IntentionForUsing = $this->input->post('fp_method')[$i];
+            $modernFp->IntentionToShift = $this->input->post('fp_method')[$i];
 
+            return $modernFp;
+        }
+        
+    }
+
+    public function getTraditionalFp()
+    {
+        for ($i = 0; $i < $this->input->post('type'); $i++) {
 
             $traditionalFp = new TraditionalFpUserClass();
 
             $traditionalFp->Type = $this->input->post('type')[$i];
             $traditionalFp->Status = $this->input->post('status')[$i];
-            $traditionalFp->IntentionForUsing = $this->input->post('reason')[$i];
+            $traditionalFp->ReasonForUse = $this->input->post('reason')[$i];
 
-
-            $couple->ListHusband->append($husband);
-            $couple->ListWife->append($wife);
-            $couple->ListModernFp->append($modernFp);
-            $couple->ListTraditionalFp->append($traditionalFp);
-            $listCouple->append($couple); 
+            return $traditionalFp;
         }
-
-        return $listCouple;
+        
     }
 
     public function saveServiceSlip()
