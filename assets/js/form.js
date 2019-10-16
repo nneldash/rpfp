@@ -1,4 +1,6 @@
+/** PREVENT SAVE FORM UPON CLICK OF SERVICE SLIP */
 var base_url = window.location.origin + '/rpfp';
+
 $(function() {
   	serviceModal();
   	importModal();
@@ -11,22 +13,24 @@ $(function() {
 
 function serviceModal()
 {
-	$('.btn-slip').click(function() {
+	$('.btn-slip').click(function(event) {
+		event.preventDefault();
+		$('#menuModal').modal();
 		$.post(base_url + '/forms/serviceSlip')
 		.done(function(html){
-			$('#menuModal').modal();
-			$('#menuModal').find('.modal-body').html(html);
+			$('#menuModal .modal-body').html(html);
 		});
 	});
 }
 
 function importModal() 
 {
-	$('.btn-import').click(function() {
+	$('.btn-import').click(function(event) {
+		event.preventDefault();
+		$('#importModal').modal();
 		$.post(base_url + '/menu/importExcel')
 		.done(function(html){
-			$('#importModal').modal();
-			$('#importModal').find('.modal-body').html(html);
+			$('#importModal .modal-body').html(html);
 		});
 	});
 }
@@ -59,7 +63,7 @@ function inputValid()
 
 function saveForm1()
 {
-	$('#form_validation').submit(function() {
+	$('.saveForm1').click(function() {
 		const Toast = Swal.mixin({
 			toast: true,
 			position: 'top-end',
@@ -93,7 +97,7 @@ function saveForm1()
 
 function saveServiceSlip()
 {
-	$('#service_slip').submit(function() {
+	$('#service_slip').click(function() {
 		var formData = $(this).serialize();
 		const Toast = Swal.mixin({
 			toast: true,
