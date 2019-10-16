@@ -9,8 +9,6 @@ class Forms extends CI_Controller
         $this->load->model('FormModel');
         $this->load->library('form1/FormClass');
         $this->load->library('form1/CoupleClass');
-        // $this->load->library('form1/HusbandClass');
-        // $this->load->library('form1/WifeClass');
         $this->load->library('form1/ProfileClass');
         $this->load->library('form1/ModernFpUserClass');
         $this->load->library('form1/TraditionalFpUserClass');
@@ -26,18 +24,13 @@ class Forms extends CI_Controller
             return;
         }
 
-        // if (!$this->LoginModel->isLoggedIn()) {
-        //     $this->load->view("includes/header", $header);
-        //     $this->load->view('index/landingPage');
-        //     return;
-        // }
+        if (!$this->LoginModel->isLoggedIn()) {
+            $this->load->view("includes/header", $header);
+            $this->load->view('index/landingPage');
+            return;
+        }
 
-        // $this->load->Model('ProfileModel');
-        // if ($this->ProfileModel->isEncoder()) {
-        //     redirect(site_url('Forms'));
-        //     return;
-        // }
-
+        $this->load->Model('ProfileModel');
         $this->load->model('FormModel');
 
         $form1 = $this->FormModel->getForm1();

@@ -1,5 +1,5 @@
 
-call rpfp.itdmu_create_rpfp_user('test', 'test', 'rojo', 'rowell', 'x@com.com', 13, 130000000, 60, 40);
+call rpfp.itdmu_create_rpfp_user('test', 'test', 'rojo', 'rowell', 'x@com.com', 13, 130000000, 50, 40);
 call rpfp.itdmu_create_rpfp_user('root', '', 'root', 'root', 'y@com.com', 08, 080000000, 50, 40);
 
 --

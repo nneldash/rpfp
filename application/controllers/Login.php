@@ -112,7 +112,7 @@ class Login extends CI_Controller
         }
 
         /* CHECK IF ACTIVE */
-        if (!$this->LoginModel->isDeactivated()) {
+        if ($this->LoginModel->isDeactivated()) {
             $this->logoffUser();
             return;
         }

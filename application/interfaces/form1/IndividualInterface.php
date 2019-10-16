@@ -2,7 +2,6 @@
 defined('BASEPATH') or exit('No direct script access allowed');
 $CI =& get_instance();
 $CI->load->iface('form1/NameInterface');
-$CI->load->iface('form1/AddressInterface');
 $CI->load->iface('common/Sexes');
 $CI->load->iface('common/CivilStatuses');
 $CI->load->iface('common/EducationBackgrounds');

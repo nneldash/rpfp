@@ -1,0 +1,18 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\application",
+    "\\application\\core",
+    "\\application\\interfaces",
+    "\\application\\interfaces\\form",
+    "\\application\\libraries",
+    "\\application\\libraries\\form",
+    "\\application\\views",
+    "\\application\\views\\forms",
+    "\\assets",
+    "\\assets\\js",
+    "\\node_modules"
+  ],
+  "SelectedNode": "\\application\\libraries\\form\\FormClass.php",
+  "PreviewInSolutionExplorer": false
+}

@@ -255,7 +255,7 @@ BEGIN
     DECLARE ret_val INT(1) DEFAULT NULL;
      SELECT TRUE INTO ret_val
        FROM rpfp.user_profile prof
-      WHERE prof.DB_USER_ID = USER()
+      WHERE CONCAT( prof.DB_USER_ID, "@localhost" ) = USER()
         AND prof.IS_ACTIVE = TRUE
     ;
     RETURN ret_val;
@@ -336,6 +336,12 @@ BEGIN
     IF role_num NOT IN (50, 60, 70, 80, 90, 100) THEN
         SELECT CONCAT( "INVALID ROLE: ", role_num ) AS MESSAGE;
         LEAVE proc_exit_point;
+    END IF;
+
+    IF NOT (name_user = 'root') THEN
+        SET @sql_stmt_role := CONCAT( "REVOKE ALL PRIVILEGES, GRANT OPTION FROM  ", db_user_name );
+        PREPARE stmt_role FROM @sql_stmt_role;
+        EXECUTE stmt_role;
     END IF;
 
     SET default_role := rpfp.profile_select_role( role_num );
@@ -546,6 +552,7 @@ BEGIN
     CALL rpfp.lib_extract_user_name( db_user, name_user, db_user_name );
 
      SELECT prof.REGION_CODE INTO ret_val
+       FROM rpfp.user_profile prof
       WHERE prof.DB_USER_ID = name_user
     ;
 
@@ -1831,6 +1838,7 @@ CREATE TABLE fp_service (
 GRANT EXECUTE ON PROCEDURE rpfp.login_change_initial_password TO 'rpfp_login';
 GRANT EXECUTE ON PROCEDURE rpfp.login_change_own_password TO 'rpfp_login';
 GRANT EXECUTE ON PROCEDURE rpfp.login_update_first_login TO 'rpfp_login';
+ GRANT EXECUTE ON FUNCTION rpfp.login_check_if_active TO 'rpfp_login';
 
  GRANT EXECUTE ON FUNCTION rpfp.profile_check_if_encoder TO 'rpfp_login';
  GRANT EXECUTE ON FUNCTION rpfp.profile_check_if_focal TO 'rpfp_login';
