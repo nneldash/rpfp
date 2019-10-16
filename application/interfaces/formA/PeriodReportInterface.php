@@ -5,6 +5,9 @@ $CI->load->iface('base/BaseInterface');
 
 abstract class PeriodReportInterface extends BaseInterface
 {
+    /** @var Periods */
     public $MonthsPeriod;
+
+    /** @var PSGCInterface */
     public $RegionalOffice;
 }

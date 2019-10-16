@@ -2,7 +2,7 @@
 defined('BASEPATH') or exit('No direct script access allowed');
 ?>
 
-<link href="../node_modules/gentelella/vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+<link href="NewAssets/fontAwesome" rel="stylesheet">
 <link href="<?= base_url('assets/css/style.css') ?>" rel="stylesheet">
 <link href="<?= base_url('NewAssets/datatablesBootstrap') ?>" rel="stylesheet">
 <link href="<?= base_url('NewAssets/datatablesResponsive') ?>" rel="stylesheet">

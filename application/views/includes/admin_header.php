@@ -12,7 +12,7 @@
         <link href="<?= base_url('NewAssets/nProgress') ?>" rel="stylesheet">
         <link href="<?= base_url('NewAssets/customCss') ?>" rel="stylesheet">
 
-        <link href="<?= base_url('node_modules/gentelella/vendors/font-awesome/css/font-awesome.min.css'); ?>" rel="stylesheet">
+        <link href="<?= base_url('NewAssets/fontAwesome'); ?>" rel="stylesheet">
         
         <script type="text/javascript" src="<?= base_url('NewAssets/templateJs')?>"></script>
         <script type="text/javascript" src="<?= base_url('NewAssets/bootstrapJs')?>"></script>

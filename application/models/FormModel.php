@@ -7,7 +7,6 @@ class FormModel extends BaseModel
     public function __construct()
     {
         parent::__construct();
-        $this->CI->load->library('login/DbInstance');
         $this->CI->load->library('form1/FormClass');
         $this->CI->load->library('service_slip/ServiceSlipClass');
         $this->CI->load->library('formA/FormAClass');
@@ -16,6 +15,7 @@ class FormModel extends BaseModel
         $this->CI->load->library('formA/IndividualsReproductiveAgeClass');
         $this->CI->load->library('formA/SoloCoupleDisaggregationClass');
         $this->CI->load->library('formA/SoloAttendeesClass');
+        $this->CI->load->iface('common/TraditionalStatuses');
     }
 
     public function saveForm1(FormInterface $form)
@@ -39,9 +39,9 @@ class FormModel extends BaseModel
     public function saveSeminar(SeminarInterface $data)
     {
         $method = "encoder_save_class";
-        $with_id = [$data->ClassId == N_A ? BLANK : $data->ClassId];
 
-        $params = $with_id + [
+        $params = [
+            $data->ClassId == N_A ? BLANK : $data->ClassId,
             $data->TypeOfClass->Type == N_A ? BLANK : $data->TypeOfClass->Type,
             $data->TypeOfClass->Others == N_A ? BLANK : $data->TypeOfClass->Others,
             $data->Location->SpecificLocation->Code  == N_A ? BLANK : $data->Location->SpecificLocation->Code,
@@ -61,8 +61,8 @@ class FormModel extends BaseModel
         $modern = $couple->ModernFp;
 
         $params = [
-            $couple->Id == N_A ? BLANK : $couple->Id,
             $class_id == 0 ? BLANK : $class_id,
+            $couple->Id == N_A ? BLANK : $couple->Id,
             
             $couple->Address_St == N_A ? BLANK : $couple->Address_St,
             $couple->Address_Brgy == N_A ? BLANK : $couple->Address_Brgy,
@@ -131,7 +131,7 @@ class FormModel extends BaseModel
         $form1 = new FormClass();
 
         $form1->Seminar = $this->getForm1Seminar();
-        $form1->ListCouple = $this->getForm1Couple();
+        $form1->ListCouple = $this->getForm1Couples();
         return $form1;
     }
 
@@ -150,8 +150,9 @@ class FormModel extends BaseModel
 
     }
 
-    public function getForm1Couple() : CoupleInterface
+    public function getForm1Couples() : ListCoupleInterface
     {
+        $list = new ListCoupleClass();
         $couple = new CoupleClass();
         
         $couple->Id = '1';
@@ -167,7 +168,8 @@ class FormModel extends BaseModel
         $couple->ModernFp = $this->getForm1ModernFpUser();
         $couple->TraditionalFp = $this->getForm1TraditionalFpUser();
 
-        return $couple;
+        $list->append($couple);
+        return $list;
     }
 
     public function getForm1Husband() : IndividualInterface
@@ -179,13 +181,13 @@ class FormModel extends BaseModel
         $individual->Name->Firstname = 'Chou';
         $individual->Name->Middlename = '';
         $individual->Name->Extname = '';
-        $individual->Sex = 'M';
-        $individual->CivilStatus = 'Married';
+        $individual->Sex = Sexes::MALE;
+        $individual->CivilStatus = CivilStatuses::MARRIED;
         $individual->Birthdate = '12/31/1996';
         $individual->Age = '22';
         $individual->ResidentialAddress = 'Mandaluyong City, Metro Manila';
-        $individual->HighestEducation = '5';
-        $individual->Attendee = 'Yes';
+        $individual->HighestEducation = EducationBackgrounds::HIGH_SCHOOL_GRADUATE;
+        $individual->Attendee = true;
 
         return $individual;
     }
@@ -199,13 +201,13 @@ class FormModel extends BaseModel
         $individual->Name->Firstname = 'Hanabi';
         $individual->Name->Middlename = '';
         $individual->Name->Extname = '';
-        $individual->Sex = 'F';
-        $individual->CivilStatus = 'Married';
+        $individual->Sex = Sexes::FEMALE;
+        $individual->CivilStatus = CivilStatuses::MARRIED;
         $individual->Birthdate = '12/31/1996';
         $individual->Age = '22';
         $individual->ResidentialAddress = 'Mandaluyong City, Metro Manila';
-        $individual->HighestEducation = '5';
-        $individual->Attendee = 'Yes';
+        $individual->HighestEducation = EducationBackgrounds::VOCATIONAL;
+        $individual->Attendee = true;
 
         return $individual;
     }
@@ -214,8 +216,8 @@ class FormModel extends BaseModel
     {
         $modernFp = new ModernFpUserClass();
         
-        $modernFp->MethodUsed = '1';
-        $modernFp->IntentionToShift = '2';
+        $modernFp->MethodUsed = ModernMethods::CONDOM;
+        $modernFp->IntentionToShift = ModernMethods::IUD;
 
         return $modernFp;
     }
@@ -224,9 +226,9 @@ class FormModel extends BaseModel
     {
         $traditionalFp = new TraditionalFpUserClass();
         
-        $traditionalFp->Type  = '1';
-        $traditionalFp->Status = '2';
-        $traditionalFp->ReasonForUse = '3';
+        $traditionalFp->Type  = TraditionalMethods::WITHDRAWAL;
+        $traditionalFp->Status = TraditionalStatuses::UNDECIDED;
+        $traditionalFp->ReasonForUse = ReasonsForUsing::LIMITING;
 
         return $traditionalFp;
     }
@@ -244,8 +246,9 @@ class FormModel extends BaseModel
     {
         $periodReport = new PeriodReportClass();
 
-        $periodReport->MonthsPeriod = '1';
-        $periodReport->RegionalOffice = 'III';
+        $periodReport->MonthsPeriod = Periods::MONTHLY;
+        $periodReport->RegionalOffice->Code = 30000000;
+        $periodReport->RegionalOffice->Description = 'Central Luzon Region';
 
         return $periodReport;
     }

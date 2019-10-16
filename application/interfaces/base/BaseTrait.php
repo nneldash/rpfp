@@ -4,9 +4,9 @@ trait BaseTrait
 {
     protected function &newIfEmpty(BaseProperty $variable, $class)
     {
-        if (!($variable->value instanceof $class)) {
-            $variable->value = new $class($variable->value);
+        if (!($variable->davalue instanceof $class)) {
+            $variable->davalue = new $class($variable->davalue);
         }
-        return $variable->value;
+        return $variable->davalue;
     }
 }

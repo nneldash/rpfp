@@ -1,8 +1,9 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 $this->load->library('helpers/HtmlHelper');
-// echo '<pre>';
-// print_r($form1);exit;
+
+$form1 = FormClass::getFormFromVariable($form1);
+
 ?>
 
 <?php if($is_pdf){ ?>
@@ -159,11 +160,11 @@ $this->load->library('helpers/HtmlHelper');
 								<?php
 		                            echo HtmlHelper::inputPdf(
 		                                $is_pdf,
-		                                $form1->Seminar->Location,
+		                                $form1->Seminar->Location->Region->Description,
 		                                "text",
 		                                "province",
 		                                "padding-l10 underline width-70",
-		                                ""
+										""
 		                            );
 		                        ?>
 		                    </span>
@@ -213,7 +214,7 @@ $this->load->library('helpers/HtmlHelper');
 								<?php
 		                            echo HtmlHelper::inputPdf(
 		                                $is_pdf,
-		                                $form1->Seminar->Location,
+		                                $form1->Seminar->Location->SpecificLocation->Description,
 		                                "text",
 		                                "barangay",
 		                                "padding-l10 underline width-70",

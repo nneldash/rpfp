@@ -4,7 +4,7 @@ $CI =& get_instance();
 $CI->load->iface('common/LocationInterface');
 $CI->load->library('common/PSGC');
 
-class Location extends LocationInterface
+class SpecificLocation extends LocationInterface
 {
     public function __construct($params = null)
     {

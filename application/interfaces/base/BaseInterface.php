@@ -55,10 +55,10 @@ abstract class BaseInterface
         }
 
         if (property_exists($this, $property)) {
-            if (!empty($this->$property->type)) {
-                $value =& $this->newIfEmpty($this->$property, $this->$property->type);
+            if (!empty($this->$property->datype)) {
+                $value =& $this->newIfEmpty($this->$property, $this->$property->datype);
             } else {
-                $value = $this->$property->value;
+                $value = $this->$property->davalue;
             }
             return $value ?: N_A;
         }
@@ -89,7 +89,7 @@ abstract class BaseInterface
             return false;
         }
 
-        $this->$property->value = $value;
+        $this->$property->davalue = $value;
         return true;
     }
 }

@@ -57,10 +57,9 @@ class Forms extends CI_Controller
         $form1->Seminar = $this->getInputFromSeminar();
         $form1->ListCouple = $this->getInputFromListCouples();
         
+        $data = ['is_save' => true];
         if(!$this->FormModel->saveForm1($form1)) {
             $data = ['is_save' => false];
-        } else {
-            $data = ['is_save' => true];
         }
 
         $this->output
@@ -82,7 +81,7 @@ class Forms extends CI_Controller
         return $seminar;
     }
 
-    public function getInputFromListCouples() 
+    public function getInputFromListCouples() : ListCoupleInterface
     {
         $listCouple = new ListCoupleClass();
         
@@ -100,91 +99,76 @@ class Forms extends CI_Controller
             $couple->Address_HH_No = $this->input->post('address')[$i];
             $couple->NumberOfChildren = $this->input->post('no_of_children')[$i];
 
-            $couple->FirstEntry = $this->getFirstEntry();
-            $couple->SecondEntry = $this->getSecondEntry();
-            $couple->ModernFp = $this->getModernFp ();
-            $couple->TraditionalFp = $this->getTraditionalFp();
+            $couple->FirstEntry = $this->getFirstEntry($i);
+            $couple->SecondEntry = $this->getSecondEntry($i);
+            $couple->ModernFp = $this->getModernFp ($i);
+            $couple->TraditionalFp = $this->getTraditionalFp($i);
+
             $listCouple->append($couple);
         }
 
         return $listCouple;
     }
 
-    public function getFirstEntry()
+    public function getFirstEntry(int $i) : IndividualInterface
     {
-        for ($i = 0; $i < $this->input->post('individual_id1'); $i++) {
-            
-            if (!$this->input->post('name_participant1')[$i]) {
-                break;
-            }
 
-            $individual = new IndividualClass();
-
-            $individual->Id = $this->input->post('individual_id1')[$i];
-            $individual->Name = $this->input->post('name_participant1')[$i];
-            $individual->Sex = $this->input->post('sex1')[$i];
-            $individual->CivilStatus = $this->input->post('civil_status1')[$i];
-            $individual->Birthdate = $this->input->post('birthdate')[$i];
-            $individual->Age = $this->input->post('age1')[$i];
-            $individual->HighestEducation = $this->input->post('educ1')[$i];
-            $individual->Attendee = 'Yes';
-
+        $individual = new IndividualClass();
+        if (!$this->input->post('name_participant1')[$i]) {
             return $individual;
         }
-        
+
+        $individual->Id = $this->input->post('individual_id1')[$i];
+        $individual->Name = $this->input->post('name_participant1')[$i];
+        $individual->Sex = $this->input->post('sex1')[$i];
+        $individual->CivilStatus = $this->input->post('civil_status1')[$i];
+        $individual->Birthdate = $this->input->post('birthdate')[$i];
+        $individual->Age = $this->input->post('age1')[$i];
+        $individual->HighestEducation = $this->input->post('educ1')[$i];
+        $individual->Attendee = 'Yes';
+
+        return $individual;
     }
 
-    public function getSecondEntry()
+    public function getSecondEntry(int $i) : IndividualInterface
     {
-        for ($i = 0; $i < $this->input->post('individual_id2'); $i++) {
-            
-            if (!$this->input->post('name_participant2')[$i]) {
-                break;
-            }
+        $individual = new IndividualClass();
 
-            $individual = new IndividualClass();
-
-            $individual->Id = $this->input->post('individual_id2')[$i];
-            $individual->Name = $this->input->post('name_participant2')[$i];
-            $individual->Sex = $this->input->post('sex2')[$i];
-            $individual->CivilStatus = $this->input->post('civil_status2')[$i];
-            $individual->Birthdate = $this->input->post('birthdate')[$i];
-            $individual->Age = $this->input->post('age2')[$i];
-            $individual->HighestEducation = $this->input->post('educ2')[$i];
-            $individual->Attendee = 'Yes';
-
+        if (!$this->input->post('name_participant2')[$i]) {
             return $individual;
         }
-        
+
+        $individual->Id = $this->input->post('individual_id2')[$i];
+        $individual->Name = $this->input->post('name_participant2')[$i];
+        $individual->Sex = $this->input->post('sex2')[$i];
+        $individual->CivilStatus = $this->input->post('civil_status2')[$i];
+        $individual->Birthdate = $this->input->post('birthdate')[$i];
+        $individual->Age = $this->input->post('age2')[$i];
+        $individual->HighestEducation = $this->input->post('educ2')[$i];
+        $individual->Attendee = 'Yes';
+
+        return $individual;
     }
 
-    public function getModernFp()
+    public function getModernFp(int $i) : ModernFpUserInterface
     {
-        for ($i = 0; $i < $this->input->post('method'); $i++) {
+        $modernFp = new ModernFpUserClass();
 
-            $modernFp = new ModernFpUserClass();
+        $modernFp->MethodUsed = $this->input->post('method')[$i];
+        $modernFp->IntentionToShift = $this->input->post('fp_method')[$i];
 
-            $modernFp->MethodUsed = $this->input->post('method')[$i];
-            $modernFp->IntentionToShift = $this->input->post('fp_method')[$i];
-
-            return $modernFp;
-        }
-        
+        return $modernFp;        
     }
 
-    public function getTraditionalFp()
+    public function getTraditionalFp(int $i) : TraditionalFpUserInterface
     {
-        for ($i = 0; $i < $this->input->post('type'); $i++) {
+        $traditionalFp = new TraditionalFpUserClass();
 
-            $traditionalFp = new TraditionalFpUserClass();
+        $traditionalFp->Type = $this->input->post('type')[$i];
+        $traditionalFp->Status = $this->input->post('status')[$i];
+        $traditionalFp->ReasonForUse = $this->input->post('reason')[$i];
 
-            $traditionalFp->Type = $this->input->post('type')[$i];
-            $traditionalFp->Status = $this->input->post('status')[$i];
-            $traditionalFp->ReasonForUse = $this->input->post('reason')[$i];
-
-            return $traditionalFp;
-        }
-        
+        return $traditionalFp;        
     }
 
     public function saveServiceSlip()
