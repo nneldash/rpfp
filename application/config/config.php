@@ -23,7 +23,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | a PHP script and you can easily do that on your own.
 |
 */
-$config['base_url'] = 'http://localhost:7777/rpfp/';
+$config['base_url'] = 'http://localhost/rpfp/';
 
 /*
 |--------------------------------------------------------------------------
@@ -531,7 +531,7 @@ $config[DB_DEFAULT] = array(
     'dbdriver' => 'mysqli',
     'dbprefix' => '',
     'pconnect' => TRUE,
-    'db_debug' => FALSE,  // (ENVIRONMENT !== 'production'),
+    'db_debug' => TRUE,  // (ENVIRONMENT !== 'production'),
     'cache_on' => FALSE,
     'cachedir' => '',
     'char_set' => 'utf8',

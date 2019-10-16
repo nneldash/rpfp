@@ -128,6 +128,8 @@ defined('CAPTCHA_API') or define('CAPTCHA_API', 'https://www.google.com/recaptch
 defined('CAPTCHA_VERIFY') or define('CAPTCHA_VERIFY', 'https://www.google.com/recaptcha/api/siteverify');
 
 defined('FONT_AWESOME') or define('FONT_AWESOME', '/../node_modules/gentelella/vendors/font-awesome/css/font-awesome.min.css');
+defined('FONTS_FOLDER_FA') or define('FONTS_FOLDER_FA', '/../node_modules/gentelella/vendors/font-awesome/fonts/');
+defined('FONTS_FOLDER_APP') or define('FONTS_FOLDER_APP', '/../../fonts/');
 defined('NPROGRESS') or define('NPROGRESS', '/../node_modules/gentelella/vendors/nprogress/nprogress.css');
 defined('CUSTOM') or define('CUSTOM', '/../node_modules/gentelella/build/css/custom.min.css');
 defined('TEMPLATE_JS') or define('TEMPLATE_JS', '/../node_modules/gentelella/vendors/jquery/dist/jquery.min.js');
