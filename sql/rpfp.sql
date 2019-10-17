@@ -1575,6 +1575,729 @@ BEGIN
 END$$
 /** END APPROVE COUPLES DETAILS */
 
+/** SAVE TARGET COUPLES */
+CREATE DEFINER=root@localhost PROCEDURE rdm_save_target (
+    IN target_id INT,
+    IN target_year INT,
+    IN target_month INT,
+    IN psgc_id INT,
+    IN target_count INT
+    )  MODIFIES SQL DATA
+proc_exit_point :
+BEGIN
+    IF ( IFNULL( target_id, 0 ) = 0 ) THEN
+        INSERT INTO rpfp.target_couples (
+                TARGET_YEAR,
+                TARGET_MONTH,
+                PSGC_ID,
+                TARGET_COUNT
+            )
+        VALUES (
+                target_year,
+                target_month,
+                psgc_id,
+                target_count
+            )
+        ;
+
+        SELECT CONCAT( "NEW ENTRY: ", LAST_INSERT_ID() ) AS MESSAGE;
+        LEAVE proc_exit_point;
+    END IF;
+
+     UPDATE rpfp.target_couples tc
+        SET tc.TARGET_YEAR = IF( IFNULL( target_year, '') = '', tc.TARGET_YEAR, target_year ),                           
+            tc.TARGET_MONTH = IF( IFNULL( target_month, '') = '', tc.TARGET_MONTH, target_month ),
+            tc.PSGC_ID = IF( IFNULL( psgc_id, '') = '', tc.PSGC_ID, psgc_id ), 
+            tc.TARGET_COUNT = IF( IFNULL( target_count, '') = '', tc.TARGET_COUNT, target_count)
+      WHERE tc.TARGET_ID = target_id
+    ;
+
+    SELECT "SUCCESS!" AS MESSAGE;
+    
+END$$
+/** END SAVE TARGET COUPLES */
+
+/** PROCESS REPORTS */
+CREATE DEFINER=root@localhost PROCEDURE process_demandgen (
+    IN demandgen_id INT,
+    IN report_year INT,
+    IN report_month INT,
+    IN psgc_code INT
+    )  MODIFIES SQL DATA
+proc_exit_point :
+BEGIN
+DECLARE class_4ps INT;
+DECLARE class_non4ps INT;
+DECLARE class_usapan INT;
+DECLARE class_pmc INT;
+DECLARE class_h2h INT;
+DECLARE class_profiled INT;
+DECLARE class_total INT;
+DECLARE target_couples INT;
+DECLARE wra_4ps INT;
+DECLARE wra_non4ps INT;
+DECLARE wra_usapan INT;
+DECLARE wra_pmc INT;
+DECLARE wra_h2h INT;
+DECLARE wra_profiled INT;
+DECLARE wra_total INT;
+DECLARE solo_male INT;
+DECLARE solo_female INT;
+DECLARE couple_attendee INT;
+DECLARE reached_total INT;
+DECLARE report_scope VARCHAR(100);
+    
+    IF ( IFNULL( psgc_code, 0 ) = 0 ) THEN
+        SET report_scope = '';
+    ELSE
+        SET report_scope = 'AND PSGC_CODE = ' + psgc_code;
+    END IF
+    ;
+
+    SELECT COUNT(*) 
+      INTO class_4ps 
+      FROM rpfp.rpfp_class rc 
+     WHERE rc.TYPE_CLASS_ID = 1 
+       AND YEAR(rc.DATE_CONDUCTED) = report_year 
+       AND MONTH(rc.DATE_CONDUCTED) = report_month 
+  GROUP BY CLASS_NUMBER
+    ;
+
+    SELECT class_4ps;
+
+    SELECT COUNT(*) 
+      INTO class_non4ps 
+      FROM rpfp.rpfp_class 
+     WHERE TYPE_CLASS_ID = 2 
+       AND TYPE_CLASS_ID = 7 
+       AND YEAR(DATE_CONDUCTED) = report_year 
+       AND MONTH(DATE_CONDUCTED) = report_month 
+  GROUP BY CLASS_NUMBER
+    ;
+
+    SELECT class_non4ps;
+
+    SELECT COUNT(*) 
+      INTO class_usapan 
+      FROM rpfp.rpfp_class 
+     WHERE TYPE_CLASS_ID = 4 
+       AND YEAR(DATE_CONDUCTED) = report_year 
+       AND MONTH(DATE_CONDUCTED) = report_month 
+  GROUP BY CLASS_NUMBER
+    ;
+
+    SELECT class_usapan;
+
+    SELECT COUNT(*) 
+      INTO class_pmc 
+      FROM rpfp.rpfp_class 
+     WHERE TYPE_CLASS_ID = 3 
+       AND YEAR(DATE_CONDUCTED) = report_year 
+       AND MONTH(DATE_CONDUCTED) = report_month 
+  GROUP BY CLASS_NUMBER
+    ;
+
+    SELECT class_pmc;
+
+    SELECT COUNT(*) 
+      INTO class_h2h 
+      FROM rpfp.rpfp_class 
+     WHERE TYPE_CLASS_ID = 5 
+       AND YEAR(DATE_CONDUCTED) = report_year 
+       AND MONTH(DATE_CONDUCTED) = report_month  
+  GROUP BY CLASS_NUMBER
+    ;
+
+    SELECT class_h2h;
+
+    SELECT COUNT(*) 
+      INTO class_profiled 
+      FROM rpfp.rpfp_class 
+     WHERE TYPE_CLASS_ID = 6 
+       AND YEAR(DATE_CONDUCTED) = report_year 
+       AND MONTH(DATE_CONDUCTED) = report_month 
+  GROUP BY CLASS_NUMBER
+    ;
+
+    SELECT class_profiled;
+
+    SELECT COUNT(*) 
+      INTO class_total 
+      FROM rpfp.rpfp_class 
+     WHERE YEAR(DATE_CONDUCTED) = report_year 
+       AND MONTH(DATE_CONDUCTED) = report_month 
+  GROUP BY CLASS_NUMBER
+    ;
+
+    SELECT class_total;
+
+    SELECT COUNT(*) 
+      INTO wra_4ps 
+      FROM rpfp.individual ic
+      JOIN rpfp.couples apc ON apc.COUPLES_ID = ic.COUPLES_ID
+      JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
+     WHERE ic.SEX = 2 
+       AND apc.IS_ACTIVE = 0
+       AND YEAR(rc.DATE_CONDUCTED) = report_year 
+       AND MONTH(rc.DATE_CONDUCTED) = report_month 
+       AND rc.TYPE_CLASS_ID = 1
+       ;
+
+    SELECT wra_4ps;
+
+    SELECT COUNT(*) 
+      INTO wra_non4ps 
+      FROM rpfp.individual ic
+ LEFT JOIN rpfp.couples apc ON apc.COUPLES_ID = ic.COUPLES_ID
+ LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
+     WHERE ic.SEX = 2 
+       AND apc.IS_ACTIVE = 0
+       AND YEAR(rc.DATE_CONDUCTED) = report_year 
+       AND MONTH(rc.DATE_CONDUCTED) = report_month 
+       AND rc.TYPE_CLASS_ID = 2
+       AND rc.TYPE_CLASS_ID = 7
+       ;
+
+    SELECT wra_non4ps;
+
+    SELECT COUNT(*) 
+      INTO wra_usapan 
+      FROM rpfp.individual ic
+ LEFT JOIN rpfp.couples apc ON apc.COUPLES_ID = ic.COUPLES_ID
+ LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
+     WHERE ic.SEX = 2 
+       AND apc.IS_ACTIVE = 0
+       AND YEAR(rc.DATE_CONDUCTED) = report_year 
+       AND MONTH(rc.DATE_CONDUCTED) = report_month 
+       AND rc.TYPE_CLASS_ID = 4
+       ;
+
+    SELECT wra_usapan;
+
+    SELECT COUNT(*) 
+      INTO wra_pmc 
+      FROM rpfp.individual ic
+ LEFT JOIN rpfp.couples apc ON apc.COUPLES_ID = ic.COUPLES_ID
+ LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
+     WHERE ic.SEX = 2 
+       AND apc.IS_ACTIVE = 0
+       AND YEAR(rc.DATE_CONDUCTED) = report_year 
+       AND MONTH(rc.DATE_CONDUCTED) = report_month 
+       AND rc.TYPE_CLASS_ID = 3
+       ;
+
+    SELECT wra_pmc;
+
+    SELECT COUNT(*) 
+      INTO wra_h2h 
+      FROM rpfp.individual ic
+ LEFT JOIN rpfp.couples apc ON apc.COUPLES_ID = ic.COUPLES_ID
+ LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
+     WHERE ic.SEX = 2 
+       AND apc.IS_ACTIVE = 0
+       AND YEAR(rc.DATE_CONDUCTED) = report_year 
+       AND MONTH(rc.DATE_CONDUCTED) = report_month 
+       AND rc.TYPE_CLASS_ID = 5
+       ;
+
+    SELECT wra_h2h;
+
+    SELECT COUNT(*) 
+      INTO wra_profiled
+      FROM rpfp.individual ic
+ LEFT JOIN rpfp.couples apc ON apc.COUPLES_ID = ic.COUPLES_ID
+ LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
+     WHERE ic.SEX = 2 
+       AND apc.IS_ACTIVE = 0
+       AND YEAR(rc.DATE_CONDUCTED) = report_year 
+       AND MONTH(rc.DATE_CONDUCTED) = report_month 
+       AND rc.TYPE_CLASS_ID = 6
+       ;
+
+    SELECT wra_profiled;
+
+    SELECT COUNT(*) 
+      INTO wra_total 
+      FROM rpfp.individual ic
+ LEFT JOIN rpfp.couples apc ON apc.COUPLES_ID = ic.COUPLES_ID
+ LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
+     WHERE ic.SEX = 2 
+       AND apc.IS_ACTIVE = 0
+       AND YEAR(rc.DATE_CONDUCTED) = report_year 
+       AND MONTH(rc.DATE_CONDUCTED) = report_month 
+       ;
+
+    SELECT wra_total;
+
+    SELECT COUNT(*) 
+      INTO solo_male 
+      FROM rpfp.individual ic
+ LEFT JOIN rpfp.couples apc ON apc.COUPLES_ID = ic.COUPLES_ID
+ LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
+     WHERE ic.SEX = 1 
+       AND apc.IS_ACTIVE = 0
+       AND YEAR(rc.DATE_CONDUCTED) = report_year 
+       AND MONTH(rc.DATE_CONDUCTED) = report_month 
+       ;
+
+    SELECT solo_male;
+
+    SELECT COUNT(*) 
+      INTO solo_female 
+      FROM rpfp.individual ic
+ LEFT JOIN rpfp.couples apc ON apc.COUPLES_ID = ic.COUPLES_ID
+ LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
+     WHERE ic.SEX = 2
+       AND apc.IS_ACTIVE = 0
+       AND YEAR(rc.DATE_CONDUCTED) = report_year 
+       AND MONTH(rc.DATE_CONDUCTED) = report_month 
+       ;
+
+    SELECT solo_female;
+
+    SELECT COUNT(*) 
+      INTO couple_attendee 
+      FROM rpfp.individual ic
+ LEFT JOIN rpfp.couples apc ON apc.COUPLES_ID = ic.COUPLES_ID
+ LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
+     WHERE apc.IS_ACTIVE = 0
+       AND YEAR(rc.DATE_CONDUCTED) = report_year 
+       AND MONTH(rc.DATE_CONDUCTED) = report_month 
+       ;
+
+    SELECT couple_attendee;
+
+    SELECT COUNT(*) 
+      INTO reached_total 
+      FROM rpfp.couples apc
+ LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = rc.RPFP_CLASS_ID
+     WHERE apc.IS_ACTIVE = 0
+       AND YEAR(rc.DATE_CONDUCTED) = report_year 
+       AND MONTH(rc.DATE_CONDUCTED) = report_month  
+       ;
+
+    SELECT reached_total;
+
+        INSERT INTO rpfp.report_demandgen (
+                DEMANDGEN_ID,
+                REPORT_YEAR,
+                REPORT_MONTH,
+                PSGC_CODE,
+                CLASS_4PS,
+                CLASS_NON4PS,
+                CLASS_USAPAN,
+                CLASS_PMC,
+                CLASS_H2H,
+                CLASS_PROFILED,
+                CLASS_TOTAL,
+                TARGET_COUPLES,
+                WRA_4PS,
+                WRA_NON4PS,
+                WRA_USAPAN,
+                WRA_PMC,
+                WRA_H2H,
+                WRA_PROFILED,
+                WRA_TOTAL,
+                SOLO_MALE,
+                SOLO_FEMALE,
+                COUPLE_ATTENDEE,
+                REACHED_TOTAL,
+                DATE_PROCESSED
+            )
+        VALUES (
+                demandgen_id,
+                report_year,
+                report_month,
+                psgc_code,
+                class_4ps,
+                class_non4ps,
+                class_usapan,
+                class_pmc,
+                class_h2h,
+                class_profiled,
+                class_total,
+                target_couples,
+                wra_4ps,
+                wra_non4ps,
+                wra_usapan,
+                wra_pmc,
+                wra_h2h,
+                wra_profiled,
+                wra_total,
+                solo_male,
+                solo_female,
+                couple_attendee,
+                reached_total,
+                CURRENT_DATE()
+            )
+        ;
+
+        SELECT CONCAT( "NEW ENTRY: ", LAST_INSERT_ID() ) AS MESSAGE;
+        LEAVE proc_exit_point;
+
+    SELECT "SUCCESS!" AS MESSAGE;
+    
+END$$
+
+CREATE DEFINER=root@localhost PROCEDURE process_unmet_need (
+    IN unmet_id INT,
+    IN report_year INT,
+    IN report_month INT,
+    IN psgc_code INT
+    )  MODIFIES SQL DATA
+proc_exit_point :
+BEGIN
+DECLARE unmet_modern_tm INT;
+DECLARE unmet_modern_nm INT;
+DECLARE served_modern INT;
+DECLARE no_intention INT;
+DECLARE w_intention INT;
+DECLARE served_traditional INT;
+DECLARE total_unmet INT;
+DECLARE total_served INT;
+DECLARE report_scope VARCHAR(100);
+
+    IF ( IFNULL( psgc_code, 0 ) = 0 ) THEN
+        SET report_scope = "";
+    ELSE
+        SET report_scope = "AND PSGC_CODE = " + psgc_code;
+    END IF
+    ;
+
+    SELECT COUNT(*) 
+      INTO unmet_modern_tm 
+      FROM rpfp.individual ic
+ LEFT JOIN rpfp.couples apc ON apc.COUPLES_ID = ic.COUPLES_ID
+ LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
+ LEFT JOIN rpfp.fp_details fd ON fd.COUPLES_ID = ic.COUPLES_ID
+     WHERE ic.SEX = 2 
+       AND ic.AGE >= 15
+       AND ic.AGE <= 49
+       AND apc.IS_ACTIVE = 0
+       AND YEAR(rc.DATE_CONDUCTED) = report_year 
+       AND MONTH(rc.DATE_CONDUCTED) = report_month 
+       AND fd.TFP_TYPE_ID > 0
+       AND fd.TFP_TYPE_ID < 6
+       ;
+
+    SELECT COUNT(*)
+      INTO unmet_modern_nm 
+      FROM rpfp.individual ic
+ LEFT JOIN rpfp.couples apc ON apc.COUPLES_ID = ic.COUPLES_ID
+ LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
+ LEFT JOIN rpfp.fp_details fd ON fd.COUPLES_ID = ic.COUPLES_ID
+     WHERE ic.SEX = 2 
+       AND ic.AGE >= 15
+       AND ic.AGE <= 49
+       AND apc.IS_ACTIVE = 0
+       AND YEAR(rc.DATE_CONDUCTED) = report_year 
+       AND MONTH(rc.DATE_CONDUCTED) = report_month 
+       AND fd.TFP_TYPE_ID = 6
+       AND fd.TFP_STATUS_ID = 1
+       ;
+
+    SELECT COUNT(*)
+      INTO served_modern 
+      FROM rpfp.fp_service fs
+     WHERE fs.IS_PROVIDED_SERVICE = 1
+       AND YEAR(fs.DATE_SERVED) = report_year 
+       AND MONTH(fs.DATE_SERVED) = report_month
+       ;
+
+    SELECT COUNT(*)
+      INTO no_intention 
+      FROM rpfp.individual ic
+ LEFT JOIN rpfp.couples apc ON apc.COUPLES_ID = ic.COUPLES_ID
+ LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
+ LEFT JOIN rpfp.fp_details fd ON fd.COUPLES_ID = ic.COUPLES_ID
+     WHERE ic.SEX = 2 
+       AND ic.AGE >= 15
+       AND ic.AGE <= 49
+       AND apc.IS_ACTIVE = 0
+       AND YEAR(rc.DATE_CONDUCTED) = report_year 
+       AND MONTH(rc.DATE_CONDUCTED) = report_month 
+       AND fd.TFP_TYPE_ID > 0
+       AND fd.TFP_TYPE_ID < 6
+       AND fd.TFP_STATUS_ID > 1
+       ;
+
+    SELECT COUNT(*)
+      INTO w_intention 
+      FROM rpfp.individual ic
+ LEFT JOIN rpfp.couples apc ON apc.COUPLES_ID = ic.COUPLES_ID
+ LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
+ LEFT JOIN rpfp.fp_details fd ON fd.COUPLES_ID = ic.COUPLES_ID
+     WHERE ic.SEX = 2 
+       AND ic.AGE >= 15
+       AND ic.AGE <= 49
+       AND apc.IS_ACTIVE = 0
+       AND YEAR(rc.DATE_CONDUCTED) = report_year 
+       AND MONTH(rc.DATE_CONDUCTED) = report_month 
+       AND fd.TFP_TYPE_ID > 0
+       AND fd.TFP_TYPE_ID < 6
+       AND fd.TFP_STATUS_ID = 1
+       ;
+
+    SELECT COUNT(*)
+      INTO served_traditional 
+      FROM rpfp.individual ic
+ LEFT JOIN rpfp.couples apc ON apc.COUPLES_ID = ic.COUPLES_ID
+ LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
+ LEFT JOIN rpfp.fp_details fd ON fd.COUPLES_ID = ic.COUPLES_ID
+ LEFT JOIN rpfp.fp_service fs ON fs.COUPLES_ID = ic.COUPLES_ID
+     WHERE ic.SEX = 2 
+       AND ic.AGE >= 15
+       AND ic.AGE <= 49
+       AND apc.IS_ACTIVE = 0
+       AND fd.TFP_TYPE_ID > 0
+       AND fd.TFP_TYPE_ID < 6
+       AND fd.TFP_STATUS_ID > 1
+       AND fs.IS_PROVIDED_SERVICE = 1
+       AND YEAR(fs.DATE_SERVED) = report_year 
+       AND MONTH(fs.DATE_SERVED) = report_month
+       ;
+
+       SET total_unmet = unmet_modern_tm + unmet_modern_nm;
+       SET total_served = served_modern;
+
+        INSERT INTO rpfp.report_unmet_need (
+                UNMET_ID,
+                REPORT_YEAR,
+                REPORT_MONTH,
+                PSGC_CODE,
+                UNMET_MODERN_FP,
+                SERVED_MODERN_FP,
+                NO_INTENTION,
+                W_INTENTION,
+                SERVED_TRADITIONAL,
+                TOTAL_UNMET,
+                TOTAL_SERVED,
+                DATE_PROCESSED
+            )
+        VALUES (
+                unmet_id,
+                report_year,
+                report_month,
+                psgc_code,
+                total_unmet,
+                served_modern,
+                no_intention,
+                w_intention,
+                served_traditional,
+                total_unmet,
+                total_served,
+                CURRENT_DATE()
+            )
+        ;
+
+        SELECT CONCAT( "NEW ENTRY: ", LAST_INSERT_ID() ) AS MESSAGE;
+        LEAVE proc_exit_point;
+
+    SELECT "SUCCESS!" AS MESSAGE;
+    
+END$$
+
+CREATE DEFINER=root@localhost PROCEDURE process_served_method_mix (
+    IN served_id INT,
+    IN report_year INT,
+    IN report_month INT,
+    IN psgc_code INT
+    )  MODIFIES SQL DATA
+proc_exit_point :
+BEGIN
+DECLARE served_condom INT;
+DECLARE served_iud INT;
+DECLARE served_pills INT;
+DECLARE served_injectables INT;
+DECLARE served_nsv INT;
+DECLARE served_btl INT;
+DECLARE served_implant INT;
+DECLARE served_cmm INT;
+DECLARE served_bbt INT;
+DECLARE served_symptothermal INT;
+DECLARE served_sdm INT;
+DECLARE served_lam INT;
+DECLARE total_served INT;
+DECLARE report_scope VARCHAR(100);
+
+    IF ( IFNULL( psgc_code, 0 ) = 0 ) THEN
+        SET report_scope = "";
+    ELSE
+        SET report_scope = "AND PSGC_CODE = " + psgc_code;
+    END IF
+    ;
+
+    SELECT COUNT(*)
+      INTO served_condom 
+      FROM rpfp.couples apc
+ LEFT JOIN rpfp.fp_service fs ON fs.COUPLES_ID = apc.COUPLES_ID
+     WHERE apc.IS_ACTIVE = 0
+       AND YEAR(fs.DATE_SERVED) = report_year 
+       AND MONTH(fs.DATE_SERVED) = report_month
+       AND fs.FP_SERVED_ID = 1
+       ;
+
+    SELECT COUNT(*) 
+      INTO served_iud 
+      FROM rpfp.couples apc
+ LEFT JOIN rpfp.fp_service fs ON fs.COUPLES_ID = apc.COUPLES_ID
+     WHERE apc.IS_ACTIVE = 0
+       AND YEAR(fs.DATE_SERVED) = report_year 
+       AND MONTH(fs.DATE_SERVED) = report_month
+       AND fs.FP_SERVED_ID = 2
+       ;
+
+    SELECT COUNT(*)
+      INTO served_pills 
+      FROM rpfp.couples apc
+ LEFT JOIN rpfp.fp_service fs ON fs.COUPLES_ID = apc.COUPLES_ID
+     WHERE apc.IS_ACTIVE = 0
+       AND YEAR(fs.DATE_SERVED) = report_year 
+       AND MONTH(fs.DATE_SERVED) = report_month
+       AND fs.FP_SERVED_ID = 3
+       ;
+
+    SELECT COUNT(*)
+      INTO served_injectables 
+      FROM rpfp.couples apc
+ LEFT JOIN rpfp.fp_service fs ON fs.COUPLES_ID = apc.COUPLES_ID
+     WHERE apc.IS_ACTIVE = 0
+       AND YEAR(fs.DATE_SERVED) = report_year 
+       AND MONTH(fs.DATE_SERVED) = report_month
+       AND fs.FP_SERVED_ID = 4
+       ;
+
+    SELECT COUNT(*)
+      INTO served_nsv 
+      FROM rpfp.couples apc
+ LEFT JOIN rpfp.fp_service fs ON fs.COUPLES_ID = apc.COUPLES_ID
+     WHERE apc.IS_ACTIVE = 0
+       AND YEAR(fs.DATE_SERVED) = report_year 
+       AND MONTH(fs.DATE_SERVED) = report_month
+       AND fs.FP_SERVED_ID = 5
+       ;
+
+    SELECT COUNT(*)
+      INTO served_btl 
+      FROM rpfp.couples apc
+ LEFT JOIN rpfp.fp_service fs ON fs.COUPLES_ID = apc.COUPLES_ID
+     WHERE apc.IS_ACTIVE = 0
+       AND YEAR(fs.DATE_SERVED) = report_year 
+       AND MONTH(fs.DATE_SERVED) = report_month
+       AND fs.FP_SERVED_ID = 6
+       ;
+
+    SELECT COUNT(*) 
+      INTO served_implant 
+      FROM rpfp.couples apc
+ LEFT JOIN rpfp.fp_service fs ON fs.COUPLES_ID = apc.COUPLES_ID
+     WHERE apc.IS_ACTIVE = 0
+       AND YEAR(fs.DATE_SERVED) = report_year 
+       AND MONTH(fs.DATE_SERVED) = report_month
+       AND fs.FP_SERVED_ID = 7
+       ;
+
+    SELECT COUNT(*)
+      INTO served_cmm 
+      FROM rpfp.couples apc
+ LEFT JOIN rpfp.fp_service fs ON fs.COUPLES_ID = apc.COUPLES_ID
+     WHERE apc.IS_ACTIVE = 0
+       AND YEAR(fs.DATE_SERVED) = report_year 
+       AND MONTH(fs.DATE_SERVED) = report_month
+       AND fs.FP_SERVED_ID = 8
+       ;
+
+    SELECT COUNT(*)
+      INTO served_bbt 
+      FROM rpfp.couples apc
+ LEFT JOIN rpfp.fp_service fs ON fs.COUPLES_ID = apc.COUPLES_ID
+     WHERE apc.IS_ACTIVE = 0
+       AND YEAR(fs.DATE_SERVED) = report_year 
+       AND MONTH(fs.DATE_SERVED) = report_month
+       AND fs.FP_SERVED_ID = 9
+       ;
+
+    SELECT COUNT(*)
+      INTO served_symptothermal 
+      FROM rpfp.couples apc
+ LEFT JOIN rpfp.fp_service fs ON fs.COUPLES_ID = apc.COUPLES_ID
+     WHERE apc.IS_ACTIVE = 0
+       AND YEAR(fs.DATE_SERVED) = report_year 
+       AND MONTH(fs.DATE_SERVED) = report_month
+       AND fs.FP_SERVED_ID = 10
+       ;
+
+    SELECT COUNT(*)
+      INTO served_sdm 
+      FROM rpfp.couples apc
+ LEFT JOIN rpfp.fp_service fs ON fs.COUPLES_ID = apc.COUPLES_ID
+     WHERE apc.IS_ACTIVE = 0
+       AND YEAR(fs.DATE_SERVED) = report_year 
+       AND MONTH(fs.DATE_SERVED) = report_month
+       AND fs.FP_SERVED_ID = 11
+       ;
+
+    SELECT COUNT(*)
+      INTO served_lam 
+      FROM rpfp.couples apc
+ LEFT JOIN rpfp.fp_service fs ON fs.COUPLES_ID = apc.COUPLES_ID
+     WHERE apc.IS_ACTIVE = 0
+       AND YEAR(fs.DATE_SERVED) = report_year 
+       AND MONTH(fs.DATE_SERVED) = report_month
+       AND fs.FP_SERVED_ID = 12
+       ;
+
+        INSERT INTO rpfp.report_served_method_mix (
+                SERVED_ID,
+                REPORT_YEAR,
+                REPORT_MONTH,
+                PSGC_CODE,
+                SERVED_CONDOM,
+                SERVED_IUD,
+                SERVED_PILLS,
+                SERVED_INJECTABLES,
+                SERVED_NSV,
+                SERVED_BTL,
+                SERVED_IMPLANT,
+                SERVED_CMM,
+                SERVED_BBT,
+                SERVED_SYMPTOTHERMAL,
+                SERVED_SDM,
+                SERVED_LAM,
+                TOTAL_SERVED,
+                DATE_PROCESSED
+            )
+        VALUES (
+                served_id,
+                report_year,
+                report_month,
+                psgc_code,
+                served_condom,
+                served_iud,
+                served_pills,
+                served_injectables,
+                served_nsv,
+                served_btl,
+                served_implant,
+                served_cmm,
+                served_bbt,
+                served_symptothermal,
+                served_sdm,
+                served_lam,
+                total_served,
+                CURRENT_DATE()
+            )
+        ;
+
+        SELECT CONCAT( "NEW ENTRY: ", LAST_INSERT_ID() ) AS MESSAGE;
+        LEAVE proc_exit_point;
+
+    SELECT "SUCCESS!" AS MESSAGE;
+    
+END$$
+
+/** END PROCESS REPORTS */
+
 DELIMITER ;
 --
 -- END OF STORED ROUTINES
@@ -1806,6 +2529,106 @@ CREATE TABLE fp_service (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
+
+--
+-- Table structure for table report_demandgen
+--
+
+CREATE TABLE report_demandgen (
+              REPORT_ID INT UNSIGNED NOT NULL AUTO_INCREMENT,
+           DEMANDGEN_ID INT NOT NULL,
+            REPORT_YEAR INT NOT NULL,
+              PSGC_CODE INT NOT NULL,
+           REPORT_MONTH INT NOT NULL,
+              CLASS_4PS INT,
+           CLASS_NON4PS INT,
+           CLASS_USAPAN INT,
+	          CLASS_PMC INT,
+              CLASS_H2H INT,
+         CLASS_PROFILED INT,
+            CLASS_TOTAL INT,
+         TARGET_COUPLES INT,
+                WRA_4PS INT,
+             WRA_NON4PS INT,
+             WRA_USAPAN INT,
+	            WRA_PMC INT,
+                WRA_H2H INT,
+           WRA_PROFILED INT,
+              WRA_TOTAL INT,
+	          SOLO_MALE INT,
+            SOLO_FEMALE INT,
+        COUPLE_ATTENDEE INT,
+          REACHED_TOTAL INT,
+         DATE_PROCESSED DATE,
+            PRIMARY KEY (REPORT_ID)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table report_unmet_need
+--
+
+CREATE TABLE report_unmet_need (
+              REPORT_ID INT UNSIGNED NOT NULL AUTO_INCREMENT,
+               UNMET_ID INT NOT NULL,
+            REPORT_YEAR INT NOT NULL,
+              PSGC_CODE INT NOT NULL,
+           REPORT_MONTH INT NOT NULL,
+        UNMET_MODERN_FP INT,
+       SERVED_MODERN_FP INT,
+           NO_INTENTION INT,
+	        W_INTENTION INT,
+     SERVED_TRADITIONAL INT,
+            TOTAL_UNMET INT,
+           TOTAL_SERVED INT,
+         DATE_PROCESSED DATE,
+            PRIMARY KEY (REPORT_ID)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table report_served_method_mix
+--
+
+CREATE TABLE report_served_method_mix (
+              REPORT_ID INT UNSIGNED NOT NULL AUTO_INCREMENT,
+              SERVED_ID INT NOT NULL,
+            REPORT_YEAR INT NOT NULL,
+              PSGC_CODE INT NOT NULL,
+           REPORT_MONTH INT NOT NULL,
+          SERVED_CONDOM INT,
+             SERVED_IUD INT,
+           SERVED_PILLS INT,
+	 SERVED_INJECTABLES INT,
+             SERVED_NSV INT,
+             SERVED_BTL INT,
+         SERVED_IMPLANT INT,
+             SERVED_CMM INT,
+             SERVED_BBT INT,
+   SERVED_SYMPTOTHERMAL INT,
+             SERVED_SDM INT,
+             SERVED_LAM INT,
+           TOTAL_SERVED INT,
+         DATE_PROCESSED DATE,
+            PRIMARY KEY (REPORT_ID)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table target_couples
+--
+
+CREATE TABLE target_couples (
+              TARGET_ID INT UNSIGNED NOT NULL AUTO_INCREMENT,
+            TARGET_YEAR INT NOT NULL,
+           TARGET_MONTH INT NOT NULL,
+              PSGC_CODE INT NOT NULL,
+           TARGET_COUNT INT,
+            PRIMARY KEY (TARGET_ID)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 
 /** RPFP ROLES */
