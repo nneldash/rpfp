@@ -284,7 +284,7 @@ BEGIN
     ;
 
     IF role_word IS NOT NULL THEN
-        RETURN rpfp.profile_num_role( role_word );
+        RETURN rpfp.lib_num_role( role_word );
     END IF;
 
     RETURN 0;
@@ -310,7 +310,7 @@ BEGIN
     ;
 
     IF scope_word IS NOT NULL THEN
-        RETURN rpfp.profile_num_scope( scope_word );
+        RETURN rpfp.lib_num_scope( scope_word );
     END IF;
 
     RETURN 0;
@@ -344,7 +344,7 @@ BEGIN
         EXECUTE stmt_role;
     END IF;
 
-    SET default_role := rpfp.profile_select_role( role_num );
+    SET default_role := rpfp.lib_select_role( role_num );
 
     SET @sql_stmt4 := CONCAT( "GRANT ", default_role, " TO ", db_user_name );
     PREPARE stmt4 FROM @sql_stmt4;
@@ -377,7 +377,7 @@ BEGIN
         LEAVE proc_exit_point;
     END IF;
 
-    SET scope_role := rpfp.profile_select_scope( scope_reg_prov_or_muni );
+    SET scope_role := rpfp.lib_select_scope( scope_reg_prov_or_muni );
     SET @sql_stmt6 := CONCAT( "GRANT ", scope_role, " TO ", db_user_name );
     PREPARE stmt6 FROM @sql_stmt6;
     EXECUTE stmt6;
@@ -397,7 +397,7 @@ BEGIN
 
     SELECT TRUE INTO ret_val
       FROM mysql.ROLES_MAPPING rm
-     WHERE rm.ROLE = rpfp.profile_select_role( role_num )
+     WHERE rm.ROLE = rpfp.lib_select_role( role_num )
        AND rm.USER = name_user
      LIMIT 1  
     ;
@@ -579,6 +579,7 @@ END$$
 /** END OF PROFILE PROCS */
 
 
+
 /** LIBRARIES */
 CREATE DEFINER=root@localhost PROCEDURE lib_get_full_location(
     IN  LOCATION_ID INT,
@@ -628,9 +629,9 @@ END$$
 CREATE DEFINER=root@localhost PROCEDURE lib_list_regions()
         READS SQL DATA
 BEGIN
-     SELECT reg.REGION_CODE AS REGION_ID,
-            reg.PSGC_CODE AS LOCATION_CODE,
-            reg.LOCATION_DESCRIPTION AS LOCATION_NAME
+     SELECT reg.REGION_CODE AS region_id,
+            reg.PSGC_CODE AS location_code,
+            reg.LOCATION_DESCRIPTION AS location_name
        FROM rpfp.lib_psgc_locations reg
       WHERE reg.INTER_LEVEL = 'REG'
    ORDER BY reg.LOCATION_ID
@@ -641,10 +642,10 @@ CREATE DEFINER=root@localhost PROCEDURE lib_list_provinces(
     IN region_id INT UNSIGNED
     )    READS SQL DATA
 BEGIN
-     SELECT reg.REGION_CODE AS REGION_ID,
-            reg.LOCATION_DESCRIPTION AS REGION_NAME,
-            prov.PROVINCE_CODE AS LOCATION_CODE,
-            prov.LOCATION_DESCRIPTION AS LOCATION_NAME
+     SELECT reg.REGION_CODE AS region_id,
+            reg.LOCATION_DESCRIPTION AS region_name,
+            prov.PROVINCE_CODE AS location_code,
+            prov.LOCATION_DESCRIPTION AS location_name
        FROM rpfp.lib_psgc_locations prov
   LEFT JOIN rpfp.lib_psgc_locations reg
          ON reg.PSGC_CODE = (prov.REGION_CODE * POWER( 10, 7 ))
@@ -658,12 +659,12 @@ CREATE DEFINER=root@localhost PROCEDURE lib_list_cities(
     IN province_id INT UNSIGNED
     )    READS SQL DATA
 BEGIN
-     SELECT reg.REGION_CODE AS REGION_ID,
-            reg.LOCATION_DESCRIPTION AS REGION_NAME,
-            prov.PROVINCE_CODE AS PROVINCE_ID,
-            prov.LOCATION_DESCRIPTION AS PROVINCE_NAME,
-            city.MUNICIPALITY_CODE AS LOCATION_CODE,
-            city.LOCATION_DESCRIPTION AS LOCATION_NAME
+     SELECT reg.REGION_CODE AS region_id,
+            reg.LOCATION_DESCRIPTION AS region_name,
+            prov.PROVINCE_CODE AS province_id,
+            prov.LOCATION_DESCRIPTION AS province_name,
+            city.MUNICIPALITY_CODE AS location_code,
+            city.LOCATION_DESCRIPTION AS location_name
        FROM rpfp.lib_psgc_locations city
   LEFT JOIN rpfp.lib_psgc_locations reg
          ON reg.PSGC_CODE = (city.REGION_CODE * POWER( 10, 7 ))
@@ -679,14 +680,14 @@ CREATE DEFINER=root@localhost PROCEDURE lib_list_brgy(
     IN municipality_id INT UNSIGNED
     )    READS SQL DATA
 BEGIN
-     SELECT reg.REGION_CODE AS REGION_ID,
-            reg.LOCATION_DESCRIPTION AS REGION_NAME,
-            prov.PROVINCE_CODE AS PROVINCE_ID,
-            prov.LOCATION_DESCRIPTION AS PROVINCE_NAME,
-            city.MUNICIPALITY_CODE AS MUNICIPALITY_ID,
-            city.LOCATION_DESCRIPTION AS MUNICIPALITY_NAME,
-            brgy.PSGC_CODE AS LOCATION_CODE,
-            brgy.LOCATION_DESCRIPTION AS LOCATION_NAME
+     SELECT reg.REGION_CODE AS region_id,
+            reg.LOCATION_DESCRIPTION AS region_name,
+            prov.PROVINCE_CODE AS province_id,
+            prov.LOCATION_DESCRIPTION AS province_name,
+            city.MUNICIPALITY_CODE AS municipality_id,
+            city.LOCATION_DESCRIPTION AS municipality_name,
+            brgy.PSGC_CODE AS location_code,
+            brgy.LOCATION_DESCRIPTION AS location_name
        FROM rpfp.lib_psgc_locations brgy
   LEFT JOIN rpfp.lib_psgc_locations reg
          ON reg.PSGC_CODE = (brgy.REGION_CODE * POWER( 10, 7 ))
@@ -718,7 +719,7 @@ BEGIN
     END IF;
 END$$
 
-CREATE DEFINER=root@localhost FUNCTION profile_select_role(
+CREATE DEFINER=root@localhost FUNCTION lib_select_role(
     role_num INT
     )   RETURNS VARCHAR(25)
         CONTAINS SQL
@@ -750,7 +751,7 @@ BEGIN
     RETURN default_role;
 END$$
 
-CREATE DEFINER=root@localhost FUNCTION profile_select_scope(
+CREATE DEFINER=root@localhost FUNCTION lib_select_scope(
     scope_num INT
     )   RETURNS VARCHAR(25) CONTAINS SQL
 BEGIN
@@ -775,7 +776,7 @@ BEGIN
     RETURN default_scope;
 END$$
 
-CREATE DEFINER=root@localhost FUNCTION profile_num_scope(
+CREATE DEFINER=root@localhost FUNCTION lib_num_scope(
     scope_word VARCHAR(25) CHARSET utf8 COLLATE utf8_unicode_ci
     )   RETURNS INT CONTAINS SQL
 BEGIN
@@ -800,7 +801,7 @@ BEGIN
     RETURN default_num;
 END$$
 
-CREATE DEFINER=root@localhost FUNCTION profile_num_role(
+CREATE DEFINER=root@localhost FUNCTION lib_num_role(
     role_word VARCHAR(25) CHARSET utf8 COLLATE utf8_unicode_ci
     )   RETURNS INT CONTAINS SQL
 BEGIN
@@ -976,7 +977,6 @@ BEGIN
     END IF;
 END$$
 
-
 CREATE DEFINER=root@localhost PROCEDURE encoder_get_couples_details(
     IN class_num VARCHAR(50)
     )   READS SQL DATA
@@ -1048,7 +1048,6 @@ BEGIN
     END IF;
 END$$
 
-
 CREATE DEFINER=root@localhost PROCEDURE encoder_save_class(
     IN classid INT UNSIGNED,
     IN type_class INT,
@@ -1109,6 +1108,8 @@ BEGIN
     SELECT "SAVE SUCCESSFUL" AS MESSAGE;
 END$$
 /** END OF CLASSES */
+
+
 
 /** COUPLES DETAILS */
 CREATE DEFINER=root@localhost PROCEDURE encoder_get_couple_fp_details (IN couplesid INT UNSIGNED)  READS SQL DATA
@@ -1550,6 +1551,8 @@ BEGIN
     
 END$$
 /** END COUPLES DETAILS */
+
+
 
 /**  APPROVE COUPLES DETAILS  */
 CREATE DEFINER=root@localhost PROCEDURE rdm_approve_couples (

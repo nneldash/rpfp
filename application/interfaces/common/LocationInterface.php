@@ -7,6 +7,12 @@ abstract class LocationInterface extends BaseInterface
 {
     /** @var PSGCInterface */
     public $Region;
+
+    /** @var PSGCInterface */
+    public $Province;
+
+    /** @var PSGCInterface */
+    public $City;
     
     /** @var PSGCInterface */
     public $SpecificLocation;
