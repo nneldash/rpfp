@@ -53,13 +53,13 @@ var process_wb = (function() {
 	    if(typeof array[136] !== '') $('#others').prop('checked', true);
 	   	if(typeof array[150] !== '') $('#usapan').prop('checked', true);
 
-	   	if(typeof array[101] == '') $('#4ps').prop('checked', false);
-	    if(typeof array[104] == '') $('#house').prop('checked', false);
-	    if(typeof array[117] == '') $('#faith').prop('checked', false);
-	    if(typeof array[120] == '') $('#profile').prop('checked', false);
-	    if(typeof array[133] == '') $('#pmc').prop('checked', false);
-	    if(typeof array[136] == '') $('#others').prop('checked', false);
-	   	if(typeof array[150] == '') $('#usapan').prop('checked', false);
+	   	if(typeof array[101] === '') $('#4ps').prop('checked', false);
+	    if(typeof array[104] === '') $('#house').prop('checked', false);
+	    if(typeof array[117] === '') $('#faith').prop('checked', false);
+	    if(typeof array[120] === '') $('#profile').prop('checked', false);
+	    if(typeof array[133] === '') $('#pmc').prop('checked', false);
+	    if(typeof array[136] === '') $('#others').prop('checked', false);
+	   	if(typeof array[150] === '') $('#usapan').prop('checked', false);
 	    
 	  //   if(array[101] !== '')  {
 	  //   	$('#4ps').prop('checked', true);
@@ -92,6 +92,7 @@ var process_wb = (function() {
 
 
 	    $('input[name=date_conducted]').val('2019-02-11');
+
 
 	    var i;
 	    var inc = 32;
@@ -232,6 +233,8 @@ function uploadFile() {
 	formdata.append("xlf", file);
 	var ajax = new XMLHttpRequest();
 	ajax.upload.addEventListener("progress", progressHandler, false);
+	ajax.open("POST", "");
+	ajax.send(formdata);
 }
 
 function progressHandler(event) {

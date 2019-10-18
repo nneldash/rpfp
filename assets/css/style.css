@@ -47,18 +47,34 @@ table.dataTable thead th.sorting_desc:after {
 .table-hover > tbody > tr:hover {	
 	background-color: #dde5ee;
 }
+table.datatable,
+.dataTables_wrapper > .row {
+    color: #333!important;
+}
+
+/*------------------------------------------------------------------
+[ Sidebar Styles ]*/
+.nav.side-menu>li.active, 
+.nav.side-menu>li.current-page {
+    border-right: 5px solid #f5cd06!important;
+}
+.left_col, 
+.nav_title {
+    background: #095017;
+}
+
 /*------------------------------------------------------------------
 [ Btn Styles ]*/
 .btn {
-	border: 2px solid #2a3f54;
+	border: 2px solid #076c1b;
     border-radius: 0;
 }
 .btn-primary {
-    background: #2a3f54;
+    background: #076c1b;
 }
 .btn-primary:hover {
 	background: #fff;
-	border: 1px solid #2a3f54;
+	border: 2px solid #076c1b;
 	color: #333;
 }
 .btn-info {
@@ -66,7 +82,7 @@ table.dataTable thead th.sorting_desc:after {
 }
 .btn-info:hover {
 	background: #fff;
-	border: 2px solid #2a3f54;
+	border: 2px solid #076c1b;
 	color: #333;
 }
 

@@ -9,6 +9,8 @@ $(function() {
 	saveForm1();
 	saveServiceSlip();
 	checkBox();
+
+	checkDuplicate();
 });
 
 function serviceModal()
@@ -138,4 +140,21 @@ function checkBox()
     	$('td:first-child input[value="aproveCouple"]').closest('tr').toggleClass("highlight", this.checked);
     	$('td:first-child input[value="aproveCouple"]').closest('tr').next('tr').toggleClass("highlight", this.checked);
     });
+}
+
+function checkDuplicate()
+{
+	var i;
+	for (i = 0; i < 10; i++) {
+		$('input[name="name_participant1['+ i +']"]').keydown(function(){
+			var fname = $('input[name="name_participant['+ i +']"]').val();
+
+			alert(fname);
+			
+			$.post(base_url + 'forms/checkDuplicate')
+			.done(function(result){
+				alert(result);
+			});
+		});
+	}
 }

@@ -1,6 +1,6 @@
 
 <div hidden id="drop"></div>
-<input type="file" name="xlfile" id="xlf" onchange="uploadFile()" />
+<input type="file" name="xlfile" id="xlf" onchange="uploadFile()" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" />
 <br>
 <progress id="progressBar" value="0" max="100" style="width:100%;"></progress>
 <h5 class="text-center" id="status"></h5>
