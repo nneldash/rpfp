@@ -2675,6 +2675,8 @@ GRANT EXECUTE ON PROCEDURE rpfp.profile_set_role TO 'itdmu';
 GRANT EXECUTE ON PROCEDURE rpfp.profile_set_scope TO 'itdmu';
 GRANT EXECUTE ON PROCEDURE rpfp.profile_save_profile TO 'itdmu';
 
+COMMIT;
+
 -- --------------------------------------------------------
 /**                */
 /** DEFAULT VALUES */
@@ -2689,6 +2691,7 @@ SOURCE ./libraries.sql;
 /** TEST VALUES */
 /** REMOVE THE FOLLOWING LINE IN PRODUCTION */
  SOURCE ./test.sql;
+
 -- --------------------------------------------------------
 
 /** END OF RPFP.SQL */

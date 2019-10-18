@@ -1,10 +1,16 @@
+SELECT "Loading Test values" AS MESSAGE;
 
-call rpfp.itdmu_create_rpfp_user('test', 'test', 'rojo', 'rowell', 'x@com.com', 13, 130000000, 50, 40);
-call rpfp.itdmu_create_rpfp_user('root', '', 'root', 'root', 'y@com.com', 08, 080000000, 50, 40);
+CALL rpfp.itdmu_create_rpfp_user('test', 'test', 'rojo', 'rowell', 'x@com.com', 13, 130000000, 50, 40);
+SELECT "User Created: Test" AS MESSAGE;
+
+CALL rpfp.itdmu_create_rpfp_user('root', '', 'root', 'root', 'y@com.com', 08, 080000000, 50, 40);
+SELECT "User Created: root" AS MESSAGE;
+
 
 --
 -- Dumping data for table `rpfp_class`
 --
+SELECT "Populating Seminars" AS MESSAGE;
 
 INSERT INTO rpfp.`rpfp_class`
             (`RPFP_CLASS_ID`, `TYPE_CLASS_ID`, `OTHERS_SPECIFY`,`BARANGAY_ID`,`CLASS_NUMBER`,`DATE_CONDUCTED`,`DB_USER_ID`)
@@ -12,6 +18,8 @@ INSERT INTO rpfp.`rpfp_class`
 ;
 
 -- --------------------------------------------------------
+
+SELECT "Populating Couples" AS MESSAGE;
 
 --
 -- Dumping data for table `couples`
@@ -35,6 +43,8 @@ INSERT INTO rpfp.`couples`
             (14, 1, '11 ISANG STREET', 'PINAGKAISAHAN', 'MANDALUYONG', '1-000-102453-2', 2, '2019-03-01', 2 ),
             (15, 1, '15 ISANG STREET', 'PINAGKAISAHAN', 'MANDALUYONG', '1-000-102453-2', 2, '2019-03-01', 2 )
 ;
+
+SELECT "Populating Individuals" AS MESSAGE;
 
 --
 -- Dumping data for table `individual`
@@ -80,6 +90,8 @@ INSERT INTO rpfp.`individual`
             (25, 15, 'Lopez',      'Karina',           '', NULL, 40,       2,        '1979-12-10', 4, 8, 1 )
 ;
 
+
+SELECT "Populating details of FP Method used by couples" AS MESSAGE;
 -- --------------------------------------------------------
 --
 -- Dumping data for table `fp_details`
@@ -105,3 +117,6 @@ INSERT INTO rpfp.`fp_details`
 ;
 
 -- --------------------------------------------------------
+
+COMMIT;
+SELECT "Done" AS MESSAGE;
