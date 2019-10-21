@@ -1634,236 +1634,329 @@ DECLARE couple_attendee INT;
 DECLARE reached_total INT;
 DECLARE report_scope VARCHAR(100);
     
-    IF ( IFNULL( psgc_code, 0 ) = 0 ) THEN
-        SET report_scope = '';
-    ELSE
-        SET report_scope = 'AND PSGC_CODE = ' + psgc_code;
-    END IF
+      SELECT COUNT(*) 
+        INTO class_4ps 
+        FROM rpfp.rpfp_class rc 
+   LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
+       WHERE rc.TYPE_CLASS_ID = 1 
+         AND YEAR(rc.DATE_CONDUCTED) = report_year 
+         AND MONTH(rc.DATE_CONDUCTED) = report_month
+         AND (
+                QUOTE(lp.REGION_CODE) = QUOTE(psgc_code)
+             OR (IFNULL( psgc_code, 0 ) = 0)
+            )
+    GROUP BY rc.CLASS_NUMBER
     ;
 
-    SELECT COUNT(*) 
-      INTO class_4ps 
-      FROM rpfp.rpfp_class rc 
-     WHERE rc.TYPE_CLASS_ID = 1 
-       AND YEAR(rc.DATE_CONDUCTED) = report_year 
-       AND MONTH(rc.DATE_CONDUCTED) = report_month 
-  GROUP BY CLASS_NUMBER
+      SELECT class_4ps;
+
+      SELECT COUNT(*) 
+        INTO class_non4ps 
+        FROM rpfp.rpfp_class rc 
+   LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
+       WHERE rc.TYPE_CLASS_ID = 2 
+         AND rc.TYPE_CLASS_ID = 7 
+         AND YEAR(rc.DATE_CONDUCTED) = report_year 
+         AND MONTH(rc.DATE_CONDUCTED) = report_month 
+         AND (
+                QUOTE(lp.REGION_CODE) = QUOTE(psgc_code)
+             OR (IFNULL( psgc_code, 0 ) = 0)
+            )
+    GROUP BY rc.CLASS_NUMBER
     ;
 
-    SELECT class_4ps;
+      SELECT class_non4ps;
 
-    SELECT COUNT(*) 
-      INTO class_non4ps 
-      FROM rpfp.rpfp_class 
-     WHERE TYPE_CLASS_ID = 2 
-       AND TYPE_CLASS_ID = 7 
-       AND YEAR(DATE_CONDUCTED) = report_year 
-       AND MONTH(DATE_CONDUCTED) = report_month 
-  GROUP BY CLASS_NUMBER
+      SELECT COUNT(*) 
+        INTO class_usapan 
+        FROM rpfp.rpfp_class rc 
+   LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
+       WHERE rc.TYPE_CLASS_ID = 4 
+         AND YEAR(rc.DATE_CONDUCTED) = report_year 
+         AND MONTH(rc.DATE_CONDUCTED) = report_month 
+         AND (
+                QUOTE(lp.REGION_CODE) = QUOTE(psgc_code)
+             OR (IFNULL( psgc_code, 0 ) = 0)
+            )
+    GROUP BY rc.CLASS_NUMBER
     ;
 
-    SELECT class_non4ps;
+      SELECT class_usapan;
 
-    SELECT COUNT(*) 
-      INTO class_usapan 
-      FROM rpfp.rpfp_class 
-     WHERE TYPE_CLASS_ID = 4 
-       AND YEAR(DATE_CONDUCTED) = report_year 
-       AND MONTH(DATE_CONDUCTED) = report_month 
-  GROUP BY CLASS_NUMBER
+      SELECT COUNT(*) 
+        INTO class_pmc 
+        FROM rpfp.rpfp_class rc 
+   LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
+       WHERE rc.TYPE_CLASS_ID = 3 
+         AND YEAR(rc.DATE_CONDUCTED) = report_year 
+         AND MONTH(rc.DATE_CONDUCTED) = report_month 
+         AND (
+                QUOTE(lp.REGION_CODE) = QUOTE(psgc_code)
+             OR (IFNULL( psgc_code, 0 ) = 0)
+            )
+    GROUP BY rc.CLASS_NUMBER
     ;
 
-    SELECT class_usapan;
+      SELECT class_pmc;
 
-    SELECT COUNT(*) 
-      INTO class_pmc 
-      FROM rpfp.rpfp_class 
-     WHERE TYPE_CLASS_ID = 3 
-       AND YEAR(DATE_CONDUCTED) = report_year 
-       AND MONTH(DATE_CONDUCTED) = report_month 
-  GROUP BY CLASS_NUMBER
+      SELECT COUNT(*) 
+        INTO class_h2h 
+        FROM rpfp.rpfp_class rc 
+   LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
+       WHERE TYPE_CLASS_ID = 5 
+         AND YEAR(rc.DATE_CONDUCTED) = report_year 
+         AND MONTH(rc.DATE_CONDUCTED) = report_month 
+         AND (
+                QUOTE(lp.REGION_CODE) = QUOTE(psgc_code)
+             OR (IFNULL( psgc_code, 0 ) = 0)
+            )
+    GROUP BY rc.CLASS_NUMBER
     ;
 
-    SELECT class_pmc;
+      SELECT class_h2h;
 
-    SELECT COUNT(*) 
-      INTO class_h2h 
-      FROM rpfp.rpfp_class 
-     WHERE TYPE_CLASS_ID = 5 
-       AND YEAR(DATE_CONDUCTED) = report_year 
-       AND MONTH(DATE_CONDUCTED) = report_month  
-  GROUP BY CLASS_NUMBER
-    ;
-
-    SELECT class_h2h;
-
-    SELECT COUNT(*) 
-      INTO class_profiled 
-      FROM rpfp.rpfp_class 
-     WHERE TYPE_CLASS_ID = 6 
-       AND YEAR(DATE_CONDUCTED) = report_year 
-       AND MONTH(DATE_CONDUCTED) = report_month 
-  GROUP BY CLASS_NUMBER
+      SELECT COUNT(*) 
+        INTO class_profiled 
+        FROM rpfp.rpfp_class rc 
+   LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
+       WHERE TYPE_CLASS_ID = 6 
+         AND YEAR(rc.DATE_CONDUCTED) = report_year 
+         AND MONTH(rc.DATE_CONDUCTED) = report_month 
+         AND (
+                QUOTE(lp.REGION_CODE) = QUOTE(psgc_code)
+             OR (IFNULL( psgc_code, 0 ) = 0)
+            )
+    GROUP BY rc.CLASS_NUMBER
     ;
 
     SELECT class_profiled;
 
-    SELECT COUNT(*) 
-      INTO class_total 
-      FROM rpfp.rpfp_class 
-     WHERE YEAR(DATE_CONDUCTED) = report_year 
-       AND MONTH(DATE_CONDUCTED) = report_month 
-  GROUP BY CLASS_NUMBER
+      SELECT COUNT(*) 
+        INTO class_total 
+        FROM rpfp.rpfp_class rc 
+   LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
+         AND YEAR(rc.DATE_CONDUCTED) = report_year 
+         AND MONTH(rc.DATE_CONDUCTED) = report_month 
+         AND (
+                QUOTE(lp.REGION_CODE) = QUOTE(psgc_code)
+             OR (IFNULL( psgc_code, 0 ) = 0)
+            )
+    GROUP BY rc.CLASS_NUMBER
     ;
 
-    SELECT class_total;
+      SELECT class_total;
 
-    SELECT COUNT(*) 
-      INTO wra_4ps 
-      FROM rpfp.individual ic
-      JOIN rpfp.couples apc ON apc.COUPLES_ID = ic.COUPLES_ID
-      JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
-     WHERE ic.SEX = 2 
-       AND apc.IS_ACTIVE = 0
-       AND YEAR(rc.DATE_CONDUCTED) = report_year 
-       AND MONTH(rc.DATE_CONDUCTED) = report_month 
-       AND rc.TYPE_CLASS_ID = 1
+      SELECT TARGET_COUNT
+        FROM target_couples tc
+       WHERE tc.TARGET_YEAR = report_year 
+         AND tc.TARGET_MONTH = report_month
+         AND (
+                QUOTE(tc.PSGC_CODE) = QUOTE(psgc_code)
+             OR (IFNULL( psgc_code, 0 ) = 0)
+            )
+    ;
+
+      SELECT COUNT(*) 
+        INTO wra_4ps 
+        FROM rpfp.individual ic
+   LEFT JOIN rpfp.couples apc ON apc.COUPLES_ID = ic.COUPLES_ID
+   LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
+   LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
+       WHERE ic.SEX = 2 
+         AND apc.IS_ACTIVE = 0
+         AND YEAR(rc.DATE_CONDUCTED) = report_year 
+         AND MONTH(rc.DATE_CONDUCTED) = report_month 
+         AND rc.TYPE_CLASS_ID = 1
+         AND (
+                QUOTE(lp.REGION_CODE) = QUOTE(psgc_code)
+             OR (IFNULL( psgc_code, 0 ) = 0)
+            )
        ;
 
-    SELECT wra_4ps;
+      SELECT wra_4ps;
 
-    SELECT COUNT(*) 
-      INTO wra_non4ps 
-      FROM rpfp.individual ic
- LEFT JOIN rpfp.couples apc ON apc.COUPLES_ID = ic.COUPLES_ID
- LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
-     WHERE ic.SEX = 2 
-       AND apc.IS_ACTIVE = 0
-       AND YEAR(rc.DATE_CONDUCTED) = report_year 
-       AND MONTH(rc.DATE_CONDUCTED) = report_month 
-       AND rc.TYPE_CLASS_ID = 2
-       AND rc.TYPE_CLASS_ID = 7
+      SELECT COUNT(*) 
+        INTO wra_non4ps 
+        FROM rpfp.individual ic
+   LEFT JOIN rpfp.couples apc ON apc.COUPLES_ID = ic.COUPLES_ID
+   LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
+   LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
+       WHERE ic.SEX = 2 
+         AND apc.IS_ACTIVE = 0
+         AND YEAR(rc.DATE_CONDUCTED) = report_year 
+         AND MONTH(rc.DATE_CONDUCTED) = report_month 
+         AND rc.TYPE_CLASS_ID = 2
+         AND rc.TYPE_CLASS_ID = 7
+         AND (
+                QUOTE(lp.REGION_CODE) = QUOTE(psgc_code)
+             OR (IFNULL( psgc_code, 0 ) = 0)
+            )
        ;
 
-    SELECT wra_non4ps;
+      SELECT wra_non4ps;
 
-    SELECT COUNT(*) 
-      INTO wra_usapan 
-      FROM rpfp.individual ic
- LEFT JOIN rpfp.couples apc ON apc.COUPLES_ID = ic.COUPLES_ID
- LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
-     WHERE ic.SEX = 2 
-       AND apc.IS_ACTIVE = 0
-       AND YEAR(rc.DATE_CONDUCTED) = report_year 
-       AND MONTH(rc.DATE_CONDUCTED) = report_month 
-       AND rc.TYPE_CLASS_ID = 4
+      SELECT COUNT(*) 
+        INTO wra_usapan 
+        FROM rpfp.individual ic
+   LEFT JOIN rpfp.couples apc ON apc.COUPLES_ID = ic.COUPLES_ID
+   LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
+   LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
+       WHERE ic.SEX = 2 
+         AND apc.IS_ACTIVE = 0
+         AND YEAR(rc.DATE_CONDUCTED) = report_year 
+         AND MONTH(rc.DATE_CONDUCTED) = report_month 
+         AND rc.TYPE_CLASS_ID = 4
+         AND (
+                QUOTE(lp.REGION_CODE) = QUOTE(psgc_code)
+             OR (IFNULL( psgc_code, 0 ) = 0)
+            )
        ;
 
-    SELECT wra_usapan;
+      SELECT wra_usapan;
 
-    SELECT COUNT(*) 
-      INTO wra_pmc 
-      FROM rpfp.individual ic
- LEFT JOIN rpfp.couples apc ON apc.COUPLES_ID = ic.COUPLES_ID
- LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
-     WHERE ic.SEX = 2 
-       AND apc.IS_ACTIVE = 0
-       AND YEAR(rc.DATE_CONDUCTED) = report_year 
-       AND MONTH(rc.DATE_CONDUCTED) = report_month 
-       AND rc.TYPE_CLASS_ID = 3
+      SELECT COUNT(*) 
+        INTO wra_pmc 
+        FROM rpfp.individual ic
+   LEFT JOIN rpfp.couples apc ON apc.COUPLES_ID = ic.COUPLES_ID
+   LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
+   LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
+       WHERE ic.SEX = 2 
+         AND apc.IS_ACTIVE = 0
+         AND YEAR(rc.DATE_CONDUCTED) = report_year 
+         AND MONTH(rc.DATE_CONDUCTED) = report_month 
+         AND rc.TYPE_CLASS_ID = 3
+         AND (
+                QUOTE(lp.REGION_CODE) = QUOTE(psgc_code)
+             OR (IFNULL( psgc_code, 0 ) = 0)
+            )
        ;
 
-    SELECT wra_pmc;
+      SELECT wra_pmc;
 
-    SELECT COUNT(*) 
-      INTO wra_h2h 
-      FROM rpfp.individual ic
- LEFT JOIN rpfp.couples apc ON apc.COUPLES_ID = ic.COUPLES_ID
- LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
-     WHERE ic.SEX = 2 
-       AND apc.IS_ACTIVE = 0
-       AND YEAR(rc.DATE_CONDUCTED) = report_year 
-       AND MONTH(rc.DATE_CONDUCTED) = report_month 
-       AND rc.TYPE_CLASS_ID = 5
+      SELECT COUNT(*) 
+        INTO wra_h2h 
+        FROM rpfp.individual ic
+   LEFT JOIN rpfp.couples apc ON apc.COUPLES_ID = ic.COUPLES_ID
+   LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
+   LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
+       WHERE ic.SEX = 2 
+         AND apc.IS_ACTIVE = 0
+         AND YEAR(rc.DATE_CONDUCTED) = report_year 
+         AND MONTH(rc.DATE_CONDUCTED) = report_month 
+         AND rc.TYPE_CLASS_ID = 5
+         AND (
+                QUOTE(lp.REGION_CODE) = QUOTE(psgc_code)
+             OR (IFNULL( psgc_code, 0 ) = 0)
+            )
        ;
 
-    SELECT wra_h2h;
+      SELECT wra_h2h;
 
-    SELECT COUNT(*) 
-      INTO wra_profiled
-      FROM rpfp.individual ic
- LEFT JOIN rpfp.couples apc ON apc.COUPLES_ID = ic.COUPLES_ID
- LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
-     WHERE ic.SEX = 2 
-       AND apc.IS_ACTIVE = 0
-       AND YEAR(rc.DATE_CONDUCTED) = report_year 
-       AND MONTH(rc.DATE_CONDUCTED) = report_month 
-       AND rc.TYPE_CLASS_ID = 6
+      SELECT COUNT(*) 
+        INTO wra_profiled
+        FROM rpfp.individual ic
+   LEFT JOIN rpfp.couples apc ON apc.COUPLES_ID = ic.COUPLES_ID
+   LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
+   LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
+       WHERE ic.SEX = 2 
+         AND apc.IS_ACTIVE = 0
+         AND YEAR(rc.DATE_CONDUCTED) = report_year 
+         AND MONTH(rc.DATE_CONDUCTED) = report_month 
+         AND rc.TYPE_CLASS_ID = 6
+         AND (
+                QUOTE(lp.REGION_CODE) = QUOTE(psgc_code)
+             OR (IFNULL( psgc_code, 0 ) = 0)
+            )
        ;
 
-    SELECT wra_profiled;
+      SELECT wra_profiled;
 
-    SELECT COUNT(*) 
-      INTO wra_total 
-      FROM rpfp.individual ic
- LEFT JOIN rpfp.couples apc ON apc.COUPLES_ID = ic.COUPLES_ID
- LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
-     WHERE ic.SEX = 2 
-       AND apc.IS_ACTIVE = 0
-       AND YEAR(rc.DATE_CONDUCTED) = report_year 
-       AND MONTH(rc.DATE_CONDUCTED) = report_month 
+      SELECT COUNT(*) 
+        INTO wra_total 
+        FROM rpfp.individual ic
+   LEFT JOIN rpfp.couples apc ON apc.COUPLES_ID = ic.COUPLES_ID
+   LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
+   LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
+       WHERE ic.SEX = 2 
+         AND apc.IS_ACTIVE = 0
+         AND YEAR(rc.DATE_CONDUCTED) = report_year 
+         AND MONTH(rc.DATE_CONDUCTED) = report_month 
+         AND (
+                QUOTE(lp.REGION_CODE) = QUOTE(psgc_code)
+             OR (IFNULL( psgc_code, 0 ) = 0)
+            )
        ;
 
-    SELECT wra_total;
+      SELECT wra_total;
 
-    SELECT COUNT(*) 
-      INTO solo_male 
-      FROM rpfp.individual ic
- LEFT JOIN rpfp.couples apc ON apc.COUPLES_ID = ic.COUPLES_ID
- LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
-     WHERE ic.SEX = 1 
-       AND apc.IS_ACTIVE = 0
-       AND YEAR(rc.DATE_CONDUCTED) = report_year 
-       AND MONTH(rc.DATE_CONDUCTED) = report_month 
+      SELECT COUNT(*) 
+        INTO solo_male 
+        FROM rpfp.individual ic
+   LEFT JOIN rpfp.couples apc ON apc.COUPLES_ID = ic.COUPLES_ID
+   LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
+   LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
+       WHERE ic.SEX = 1 
+         AND apc.IS_ACTIVE = 0
+         AND YEAR(rc.DATE_CONDUCTED) = report_year 
+         AND MONTH(rc.DATE_CONDUCTED) = report_month 
+         AND (
+                QUOTE(lp.REGION_CODE) = QUOTE(psgc_code)
+             OR (IFNULL( psgc_code, 0 ) = 0)
+            )
        ;
 
-    SELECT solo_male;
+      SELECT solo_male;
 
-    SELECT COUNT(*) 
-      INTO solo_female 
-      FROM rpfp.individual ic
- LEFT JOIN rpfp.couples apc ON apc.COUPLES_ID = ic.COUPLES_ID
- LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
-     WHERE ic.SEX = 2
-       AND apc.IS_ACTIVE = 0
-       AND YEAR(rc.DATE_CONDUCTED) = report_year 
-       AND MONTH(rc.DATE_CONDUCTED) = report_month 
+      SELECT COUNT(*) 
+        INTO solo_female 
+        FROM rpfp.individual ic
+   LEFT JOIN rpfp.couples apc ON apc.COUPLES_ID = ic.COUPLES_ID
+   LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
+   LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
+       WHERE ic.SEX = 2
+         AND apc.IS_ACTIVE = 0
+         AND YEAR(rc.DATE_CONDUCTED) = report_year 
+         AND MONTH(rc.DATE_CONDUCTED) = report_month 
+         AND (
+                QUOTE(lp.REGION_CODE) = QUOTE(psgc_code)
+             OR (IFNULL( psgc_code, 0 ) = 0)
+            )
        ;
 
-    SELECT solo_female;
+      SELECT solo_female;
 
-    SELECT COUNT(*) 
-      INTO couple_attendee 
-      FROM rpfp.individual ic
- LEFT JOIN rpfp.couples apc ON apc.COUPLES_ID = ic.COUPLES_ID
- LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
-     WHERE apc.IS_ACTIVE = 0
-       AND YEAR(rc.DATE_CONDUCTED) = report_year 
-       AND MONTH(rc.DATE_CONDUCTED) = report_month 
+      SELECT COUNT(*) 
+        INTO couple_attendee 
+        FROM rpfp.individual ic
+   LEFT JOIN rpfp.couples apc ON apc.COUPLES_ID = ic.COUPLES_ID
+   LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
+   LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
+       WHERE apc.IS_ACTIVE = 0
+         AND YEAR(rc.DATE_CONDUCTED) = report_year 
+         AND MONTH(rc.DATE_CONDUCTED) = report_month 
+         AND (
+                QUOTE(lp.REGION_CODE) = QUOTE(psgc_code)
+             OR (IFNULL( psgc_code, 0 ) = 0)
+            )
        ;
 
-    SELECT couple_attendee;
+      SELECT couple_attendee;
 
-    SELECT COUNT(*) 
-      INTO reached_total 
-      FROM rpfp.couples apc
- LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = rc.RPFP_CLASS_ID
-     WHERE apc.IS_ACTIVE = 0
-       AND YEAR(rc.DATE_CONDUCTED) = report_year 
-       AND MONTH(rc.DATE_CONDUCTED) = report_month  
+      SELECT COUNT(*) 
+        INTO reached_total 
+        FROM rpfp.couples apc
+   LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = rc.RPFP_CLASS_ID
+   LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
+       WHERE apc.IS_ACTIVE = 0
+         AND YEAR(rc.DATE_CONDUCTED) = report_year 
+         AND MONTH(rc.DATE_CONDUCTED) = report_month  
+         AND (
+                QUOTE(lp.REGION_CODE) = QUOTE(psgc_code)
+             OR (IFNULL( psgc_code, 0 ) = 0)
+            )
        ;
 
-    SELECT reached_total;
+      SELECT reached_total;
 
         INSERT INTO rpfp.report_demandgen (
                 DEMANDGEN_ID,
@@ -1944,19 +2037,13 @@ DECLARE total_unmet INT;
 DECLARE total_served INT;
 DECLARE report_scope VARCHAR(100);
 
-    IF ( IFNULL( psgc_code, 0 ) = 0 ) THEN
-        SET report_scope = "";
-    ELSE
-        SET report_scope = "AND PSGC_CODE = " + psgc_code;
-    END IF
-    ;
-
     SELECT COUNT(*) 
       INTO unmet_modern_tm 
       FROM rpfp.individual ic
  LEFT JOIN rpfp.couples apc ON apc.COUPLES_ID = ic.COUPLES_ID
  LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
  LEFT JOIN rpfp.fp_details fd ON fd.COUPLES_ID = ic.COUPLES_ID
+ LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
      WHERE ic.SEX = 2 
        AND ic.AGE >= 15
        AND ic.AGE <= 49
@@ -1965,6 +2052,10 @@ DECLARE report_scope VARCHAR(100);
        AND MONTH(rc.DATE_CONDUCTED) = report_month 
        AND fd.TFP_TYPE_ID > 0
        AND fd.TFP_TYPE_ID < 6
+         AND (
+                QUOTE(lp.REGION_CODE) = QUOTE(psgc_code)
+             OR (IFNULL( psgc_code, 0 ) = 0)
+            )
        ;
 
     SELECT COUNT(*)
@@ -1973,6 +2064,7 @@ DECLARE report_scope VARCHAR(100);
  LEFT JOIN rpfp.couples apc ON apc.COUPLES_ID = ic.COUPLES_ID
  LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
  LEFT JOIN rpfp.fp_details fd ON fd.COUPLES_ID = ic.COUPLES_ID
+ LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
      WHERE ic.SEX = 2 
        AND ic.AGE >= 15
        AND ic.AGE <= 49
@@ -1981,14 +2073,25 @@ DECLARE report_scope VARCHAR(100);
        AND MONTH(rc.DATE_CONDUCTED) = report_month 
        AND fd.TFP_TYPE_ID = 6
        AND fd.TFP_STATUS_ID = 1
+         AND (
+                QUOTE(lp.REGION_CODE) = QUOTE(psgc_code)
+             OR (IFNULL( psgc_code, 0 ) = 0)
+            )
        ;
 
     SELECT COUNT(*)
       INTO served_modern 
       FROM rpfp.fp_service fs
+ LEFT JOIN rpfp.couples apc ON apc.COUPLES_ID = fs.COUPLES_ID
+ LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
+ LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
      WHERE fs.IS_PROVIDED_SERVICE = 1
        AND YEAR(fs.DATE_SERVED) = report_year 
        AND MONTH(fs.DATE_SERVED) = report_month
+         AND (
+                QUOTE(lp.REGION_CODE) = QUOTE(psgc_code)
+             OR (IFNULL( psgc_code, 0 ) = 0)
+            )
        ;
 
     SELECT COUNT(*)
@@ -1997,6 +2100,7 @@ DECLARE report_scope VARCHAR(100);
  LEFT JOIN rpfp.couples apc ON apc.COUPLES_ID = ic.COUPLES_ID
  LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
  LEFT JOIN rpfp.fp_details fd ON fd.COUPLES_ID = ic.COUPLES_ID
+ LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
      WHERE ic.SEX = 2 
        AND ic.AGE >= 15
        AND ic.AGE <= 49
@@ -2006,6 +2110,10 @@ DECLARE report_scope VARCHAR(100);
        AND fd.TFP_TYPE_ID > 0
        AND fd.TFP_TYPE_ID < 6
        AND fd.TFP_STATUS_ID > 1
+         AND (
+                QUOTE(lp.REGION_CODE) = QUOTE(psgc_code)
+             OR (IFNULL( psgc_code, 0 ) = 0)
+            )
        ;
 
     SELECT COUNT(*)
@@ -2014,6 +2122,7 @@ DECLARE report_scope VARCHAR(100);
  LEFT JOIN rpfp.couples apc ON apc.COUPLES_ID = ic.COUPLES_ID
  LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
  LEFT JOIN rpfp.fp_details fd ON fd.COUPLES_ID = ic.COUPLES_ID
+ LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
      WHERE ic.SEX = 2 
        AND ic.AGE >= 15
        AND ic.AGE <= 49
@@ -2023,6 +2132,10 @@ DECLARE report_scope VARCHAR(100);
        AND fd.TFP_TYPE_ID > 0
        AND fd.TFP_TYPE_ID < 6
        AND fd.TFP_STATUS_ID = 1
+         AND (
+                QUOTE(lp.REGION_CODE) = QUOTE(psgc_code)
+             OR (IFNULL( psgc_code, 0 ) = 0)
+            )
        ;
 
     SELECT COUNT(*)
@@ -2032,6 +2145,7 @@ DECLARE report_scope VARCHAR(100);
  LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
  LEFT JOIN rpfp.fp_details fd ON fd.COUPLES_ID = ic.COUPLES_ID
  LEFT JOIN rpfp.fp_service fs ON fs.COUPLES_ID = ic.COUPLES_ID
+ LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
      WHERE ic.SEX = 2 
        AND ic.AGE >= 15
        AND ic.AGE <= 49
@@ -2042,6 +2156,10 @@ DECLARE report_scope VARCHAR(100);
        AND fs.IS_PROVIDED_SERVICE = 1
        AND YEAR(fs.DATE_SERVED) = report_year 
        AND MONTH(fs.DATE_SERVED) = report_month
+         AND (
+                QUOTE(lp.REGION_CODE) = QUOTE(psgc_code)
+             OR (IFNULL( psgc_code, 0 ) = 0)
+            )
        ;
 
        SET total_unmet = unmet_modern_tm + unmet_modern_nm;
@@ -2107,131 +2225,196 @@ DECLARE served_lam INT;
 DECLARE total_served INT;
 DECLARE report_scope VARCHAR(100);
 
-    IF ( IFNULL( psgc_code, 0 ) = 0 ) THEN
-        SET report_scope = "";
-    ELSE
-        SET report_scope = "AND PSGC_CODE = " + psgc_code;
-    END IF
-    ;
-
     SELECT COUNT(*)
       INTO served_condom 
       FROM rpfp.couples apc
  LEFT JOIN rpfp.fp_service fs ON fs.COUPLES_ID = apc.COUPLES_ID
+ LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
+ LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
      WHERE apc.IS_ACTIVE = 0
        AND YEAR(fs.DATE_SERVED) = report_year 
        AND MONTH(fs.DATE_SERVED) = report_month
        AND fs.FP_SERVED_ID = 1
+         AND (
+                QUOTE(lp.REGION_CODE) = QUOTE(psgc_code)
+             OR (IFNULL( psgc_code, 0 ) = 0)
+            )
        ;
 
     SELECT COUNT(*) 
       INTO served_iud 
       FROM rpfp.couples apc
  LEFT JOIN rpfp.fp_service fs ON fs.COUPLES_ID = apc.COUPLES_ID
+ LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
+ LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
      WHERE apc.IS_ACTIVE = 0
        AND YEAR(fs.DATE_SERVED) = report_year 
        AND MONTH(fs.DATE_SERVED) = report_month
        AND fs.FP_SERVED_ID = 2
+         AND (
+                QUOTE(lp.REGION_CODE) = QUOTE(psgc_code)
+             OR (IFNULL( psgc_code, 0 ) = 0)
+            )
        ;
 
     SELECT COUNT(*)
       INTO served_pills 
       FROM rpfp.couples apc
  LEFT JOIN rpfp.fp_service fs ON fs.COUPLES_ID = apc.COUPLES_ID
+ LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
+ LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
      WHERE apc.IS_ACTIVE = 0
        AND YEAR(fs.DATE_SERVED) = report_year 
        AND MONTH(fs.DATE_SERVED) = report_month
        AND fs.FP_SERVED_ID = 3
+         AND (
+                QUOTE(lp.REGION_CODE) = QUOTE(psgc_code)
+             OR (IFNULL( psgc_code, 0 ) = 0)
+            )
        ;
 
     SELECT COUNT(*)
       INTO served_injectables 
       FROM rpfp.couples apc
  LEFT JOIN rpfp.fp_service fs ON fs.COUPLES_ID = apc.COUPLES_ID
+ LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
+ LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
      WHERE apc.IS_ACTIVE = 0
        AND YEAR(fs.DATE_SERVED) = report_year 
        AND MONTH(fs.DATE_SERVED) = report_month
        AND fs.FP_SERVED_ID = 4
+         AND (
+                QUOTE(lp.REGION_CODE) = QUOTE(psgc_code)
+             OR (IFNULL( psgc_code, 0 ) = 0)
+            )
        ;
 
     SELECT COUNT(*)
       INTO served_nsv 
       FROM rpfp.couples apc
  LEFT JOIN rpfp.fp_service fs ON fs.COUPLES_ID = apc.COUPLES_ID
+ LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
+ LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
      WHERE apc.IS_ACTIVE = 0
        AND YEAR(fs.DATE_SERVED) = report_year 
        AND MONTH(fs.DATE_SERVED) = report_month
        AND fs.FP_SERVED_ID = 5
+         AND (
+                QUOTE(lp.REGION_CODE) = QUOTE(psgc_code)
+             OR (IFNULL( psgc_code, 0 ) = 0)
+            )
        ;
 
     SELECT COUNT(*)
       INTO served_btl 
       FROM rpfp.couples apc
  LEFT JOIN rpfp.fp_service fs ON fs.COUPLES_ID = apc.COUPLES_ID
+ LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
+ LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
      WHERE apc.IS_ACTIVE = 0
        AND YEAR(fs.DATE_SERVED) = report_year 
        AND MONTH(fs.DATE_SERVED) = report_month
        AND fs.FP_SERVED_ID = 6
+         AND (
+                QUOTE(lp.REGION_CODE) = QUOTE(psgc_code)
+             OR (IFNULL( psgc_code, 0 ) = 0)
+            )
        ;
 
     SELECT COUNT(*) 
       INTO served_implant 
       FROM rpfp.couples apc
  LEFT JOIN rpfp.fp_service fs ON fs.COUPLES_ID = apc.COUPLES_ID
+ LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
+ LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
      WHERE apc.IS_ACTIVE = 0
        AND YEAR(fs.DATE_SERVED) = report_year 
        AND MONTH(fs.DATE_SERVED) = report_month
        AND fs.FP_SERVED_ID = 7
+         AND (
+                QUOTE(lp.REGION_CODE) = QUOTE(psgc_code)
+             OR (IFNULL( psgc_code, 0 ) = 0)
+            )
        ;
 
     SELECT COUNT(*)
       INTO served_cmm 
       FROM rpfp.couples apc
  LEFT JOIN rpfp.fp_service fs ON fs.COUPLES_ID = apc.COUPLES_ID
+ LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
+ LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
      WHERE apc.IS_ACTIVE = 0
        AND YEAR(fs.DATE_SERVED) = report_year 
        AND MONTH(fs.DATE_SERVED) = report_month
        AND fs.FP_SERVED_ID = 8
+         AND (
+                QUOTE(lp.REGION_CODE) = QUOTE(psgc_code)
+             OR (IFNULL( psgc_code, 0 ) = 0)
+            )
        ;
 
     SELECT COUNT(*)
       INTO served_bbt 
       FROM rpfp.couples apc
  LEFT JOIN rpfp.fp_service fs ON fs.COUPLES_ID = apc.COUPLES_ID
+ LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
+ LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
      WHERE apc.IS_ACTIVE = 0
        AND YEAR(fs.DATE_SERVED) = report_year 
        AND MONTH(fs.DATE_SERVED) = report_month
        AND fs.FP_SERVED_ID = 9
+         AND (
+                QUOTE(lp.REGION_CODE) = QUOTE(psgc_code)
+             OR (IFNULL( psgc_code, 0 ) = 0)
+            )
        ;
 
     SELECT COUNT(*)
       INTO served_symptothermal 
       FROM rpfp.couples apc
  LEFT JOIN rpfp.fp_service fs ON fs.COUPLES_ID = apc.COUPLES_ID
+ LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
+ LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
      WHERE apc.IS_ACTIVE = 0
        AND YEAR(fs.DATE_SERVED) = report_year 
        AND MONTH(fs.DATE_SERVED) = report_month
        AND fs.FP_SERVED_ID = 10
+         AND (
+                QUOTE(lp.REGION_CODE) = QUOTE(psgc_code)
+             OR (IFNULL( psgc_code, 0 ) = 0)
+            )
        ;
 
     SELECT COUNT(*)
       INTO served_sdm 
       FROM rpfp.couples apc
  LEFT JOIN rpfp.fp_service fs ON fs.COUPLES_ID = apc.COUPLES_ID
+ LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
+ LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
      WHERE apc.IS_ACTIVE = 0
        AND YEAR(fs.DATE_SERVED) = report_year 
        AND MONTH(fs.DATE_SERVED) = report_month
        AND fs.FP_SERVED_ID = 11
+         AND (
+                QUOTE(lp.REGION_CODE) = QUOTE(psgc_code)
+             OR (IFNULL( psgc_code, 0 ) = 0)
+            )
        ;
 
     SELECT COUNT(*)
       INTO served_lam 
       FROM rpfp.couples apc
  LEFT JOIN rpfp.fp_service fs ON fs.COUPLES_ID = apc.COUPLES_ID
+ LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
+ LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
      WHERE apc.IS_ACTIVE = 0
        AND YEAR(fs.DATE_SERVED) = report_year 
        AND MONTH(fs.DATE_SERVED) = report_month
        AND fs.FP_SERVED_ID = 12
+         AND (
+                QUOTE(lp.REGION_CODE) = QUOTE(psgc_code)
+             OR (IFNULL( psgc_code, 0 ) = 0)
+            )
        ;
 
         INSERT INTO rpfp.report_served_method_mix (
