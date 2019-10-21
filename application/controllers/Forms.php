@@ -325,6 +325,7 @@ class Forms extends CI_Controller
 
     public function checkDuplicate()
     {
-        echo 343;
+        $count = 1;
+        echo json_encode($count);
     }
 }

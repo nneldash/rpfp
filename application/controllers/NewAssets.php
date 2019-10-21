@@ -187,4 +187,22 @@ class NewAssets extends CI_Controller
         header('Content-Type: application/javascript');
         readfile(BASEPATH . XLSX_JS);
     }
+
+    public function inputMaskJs()
+    {
+        header('Content-Type: application/javascript');
+        readfile(BASEPATH . INPUTMASK_JS);
+    }
+
+    public function jqueryMaskJs()
+    {
+        header('Content-Type: application/javascript');
+        readfile(BASEPATH . JQUERYINPUT_JS);
+    }
+
+    public function inputExtJs()
+    {
+        header('Content-Type: application/javascript');
+        readfile(BASEPATH . INPUTEXT_JS);
+    }
 }

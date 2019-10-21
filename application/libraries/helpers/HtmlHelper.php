@@ -35,6 +35,31 @@ class HtmlHelper
             }
         }
     }
+
+    public static function inputMaskPdf($is_pdf, $field, $type, $name, $class, $mask, $returnIfEmpty = "")
+    {
+        $date = "";        
+        if (!$is_pdf) {
+            $data = array(
+                "name" => $name,
+                "value" => (
+                    ($type == "date") ? $date : $field
+                ),
+                "class" => $class,
+                "type" => $type,
+                "data-inputmask" => $mask
+            );
+            return form_input($data);
+        } else {
+            if (empty($field) && !empty($returnIfEmpty)) {
+                return returnIfEmpty;
+            } else {
+                return (
+                    ($type == "date") ? $field : $field
+                );
+            }
+        }
+    }
     
     public static function checkBox($is_pdf, $field, $value, $name)
     {
