@@ -500,6 +500,13 @@ iframe {
     background: #e7eaea;
     box-shadow: 0px 10px 9px rgba(0, 0, 0, 0.4);
 }
+.navbar-default 
+.navbar-nav>li>a:focus, 
+.navbar-default 
+.navbar-nav>li>a:hover {
+    color: #fff;
+    border-bottom: 3px solid #fed205;
+}
 
 /*------------------------------------------------------------------
 [ Custom CSS ]*/
