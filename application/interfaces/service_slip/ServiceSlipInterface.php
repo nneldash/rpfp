@@ -21,6 +21,12 @@ abstract class ServiceSlipInterface extends BaseInterface
     /** @var string */
     public $MethodUsed;
 
+    /** @var string */
+    public $CounseledToUse;
+
+    /** @var string */
+    public $OtherReasons;
+
     /** @var DateTime */
     public $DateOfMethod;
 

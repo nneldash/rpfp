@@ -183,6 +183,8 @@ class Forms extends CI_Controller
         $slip->ClientName = $this->input->post('client_name');
         $slip->ClientAddress = $this->input->post('client_address');
         $slip->MethodUsed = $this->input->post('method');
+        $slip->CounseledToUse = $this->input->post('counseled_to_used');
+        $slip->OtherReasons = $this->input->post('other_reason');
         $slip->DateOfMethod = $this->input->post('date_of_method');
         $slip->ClientAdvised = $this->input->post('client_advised');
         $slip->ReferralFacility = $this->input->post('referral_facility');
@@ -231,8 +233,12 @@ class Forms extends CI_Controller
 
     public function serviceSlip()
     {
+        $this->load->model('FormModel');
+
+        $serviceSlip = $this->FormModel->getServiceSlip();
+
         $header['title'] = 'RPFP Online | Service Slip';
-        $this->load->view('forms/serviceSlip', array('is_pdf' => false));
+        $this->load->view('forms/serviceSlip', array('slip' => $serviceSlip, 'is_pdf' => false));
     }
 
     public function viewform1()

@@ -114,6 +114,8 @@ class FormModel extends BaseModel
             $data->ClientName == N_A ? BLANK : $data->ClientName,
             $data->ClientAddress == N_A ? BLANK : $data->ClientAddress,
             $data->MethodUsed == N_A ? BLANK : $data->MethodUsed,
+            $data->CounseledToUse == N_A ? BLANK : $data->CounseledToUse,
+            $data->OtherReasons == N_A ? BLANK : $data->OtherReasons,
             $data->DateOfMethod == N_A ? BLANK : $data->DateOfMethod->format('Y-m-d'),
             $data->ReferralFacility == N_A ? BLANK : $data->ReferralFacility,
 
@@ -124,6 +126,25 @@ class FormModel extends BaseModel
         ];
 
         return $this->saveToDb($method, $params);
+    }
+
+    public function getServiceSlip() : ServiceSlipInterface
+    {
+        $slip = new ServiceSlipClass();
+
+        $slip->Id = '1';
+        $slip->DateOfVisit = '10/21/2019';
+        $slip->ClientName = 'CHOU FAN';
+        $slip->ClientAddress = 'Mandaluyong City';
+        $slip->MethodUsed = 'SDM';
+        $slip->CounseledToUse = '1';
+        $slip->OtherReasons = '2';
+        $slip->DateOfMethod = '10/21/2019';
+        $slip->ClientAdvised = 'OK';
+        $slip->ReferralFacility = 'CLAUDE GUSION';
+        $slip->Name = 'CHOU FAN';
+
+        return $slip;
     }
 
     public function getForm1(): FormInterface
