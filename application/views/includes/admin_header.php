@@ -41,6 +41,38 @@
                         <div class="clearfix"></div>
                         <br />
                         <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
+                            <!-- ENCODER MENU -->
+                            <!-- <div class="menu_section">
+                                <ul class="nav side-menu">
+                                    <li>
+                                        <a href="<?= base_url('forms')?>">
+                                            <i class="fa fa-plus"></i> Add Couple
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="<?= base_url('menu')?>">
+                                            <i class="fa fa-hourglass-start"></i> Service Slip
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="<?= base_url('menu/approve')?>">
+                                            <i class="fa fa-thumbs-o-up"></i> Search Form 1
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="<?= base_url('menu/summary')?>">
+                                            <i class="fa fa-file-text-o"></i> Accomp. Report
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="<?= base_url('login/logoffUser')?>">
+                                            <i class="fa fa-sign-out"></i> Logout
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div> -->
+                            <!-- END ENCODER MENU -->
+                            <!-- PMED MENU -->
                             <div class="menu_section">
                                 <ul class="nav side-menu">
                                     <li>
@@ -81,6 +113,7 @@
                                     </li>
                                 </ul>
                             </div>
+                            <!-- END PMED MENU -->
                         </div>
                     </div>
                 </div>

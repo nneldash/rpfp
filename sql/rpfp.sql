@@ -582,30 +582,17 @@ END$$
 
 /** LIBRARIES */
 CREATE DEFINER=root@localhost PROCEDURE lib_get_full_location(
-    IN  LOCATION_ID INT,
-    OUT LOCATION_NAME VARCHAR(100),
-    OUT MUNICIPALITY_ID INT,
-    OUT MUNICIPALITY_NAME VARCHAR(100),
-    OUT PROVINCE_ID INT,
-    OUT PROVINCE_NAME VARCHAR(100),
-    OUT REGION_ID INT,
-    OUT REGION_NAME VARCHAR(100)
+    IN  LOCATION_ID INT
     )   READS SQL DATA
 BEGIN
-     SELECT reg.REGION_CODE,
-            reg.LOCATION_DESCRIPTION,
-            prov.PROVINCE_CODE,
-            prov.LOCATION_DESCRIPTION,
-            city.MUNICIPALITY_CODE,
-            city.LOCATION_DESCRIPTION,
-            brgy.LOCATION_DESCRIPTION
-       INTO REGION_ID,
-            REGION_NAME,
-            PROVINCE_ID,
-            PROVINCE_NAME,
-            MUNICIPALITY_ID,
-            MUNICIPALITY_NAME,
-            LOCATION_NAME
+     SELECT reg.REGION_CODE AS region_id,
+            reg.LOCATION_DESCRIPTION AS region_name,
+            prov.PROVINCE_CODE AS province_id,
+            prov.LOCATION_DESCRIPTION AS province_name,
+            city.MUNICIPALITY_CODE AS municipality_id,
+            city.LOCATION_DESCRIPTION AS municipality_name,
+            brgy.PSGC_CODE AS location_code,
+            brgy.LOCATION_DESCRIPTION AS location_name
        FROM rpfp.lib_psgc_locations reg
   LEFT JOIN rpfp.lib_psgc_locations brgy
          ON reg.PSGC_CODE = (brgy.REGION_CODE * POWER( 10, 7 ))
@@ -613,7 +600,7 @@ BEGIN
          ON prov.PSGC_CODE = (brgy.PROVINCE_CODE * POWER( 10, 5 ))
   LEFT JOIN rpfp.lib_psgc_locations city
          ON city.PSGC_CODE = (brgy.MUNICIPALITY_CODE * POWER( 10, 3 ))
-      WHERE brgy.LOCATION_CODE = LOCATION_ID
+      WHERE brgy.PSGC_CODE = LOCATION_ID
       LIMIT 1
     ;
 END$$
@@ -2688,6 +2675,8 @@ GRANT EXECUTE ON PROCEDURE rpfp.profile_set_role TO 'itdmu';
 GRANT EXECUTE ON PROCEDURE rpfp.profile_set_scope TO 'itdmu';
 GRANT EXECUTE ON PROCEDURE rpfp.profile_save_profile TO 'itdmu';
 
+COMMIT;
+
 -- --------------------------------------------------------
 /**                */
 /** DEFAULT VALUES */
@@ -2702,6 +2691,7 @@ SOURCE ./libraries.sql;
 /** TEST VALUES */
 /** REMOVE THE FOLLOWING LINE IN PRODUCTION */
  SOURCE ./test.sql;
+
 -- --------------------------------------------------------
 
 /** END OF RPFP.SQL */

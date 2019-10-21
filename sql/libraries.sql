@@ -1,3 +1,4 @@
+SELECT "Populating Libraries" AS MESSAGE;
 --
 -- Dumping data for table `lib_type_class`
 --
@@ -98,3 +99,6 @@ INSERT INTO `lib_reason_intending_use` (`REASON_INTENDING_USE_ID`, `REASON_INTEN
 (3, 'Achieving');
 
 -- --------------------------------------------------------
+
+COMMIT;
+SELECT "Done" AS MESSAGE;

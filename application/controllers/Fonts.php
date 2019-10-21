@@ -26,7 +26,7 @@ class Fonts extends CI_Controller
 
         $q_pos = strpos($newParams, '?');
         if($q_pos) {
-            $newParams = substr($newParams, 0, );
+            $newParams = substr($newParams, 0);
         }
 
         header('application/font');

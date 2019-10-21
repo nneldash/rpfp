@@ -11,6 +11,15 @@ html {
     color: #333;
 }
 
+.panel {
+    border-radius: 0;
+}
+.panel-heading {
+    background: transparent!important;
+    border: none!important;
+    padding: 10% 0!important;
+}
+
 /*------------------------------------------------------------------
 [ Font Styles ]*/
 @font-face {
@@ -176,17 +185,18 @@ iframe {
     align-items: center;
     padding: 15px;
     background: darkgreen;
-    background: -webkit-linear-gradient(-135deg, #3E8797, #65AFBF);
+  /*  background: -webkit-linear-gradient(-135deg, #3E8797, #65AFBF);
     background: -webkit-linear-gradient(-135deg, #3E8797, #65AFBF);
     background: -o-linear-gradient(-135deg, #3E8797, #65AFBF);
     background: -moz-linear-gradient(-135deg, #3E8797, #65AFBF);
-    background: linear-gradient(-135deg, #3E8797, #65AFBF);
+    background: linear-gradient(-135deg, #3E8797, #65AFBF);*/
+    /*background: linear-gradient(-300deg, #ffd308, #043c0f);*/
 }
 
 .wrap-login100 {
     width: 960px;
     background: #fff;
-    border-radius: 20px;
+    /*border-radius: 20px;*/
     overflow: hidden;
 
     display: -webkit-box;
@@ -245,7 +255,7 @@ iframe {
     width: 100%;
     background: #e6e6e6;
     height: 50px;
-    border-radius: 25px;
+    border-radius: 0;
     padding: 0 30px 0 68px;
 }
 
@@ -253,22 +263,22 @@ iframe {
 /*------------------------------------------------------------------
 [ Focus ]*/
 .form-control:focus {
-    border-color: #57a7b9!important;
+    border-color: #043c0f!important;
     outline: 0;
-    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px #57a7b9!important;
-    box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px #57a7b9!important;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px #043c0f!important;
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px #043c0f!important;
 }
 .focus-input100 {
     display: block;
     position: absolute;
-    border-radius: 25px;
+    border-radius: 0;
     bottom: 0;
     left: 0;
     z-index: -1;
     width: 100%;
     height: 100%;
     box-shadow: 0px 0px 0px 0px;
-    color: #57a7b9;
+    color: #043c0f;
 }
 
 .input100:focus + .focus-input100 {
@@ -316,7 +326,7 @@ iframe {
 }
 
 .input100:focus + .focus-input100 + .symbol-input100 {
-    color: #57a7b9;
+    color: #043c0f;
     padding-left: 28px;
 }
 
@@ -343,8 +353,8 @@ iframe {
 
     width: 100%;
     height: 50px;
-    border-radius: 25px;
-    background: #57b846;
+    border-radius: 0;
+    background: #59b76b;
     display: -webkit-box;
     display: -webkit-flex;
     display: -moz-box;
@@ -361,7 +371,7 @@ iframe {
 }
 
 .login100-form-btn:hover {
-    background: #333333;
+    background: #006400;
 }
 
 /*------------------------------------------------------------------
@@ -469,7 +479,7 @@ iframe {
 /*------------------------------------------------------------------
 [ Nav Styles ]*/
 .navbar {
-    background: #00b894;
+    background: #043c0f;
     border-bottom: none;
     transition-duration: 0.6s;
 }
@@ -509,6 +519,9 @@ iframe {
 .subheader {
     font-size:15px; 
     font-weight: normal!important;
+}
+.margin-t8p {
+    margin-top: 8%;
 }
 .margin-t12 {
     margin-top: 12px;
