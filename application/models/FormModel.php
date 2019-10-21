@@ -16,6 +16,7 @@ class FormModel extends BaseModel
         $this->CI->load->library('formA/SoloCoupleDisaggregationClass');
         $this->CI->load->library('formA/SoloAttendeesClass');
         $this->CI->load->iface('common/TraditionalStatuses');
+        $this->CI->load->iface('common/Periods');
     }
 
     public function saveForm1(FormInterface $form)
@@ -165,8 +166,8 @@ class FormModel extends BaseModel
         $seminar->ClassNumber = '12345';
         $seminar->Location->Region->Code = 30000000;
         $seminar->Location->Region->Description = 'Central Luzon Region';
-        $seminar->Location->SpecificLocation->Code = 30801001;
-        $seminar->Location->SpecificLocation->Description = 'Bangkal';
+        $seminar->Location->Barangay->Code = 30801001;
+        $seminar->Location->Barangay->Description = 'Bangkal';
         $seminar->DateConducted = '09/10/2019';
 
         return $seminar;

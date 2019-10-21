@@ -213,7 +213,7 @@ $form1 = FormClass::getFormFromVariable($form1);
 								<?php
 		                            echo HtmlHelper::inputPdf(
 		                                $is_pdf,
-		                                $form1->Seminar->Location->SpecificLocation->Description,
+		                                $form1->Seminar->Location->Barangay->Description,
 		                                "text",
 		                                "barangay",
 		                                "padding-l10 underline width-70",
