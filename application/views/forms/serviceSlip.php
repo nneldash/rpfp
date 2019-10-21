@@ -14,6 +14,7 @@ $this->load->library('helpers/HtmlHelper');
 			<div class="col-md-12">
 				<div class="col-md-6 padding-r3p text-left">
 					<p class="small"><b>SERVICE SLIP</b></p>
+					<input type="hidden" name="slip_id">
 				</div>
 				<div class="col-md-6 padding-r3p text-right">
 					<p class="small">
@@ -404,4 +405,4 @@ $this->load->library('helpers/HtmlHelper');
 	</div>
 </div>
 
-<script type="text/javascript" src="<?= base_url('assets/js/form.js')?>"></script>
+<script type="text/javascript" src="<?= base_url('assets/js/serviceSlip.js')?>"></script>

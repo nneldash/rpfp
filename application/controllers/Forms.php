@@ -174,10 +174,11 @@ class Forms extends CI_Controller
 
     public function saveServiceSlip()
     {
-        $couple_id = 1;
+        $couple_id = (!$this->input->post('couple_id') ? 0 : $this->input->post('couple_id'));
         
         $slip = new ServiceSlipClass();
 
+        $slip->Id = $this->input->post('slip_id');
         $slip->DateOfVisit = $this->input->post('date_of_visit');
         $slip->ClientName = $this->input->post('client_name');
         $slip->ClientAddress = $this->input->post('client_address');
@@ -187,12 +188,10 @@ class Forms extends CI_Controller
         $slip->ReferralFacility = $this->input->post('referral_facility');
         $slip->Name = 'NA';
 
-        print_r($this->FormModel->saveServiceSlip($couple_id, $slip));exit;
+        $data = ['is_save' => true];
         if (!$this->FormModel->saveServiceSlip($couple_id, $slip)) {
             $data = ['is_save' => false];
-        } else {
-            $data = ['is_save' => true];
-        }
+        } 
 
         $this->output
             ->set_content_type('application/json')

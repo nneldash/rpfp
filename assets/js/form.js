@@ -7,7 +7,6 @@ $(function() {
   	highlight();
 	inputValid();
 	saveForm1();
-	saveServiceSlip();
 	checkBox();
 
 	checkDuplicate();
@@ -95,43 +94,6 @@ function saveForm1()
 
 		return false;
 	});
-}
-
-function saveServiceSlip()
-{
-	$('.saveServiceSlip').click(function() {
-		const Toast = Swal.mixin({
-			toast: true,
-			position: 'top-end',
-			showConfirmButton: false,
-			timer: 3000
-		});
-
-		var formData = $('#service_slip').serialize();
-		
-		$.ajax({
-			type: 'POST',
-			data: formData,
-			url: base_url + '/forms/saveServiceSlip'
-		}).done(function(result){
-			alert(result);return false;
-			if(result.is_save == true) {
-				Toast.fire({
-					type: 'success',
-					title: 'Service Slip successfully saved!'
-				});
-				// alert('Nixie, ayaw gumana nung Toast.fire');
-			} else {
-				Toast.fire({
-					type: 'error',
-					title: 'An error occurred.'
-				});
-				// alert('Nixie, ayaw gumana nung Toast.fire');
-			}
-		});
-		return false;
-	});
-
 }
 
 function checkBox()

@@ -117,10 +117,10 @@ class FormModel extends BaseModel
             $data->DateOfMethod == N_A ? BLANK : $data->DateOfMethod->format('Y-m-d'),
             $data->ReferralFacility == N_A ? BLANK : $data->ReferralFacility,
 
-            $data->Name->Surname == N_A ? BLANK : $data->Name->Surname,
-            $data->Name->Firstname == N_A ? BLANK : $data->Name->Firstname,
-            $data->Name->Middlename == N_A ? BLANK : $data->Name->Middlename,
-            $data->Name->Extname == N_A ? BLANK : $data->Name->Extname
+            $data->Name == N_A ? BLANK : $data->Name,
+            // $data->Name->Firstname == N_A ? BLANK : $data->Name->Firstname,
+            // $data->Name->Middlename == N_A ? BLANK : $data->Name->Middlename,
+            // $data->Name->Extname == N_A ? BLANK : $data->Name->Extname
         ];
 
         return $this->saveToDb($method, $params);
