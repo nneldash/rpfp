@@ -15,5 +15,5 @@ abstract class LocationInterface extends BaseInterface
     public $City;
     
     /** @var PSGCInterface */
-    public $SpecificLocation;
+    public $Barangay;
 }

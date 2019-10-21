@@ -12,6 +12,14 @@ class SpecificLocation extends LocationInterface
         $this->Region = new PSGC();
         $this->Province = new PSGC();
         $this->City = new PSGC();
-        $this->SpecificLocation = new PSGC();
+        $this->Barangay = new PSGC();
+    }
+
+    public static function getFromVariable($variable) : LocationInterface
+    {
+        if ($variable instanceof LocationInterface) {
+            return $variable;
+        }
+        return new SpecificLocation();
     }
 }

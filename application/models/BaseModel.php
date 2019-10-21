@@ -32,7 +32,8 @@ class BaseModel extends CI_Model
         $params = array(),
         DbInstance &$db = null,
         $libFolder = null
-    ) {
+    ) : ArrayObject
+    {
         $list = new ArrayObject();
         if (!empty($listClass)) {
             $list = new $listClass();
@@ -115,7 +116,6 @@ class BaseModel extends CI_Model
 
     protected function runStoredProcAndGetResults($proc, $params, DbInstance &$db = null, $is_function = false)
     {
-        
         if (empty($proc)) {
             return;
         }
