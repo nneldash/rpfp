@@ -29,7 +29,7 @@ class FormModel extends BaseModel
         foreach ($form->ListCouple as $current_couple) {
             $current_couple = CoupleClass::getFromVariable($current_couple);
             if (!$this->saveCouple($class_id, $current_couple)) {
-                return "yehey!!!";
+                return "may error pa ito";
             }
         }
 
@@ -140,10 +140,12 @@ class FormModel extends BaseModel
         $seminar = new SeminarClass();
 
         $seminar->ClassId = '1';
-        $seminar->TypeOfClass = '4ps';
+        $seminar->TypeOfClass = AllowedSeminarTypes::FOUR_PS;
         $seminar->ClassNumber = '12345';
-        $seminar->Location = '3';
-        $seminar->Location = '1';
+        $seminar->Location->Region->Code = 30000000;
+        $seminar->Location->Region->Description = 'Central Luzon Region';
+        $seminar->Location->SpecificLocation->Code = 30801001;
+        $seminar->Location->SpecificLocation->Description = 'Bangkal';
         $seminar->DateConducted = '09/10/2019';
 
         return $seminar;

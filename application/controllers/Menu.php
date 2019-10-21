@@ -69,4 +69,40 @@ class Menu extends CI_Controller
         $this->load->view('menu/dashboard');
         $this->load->view('includes/admin_footer');
     }
+
+    public function formA()
+    {
+        $header['title'] = 'RPFP Online | Form A Data List';
+
+        $this->load->view('includes/admin_header', $header);
+        $this->load->view('menu/formAMenu');
+        $this->load->view('includes/admin_footer');
+    }
+
+    public function formB()
+    {
+        $header['title'] = 'RPFP Online | Form B Data List';
+
+        $this->load->view('includes/admin_header', $header);
+        $this->load->view('menu/formBMenu');
+        $this->load->view('includes/admin_footer');
+    }
+
+    public function formC()
+    {
+        $header['title'] = 'RPFP Online | Form C Data List';
+
+        $this->load->view('includes/admin_header', $header);
+        $this->load->view('menu/formCMenu');
+        $this->load->view('includes/admin_footer');
+    }
+
+    public function accomplishment()
+    {
+        $header['title'] = 'RPFP Online | Form Accomplishment Report Data List';
+
+        $this->load->view('includes/admin_header', $header);
+        $this->load->view('menu/accompReportMenu');
+        $this->load->view('includes/admin_footer');
+    }
 }

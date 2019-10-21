@@ -275,7 +275,7 @@ input:focus {
 }
 .cont input:checked ~ .checkmark,
 .cont input:checked ~ .smolCheck {
-	background-color: #517aa2;
+	background-color: #076c1b;
 }
 .checkmark:after,
 .smolCheck:after {
@@ -321,12 +321,12 @@ input:focus {
 	color: #fff;
     padding: 12px 37px;
 	border-radius: 0;
-	border: 2px solid #2A3F54;
-	background: #2A3F54;
+	border: 2px solid #076c1b;
+	background: #076c1b;
 }
 .save:hover {
 	background: #fff;
-	color: #2A3F54;
+	color: #076c1b;
 }
 a:hover {
     text-decoration: none;
@@ -347,13 +347,13 @@ a:hover {
 
 .btn-slip {
 	border: 1px solid;
-    background: #2A3F54;
+    background: #076c1b;
     padding: 10px;
     width: 100%;
     color: #fff;
 }
 .btn-slip:hover {
-    color: #2A3F54;
+    color: #076c1b;
     background: #fff;
     border: 1px solid #333;
 }
@@ -368,7 +368,7 @@ a:hover {
 	border-radius: 0!important;
 }
 .modal-header {
-	background: #2A3F54;
+	background: #0a4c17;
 	color: #fff;
 }
 .modal-open .modal {
@@ -386,7 +386,7 @@ a:hover {
 	padding: 10px;
 }
 .dropdown-menu > li > a:hover {
-	background: #5b84ad;
+	background: #82b18c;
 	color: #fff;
 }
 

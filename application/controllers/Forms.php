@@ -323,4 +323,9 @@ class Forms extends CI_Controller
             echo $e->getMessage();
         }
     }
+
+    public function checkDuplicate()
+    {
+        echo 343;
+    }
 }
