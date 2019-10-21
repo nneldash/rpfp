@@ -80,7 +80,7 @@ class BaseModel extends CI_Model
     protected function runQuery(&$db, $query_string, $bind_params = false)
     {
         $queryResult = $db->query($query_string, $bind_params, true);
-        
+
         $err = $db->error();
         if (!empty($err->code)) {
             if (!$queryResult) {
@@ -95,6 +95,7 @@ class BaseModel extends CI_Model
     protected function getRows(&$db, $query_string, $bind_params = false)
     {
         $res = $this->runQuery($db, $query_string, $bind_params);
+
         if (!$res) {
             if ($db->conn_id->more_results()) {
                 $db->conn_id->next_result();
@@ -114,10 +115,11 @@ class BaseModel extends CI_Model
 
     protected function runStoredProcAndGetResults($proc, $params, DbInstance &$db = null, $is_function = false)
     {
+        
         if (empty($proc)) {
             return;
         }
-
+        
         $close_db = false;
         if ($db == null) {
             $close_db = true;
@@ -126,7 +128,7 @@ class BaseModel extends CI_Model
                 return false;
             }
         }
-
+        
         $method = (empty($is_function) ? 'CALL' : 'SELECT') .' rpfp.' . $proc;
         
         $numParams = count($params);
@@ -146,7 +148,7 @@ class BaseModel extends CI_Model
         }
         
         $res = $this->getRows($db->database, $method, $data);
-        
+
         if ($close_db) {
             $db->database->close();
         }
@@ -166,7 +168,7 @@ class BaseModel extends CI_Model
     protected function saveToDb($proc, $params, DbInstance &$db = null)
     {
         $rows = $this->runStoredProcAndGetResults($proc, $params, $db);
-
+        
         if (!empty($rows)) {
             $message = $rows[0]->MESSAGE;
             return $message;

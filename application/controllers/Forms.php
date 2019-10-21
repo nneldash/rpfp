@@ -56,7 +56,7 @@ class Forms extends CI_Controller
 
         $form1->Seminar = $this->getInputFromSeminar();
         $form1->ListCouple = $this->getInputFromListCouples();
-        
+
         $data = ['is_save' => true];
         if(!$this->FormModel->saveForm1($form1)) {
             $data = ['is_save' => false];
@@ -75,7 +75,8 @@ class Forms extends CI_Controller
         $seminar->TypeOfClass->Type = $this->input->post('type_of_class');
         $seminar->TypeOfClass->Others = $this->input->post('others');
         $seminar->ClassNumber = $this->input->post('class_no');
-        $seminar->Location->SpecificLocation->Code = $this->input->post('location');
+        $seminar->Location->Region->Description = $this->input->post('province');
+        $seminar->Location->SpecificLocation->Description = $this->input->post('barangay');
         $seminar->DateConducted = $this->input->post('date_conducted');
 
         return $seminar;
@@ -173,7 +174,7 @@ class Forms extends CI_Controller
 
     public function saveServiceSlip()
     {
-        $couple_id = $this->input->post('couple_id');
+        $couple_id = 1;
         
         $slip = new ServiceSlipClass();
 
@@ -186,6 +187,7 @@ class Forms extends CI_Controller
         $slip->ReferralFacility = $this->input->post('referral_facility');
         $slip->Name = 'NA';
 
+        print_r($this->FormModel->saveServiceSlip($couple_id, $slip));exit;
         if (!$this->FormModel->saveServiceSlip($couple_id, $slip)) {
             $data = ['is_save' => false];
         } else {
