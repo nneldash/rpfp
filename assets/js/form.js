@@ -10,6 +10,8 @@ $(function() {
 	checkBox();
 
 	checkDuplicate();
+
+	Inputmask().mask(".birthAge");
 });
 
 function serviceModal()
@@ -113,15 +115,18 @@ function checkDuplicate()
 		var that1 = 'input[name="name_participant1['+ i +']';
 		var that2 = 'input[name="name_participant2['+ i +']';
 		$(that1).keydown(function(){
-			var fname = $('input[name="name_participant1['+ i +']"]').val();
+			// var name = this.value;
+			// var nameArr = name.split(',');
+   //  		console.log(nameArr);
 
-			$(this).closest('td').attr('data-tip', 'Duplicate Entry');
-			$(this).closest('td').addClass('has-duplicate');
-			$(this).addClass('has-duplicate');
-			
 			$.post(base_url + 'forms/checkDuplicate')
-			.done(function(result){
-				// alert(result);
+			.done(function(result) {
+				if(result == 1) {
+					// alert($(this));
+					// $(this).closest('td').attr('data-tip', 'Duplicate Entry');
+					// $(this).closest('td').addClass('has-duplicate');
+					$(this).addClass('has-duplicate');
+				}
 			});
 		});
 

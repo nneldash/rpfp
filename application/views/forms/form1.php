@@ -159,7 +159,8 @@ $form1 = FormClass::getFormFromVariable($form1);
 								<?php
 		                            echo HtmlHelper::inputPdf(
 		                                $is_pdf,
-		                                $form1->Seminar->Location->Region->Description,
+		                                // $form1->Seminar->Location->Region->Description,
+		                                "",
 		                                "text",
 		                                "province",
 		                                "padding-l10 underline width-70",
@@ -399,15 +400,15 @@ $form1 = FormClass::getFormFromVariable($form1);
 												<input class="check" type="checkbox" name="type_of_class" value="aproveCouple" />
 												<span class="checkmark"></span>
 											</label>
-											<input type="hidden" name="couple_id['.$i.']" />
+											<input type="hidden" name="couple_id['<?= $i; ?>']" />
 										</td>
 									<?php endif; ?>
-									<td class="text-center" style="border-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      left: none" rowspan="2">
+									<td class="text-center" style="border-left: none" rowspan="2">
 										<p class="small"><?= $i + 1; ?></p>
 									</td>
 									
 									<td class="small" style="padding: 5px;">
-									<input type="hidden" name="individual_id1['.$i.']"/>
+										<input type="hidden" name="individual_id1['<?= $i; ?>']"/>
 										<?php
 				                            echo HtmlHelper::inputPdf(
 				                                $is_pdf,
@@ -444,14 +445,14 @@ $form1 = FormClass::getFormFromVariable($form1);
 				                        ?>
 									</td>
 									<td class="small text-center">
-										<?php
-				                            echo HtmlHelper::inputPdf(
+				                        <?php
+				                            echo HtmlHelper::inputMaskPdf(
 				                            	$is_pdf,
 				                            	"",
 				                                "text",
 				                                "age1[".$i."]",
-				                                "text-center",
-				                                ""
+				                                "text-center birthAge",
+				                                "'mask': '99-9999 / 99'"
 				                            );
 				                        ?>
 									</td>
@@ -607,15 +608,15 @@ $form1 = FormClass::getFormFromVariable($form1);
 									</td>
 									<td class="small text-center">
 										<?php
-			                            echo HtmlHelper::inputPdf(
-			                            	$is_pdf,
-			                            	"",
-			                                "text",
-			                                "age2[".$i."]",
-			                                "text-center",
-			                                ""
-			                            );
-			                        ?>
+			                            	echo HtmlHelper::inputMaskPdf(
+				                            	$is_pdf,
+				                            	"",
+				                                "text",
+				                                "age2[".$i."]",
+				                                "text-center birthAge",
+				                                "'mask': '99-9999 / 99'"
+				                            );
+			                        	?>
 									</td>
 									<td class="small text-center">
 										<?php
@@ -849,4 +850,7 @@ $form1 = FormClass::getFormFromVariable($form1);
 
 <?php if(!$is_pdf) : ?>
 	<script type="text/javascript" src="<?= base_url('assets/js/form.js')?>"></script>
+	<script type="text/javascript" src="<?= base_url('NewAssets/inputMaskJs')?>"></script>
+	<script type="text/javascript" src="<?= base_url('NewAssets/jqueryMaskJs')?>"></script>
+	<script type="text/javascript" src="<?= base_url('NewAssets/inputExtJs')?>"></script>
 <?php endif; ?>

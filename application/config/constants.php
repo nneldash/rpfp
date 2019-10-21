@@ -148,3 +148,7 @@ defined('CPEXCEL_JS') or define('CPEXCEL_JS', '/../node_modules/xlsx/dist/cpexce
 defined('SHIM_JS') or define('SHIM_JS', '/../node_modules/xlsx/dist/shim.min.js');
 defined('JSZIP_JS') or define('JSZIP_JS', '/../node_modules/xlsx/dist/jszip.js');
 defined('XLSX_JS') or define('XLSX_JS', '/../node_modules/xlsx/dist/xlsx.js');
+
+defined('INPUTMASK_JS') or define('INPUTMASK_JS', '/../node_modules/inputmask/dist/inputmask/inputmask.js');
+defined('JQUERYINPUT_JS') or define('JQUERYINPUT_JS', '/../node_modules/inputmask/dist/inputmask/jquery.inputmask.js');
+defined('INPUTEXT_JS') or define('INPUTEXT_JS', '/../node_modules/inputmask/dist/inputmask/inputmask.extensions.js');
