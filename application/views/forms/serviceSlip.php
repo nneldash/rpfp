@@ -1,6 +1,8 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 $this->load->library('helpers/HtmlHelper');
+// echo '<pre>';
+// print_r($slip);
 ?>
 
 <div class="body-padding" style="padding-top: 0">
@@ -14,7 +16,7 @@ $this->load->library('helpers/HtmlHelper');
 			<div class="col-md-12">
 				<div class="col-md-6 padding-r3p text-left">
 					<p class="small"><b>SERVICE SLIP</b></p>
-					<input type="hidden" name="slip_id">
+					<input type="hidden" name="slip_id" value="">
 				</div>
 				<div class="col-md-6 padding-r3p text-right">
 					<p class="small">
@@ -23,7 +25,7 @@ $this->load->library('helpers/HtmlHelper');
 							<?php
 	                            echo HtmlHelper::inputPdf(
 	                                $is_pdf,
-	                                "",
+	                                $slip->DateOfVisit,
 	                                "date",
 	                                "date_of_visit",
 	                                "padding-l10 underline width-45",
@@ -51,7 +53,7 @@ $this->load->library('helpers/HtmlHelper');
 					<?php
                         echo HtmlHelper::inputPdf(
                             $is_pdf,
-                            "",
+                            $slip->ClientName,
                             "text",
                             "client_name",
                             "padding-l10 underline",
@@ -70,7 +72,7 @@ $this->load->library('helpers/HtmlHelper');
 					<?php
                         echo HtmlHelper::inputPdf(
                             $is_pdf,
-                            "",
+                            $slip->ClientAddress,
                             "text",
                             "client_address",
                             "padding-l10 underline",
@@ -293,7 +295,7 @@ $this->load->library('helpers/HtmlHelper');
 						<?php
                             echo HtmlHelper::inputPdf(
                                 $is_pdf,
-                                "",
+                                $slip->CounseledToUse,
                                 "text",
                                 "counseled_to_use",
                                 "padding-l10 underline width-20 no4-input",
@@ -314,7 +316,7 @@ $this->load->library('helpers/HtmlHelper');
 						<?php
                             echo HtmlHelper::inputPdf(
                                 $is_pdf,
-                                "",
+                                $slip->OtherReasons,
                                 "text",
                                 "other_reason",
                                 "padding-l10 underline width-45 no5-input",
@@ -349,7 +351,7 @@ $this->load->library('helpers/HtmlHelper');
 						<?php
 	                        echo HtmlHelper::inputPdf(
 	                            $is_pdf,
-	                            "",
+	                            $slip->DateOfMethod,
 	                            "date",
 	                            "date_of_method",
 	                            "padding-l10 underline width-20",
@@ -364,7 +366,7 @@ $this->load->library('helpers/HtmlHelper');
 						<?php
 	                        echo HtmlHelper::inputPdf(
 	                            $is_pdf,
-	                            "",
+	                        	$slip->ClientAdvised,
 	                            "text",
 	                            "client_advised",
 	                            "padding-l10 underline width-20",
@@ -379,7 +381,7 @@ $this->load->library('helpers/HtmlHelper');
 				<?php
                     echo HtmlHelper::inputPdf(
                         $is_pdf,
-                        "",
+                        $slip->ReferralFacility,
                         "text",
                         "referral_facility",
                         "padding-l10 underline width-35",
@@ -392,7 +394,7 @@ $this->load->library('helpers/HtmlHelper');
 				<?php
                     echo HtmlHelper::inputPdf(
                         $is_pdf,
-                        "",
+                        $slip->Name,
                         "text",
                         "referral_facility",
                         "padding-l10 underline width-70 text-center",
