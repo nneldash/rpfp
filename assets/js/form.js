@@ -71,7 +71,7 @@ function saveForm1()
 			timer: 3000
 		});
 		
-		var formData = $(this).serialize();
+		var formData = $('#form_validation').serialize();
 		
 		$.ajax({
 			type: 'POST',
@@ -97,20 +97,22 @@ function saveForm1()
 
 function saveServiceSlip()
 {
-	$('#service_slip').click(function() {
-		var formData = $(this).serialize();
+	$('.saveServiceSlip').click(function() {
 		const Toast = Swal.mixin({
 			toast: true,
 			position: 'top-end',
 			showConfirmButton: false,
 			timer: 3000
 		});
+
+		var formData = $('#service_slip').serialize();
 		
 		$.ajax({
 			type: 'POST',
 			data: formData,
 			url: base_url + '/forms/saveServiceSlip'
 		}).done(function(result){
+			alert(result);return false;
 			if(result.is_save == true) {
 				Toast.fire({
 					type: 'success',

@@ -400,7 +400,7 @@ $form1 = FormClass::getFormFromVariable($form1);
 												<input class="check" type="checkbox" name="type_of_class" value="aproveCouple" />
 												<span class="checkmark"></span>
 											</label>
-											<input type="hidden" name="couple_id" />
+											<input type="hidden" name="couple_id['.$i.']" />
 										</td>
 									<?php endif; ?>
 									<td class="text-center" style="border-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      left: none" rowspan="2">

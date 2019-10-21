@@ -39,7 +39,7 @@ class FormModel extends BaseModel
     public function saveSeminar(SeminarInterface $data)
     {
         $method = "encoder_save_class";
-
+        
         $params = [
             $data->ClassId == N_A ? BLANK : $data->ClassId,
             $data->TypeOfClass->Type == N_A ? BLANK : $data->TypeOfClass->Type,
@@ -48,7 +48,7 @@ class FormModel extends BaseModel
             $data->ClassNumber == N_A ? BLANK : $data->ClassNumber,
             $data->DateConducted == N_A ? BLANK : $data->DateConducted
         ];
-
+        
         return $this->saveToDb($method, $params);
     }
 
@@ -113,7 +113,7 @@ class FormModel extends BaseModel
             $data->DateOfVisit == N_A ? BLANK : $data->DateOfVisit->format('Y-m-d'),
             $data->ClientName == N_A ? BLANK : $data->ClientName,
             $data->ClientAddress == N_A ? BLANK : $data->ClientAddress,
-            $data->Method == N_A ? BLANK : $data->Method,
+            $data->MethodUsed == N_A ? BLANK : $data->MethodUsed,
             $data->DateOfMethod == N_A ? BLANK : $data->DateOfMethod->format('Y-m-d'),
             $data->ReferralFacility == N_A ? BLANK : $data->ReferralFacility,
 

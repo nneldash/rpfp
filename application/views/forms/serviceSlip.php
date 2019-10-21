@@ -404,4 +404,4 @@ $this->load->library('helpers/HtmlHelper');
 	</div>
 </div>
 
-<script type="text/javascript" src="<?= base_url('assets/js/serviceSlip.js')?>"></script>
+<script type="text/javascript" src="<?= base_url('assets/js/form.js')?>"></script>
