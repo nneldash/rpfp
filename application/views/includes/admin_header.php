@@ -76,11 +76,6 @@
                             <div class="menu_section">
                                 <ul class="nav side-menu">
                                     <li>
-                                        <a href="<?= base_url('menu/dashboard')?>">
-                                            <i class="fa fa-dashboard"></i> Dashboard
-                                        </a>
-                                    </li>
-                                    <li>
                                         <a href="<?= base_url('forms')?>">
                                             <i class="fa fa-plus"></i> Add Couple
                                         </a>

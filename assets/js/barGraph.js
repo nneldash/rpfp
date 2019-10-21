@@ -22,6 +22,6 @@ Morris.Bar({
 	xkey: 'region',
 	ykeys: ['value'],
 	labels: ['value'],
-	barColors: ['#2a3e53'],
+	barColors: ['#095017'],
 	xLabelMargin: 10
 });

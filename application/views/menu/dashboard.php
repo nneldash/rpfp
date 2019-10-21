@@ -29,6 +29,12 @@
 	.margin-t7 {
 		margin-top: 7px;
 	}
+	.nav.side-menu>li.active>a {
+	    background: linear-gradient(#355633,#2f572c),#2b542a!important;
+	}
+	.left_col, .nav_title {
+	    background: #095017;
+	}
 </style>
 
 <div class="container margin-t7">

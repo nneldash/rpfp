@@ -110,14 +110,31 @@ function checkDuplicate()
 {
 	var i;
 	for (i = 0; i < 10; i++) {
-		$('input[name="name_participant1['+ i +']"]').keydown(function(){
-			var fname = $('input[name="name_participant['+ i +']"]').val();
+		var that1 = 'input[name="name_participant1['+ i +']';
+		var that2 = 'input[name="name_participant2['+ i +']';
+		$(that1).keydown(function(){
+			var fname = $('input[name="name_participant1['+ i +']"]').val();
 
-			alert(fname);
+			$(this).closest('td').attr('data-tip', 'Duplicate Entry');
+			$(this).closest('td').addClass('has-duplicate');
+			$(this).addClass('has-duplicate');
 			
 			$.post(base_url + 'forms/checkDuplicate')
 			.done(function(result){
-				alert(result);
+				// alert(result);
+			});
+		});
+
+		$(that2).keydown(function(){
+			var fname = $('input[name="name_participant2['+ i +']"]').val();
+
+			$(this).closest('td').attr('data-tip', 'Duplicate Entry');
+			$(this).closest('td').addClass('has-duplicate');
+			$(this).addClass('has-duplicate');
+			
+			$.post(base_url + 'forms/checkDuplicate')
+			.done(function(result){
+				// alert(result);
 			});
 		});
 	}

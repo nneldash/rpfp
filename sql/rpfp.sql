@@ -990,7 +990,8 @@ BEGIN
                     NULL AS ext,
                     NULL AS age,
                     NULL AS sex,
-                    NULL AS birthdate,
+                    NULL AS birth_year,
+                    NULL AS birth_month,
                     NULL AS civil,
                     NULL AS address_no_st,
                     NULL AS address_brgy,
@@ -1012,7 +1013,8 @@ BEGIN
                     ic.EXT_NAME AS ext,
                     ic.AGE AS age,
                     ic.SEX AS sex,
-                    ic.BDATE AS birthdate,
+                    ic.YEAR(BDATE) AS birth_year,
+                    ic.MONTH(BDATE) AS birth_month,
                     ic.CIVIL_ID AS civil,
                     ic.ADDRESS_NO_ST AS address_no_st,
                     ic.ADDRESS_BRGY AS address_brgy,
@@ -1203,6 +1205,46 @@ BEGIN
             ;
         END;
     END IF;
+END$$
+
+CREATE DEFINER=root@localhost PROCEDURE encoder_check_couples_details_m(
+    IN firstname_m VARCHAR(50),
+    IN lastname_m VARCHAR(50),
+    IN extname_m VARCHAR(50),
+    IN birthdate_m DATE
+    )   READS SQL DATA
+BEGIN
+DECLARE check_details_m INT;
+
+      SELECT COUNT(*) 
+        INTO check_details_m
+        FROM rpfp.individual ic 
+       WHERE ic.FNAME = firstname_m 
+         AND ic.LNAME = lastname_m
+         AND ic.EXT_NAME = extname_m
+         AND ic.BDATE = birthdate_m
+    ;
+
+    SELECT check_details_m;
+END$$
+
+CREATE DEFINER=root@localhost PROCEDURE encoder_check_couples_details_f(
+    IN firstname_f VARCHAR(50),
+    IN lastname_f VARCHAR(50),
+    IN birthdate_f DATE
+    )   READS SQL DATA
+BEGIN
+DECLARE check_details_f INT;
+
+      SELECT COUNT(*) 
+        INTO check_details_f
+        FROM rpfp.individual ic 
+       WHERE ic.FNAME = firstname_m 
+         AND ic.LNAME = lastname_m
+         AND ic.BDATE = birthdate_m
+    ;
+
+    SELECT check_details_f;
 END$$
 
 CREATE DEFINER=root@localhost PROCEDURE encoder_save_couple (
@@ -1538,8 +1580,6 @@ BEGIN
     
 END$$
 /** END COUPLES DETAILS */
-
-
 
 /**  APPROVE COUPLES DETAILS  */
 CREATE DEFINER=root@localhost PROCEDURE rdm_approve_couples (
@@ -2465,8 +2505,329 @@ DECLARE report_scope VARCHAR(100);
     SELECT "SUCCESS!" AS MESSAGE;
     
 END$$
-
 /** END PROCESS REPORTS */
+
+/** GET REPORTS */
+CREATE DEFINER=root@localhost PROCEDURE get_report_demandgen_list(
+    IN username VARCHAR(50),
+    IN page_no INT,
+    IN items_per_page INT
+    )   READS SQL DATA
+BEGIN
+    DECLARE name_user VARCHAR(50);
+    DECLARE db_user_name VARCHAR(50);
+    DECLARE read_offset INT;
+
+    CALL rpfp.lib_extract_user_name( username, name_user, db_user_name );
+
+    IF NOT EXISTS (
+         SELECT rd.REPORT_ID
+           FROM rpfp.report_demandgen rd
+      LEFT JOIN rpfp.user_profile up
+             ON up.REGION_CODE = rd.PSGC_CODE
+          WHERE up.DB_USER_ID = name_user
+    ) THEN
+         SELECT NULL AS report_id,
+                NULL AS report_year,
+                NULL AS report_month,
+                NULL AS date_processed
+        ;
+    ELSE
+        IF (IFNULL( page_no, 0) = 0) THEN
+            /** DEFAULT PAGE NO. */
+            SET page_no := 1;
+        END IF;
+        IF (IFNULL( items_per_page, 0) = 0) THEN
+            /** DEFAULT COUNT PER PAGE*/
+            SET items_per_page := 10;
+        END IF;
+
+        SET read_offset := (page_no - 1) * items_per_page;
+         SELECT rd.REPORT_ID AS report_id,
+                rd.REPORT_YEAR AS report_year,
+                rd.REPORT_MONTH AS report_month,
+                rd.DATE_PROCESSED AS date_processed
+           FROM rpfp.report_demandgen rd
+      LEFT JOIN rpfp.user_profile up
+             ON up.REGION_CODE = rd.PSGC_CODE
+          WHERE up.DB_USER_ID = name_user
+       GROUP BY rd.demandgen_id
+       ORDER BY rd.DATE_PROCESSED DESC
+          LIMIT read_offset, items_per_page
+        ;
+    END IF;
+END$$
+
+CREATE DEFINER=root@localhost PROCEDURE get_report_unmet_need_list(
+    IN username VARCHAR(50),
+    IN page_no INT,
+    IN items_per_page INT
+    )   READS SQL DATA
+BEGIN
+    DECLARE name_user VARCHAR(50);
+    DECLARE db_user_name VARCHAR(50);
+    DECLARE read_offset INT;
+
+    CALL rpfp.lib_extract_user_name( username, name_user, db_user_name );
+
+    IF NOT EXISTS (
+         SELECT ru.REPORT_ID
+           FROM rpfp.report_unmet_need ru
+      LEFT JOIN rpfp.user_profile up
+             ON up.REGION_CODE = ru.PSGC_CODE
+          WHERE up.DB_USER_ID = name_user
+    ) THEN
+         SELECT NULL AS report_id,
+                NULL AS report_year,
+                NULL AS report_month,
+                NULL AS date_processed
+        ;
+    ELSE
+        IF (IFNULL( page_no, 0) = 0) THEN
+            /** DEFAULT PAGE NO. */
+            SET page_no := 1;
+        END IF;
+        IF (IFNULL( items_per_page, 0) = 0) THEN
+            /** DEFAULT COUNT PER PAGE*/
+            SET items_per_page := 10;
+        END IF;
+
+        SET read_offset := (page_no - 1) * items_per_page;
+         SELECT ru.REPORT_ID AS report_id,
+                ru.REPORT_YEAR AS report_year,
+                ru.REPORT_MONTH AS report_month,
+                ru.DATE_PROCESSED AS date_processed
+           FROM rpfp.report_unmet_need ru
+      LEFT JOIN rpfp.user_profile up
+             ON up.REGION_CODE = ru.PSGC_CODE
+          WHERE up.DB_USER_ID = name_user
+       GROUP BY ru.unmet_id
+       ORDER BY ru.DATE_PROCESSED DESC
+          LIMIT read_offset, items_per_page
+        ;
+    END IF;
+END$$
+
+CREATE DEFINER=root@localhost PROCEDURE get_report_served_method_mix_list(
+    IN username VARCHAR(50),
+    IN page_no INT,
+    IN items_per_page INT
+    )   READS SQL DATA
+BEGIN
+    DECLARE name_user VARCHAR(50);
+    DECLARE db_user_name VARCHAR(50);
+    DECLARE read_offset INT;
+
+    CALL rpfp.lib_extract_user_name( username, name_user, db_user_name );
+
+    IF NOT EXISTS (
+         SELECT rs.REPORT_ID
+           FROM rpfp.report_served_method_mix rs
+      LEFT JOIN rpfp.user_profile up
+             ON up.REGION_CODE = rs.PSGC_CODE
+          WHERE up.DB_USER_ID = name_user
+    ) THEN
+         SELECT NULL AS report_id,
+                NULL AS report_year,
+                NULL AS report_month,
+                NULL AS date_processed
+        ;
+    ELSE
+        IF (IFNULL( page_no, 0) = 0) THEN
+            /** DEFAULT PAGE NO. */
+            SET page_no := 1;
+        END IF;
+        IF (IFNULL( items_per_page, 0) = 0) THEN
+            /** DEFAULT COUNT PER PAGE*/
+            SET items_per_page := 10;
+        END IF;
+
+        SET read_offset := (page_no - 1) * items_per_page;
+         SELECT rs.REPORT_ID AS report_id,
+                rs.REPORT_YEAR AS report_year,
+                rs.REPORT_MONTH AS report_month,
+                rs.DATE_PROCESSED AS date_processed
+           FROM rpfp.report_served_method_mix rs
+      LEFT JOIN rpfp.user_profile up
+             ON up.REGION_CODE = rs.PSGC_CODE
+          WHERE up.DB_USER_ID = name_user
+       GROUP BY rs.served_id
+       ORDER BY rs.DATE_PROCESSED DESC
+          LIMIT read_offset, items_per_page
+        ;
+    END IF;
+END$$
+/** END GET REPORTS */
+
+/** GET REPORT DETAILS */
+CREATE DEFINER=root@localhost PROCEDURE get_report_demandgen_details(
+    IN demandgen_id INT
+    )   READS SQL DATA
+BEGIN
+    IF NOT EXISTS (
+         SELECT rd.REPORT_ID
+           FROM rpfp.report_demandgen rd
+          WHERE rd.DEMANDGEN_ID = demandgen_id
+    ) THEN
+        BEGIN
+             SELECT NULL AS report_year,
+                    NULL AS psgc_code,
+                    NULL AS report_month,
+                    NULL AS class_4ps,
+                    NULL AS class_non4ps,
+                    NULL AS class_usapan,
+                    NULL AS class_pmc,
+                    NULL AS class_h2h,
+                    NULL AS class_profiled,
+                    NULL AS class_total,
+                    NULL AS target_couples,
+                    NULL AS wra_4ps,
+                    NULL AS wra_non4ps,
+                    NULL AS wra_usapan,
+                    NULL AS wra_pmc,
+                    NULL AS wra_h2h,
+                    NULL AS wra_profiled,
+                    NULL AS wra_total,
+                    NULL AS solo_male,
+                    NULL AS solo_female,
+                    NULL AS couple_attendee,
+                    NULL AS reached_total,
+                    NULL AS date_processed
+            ;
+        END;
+    ELSE
+        BEGIN
+             SELECT rd.REPORT_YEAR AS report_year,
+                    rd.PSGC_CODE AS psgc_code,
+                    rd.REPORT_MONTH AS report_month,
+                    rd.CLASS_4PS AS class_4ps,
+                    rd.CLASS_NON4PS AS class_non4ps,
+                    rd.CLASS_USAPAN AS class_usapan,
+                    rd.CLASS_PMC AS class_pmc,
+                    rd.CLASS_H2H AS class_h2h,
+                    rd.CLASS_PROFILED AS class_profiled,
+                    rd.CLASS_TOTAL AS class_total,
+                    rd.TARGET_COUPLES AS target_couples,
+                    rd.WRA_4PS AS wra_4ps,
+                    rd.WRA_NON4PS AS wra_non4ps,
+                    rd.WRA_USAPAN AS wra_usapan,
+                    rd.WRA_PMC AS wra_pmc,
+                    rd.WRA_H2H AS wra_h2h,
+                    rd.WRA_PROFILED AS wra_profiled,
+                    rd.WRA_TOTAL AS wra_total,
+                    rd.SOLO_MALE AS solo_male,
+                    rd.SOLO_FEMALE AS solo_female,
+                    rd.COUPLE_ATTENDEE AS couple_attendee,
+                    rd.REACHED_TOTAL AS reached_total,
+                    rd.DATE_PROCESSED AS date_processed
+               FROM rpfp.report_demandgen rd
+              WHERE rd.DEMANDGEN_ID = demandgen_id
+           ORDER BY rd.report_id ASC
+            ;
+        END;
+    END IF;
+END$$
+
+CREATE DEFINER=root@localhost PROCEDURE get_report_unmet_need_details(
+    IN unmet_id INT
+    )   READS SQL DATA
+BEGIN
+    IF NOT EXISTS (
+         SELECT ru.REPORT_ID
+           FROM rpfp.report_unmet_need ru
+          WHERE ru.UNMET_ID = unmet_id
+    ) THEN
+        BEGIN
+             SELECT NULL AS report_year,
+                    NULL AS psgc_code,
+                    NULL AS report_month,
+                    NULL AS unmet_modern,
+                    NULL AS served_modern,
+                    NULL AS no_intention,
+                    NULL AS w_intention,
+                    NULL AS served_traditional,
+                    NULL AS total_unmet,
+                    NULL AS total_served,
+                    NULL AS date_processed
+            ;
+        END;
+    ELSE
+        BEGIN
+             SELECT ru.REPORT_YEAR AS report_year,
+                    ru.PSGC_CODE AS psgc_code,
+                    ru.REPORT_MONTH AS report_month,
+                    ru.UNMET_MODERN_FP AS unmet_modern,
+                    ru.SERVED_MODERN_FP AS served_modern,
+                    ru.NO_INTENTION AS no_intention,
+                    ru.W_INTENTION AS w_intention,
+                    ru.SERVED_TRADITIONAL AS served_traditional,
+                    ru.TOTAL_UNMET AS total_unmet,
+                    ru.TOTAL_SERVED AS total_served,
+                    ru.DATE_PROCESSED AS date_processed
+               FROM rpfp.report_unmet_need ru
+              WHERE ru.unmet_id = unmet_id
+           ORDER BY ru.report_id ASC
+            ;
+        END;
+    END IF;
+END$$
+
+CREATE DEFINER=root@localhost PROCEDURE get_report_served_method_mix_details(
+    IN served_id INT
+    )   READS SQL DATA
+BEGIN
+    IF NOT EXISTS (
+         SELECT rs.REPORT_ID
+           FROM rpfp.report_served_method_mix rs
+          WHERE rs.SERVED_ID = served_id
+    ) THEN
+        BEGIN
+             SELECT NULL AS report_year,
+                    NULL AS psgc_code,
+                    NULL AS report_month,
+                    NULL AS served_condom,
+                    NULL AS served_iud,
+                    NULL AS served_pills,
+                    NULL AS served_injectables,
+                    NULL AS served_nsv,
+                    NULL AS served_btl,
+                    NULL AS served_implant,
+                    NULL AS served_cmm,
+                    NULL AS served_bbt,
+                    NULL AS served_symptothermal,
+                    NULL AS served_sdm,
+                    NULL AS served_lam,
+                    NULL AS total_served,
+                    NULL AS date_processed
+            ;
+        END;
+    ELSE
+        BEGIN
+             SELECT rs.REPORT_YEAR AS report_year,
+                    rs.PSGC_CODE AS psgc_code,
+                    rs.REPORT_MONTH AS report_month,
+                    rs.SERVED_CONDOM AS served_condom,
+                    rs.SERVED_IUD AS served_iud,
+                    rs.SERVED_PILLS AS served_pills,
+                    rs.SERVED_INJECTABLES AS served_injectables,
+                    rs.SERVED_NSV AS served_nsv,
+                    rs.SERVED_BTL AS served_btl,
+                    rs.SERVED_IMPLANT AS served_implant,
+                    rs.SERVED_CMM AS served_cmm,
+                    rs.SERVED_BBT AS served_bbt,
+                    rs.SERVED_SYMPTOTHERMAL AS served_symptothermal,
+                    rs.SERVED_SDM AS served_sdm,
+                    rs.SERVED_LAM AS served_lam,
+                    rs.TOTAL_SERVED AS total_served,
+                    rs.DATE_PROCESSED AS date_processed
+               FROM rpfp.report_served_method_mix rs
+              WHERE rs.SERVED_ID = served_id
+           ORDER BY rs.report_id ASC
+            ;
+        END;
+    END IF;
+END$$
+/** END GET REPORT DETAILS */
 
 DELIMITER ;
 --

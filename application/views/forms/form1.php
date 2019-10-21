@@ -72,8 +72,7 @@ $form1 = FormClass::getFormFromVariable($form1);
 							<span class="caret"></span>
 						</button>
 						<ul class="dropdown-menu">
-							<li><a href="<?= base_url('menu')?>">Pending</a></li>
-							<li><a href="<?= base_url('menu/approve')?>">Approved</a></li>
+							<li><a href="<?= base_url('menu')?>">Back</a></li>
 							<li><a class="btn-import">Import Excel</a></li>
 							<li><a href="<?= base_url('login/logoffUser')?>">Logout</a></li>
 						</ul>
