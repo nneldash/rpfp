@@ -17,7 +17,6 @@ class Forms extends CI_Controller
 
     public function index()
     {
-
         $header['title'] =' RPFP Online | Form 1';
 
         if (isset($GLOBALS[NO_OUTPUT]) && $GLOBALS[NO_OUTPUT]) {
@@ -39,15 +38,6 @@ class Forms extends CI_Controller
         $this->load->view('forms/form1', array('form1' => $form1, 'is_pdf' => false));
         $this->load->view('includes/footer');
         return;
-    }
-
-    public function formsample()
-    {
-        $header['title'] = 'RPFP Online | Form 1';
-
-        $this->load->view('includes/header', $header);
-        $this->load->view('forms/formsample', array('is_pdf' => false));
-        $this->load->view('includes/footer');
     }
 
     public function saveForm1()

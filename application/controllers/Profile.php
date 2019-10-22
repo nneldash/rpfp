@@ -17,7 +17,7 @@ class Profile extends CI_Controller
 
     public function index($params = array()) {
         $profile = $this->getOwnProfile();
-        $the_title = 'Profile | RPFP Online v.3';
+        $the_title = 'Profile | RPFP Online';
 
         $this->load->view('includes/header', array('title' => $the_title));
         $this->load->view('profile/profile.php', array('profile' => $profile));

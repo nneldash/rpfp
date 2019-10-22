@@ -6,14 +6,20 @@ class Menu extends CI_Controller
     public function __construct()
     {
         parent::__construct();
+        $this->load->model('CoupleModel');
+        $this->load->library('couple_list/ApproveClass');
+        $this->load->library('couple_list/PendingClass');
     }
 
     public function index()
     {
         $header['title'] = 'RPFP Online | Pending';
 
+        $this->load->model('CoupleModel');
+        $pending = $this->CoupleModel->getPendingList();
+        
         $this->load->view('includes/admin_header', $header);
-        $this->load->view('menu/pending');
+        $this->load->view('menu/pending', array('pending' => $pending));
         $this->load->view('includes/admin_footer');
     }
 
@@ -21,8 +27,11 @@ class Menu extends CI_Controller
     {
         $header['title'] = 'RPFP Online | Approve';
 
+        $this->load->model('CoupleModel');
+        $approve = $this->CoupleModel->getApproveList();
+
         $this->load->view('includes/admin_header', $header);
-        $this->load->view('menu/approve');
+        $this->load->view('menu/approve', array('approve' => $approve));
         $this->load->view('includes/admin_footer');
     }
 
@@ -38,6 +47,15 @@ class Menu extends CI_Controller
         $this->load->view('includes/header', $header);
         $this->load->view('menu/summary', array('is_pdf' => false), false);
         $this->load->view('includes/footer');
+    }
+
+    public function search()
+    {
+        $header['title'] = 'RPFP Online | Search Form 1';
+
+        $this->load->view('includes/admin_header', $header);
+        $this->load->view('menu/search');
+        $this->load->view('includes/admin_footer');
     }
 
     public function printSummary()
@@ -102,7 +120,7 @@ class Menu extends CI_Controller
         $header['title'] = 'RPFP Online | Form Accomplishment Report Data List';
 
         $this->load->view('includes/admin_header', $header);
-        $this->load->view('menu/accompReportMenu');
+        $this->load->view('menu/summary', array('is_pdf' => false), false);
         $this->load->view('includes/admin_footer');
     }
 }

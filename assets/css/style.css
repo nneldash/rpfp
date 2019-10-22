@@ -65,6 +65,9 @@ table.datatable,
 .nav.side-menu>li.active>a {
     background: linear-gradient(#355633,#2f572c),#2b542a!important;
 }
+.nav-sm ul.nav.child_menu {
+    background: #45654b!important;
+}
 
 /*------------------------------------------------------------------
 [ Btn Styles ]*/
@@ -95,4 +98,8 @@ table.datatable,
 }
 .folderview:hover .fa-folder-open-o {
     display: inline;
+}
+
+.form-control-feedback {
+    color: #095017!important;
 }

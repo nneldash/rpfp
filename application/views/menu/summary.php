@@ -27,23 +27,18 @@ defined('BASEPATH') or exit('No direct script access allowed');
 			</div>
 		</div>		
 		<?php if(!$is_pdf) : ?>
-	        <div id="leftButton">
-	        	<a href="<?= base_url('menu') ?>" class="save">
-                    <span>BACK</span>
-                </a>
-		    </div>
 		    <div id="rightButton">
 	        	<a href="<?= base_url('menu/printSummary') ?>" class="save" target="_blank">
                     <span>PRINT</span>
                 </a>
 		    </div>
 	    <?php endif; ?>
-        <div class="padding-t20">
+        <div class="padding-t20" <?php if(!$is_pdf) : ?>style="margin: 0 10%;"<?php endif; ?>>
 			<div class="table-responsive">
 				<table class="table table-bordered table-condensed">
         			<thead>
         				<tr>
-        					<th class="text-center" style="width: 50%;"><p>RPFP Class Number</p></th>
+        					<th class="text-center" style="width: 30%;"><p>RPFP Class Number</p></th>
         					<th class="text-center" style="width: 20%;"><p>Encoded Couples</p></th>
         					<th class="text-center" style="width: 20%;"><p>Approved Couples</p></th>
         					<th class="text-center" style="width: 20%;"><p>Duplicates</p></th>
