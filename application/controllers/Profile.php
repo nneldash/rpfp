@@ -15,7 +15,17 @@ class Profile extends CI_Controller
         $this->load->model('ProfileModel');
     }
 
-    public function index($params = array()) {
+    public function index($params = array()) 
+    {
+        if (!$this->LoginModel->isLoggedIn()) {
+            $header['title'] =' RPFP Online';
+
+            $this->load->view("includes/header", $header);
+            $this->load->view('index/landingPage');
+            
+            return;
+        }
+
         $profile = $this->getOwnProfile();
         $the_title = 'Profile | RPFP Online';
 

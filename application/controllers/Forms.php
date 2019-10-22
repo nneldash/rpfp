@@ -17,17 +17,20 @@ class Forms extends CI_Controller
 
     public function index()
     {
-        $header['title'] =' RPFP Online | Form 1';
-
         if (isset($GLOBALS[NO_OUTPUT]) && $GLOBALS[NO_OUTPUT]) {
             return;
         }
 
         if (!$this->LoginModel->isLoggedIn()) {
+            $header['title'] =' RPFP Online';
+
             $this->load->view("includes/header", $header);
             $this->load->view('index/landingPage');
+
             return;
         }
+
+        $header['title'] =' RPFP Online | Form 1';
 
         $this->load->Model('ProfileModel');
         $this->load->model('FormModel');
@@ -42,6 +45,15 @@ class Forms extends CI_Controller
 
     public function saveForm1()
     {
+        if (!$this->LoginModel->isLoggedIn()) {
+            $header['title'] =' RPFP Online';
+
+            $this->load->view("includes/header", $header);
+            $this->load->view('index/landingPage');
+
+            return;
+        }
+
         $form1 = new FormClass();
 
         $form1->Seminar = $this->getInputFromSeminar();
@@ -192,6 +204,15 @@ class Forms extends CI_Controller
 
     public function formA()
     {
+        if (!$this->LoginModel->isLoggedIn()) {
+            $header['title'] =' RPFP Online';
+
+            $this->load->view("includes/header", $header);
+            $this->load->view('index/landingPage');
+
+            return;
+        }
+
         $header['title'] = 'RPFP Online | Form A';
 
         $this->load->model('FormModel');
@@ -205,6 +226,15 @@ class Forms extends CI_Controller
 
     public function formB()
     {
+        if (!$this->LoginModel->isLoggedIn()) {
+            $header['title'] =' RPFP Online';
+
+            $this->load->view("includes/header", $header);
+            $this->load->view('index/landingPage');
+
+            return;
+        }
+
         $header['title'] = 'RPFP Online | Form B';
 
         $this->load->view('includes/header', $header);
@@ -214,6 +244,15 @@ class Forms extends CI_Controller
 
     public function formC()
     {
+        if (!$this->LoginModel->isLoggedIn()) {
+            $header['title'] =' RPFP Online';
+
+            $this->load->view("includes/header", $header);
+            $this->load->view('index/landingPage');
+
+            return;
+        }
+
         $header['title'] = 'RPFP Online | Form C';
 
         $this->load->view('includes/header', $header);
@@ -223,6 +262,15 @@ class Forms extends CI_Controller
 
     public function serviceSlip()
     {
+        if (!$this->LoginModel->isLoggedIn()) {
+            $header['title'] =' RPFP Online';
+
+            $this->load->view("includes/header", $header);
+            $this->load->view('index/landingPage');
+
+            return;
+        }
+
         $this->load->model('FormModel');
 
         $serviceSlip = $this->FormModel->getServiceSlip();
@@ -233,6 +281,15 @@ class Forms extends CI_Controller
 
     public function viewform1()
     {
+        if (!$this->LoginModel->isLoggedIn()) {
+            $header['title'] =' RPFP Online';
+
+            $this->load->view("includes/header", $header);
+            $this->load->view('index/landingPage');
+
+            return;
+        }
+
         $this->load->model('FormModel');
         $form1 = $this->FormModel->getForm1();
         
@@ -257,6 +314,15 @@ class Forms extends CI_Controller
 
     public function viewforma()
     {
+        if (!$this->LoginModel->isLoggedIn()) {
+            $header['title'] =' RPFP Online';
+
+            $this->load->view("includes/header", $header);
+            $this->load->view('index/landingPage');
+
+            return;
+        }
+
         $mpdfConfig = array(
             'format' => 'A4',
             'orientation' => 'L'
@@ -279,6 +345,15 @@ class Forms extends CI_Controller
 
     public function viewformb()
     {
+        if (!$this->LoginModel->isLoggedIn()) {
+            $header['title'] =' RPFP Online';
+
+            $this->load->view("includes/header", $header);
+            $this->load->view('index/landingPage');
+
+            return;
+        }
+
         $mpdfConfig = array(
             'format' => 'A4',
             'orientation' => 'L'
@@ -300,6 +375,15 @@ class Forms extends CI_Controller
 
     public function viewformc()
     {
+        if (!$this->LoginModel->isLoggedIn()) {
+            $header['title'] =' RPFP Online';
+
+            $this->load->view("includes/header", $header);
+            $this->load->view('index/landingPage');
+            
+            return;
+        }
+
         $mpdfConfig = array(
             'format' => 'A4',
             'orientation' => 'L'
