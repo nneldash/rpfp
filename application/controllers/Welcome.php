@@ -10,7 +10,7 @@ class Welcome extends CI_Controller
 
     public function index()
     {
-        $header['title'] = 'Welcome | RPFP Online v.3';
+        $header['title'] = 'Welcome | RPFP Online';
 
         if (isset($GLOBALS[NO_OUTPUT]) && $GLOBALS[NO_OUTPUT]) {
             return;

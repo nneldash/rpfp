@@ -12,6 +12,8 @@
         <link href="<?= base_url('NewAssets/nProgress') ?>" rel="stylesheet">
         <link href="<?= base_url('NewAssets/customCss') ?>" rel="stylesheet">
 
+        <link href="<?= base_url('assets/css/style.css') ?>" rel="stylesheet">
+
         <link href="<?= base_url('NewAssets/fontAwesome'); ?>" rel="stylesheet">
         
         <script type="text/javascript" src="<?= base_url('NewAssets/templateJs')?>"></script>
@@ -41,48 +43,38 @@
                         <div class="clearfix"></div>
                         <br />
                         <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
-                            <!-- ENCODER MENU -->
+                            <!-- PMED MENU -->
                             <!-- <div class="menu_section">
                                 <ul class="nav side-menu">
                                     <li>
-                                        <a href="<?= base_url('forms')?>">
-                                            <i class="fa fa-plus"></i> Add Couple
+                                        <a href="<?= base_url('menu')?>">
+                                            <i class="fa fa-clipboard"></i> Form A
                                         </a>
                                     </li>
                                     <li>
                                         <a href="<?= base_url('menu')?>">
-                                            <i class="fa fa-hourglass-start"></i> Service Slip
+                                            <i class="fa fa-clipboard"></i> Form B
                                         </a>
                                     </li>
                                     <li>
                                         <a href="<?= base_url('menu/approve')?>">
-                                            <i class="fa fa-thumbs-o-up"></i> Search Form 1
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="<?= base_url('menu/summary')?>">
-                                            <i class="fa fa-file-text-o"></i> Accomp. Report
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="<?= base_url('login/logoffUser')?>">
-                                            <i class="fa fa-sign-out"></i> Logout
+                                            <i class="fa fa-clipboard"></i> Form C
                                         </a>
                                     </li>
                                 </ul>
                             </div> -->
-                            <!-- END ENCODER MENU -->
-                            <!-- PMED MENU -->
+                            <!-- END PMED MENU -->
+                            <!-- ENCODER MENU -->
                             <div class="menu_section">
                                 <ul class="nav side-menu">
                                     <li>
                                         <a href="<?= base_url('forms')?>">
-                                            <i class="fa fa-plus"></i> Add Couple
+                                            <i class="fa fa-venus-mars"></i> Add Couple
                                         </a>
                                     </li>
                                     <li>
                                         <a href="<?= base_url('menu')?>">
-                                            <i class="fa fa-hourglass-start"></i> Pending
+                                            <i class="fa fa-clock-o"></i> Pending
                                         </a>
                                     </li>
                                     <li>
@@ -90,16 +82,20 @@
                                             <i class="fa fa-thumbs-o-up"></i> Approved
                                         </a>
                                     </li>
-                                    <li>
-                                        <a>
-                                            <i class="fa fa-file-text-o"></i> Summary
+                                    <!-- <li>
+                                        <a href="</?= base_url('menu/serviceSlip')?>">
+                                            <i class="fa fa-file-text-o"></i> Service Slip
                                         </a>
-                                        <ul class="nav child_menu">
-                                            <li><a href="<?= base_url('menu/summary')?>">Accomplishment Report</a></li>
-                                            <li><a href="<?= base_url('forms/formA')?>">Form A</a></li>
-                                            <li><a href="<?= base_url('forms/formB')?>">Form B</a></li>
-                                            <li><a href="<?= base_url('forms/formC')?>">Form C</a></li>
-                                        </ul>
+                                    </li>
+                                    <li>
+                                        <a href="</?= base_url('menu/search')?>">
+                                            <i class="fa fa-search"></i> Search Form
+                                        </a>
+                                    </li> -->
+                                    <li>
+                                        <a href="<?= base_url('menu/accomplishment')?>">
+                                            <i class="fa fa-clipboard"></i> Report
+                                        </a>
                                     </li>
                                     <li>
                                         <a href="<?= base_url('login/logoffUser')?>">

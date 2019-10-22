@@ -55,7 +55,6 @@ USE RPFP;
     CREATE OR REPLACE ROLE regional;
     CREATE OR REPLACE ROLE national;
 
-
 --
 -- STORED ROUTINES
 --
@@ -177,7 +176,6 @@ BEGIN
 END$$
 /** END OF USER MANAGEMENT */
 
-
 /** LOGIN PROCS */
 CREATE DEFINER=root@localhost FUNCTION login_check_own_password(
     old_passwd VARCHAR(50) CHARSET utf8 COLLATE utf8_unicode_ci
@@ -261,7 +259,6 @@ BEGIN
     RETURN ret_val;
 END$$
 /** END OF LOGIN PROCS */
-
 
 /** PROFILE PROCS */
 CREATE DEFINER=root@localhost FUNCTION profile_get_role(
@@ -578,8 +575,6 @@ END$$
 
 /** END OF PROFILE PROCS */
 
-
-
 /** LIBRARIES */
 CREATE DEFINER=root@localhost PROCEDURE lib_get_full_location(
     IN  LOCATION_ID INT
@@ -820,8 +815,6 @@ BEGIN
 END$$
 /** END OF LIBRARIES */
 
-
-
 /** CLASSES */
 CREATE DEFINER=root@localhost PROCEDURE get_class_list(
     IN status_active INT,
@@ -866,12 +859,13 @@ BEGIN
          SELECT rc.RPFP_CLASS_ID AS rpfpclass,
                 rc.TYPE_CLASS_ID AS typeclass,
                 rc.OTHERS_SPECIFY AS others_specify,
-                rc.BARANGAY_ID AS barangay,
+                lp.LOCATION_DESCRIPTION AS barangay,
                 rc.CLASS_NUMBER AS class_no,
                 rc.DATE_CONDUCTED AS date_conduct
            FROM rpfp.rpfp_class rc
       LEFT JOIN rpfp.couples apc
              ON apc.RPFP_CLASS_ID = rc.RPFP_CLASS_ID
+     LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID 
           WHERE apc.IS_ACTIVE = status_active
             AND rc.DB_USER_ID = name_user
        GROUP BY rc.CLASS_NUMBER
@@ -881,6 +875,212 @@ BEGIN
     END IF;
 END$$
 
+/** SEARCH COUPLES */
+CREATE DEFINER=root@localhost PROCEDURE search_couples_pending (
+    IN search_couples VARCHAR(100),
+    IN page_no INT,
+    IN items_per_page INT
+    )   READS SQL DATA
+BEGIN
+    DECLARE status_pending INT DEFAULT 2;
+    CALL rpfp.search_couples(
+            search_couples,
+            status_pending,
+            USER(),
+            page_no,
+            items_per_page
+    );
+
+END$$
+
+CREATE DEFINER=root@localhost PROCEDURE search_couples_approved (
+    IN search_couples VARCHAR(100),
+    IN page_no INT,
+    IN items_per_page INT
+    )   READS SQL DATA
+BEGIN
+    DECLARE status_approved INT DEFAULT 0;
+    CALL rpfp.search_couples(
+            search_couples,
+            status_approved,
+            USER(),
+            page_no,
+            items_per_page
+    );
+
+END$$
+
+CREATE DEFINER=root@localhost PROCEDURE search_couples(
+    IN search_couples VARCHAR(100),
+    IN status_active INT,
+    IN username VARCHAR(50),
+    IN page_no INT,
+    IN items_per_page INT
+    )   READS SQL DATA
+BEGIN
+    DECLARE name_user VARCHAR(50);
+    DECLARE db_user_name VARCHAR(50);
+    DECLARE read_offset INT;
+
+    CALL rpfp.lib_extract_user_name( username, name_user, db_user_name );
+
+    IF NOT EXISTS (
+         SELECT rc.RPFP_CLASS_ID
+           FROM rpfp.RPFP_CLASS rc
+      LEFT JOIN rpfp.couples apc
+             ON apc.RPFP_CLASS_ID = rc.RPFP_CLASS_ID
+          WHERE apc.IS_ACTIVE = status_active
+            AND rc.DB_USER_ID = name_user
+    ) THEN
+         SELECT NULL AS rpfpclass,
+                NULL AS typeclass,
+                NULL AS others_specify,
+                NULL AS city,
+                NULL AS barangay,
+                NULL AS class_no,
+                NULL AS date_conduct
+        ;
+    ELSE
+        IF (IFNULL( page_no, 0) = 0) THEN
+            /** DEFAULT PAGE NO. */
+            SET page_no := 1;
+        END IF;
+        IF (IFNULL( items_per_page, 0) = 0) THEN
+            /** DEFAULT COUNT PER PAGE*/
+            SET items_per_page := 10;
+        END IF;
+
+        SET read_offset := (page_no - 1) * items_per_page;
+        SELECT rc.RPFP_CLASS_ID AS rpfpclass,
+               rc.TYPE_CLASS_ID AS typeclass,
+               rc.OTHERS_SPECIFY AS others_specify,
+               lp.LOCATION_DESCRIPTION AS barangay,
+               rc.CLASS_NUMBER AS class_no,
+               rc.DATE_CONDUCTED AS date_conduct
+          FROM rpfp.rpfp_class rc 
+     LEFT JOIN rpfp.couples apc ON apc.RPFP_CLASS_ID = rc.RPFP_CLASS_ID
+     LEFT JOIN rpfp.individual ic ON ic.COUPLES_ID = apc.COUPLES_ID
+     LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID 
+         WHERE ic.FNAME = '%' + QUOTE(search_couples) + '%'
+            OR ic.LNAME = '%' + QUOTE(search_couples) + '%'
+            OR rc.CLASS_NUMBER = '%' + QUOTE(search_couples) + '%'
+            OR rc.DATE_CONDUCTED = '%' + QUOTE(search_couples) + '%'
+           AND apc.IS_ACTIVE = status_active
+           AND rc.DB_USER_ID = name_user
+      GROUP BY rc.CLASS_NUMBER
+      ORDER BY rc.DATE_CONDUCTED DESC
+         LIMIT read_offset, items_per_page
+    ; 
+    END IF;
+END$$
+
+CREATE DEFINER=root@localhost PROCEDURE search_class_pending (
+    IN search_class VARCHAR(100),
+    IN search_date_from DATE,
+    IN search_date_to DATE,
+    IN page_no INT,
+    IN items_per_page INT
+    )   READS SQL DATA
+BEGIN
+    DECLARE status_pending INT DEFAULT 2;
+    CALL rpfp.search_class(
+            search_class,
+            search_date_from,
+            search_date_to,
+            status_pending,
+            USER(),
+            page_no,
+            items_per_page
+    );
+
+END$$
+
+CREATE DEFINER=root@localhost PROCEDURE search_class_approved (
+    IN search_class VARCHAR(100),
+    IN search_date_from DATE,
+    IN search_date_to DATE,
+    IN page_no INT,
+    IN items_per_page INT
+    )   READS SQL DATA
+BEGIN
+    DECLARE status_approved INT DEFAULT 0;
+    CALL rpfp.search_class(
+            search_class,
+            search_date_from,
+            search_date_to,
+            status_approved,
+            USER(),
+            page_no,
+            items_per_page
+    );
+
+END$$
+
+CREATE DEFINER=root@localhost PROCEDURE search_class(
+    IN search_class VARCHAR(100),
+    IN search_date_from DATE,
+    IN search_date_to DATE,
+    IN status_active INT,
+    IN username VARCHAR(50),
+    IN page_no INT,
+    IN items_per_page INT
+    )   READS SQL DATA
+BEGIN
+    DECLARE name_user VARCHAR(50);
+    DECLARE db_user_name VARCHAR(50);
+    DECLARE read_offset INT;
+
+    CALL rpfp.lib_extract_user_name( username, name_user, db_user_name );
+
+    IF NOT EXISTS (
+         SELECT rc.RPFP_CLASS_ID
+           FROM rpfp.RPFP_CLASS rc
+      LEFT JOIN rpfp.couples apc
+             ON apc.RPFP_CLASS_ID = rc.RPFP_CLASS_ID
+          WHERE apc.IS_ACTIVE = status_active
+            AND rc.DB_USER_ID = name_user
+    ) THEN
+         SELECT NULL AS rpfpclass,
+                NULL AS typeclass,
+                NULL AS others_specify,
+                NULL AS city,
+                NULL AS barangay,
+                NULL AS class_no,
+                NULL AS date_conduct
+        ;
+    ELSE
+        IF (IFNULL( page_no, 0) = 0) THEN
+            /** DEFAULT PAGE NO. */
+            SET page_no := 1;
+        END IF;
+        IF (IFNULL( items_per_page, 0) = 0) THEN
+            /** DEFAULT COUNT PER PAGE*/
+            SET items_per_page := 10;
+        END IF;
+
+        SET read_offset := (page_no - 1) * items_per_page;
+        SELECT rc.RPFP_CLASS_ID AS rpfpclass,
+               rc.TYPE_CLASS_ID AS typeclass,
+               rc.OTHERS_SPECIFY AS others_specify,
+               lp.LOCATION_DESCRIPTION AS barangay,
+               rc.CLASS_NUMBER AS class_no,
+               rc.DATE_CONDUCTED AS date_conduct
+          FROM rpfp.rpfp_class rc 
+     LEFT JOIN rpfp.couples apc ON apc.RPFP_CLASS_ID = rc.RPFP_CLASS_ID
+     LEFT JOIN rpfp.individual ic ON ic.COUPLES_ID = apc.COUPLES_ID
+     LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID 
+         WHERE rc.CLASS_NUMBER = '%' + search_class + '%'
+           AND rc.DATE_CONDUCTED >= search_date_from
+           AND rc.DATE_CONDUCTED <= search_date_to
+           AND apc.IS_ACTIVE = status_active
+           AND rc.DB_USER_ID = name_user
+      GROUP BY rc.CLASS_NUMBER
+      ORDER BY rc.DATE_CONDUCTED DESC
+         LIMIT read_offset, items_per_page
+    ; 
+    END IF;
+END$$
+/** END SEARCH COUPLES */
 
 CREATE DEFINER=root@localhost PROCEDURE encoder_get_class_list_pending (
     IN page_no INT,
@@ -911,7 +1111,6 @@ BEGIN
     );
 
 END$$
-
 
 CREATE DEFINER=root@localhost PROCEDURE encoder_get_couples_list(
     IN class_num VARCHAR(50)
@@ -1097,8 +1296,6 @@ BEGIN
     SELECT "SAVE SUCCESSFUL" AS MESSAGE;
 END$$
 /** END OF CLASSES */
-
-
 
 /** COUPLES DETAILS */
 CREATE DEFINER=root@localhost PROCEDURE encoder_get_couple_fp_details (IN couplesid INT UNSIGNED)  READS SQL DATA

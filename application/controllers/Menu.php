@@ -6,23 +6,50 @@ class Menu extends CI_Controller
     public function __construct()
     {
         parent::__construct();
+        $this->load->model('CoupleModel');
+        $this->load->library('couple_list/ApproveClass');
+        $this->load->library('couple_list/PendingClass');
     }
 
     public function index()
     {
+        if (!$this->LoginModel->isLoggedIn()) {
+            $header['title'] =' RPFP Online';
+
+            $this->load->view("includes/header", $header);
+            $this->load->view('index/landingPage');
+
+            return;
+        }
+
         $header['title'] = 'RPFP Online | Pending';
 
+        $this->load->model('CoupleModel');
+        $pending = $this->CoupleModel->getPendingList();
+
         $this->load->view('includes/admin_header', $header);
-        $this->load->view('menu/pending');
+        $this->load->view('menu/pending', array('pending' => $pending));
         $this->load->view('includes/admin_footer');
     }
 
     public function approve()
     {
+        if (!$this->LoginModel->isLoggedIn()) {
+            $header['title'] =' RPFP Online';
+
+            $this->load->view("includes/header", $header);
+            $this->load->view('index/landingPage');
+
+            return;
+        }
+
         $header['title'] = 'RPFP Online | Approve';
 
+        $this->load->model('CoupleModel');
+        $approve = $this->CoupleModel->getApproveList();
+
         $this->load->view('includes/admin_header', $header);
-        $this->load->view('menu/approve');
+        $this->load->view('menu/approve', array('approve' => $approve));
         $this->load->view('includes/admin_footer');
     }
 
@@ -33,6 +60,15 @@ class Menu extends CI_Controller
 
     public function summary()
     {
+        if (!$this->LoginModel->isLoggedIn()) {
+            $header['title'] =' RPFP Online';
+
+            $this->load->view("includes/header", $header);
+            $this->load->view('index/landingPage');
+
+            return;
+        }
+
         $header['title'] = 'RPFP Online | Accomplishment Report';
 
         $this->load->view('includes/header', $header);
@@ -40,8 +76,35 @@ class Menu extends CI_Controller
         $this->load->view('includes/footer');
     }
 
+    public function search()
+    {
+        if (!$this->LoginModel->isLoggedIn()) {
+            $header['title'] =' RPFP Online';
+
+            $this->load->view("includes/header", $header);
+            $this->load->view('index/landingPage');
+
+            return;
+        }
+
+        $header['title'] = 'RPFP Online | Search Form 1';
+
+        $this->load->view('includes/admin_header', $header);
+        $this->load->view('menu/search');
+        $this->load->view('includes/admin_footer');
+    }
+
     public function printSummary()
     {
+        if (!$this->LoginModel->isLoggedIn()) {
+            $header['title'] =' RPFP Online';
+
+            $this->load->view("includes/header", $header);
+            $this->load->view('index/landingPage');
+
+            return;
+        }
+
         $mpdfConfig = array(
             'format' => 'A4',
             'orientation' => 'P'
@@ -63,6 +126,15 @@ class Menu extends CI_Controller
 
     public function dashboard()
     {
+        if (!$this->LoginModel->isLoggedIn()) {
+            $header['title'] =' RPFP Online';
+
+            $this->load->view("includes/header", $header);
+            $this->load->view('index/landingPage');
+
+            return;
+        }
+
         $header['title'] = 'RPFP Online | Dashboard';
 
         $this->load->view('includes/admin_header', $header);
@@ -72,6 +144,15 @@ class Menu extends CI_Controller
 
     public function formA()
     {
+        if (!$this->LoginModel->isLoggedIn()) {
+            $header['title'] =' RPFP Online';
+
+            $this->load->view("includes/header", $header);
+            $this->load->view('index/landingPage');
+
+            return;
+        }
+
         $header['title'] = 'RPFP Online | Form A Data List';
 
         $this->load->view('includes/admin_header', $header);
@@ -81,6 +162,15 @@ class Menu extends CI_Controller
 
     public function formB()
     {
+        if (!$this->LoginModel->isLoggedIn()) {
+            $header['title'] =' RPFP Online';
+
+            $this->load->view("includes/header", $header);
+            $this->load->view('index/landingPage');
+
+            return;
+        }
+
         $header['title'] = 'RPFP Online | Form B Data List';
 
         $this->load->view('includes/admin_header', $header);
@@ -90,6 +180,15 @@ class Menu extends CI_Controller
 
     public function formC()
     {
+        if (!$this->LoginModel->isLoggedIn()) {
+            $header['title'] =' RPFP Online';
+
+            $this->load->view("includes/header", $header);
+            $this->load->view('index/landingPage');
+
+            return;
+        }
+
         $header['title'] = 'RPFP Online | Form C Data List';
 
         $this->load->view('includes/admin_header', $header);
@@ -99,10 +198,19 @@ class Menu extends CI_Controller
 
     public function accomplishment()
     {
+        if (!$this->LoginModel->isLoggedIn()) {
+            $header['title'] =' RPFP Online';
+
+            $this->load->view("includes/header", $header);
+            $this->load->view('index/landingPage');
+            
+            return;
+        }
+
         $header['title'] = 'RPFP Online | Form Accomplishment Report Data List';
 
         $this->load->view('includes/admin_header', $header);
-        $this->load->view('menu/accompReportMenu');
+        $this->load->view('menu/summary', array('is_pdf' => false), false);
         $this->load->view('includes/admin_footer');
     }
 }
