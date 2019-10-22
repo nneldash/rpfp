@@ -1,6 +1,10 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 $this->load->library('helpers/HtmlHelper');
+
+$forma = FormAClass::getFormFromVariable($forma);
+// echo '<pre>';
+// print_r($forma);exit;
 ?>
 
 <?php if($is_pdf) { ?>
@@ -34,8 +38,8 @@ $this->load->library('helpers/HtmlHelper');
 			<p class="small">
 				<b>
 					RPFP CLASSES IMPLEMENTATION REPORT <br>
-					FOR THE PERIOD ___________________ 2018 <br>
-					POPCOM Regional Office __________ <br>
+					FOR THE PERIOD <?=$forma->Period->MonthsPeriod; ?> 2018 <br>
+					POPCOM Regional Office <?=$forma->Period->RegionalOffice; ?> <br>
 					DEMAND GENERATION ACTIVITIES
 				</b>
 			</p>
@@ -243,7 +247,7 @@ $this->load->library('helpers/HtmlHelper');
 										</b>
 									</p>
 								</td>
-								<td></td>
+								<td><?=$forma->Period->MonthsPeriod;?></td>
 								<td></td>
 								<td></td>
 								<td></td>
