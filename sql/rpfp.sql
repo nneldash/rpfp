@@ -165,9 +165,11 @@ BEGIN
 
     CALL rpfp.lib_extract_user_name( db_user, name_user, db_user_name );
 
-    SET @sql_stmt1 := CONCAT( "REVOKE ALL PRIVILEGES, GRANT OPTION FROM ", db_user_name );
-    PREPARE stmt1 FROM @sql_stmt1;
-    EXECUTE stmt1;
+    IF NOT (name_user = 'root') THEN
+        SET @sql_stmt1 := CONCAT( "REVOKE ALL PRIVILEGES, GRANT OPTION FROM ", db_user_name );
+        PREPARE stmt1 FROM @sql_stmt1;
+        EXECUTE stmt1;
+    END IF;
 
      UPDATE rpfp.user_profile prof
         SET prof.IS_ACTIVE = FALSE
@@ -563,16 +565,52 @@ BEGIN
     RETURN profile_get_region( USER() );
 END$$
 
+    
+CREATE DEFINER=root@localhost FUNCTION profile_get_location(
+    db_user VARCHAR(50) CHARSET utf8 COLLATE utf8_unicode_ci,
+    scope_num INT
+    )   RETURNS INT
+        READS SQL DATA
+BEGIN
+    DECLARE ret_val INT;
+    DECLARE multiplier INT;
+    DECLARE name_user VARCHAR(50);
+    DECLARE db_user_name VARCHAR(50);
+
+    CALL rpfp.lib_extract_user_name( db_user, name_user, db_user_name );
+    SET multiplier := rpfp.lib_get_multiplier( scope_num );
+
+     SELECT prof.PSGC_CODE DIV POWER( 10, multipler ) INTO ret_val
+       FROM rpfp.user_profile prof
+      WHERE prof.DB_USER_ID = name_user
+    ;
+
+    return ret_val;
+END$$
+
 CREATE DEFINER=root@localhost FUNCTION profile_check_if_allowed_location(
     username VARCHAR(50),
     location_id INT UNSIGNED,
-    location_level INT UNSIGNED
+    scope_num INT UNSIGNED
     )   RETURNS INT(1)
         READS SQL DATA
 BEGIN
-    RETURN profile_get_region( USER() );
-END$$
+    DECLARE name_user VARCHAR(50);
+    DECLARE db_user_name VARCHAR(50);
+    DECLARE user_scope INT;
+    DECLARE user_location INT;
+    DECLARE multiplier INT;
+    DECLARE ret_val INT(1);
+    
+    CALL rpfp.lib_extract_user_name( username, name_user, db_user_name );
+    SET user_scope := rpfp.profile_get_scope( username );
+    SET multiplier := rpfp.lib_get_multiplier( user_scope );
+    SET user_location := rpfp.profile_get_location( username, user_scope );
 
+    SET ret_val := (user_location = (location_id DIV POWER( 10, multiplier )));
+    
+    RETURN ret_val;
+END$$
 /** END OF PROFILE PROCS */
 
 /** LIBRARIES */
@@ -813,12 +851,32 @@ BEGIN
     END IF;
     RETURN default_num;
 END$$
+
+CREATE DEFINER=root@localhost FUNCTION lib_get_multiplier(
+    scope_num INT
+    )   RETURNS INT CONTAINS SQL
+BEGIN
+    DECLARE multiplier INT;
+
+    CASE scope_num
+        WHEN 40 THEN
+            SET multiplier := 7;
+        WHEN 30 THEN
+            SET multiplier := 5;
+        WHEN 20 THEN
+            SET multiplier := 3;
+        ELSE 
+            SET multiplier := 0;
+    END CASE;
+
+    RETURN multiplier;
+END$$
 /** END OF LIBRARIES */
 
 /** CLASSES */
+
 CREATE DEFINER=root@localhost PROCEDURE get_class_list(
     IN status_active INT,
-    IN username VARCHAR(50),
     IN page_no INT,
     IN items_per_page INT
     )   READS SQL DATA
@@ -826,16 +884,29 @@ BEGIN
     DECLARE name_user VARCHAR(50);
     DECLARE db_user_name VARCHAR(50);
     DECLARE read_offset INT;
+    DECLARE user_scope INT;
+    DECLARE user_location INT;
+    DECLARE multiplier INT;
+    DECLARE is_not_encoder INT(1);
+    
+    CALL rpfp.lib_extract_user_name( USER(), name_user, db_user_name );
+    SET user_scope := rpfp.profile_get_scope( name_user );
+    SET multiplier := rpfp.lib_get_multiplier( user_scope );
+    SET user_location := rpfp.profile_get_location( name_user, user_scope );
+    SET is_not_encoder := NOT rpfp.profile_check_if_encoder();
 
-    CALL rpfp.lib_extract_user_name( username, name_user, db_user_name );
-
-    IF NOT EXISTS (
+    IF ( NOT EXISTS (
          SELECT rc.RPFP_CLASS_ID
-           FROM rpfp.RPFP_CLASS rc
+           FROM rpfp.rpfp_class rc
       LEFT JOIN rpfp.couples apc
              ON apc.RPFP_CLASS_ID = rc.RPFP_CLASS_ID
           WHERE apc.IS_ACTIVE = status_active
-            AND rc.DB_USER_ID = name_user
+            AND (   rc.DB_USER_ID = name_user
+                 OR (   is_not_encoder
+                    AND user_location = (rc.BARANGAY_ID DIV POWER( 10, multiplier ))
+                    )
+                )
+        )
     ) THEN
          SELECT NULL AS rpfpclass,
                 NULL AS typeclass,
@@ -845,33 +916,38 @@ BEGIN
                 NULL AS class_no,
                 NULL AS date_conduct
         ;
-    ELSE
-        IF (IFNULL( page_no, 0) = 0) THEN
-            /** DEFAULT PAGE NO. */
-            SET page_no := 1;
-        END IF;
-        IF (IFNULL( items_per_page, 0) = 0) THEN
-            /** DEFAULT COUNT PER PAGE*/
-            SET items_per_page := 10;
-        END IF;
+    ELSE BEGIN
+            IF (IFNULL( page_no, 0) = 0) THEN
+                /** DEFAULT PAGE NO. */
+                SET page_no := 1;
+            END IF;
+            IF (IFNULL( items_per_page, 0) = 0) THEN
+                /** DEFAULT COUNT PER PAGE*/
+                SET items_per_page := 10;
+            END IF;
 
-        SET read_offset := (page_no - 1) * items_per_page;
-         SELECT rc.RPFP_CLASS_ID AS rpfpclass,
-                rc.TYPE_CLASS_ID AS typeclass,
-                rc.OTHERS_SPECIFY AS others_specify,
-                lp.LOCATION_DESCRIPTION AS barangay,
-                rc.CLASS_NUMBER AS class_no,
-                rc.DATE_CONDUCTED AS date_conduct
-           FROM rpfp.rpfp_class rc
-      LEFT JOIN rpfp.couples apc
-             ON apc.RPFP_CLASS_ID = rc.RPFP_CLASS_ID
-     LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID 
-          WHERE apc.IS_ACTIVE = status_active
-            AND rc.DB_USER_ID = name_user
-       GROUP BY rc.CLASS_NUMBER
-       ORDER BY rc.DATE_CONDUCTED DESC
-          LIMIT read_offset, items_per_page
-        ;
+            SET read_offset := (page_no - 1) * items_per_page;
+
+             SELECT rc.RPFP_CLASS_ID AS rpfpclass,
+                    rc.TYPE_CLASS_ID AS typeclass,
+                    rc.OTHERS_SPECIFY AS others_specify,
+                    rc.BARANGAY_ID AS barangay,
+                    rc.CLASS_NUMBER AS class_no,
+                    rc.DATE_CONDUCTED AS date_conduct
+               FROM rpfp.rpfp_class rc
+          LEFT JOIN rpfp.couples apc
+                 ON apc.RPFP_CLASS_ID = rc.RPFP_CLASS_ID
+              WHERE apc.IS_ACTIVE = status_active
+                AND (   rc.DB_USER_ID = name_user
+                    OR (   is_not_encoder
+                        AND user_location = (rc.BARANGAY_ID DIV POWER( 10, multiplier ))
+                        )
+                    )
+           GROUP BY rc.CLASS_NUMBER
+           ORDER BY rc.DATE_CONDUCTED DESC
+              LIMIT read_offset, items_per_page
+            ;
+        END;
     END IF;
 END$$
 
@@ -1090,7 +1166,6 @@ BEGIN
     DECLARE status_pending INT DEFAULT 2;
     CALL rpfp.get_class_list(
             status_pending,
-            USER(),
             page_no,
             items_per_page
     );
@@ -1105,7 +1180,6 @@ BEGIN
     DECLARE active_status INT DEFAULT 0;
     CALL rpfp.get_class_list(
             active_status,
-            USER(),
             page_no,
             items_per_page
     );
@@ -1118,48 +1192,60 @@ CREATE DEFINER=root@localhost PROCEDURE encoder_get_couples_list(
 BEGIN
     DECLARE name_user VARCHAR(50);
     DECLARE db_user_name VARCHAR(50);
-
+    DECLARE user_scope INT;
+    DECLARE user_location INT;
+    DECLARE multiplier INT;
+    DECLARE is_not_encoder INT(1);
+    
     CALL rpfp.lib_extract_user_name( USER(), name_user, db_user_name );
+    SET user_scope := rpfp.profile_get_scope( name_user );
+    SET multiplier := rpfp.lib_get_multiplier( user_scope );
+    SET user_location := rpfp.profile_get_location( name_user, user_scope );
+    SET is_not_encoder := NOT rpfp.profile_check_if_encoder();
 
     IF NOT EXISTS (
          SELECT apc.RPFP_CLASS_ID
            FROM rpfp.couples apc
-      LEFT JOIN rpfp.RPFP_CLASS rc
+      LEFT JOIN rpfp.rpfp_class rc
              ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
-          WHERE rc.DB_USER_ID = name_user
-            AND rc.CLASS_NUMBER = class_num
+          WHERE rc.CLASS_NUMBER = class_num
+            AND (   rc.DB_USER_ID = name_user
+                OR (   is_not_encoder
+                    AND user_location = (rc.BARANGAY_ID DIV POWER( 10, multiplier ))
+                    )
+                )
     ) THEN
-        BEGIN
-             SELECT NULL AS class_no,
-                    NULL AS couplesid,
-                    NULL AS isactive,
-                    NULL AS date_encode,
-                    NULL AS lastname,
-                    NULL AS firstname,
-                    NULL AS middle,
-                    NULL AS ext_name
-            ;
-        END;
+         SELECT NULL AS class_no,
+                NULL AS couplesid,
+                NULL AS isactive,
+                NULL AS date_encode,
+                NULL AS lastname,
+                NULL AS firstname,
+                NULL AS middle,
+                NULL AS ext_name
+        ;
     ELSE
-        BEGIN
-             SELECT rc.CLASS_NUMBER AS class_no,
-                    apc.COUPLES_ID AS couplesid,
-                    apc.IS_ACTIVE AS isactive,
-                    apc.DATE_ENCODED AS date_encode,
-                    ic.LNAME AS lastname,
-                    ic.FNAME AS firstname,
-                    ic.MNAME AS middle,
-                    ic.EXT_NAME AS ext_name
-               FROM rpfp.couples apc
-          LEFT JOIN rpfp.rpfp_class rc
-                 ON rc.RPFP_CLASS_ID = pc.RPFP_CLASS_ID
-          LEFT JOIN rpfp.individual ic
-                 ON ic.COUPLES_ID = pc.COUPLES_ID
-              WHERE rc.CLASS_NUMBER = class_num
-                AND DB_USER_ID = name_user
-           ORDER BY apc.COUPLES_ID ASC
-            ;
-        END;
+         SELECT rc.CLASS_NUMBER AS class_no,
+                apc.COUPLES_ID AS couplesid,
+                apc.IS_ACTIVE AS isactive,
+                apc.DATE_ENCODED AS date_encode,
+                ic.LNAME AS lastname,
+                ic.FNAME AS firstname,
+                ic.MNAME AS middle,
+                ic.EXT_NAME AS ext_name
+           FROM rpfp.couples apc
+      LEFT JOIN rpfp.rpfp_class rc
+             ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
+      LEFT JOIN rpfp.individual ic
+             ON ic.COUPLES_ID = apc.COUPLES_ID
+          WHERE rc.CLASS_NUMBER = class_num
+            AND (   rc.DB_USER_ID = name_user
+                OR (   is_not_encoder
+                    AND user_location = (rc.BARANGAY_ID DIV POWER( 10, multiplier ))
+                    )
+                )
+       ORDER BY apc.COUPLES_ID ASC
+        ;
     END IF;
 END$$
 
@@ -1169,8 +1255,16 @@ CREATE DEFINER=root@localhost PROCEDURE encoder_get_couples_details(
 BEGIN
     DECLARE name_user VARCHAR(50);
     DECLARE db_user_name VARCHAR(50);
-
+    DECLARE user_scope INT;
+    DECLARE user_location INT;
+    DECLARE multiplier INT;
+    DECLARE is_not_encoder INT(1);
+    
     CALL rpfp.lib_extract_user_name( USER(), name_user, db_user_name );
+    SET user_scope := rpfp.profile_get_scope( name_user );
+    SET multiplier := rpfp.lib_get_multiplier( user_scope );
+    SET user_location := rpfp.profile_get_location( name_user, user_scope );
+    SET is_not_encoder := NOT rpfp.profile_check_if_encoder();
 
     IF NOT EXISTS (
          SELECT apc.COUPLES_ID
@@ -1178,61 +1272,65 @@ BEGIN
       LEFT JOIN rpfp.rpfp_class rc
              ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
           WHERE rc.CLASS_NUMBER = class_num
-            AND rc.DB_USER_ID = name_user
+            AND (   rc.DB_USER_ID = name_user
+                OR (   is_not_encoder
+                    AND user_location = (rc.BARANGAY_ID DIV POWER( 10, multiplier ))
+                    )
+                )
     ) THEN
-        BEGIN
-             SELECT NULL AS indvid,
-                    NULL AS couplesid,
-                    NULL AS lastname,
-                    NULL AS firstname,
-                    NULL AS middle,
-                    NULL AS ext,
-                    NULL AS age,
-                    NULL AS sex,
-                    NULL AS birth_year,
-                    NULL AS birth_month,
-                    NULL AS civil,
-                    NULL AS address_no_st,
-                    NULL AS address_brgy,
-                    NULL AS address_city,
-                    NULL AS household_no,
-                    NULL AS educ_bckgrnd,
-                    NULL AS etnic,
-                    NULL AS number_child,
-                    NULL AS attendee
-            ;
-        END;
+         SELECT NULL AS indvid,
+                NULL AS couplesid,
+                NULL AS lastname,
+                NULL AS firstname,
+                NULL AS middle,
+                NULL AS ext,
+                NULL AS age,
+                NULL AS sex,
+                NULL AS birth_year,
+                NULL AS birth_month,
+                NULL AS civil,
+                NULL AS address_no_st,
+                NULL AS address_brgy,
+                NULL AS address_city,
+                NULL AS household_no,
+                NULL AS educ_bckgrnd,
+                NULL AS etnic,
+                NULL AS number_child,
+                NULL AS attendee
+        ;
     ELSE
-        BEGIN
-             SELECT ic.INDV_ID AS indvid,
-                    apc.COUPLES_ID AS couplesid,
-                    ic.LNAME AS lastname,
-                    ic.FNAME AS firstname,
-                    ic.MNAME AS middle,
-                    ic.EXT_NAME AS ext,
-                    ic.AGE AS age,
-                    ic.SEX AS sex,
-                    ic.YEAR(BDATE) AS birth_year,
-                    ic.MONTH(BDATE) AS birth_month,
-                    ic.CIVIL_ID AS civil,
-                    ic.ADDRESS_NO_ST AS address_no_st,
-                    ic.ADDRESS_BRGY AS address_brgy,
-                    ic.ADDRESS_CITY AS address_city,
-                    ic.HH_ID_NO AS household_no,
-                    ic.EDUC_BCKGRND_ID AS educ_bckgrnd,
-                    ic.ETNICITY AS etnic,
-                    ic.NO_CHILDREN AS number_child,
-                    ic.IS_ATTENDEE AS attendee
-               FROM rpfp.rpfp_class rc
-          LEFT JOIN rpfp.couples apc
-                 ON rc.RPFP_CLASS_ID = pc.RPFP_CLASS_ID
-          LEFT JOIN rpfp.individual ic
-                 ON ic.COUPLES_ID = apc.COUPLES_ID
-              WHERE rc.CLASS_NUMBER = class_num
-                AND rc.DB_USER_ID = name_user
-           ORDER BY ic.INDV_ID ASC
-            ;
-        END;
+         SELECT ic.INDV_ID AS indvid,
+                apc.COUPLES_ID AS couplesid,
+                ic.LNAME AS lastname,
+                ic.FNAME AS firstname,
+                ic.MNAME AS middle,
+                ic.EXT_NAME AS ext,
+                ic.AGE AS age,
+                ic.SEX AS sex,
+                ic.YEAR(BDATE) AS birth_year,
+                ic.MONTH(BDATE) AS birth_month,
+                ic.CIVIL_ID AS civil,
+                ic.ADDRESS_NO_ST AS address_no_st,
+                ic.ADDRESS_BRGY AS address_brgy,
+                ic.ADDRESS_CITY AS address_city,
+                ic.HH_ID_NO AS household_no,
+                ic.EDUC_BCKGRND_ID AS educ_bckgrnd,
+                ic.ETNICITY AS etnic,
+                ic.NO_CHILDREN AS number_child,
+                ic.IS_ATTENDEE AS attendee
+           FROM rpfp.rpfp_class rc
+      LEFT JOIN rpfp.couples apc
+             ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
+      LEFT JOIN rpfp.individual ic
+             ON ic.COUPLES_ID = apc.COUPLES_ID
+          WHERE rc.CLASS_NUMBER = class_num
+            AND (   rc.DB_USER_ID = name_user
+                OR (   is_not_encoder
+                    AND user_location = (rc.BARANGAY_ID DIV POWER( 10, multiplier ))
+                    )
+                )
+       ORDER BY ic.INDV_ID ASC
+        ;
     END IF;
 END$$
 
@@ -1246,13 +1344,19 @@ CREATE DEFINER=root@localhost PROCEDURE encoder_save_class(
     )  MODIFIES SQL DATA
 proc_exit_point :
 BEGIN
-    DECLARE rpfp_class_no INT UNSIGNED;
-    DECLARE user_region_id INT UNSIGNED;
     DECLARE name_user VARCHAR(50);
     DECLARE db_user_name VARCHAR(50);
 
-    SET user_region_id := profile_get_own_region();
-    IF user_region_id != lib_get_region_from_location( BARANGAYID ) THEN
+    IF NOT rpfp.profile_check_if_encoder() THEN
+        SELECT "INVALID ROLE" AS MESSAGE;
+        LEAVE proc_exit_point;
+    END IF;
+
+    IF rpfp.profile_check_if_allowed_location(
+        USER(),
+        BARANGAYID,
+        rpfp.profile_get_scope(USER())
+    ) THEN
         SELECT "INVALID LOCATION" AS MESSAGE;
         LEAVE proc_exit_point;
     END IF;
@@ -1302,16 +1406,30 @@ CREATE DEFINER=root@localhost PROCEDURE encoder_get_couple_fp_details (IN couple
 BEGIN
     DECLARE name_user VARCHAR(50);
     DECLARE db_user_name VARCHAR(50);
-
+    DECLARE user_scope INT;
+    DECLARE user_location INT;
+    DECLARE multiplier INT;
+    DECLARE is_not_encoder INT(1);
+    
     CALL rpfp.lib_extract_user_name( USER(), name_user, db_user_name );
+    SET user_scope := rpfp.profile_get_scope( name_user );
+    SET multiplier := rpfp.lib_get_multiplier( user_scope );
+    SET user_location := rpfp.profile_get_location( name_user, user_scope );
+    SET is_not_encoder := NOT rpfp.profile_check_if_encoder();
 
     IF NOT EXISTS (
          SELECT apc.COUPLES_ID
-           FROM rpfp.couples apc
+           FROM rpfp.rpfp_class rc
+      LEFT JOIN rpfp.couples apc
+             ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
       LEFT JOIN rpfp.fp_details fd
              ON fd.COUPLES_ID = apc.COUPLES_ID
           WHERE IFNULL( fd.COUPLES_ID, 0) = couplesid
-            AND apc.DB_USER_ID = name_user
+            AND (   rc.DB_USER_ID = name_user
+                OR (   is_not_encoder
+                    AND user_location = (rc.BARANGAY_ID DIV POWER( 10, multiplier ))
+                    )
+                )
     ) THEN
         BEGIN
              SELECT NULL AS fpdetailsid,
@@ -1332,11 +1450,17 @@ BEGIN
                     fd.TFP_TYPE_ID AS tfp_type,
                     fd.TFP_STATUS_ID as tfp_status,
                     fd.REASON_INTENDING_USE_ID AS reason_use
-               FROM rpfp.fp_details fd
+               FROM rpfp.rpfp_class rc
           LEFT JOIN rpfp.couples apc
-                 ON fd.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
+                 ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
+          LEFT JOIN rpfp.fp_details fd
+                 ON fd.COUPLES_ID = apc.COUPLES_ID
               WHERE IFNULL( fd.COUPLES_ID, 0) = couplesid
-                AND apc.DB_USER_ID = name_user
+                AND (   rc.DB_USER_ID = name_user
+                    OR (   is_not_encoder
+                        AND user_location = (rc.BARANGAY_ID DIV POWER( 10, multiplier ))
+                        )
+                    )
            ORDER BY fd.FP_DETAILS_ID ASC
             ;
         END;
@@ -1347,60 +1471,75 @@ CREATE DEFINER=root@localhost PROCEDURE encoder_get_fp_service (IN couplesid INT
 BEGIN
     DECLARE name_user VARCHAR(50);
     DECLARE db_user_name VARCHAR(50);
-
+    DECLARE user_scope INT;
+    DECLARE user_location INT;
+    DECLARE multiplier INT;
+    DECLARE is_not_encoder INT(1);
+    
     CALL rpfp.lib_extract_user_name( USER(), name_user, db_user_name );
+    SET user_scope := rpfp.profile_get_scope( name_user );
+    SET multiplier := rpfp.lib_get_multiplier( user_scope );
+    SET user_location := rpfp.profile_get_location( name_user, user_scope );
+    SET is_not_encoder := NOT rpfp.profile_check_if_encoder();
 
     IF NOT EXISTS (
          SELECT apc.COUPLES_ID
-           FROM rpfp.couples apc
+           FROM rpfp.rpfp_class rc
+      LEFT JOIN rpfp.couples apc
+             ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
       LEFT JOIN rpfp.FP_SERVICE fs
              ON fs.COUPLES_ID = apc.COUPLES_ID
           WHERE IFNULL( fs.COUPLES_ID, 0) = couplesid
-            AND apc.DB_USER_ID = name_user
+            AND (   rc.DB_USER_ID = name_user
+                OR (   is_not_encoder
+                    AND user_location = (rc.BARANGAY_ID DIV POWER( 10, multiplier ))
+                    )
+                )
     ) THEN
-        BEGIN
-             SELECT NULL AS fpserviceid,
-                    NULL AS couplesid,
-                    NULL AS datevisit,
-                    NULL AS fp_served,
-                    NULL AS provider_type,
-                    NULL AS is_counselling,
-                    NULL AS other_concern,
-                    NULL AS counseled_fp,
-                    NULL AS other_specify,
-                    NULL AS is_provided_service,
-                    NULL AS dateserved,
-                    NULL AS client_advise,
-                    NULL AS referralname,
-                    NULL AS providername,
-                    NULL AS date_encode
-            ;
-        END;
-    ELSE
-        BEGIN
-             SELECT fs.FP_SERVICE_ID AS fpserviceid,
-                    apc.COUPLES_ID AS couplesid,
-                    fs.DATE_VISIT AS datevisit,
-                    fs.FP_SERVED_ID AS fp_served,
-                    fs.PROVIDER_TYPE_ID AS provider_type,
-                    fs.IS_COUNSELLING AS is_counselling,
-                    fs.OTHER_CONCERN AS other_concern,
-                    fs.COUNSELED_TO_USE AS counseled_fp,
-                    fs.OTHER_REASONS_SPECIFY AS other_specify,
-                    fs.IS_PROVIDED_SERVICE AS is_provided_service,
-                    fs.DATE_SERVED AS dateserved,
-                    fs.CLIENT_ADVISE AS client_advise,
-                    fs.REFERRAL_NAME AS referralname,
-                    fs.PROVIDER_NAME AS providername,
-                    fs.DATE_ENCODED AS date_encode
-               FROM rpfp.fp_service fs
-          LEFT JOIN rpfp.couples apc
-                 ON fs.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
-              WHERE IFNULL( fs.COUPLES_ID, 0 ) = couplesid
-                AND apc.DB_USER_ID = name_user                    
-           ORDER BY fs.FP_SERVICE_ID ASC
-            ;
-        END;
+         SELECT NULL AS fpserviceid,
+                NULL AS couplesid,
+                NULL AS datevisit,
+                NULL AS fp_served,
+                NULL AS provider_type,
+                NULL AS is_counselling,
+                NULL AS other_concern,
+                NULL AS counseled_fp,
+                NULL AS other_specify,
+                NULL AS is_provided_service,
+                NULL AS dateserved,
+                NULL AS client_advise,
+                NULL AS referralname,
+                NULL AS providername,
+                NULL AS date_encode
+        ;
+ELSE
+         SELECT fs.FP_SERVICE_ID AS fpserviceid,
+                apc.COUPLES_ID AS couplesid,
+                fs.DATE_VISIT AS datevisit,
+                fs.FP_SERVED_ID AS fp_served,
+                fs.PROVIDER_TYPE_ID AS provider_type,
+                fs.IS_COUNSELLING AS is_counselling,
+                fs.OTHER_CONCERN AS other_concern,
+                fs.COUNSELED_TO_USE AS counseled_fp,
+                fs.OTHER_REASONS_SPECIFY AS other_specify,
+                fs.IS_PROVIDED_SERVICE AS is_provided_service,
+                fs.DATE_SERVED AS dateserved,
+                fs.CLIENT_ADVISE AS client_advise,
+                fs.REFERRAL_NAME AS referralname,
+                fs.PROVIDER_NAME AS providername,
+                fs.DATE_ENCODED AS date_encode
+           FROM rpfp.rpfp_class rc
+      LEFT JOIN rpfp.couples apc
+             ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
+      LEFT JOIN rpfp.FP_SERVICE fs
+             ON fs.COUPLES_ID = apc.COUPLES_ID
+          WHERE IFNULL( fs.COUPLES_ID, 0) = couplesid
+            AND (   rc.DB_USER_ID = name_user
+                OR (   is_not_encoder
+                    AND user_location = (rc.BARANGAY_ID DIV POWER( 10, multiplier ))
+                    )
+                )
+        ;
     END IF;
 END$$
 
@@ -3415,6 +3554,54 @@ GRANT EXECUTE ON PROCEDURE rpfp.profile_get_profile TO 'itdmu';
 GRANT EXECUTE ON PROCEDURE rpfp.profile_set_role TO 'itdmu';
 GRANT EXECUTE ON PROCEDURE rpfp.profile_set_scope TO 'itdmu';
 GRANT EXECUTE ON PROCEDURE rpfp.profile_save_profile TO 'itdmu';
+
+
+GRANT EXECUTE ON PROCEDURE rpfp.encoder_get_couple_fp_details TO 'encoder';
+GRANT EXECUTE ON PROCEDURE rpfp.encoder_get_class_list_pending TO 'encoder';
+GRANT EXECUTE ON PROCEDURE rpfp.encoder_get_class_list_approved TO 'encoder';
+GRANT EXECUTE ON PROCEDURE rpfp.encoder_get_couples_list TO 'encoder';
+GRANT EXECUTE ON PROCEDURE rpfp.encoder_get_couples_details TO 'encoder';
+GRANT EXECUTE ON PROCEDURE rpfp.encoder_check_couples_details_m TO 'encoder';
+GRANT EXECUTE ON PROCEDURE rpfp.encoder_check_couples_details_f TO 'encoder';
+GRANT EXECUTE ON PROCEDURE rpfp.encoder_get_fp_service TO 'encoder';
+
+GRANT EXECUTE ON PROCEDURE rpfp.encoder_save_class TO 'encoder';
+GRANT EXECUTE ON PROCEDURE rpfp.encoder_save_fp_details TO 'encoder';
+GRANT EXECUTE ON PROCEDURE rpfp.encoder_save_fp_service TO 'encoder';
+GRANT EXECUTE ON PROCEDURE rpfp.encoder_save_couple TO 'encoder';
+GRANT EXECUTE ON PROCEDURE rpfp.encoder_save_individual TO 'encoder';
+
+GRANT EXECUTE ON PROCEDURE rpfp.search_couples_pending TO 'encoder';
+GRANT EXECUTE ON PROCEDURE rpfp.search_couples_approved TO 'encoder';
+GRANT EXECUTE ON PROCEDURE rpfp.search_class_pending TO 'encoder';
+GRANT EXECUTE ON PROCEDURE rpfp.search_class_approved TO 'encoder';
+
+
+GRANT EXECUTE ON PROCEDURE rpfp.rdm_approve_couples TO 'regional_data_manager';
+GRANT EXECUTE ON PROCEDURE rpfp.rdm_save_target TO 'regional_data_manager';
+GRANT EXECUTE ON PROCEDURE rpfp.encoder_get_couple_fp_details TO 'regional_data_manager';
+GRANT EXECUTE ON PROCEDURE rpfp.encoder_get_class_list_pending TO 'regional_data_manager';
+GRANT EXECUTE ON PROCEDURE rpfp.encoder_get_class_list_approved TO 'regional_data_manager';
+GRANT EXECUTE ON PROCEDURE rpfp.encoder_get_couples_list TO 'regional_data_manager';
+GRANT EXECUTE ON PROCEDURE rpfp.encoder_get_couples_details TO 'regional_data_manager';
+GRANT EXECUTE ON PROCEDURE rpfp.encoder_check_couples_details_m TO 'regional_data_manager';
+GRANT EXECUTE ON PROCEDURE rpfp.encoder_check_couples_details_f TO 'regional_data_manager';
+GRANT EXECUTE ON PROCEDURE rpfp.encoder_get_fp_service TO 'regional_data_manager';
+GRANT EXECUTE ON PROCEDURE rpfp.search_couples_pending TO 'regional_data_manager';
+GRANT EXECUTE ON PROCEDURE rpfp.search_couples_approved TO 'regional_data_manager';
+GRANT EXECUTE ON PROCEDURE rpfp.search_class_pending TO 'regional_data_manager';
+GRANT EXECUTE ON PROCEDURE rpfp.search_class_approved TO 'regional_data_manager';
+
+GRANT EXECUTE ON PROCEDURE rpfp.process_demandgen TO 'pmed';
+GRANT EXECUTE ON PROCEDURE rpfp.process_unmet_need TO 'pmed';
+GRANT EXECUTE ON PROCEDURE rpfp.process_served_method_mix TO 'pmed';
+GRANT EXECUTE ON PROCEDURE rpfp.get_report_demandgen_list TO 'pmed';
+GRANT EXECUTE ON PROCEDURE rpfp.get_report_unmet_need_list TO 'pmed';
+GRANT EXECUTE ON PROCEDURE rpfp.get_report_served_method_mix_list TO 'pmed';
+GRANT EXECUTE ON PROCEDURE rpfp.get_report_demandgen_details TO 'pmed';
+GRANT EXECUTE ON PROCEDURE rpfp.get_report_unmet_need_details TO 'pmed';
+GRANT EXECUTE ON PROCEDURE rpfp.get_report_served_method_mix_details TO 'pmed';
+
 
 COMMIT;
 
