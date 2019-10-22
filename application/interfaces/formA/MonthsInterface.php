@@ -2,17 +2,20 @@
 defined('BASEPATH') or exit('No direct script access allowed');
 $CI =& get_instance();
 $CI->load->iface('base/BaseInterface');
-$CI->load->iface('formA/lists/ListSessionsHeldInterface');
-$CI->load->iface('formA/lists/ListIndividualsReproductiveAgeInterface');
-$CI->load->iface('formA/lists/ListSoloCoupleDisaggregationInterface');
+$CI->load->iface('formA/SessionsHeldInterface');
+$CI->load->iface('formA/IndividualsReproductiveAgeInterface');
+$CI->load->iface('formA/SoloCoupleDisaggregationInterface');
 
 abstract class MonthsInterface extends BaseInterface
 {
     public $Month;
-    /** @var ListSessionsHeldInterface */
-    public $ListSessionsHeld;
-    /** @var ListIndividualsReproductiveAgeInterface */
-    public $ListIndividualsReproductiveAge;
-    /** @var ListSoloCoupleDisaggregationInterface */
-    public $ListSoloCoupleDisaggregation;
+
+    /** @var SessionsHeldInterface */
+    public $SessionsHeld;
+
+    /** @var IndividualsReproductiveAgeInterface */
+    public $IndividualsReproductiveAge;
+    
+    /** @var SoloCoupleDisaggregationInterface */
+    public $SoloCoupleDisaggregation;
 }

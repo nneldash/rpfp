@@ -16,7 +16,6 @@ class FormModel extends BaseModel
         $this->CI->load->library('formA/SoloCoupleDisaggregationClass');
         $this->CI->load->library('formA/SoloAttendeesClass');
         $this->CI->load->iface('common/TraditionalStatuses');
-        $this->CI->load->iface('common/Periods');
     }
 
     public function saveForm1(FormInterface $form)
@@ -271,11 +270,11 @@ class FormModel extends BaseModel
         $periodReport = new PeriodReportClass();
 
         $periodReport->MonthsPeriod = Periods::MONTHLY;
-        $periodReport->RegionalOffice->Code = 30000000;
-        $periodReport->RegionalOffice->Description = 'Central Luzon Region';
+        $periodReport->RegionalOffice = 30000000;
+        $periodReport->RegionalOffice = 'Central Luzon Region';
 
         return $periodReport;
-    }
+    } 
 
     public function getMonthlyData() : ListMonthsInterface
     {
@@ -284,9 +283,9 @@ class FormModel extends BaseModel
         $month = new MonthsClass();
         $month->Month = '1';
  
-        $month->ListSessionsHeld->append($this->getFormASessionsHeld());
-        $month->ListIndividualsReproductiveAge->append($this->getFormAIndividualsReproductiveAge());
-        $month->ListSoloCoupleDisaggregation->append($this->getFormASoloCoupleDisaggregation());
+        $month->SessionsHeld = $this->getFormASessionsHeld();
+        $month->IndividualsReproductiveAge = $this->getFormAIndividualsReproductiveAge();
+        $month->SoloCoupleDisaggregation = $this->getFormASoloCoupleDisaggregation();
         $listMonth->append($month);
 
         return $listMonth;
@@ -324,7 +323,6 @@ class FormModel extends BaseModel
 
     public function getFormASoloCoupleDisaggregation() : SoloCoupleDisaggregationInterface
     {   
-        $listDisaggregation = new ListSoloCoupleDisaggregationClass();
         $disaggregation = new SoloCoupleDisaggregationClass();
 
         $disaggregation->CoupleAttendees = '5';
