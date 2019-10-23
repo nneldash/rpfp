@@ -19,32 +19,34 @@ class FormModel extends BaseModel
     }
 
     public function saveForm1(FormInterface $form)
-    {
+    {  
         $class_id = $this->saveSeminar($form->Seminar);
+
+        $class_id = explode(" ", $class_id);
+        
         if (!$class_id) {
             /** return exception or error message */
             return;
         }
-
+        
         foreach ($form->ListCouple as $current_couple) {
             $current_couple = CoupleClass::getFromVariable($current_couple);
-            if (!$this->saveCouple($class_id, $current_couple)) {
+            
+            if (!$this->saveCouple($class_id[2], $current_couple)) {
                 return "may error pa ito";
             }
         }
-
-        return true;
     }
 
     public function saveSeminar(SeminarInterface $data)
     {
         $method = "encoder_save_class";
-        
+
         $params = [
             $data->ClassId == N_A ? BLANK : $data->ClassId,
             $data->TypeOfClass->Type == N_A ? BLANK : $data->TypeOfClass->Type,
-            $data->TypeOfClass->Others == N_A ? BLANK : $data->TypeOfClass->Others,
-            $data->Location->SpecificLocation->Code  == N_A ? BLANK : $data->Location->SpecificLocation->Code,
+            $data->TypeOfClass->Type != 7 ? BLANK : $data->TypeOfClass->Others,
+            $data->Location->Barangay->Description  == N_A ? BLANK : $data->Location->Barangay->Description,
             $data->ClassNumber == N_A ? BLANK : $data->ClassNumber,
             $data->DateConducted == N_A ? BLANK : $data->DateConducted
         ];
