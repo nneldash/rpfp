@@ -929,7 +929,7 @@ BEGIN
             SET read_offset := (page_no - 1) * items_per_page;
 
              SELECT rc.RPFP_CLASS_ID AS rpfpclass,
-                    rc.TYPE_CLASS_ID AS typeclass,
+                    tc.TYPE_CLASS_DESC AS typeclass,
                     rc.OTHERS_SPECIFY AS others_specify,
                     rc.BARANGAY_ID AS barangay,
                     rc.CLASS_NUMBER AS class_no,
@@ -937,6 +937,7 @@ BEGIN
                FROM rpfp.rpfp_class rc
           LEFT JOIN rpfp.couples apc
                  ON apc.RPFP_CLASS_ID = rc.RPFP_CLASS_ID
+            LEFT JOIN rpfp.lib_type_class tc ON tc.TYPE_CLASS_ID = rc.TYPE_CLASS_ID 
               WHERE apc.IS_ACTIVE = status_active
                 AND (   rc.DB_USER_ID = name_user
                     OR (   is_not_encoder
