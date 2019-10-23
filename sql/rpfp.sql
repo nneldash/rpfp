@@ -488,7 +488,7 @@ BEGIN
   LEFT JOIN rpfp.lib_psgc_locations loc
          ON prof.PSGC_CODE = loc.PSGC_CODE
   LEFT JOIN rpfp.lib_psgc_locations reg
-         ON reg.PSGC_CODE = (prof.REGION * POWER( 10, 7 ))
+         ON reg.PSGC_CODE = (prof.REGION_CODE * POWER( 10, 7 ))
       WHERE prof.DB_USER_ID = name_user
         AND prof.REGION_CODE = loc.REGION_CODE
     ;

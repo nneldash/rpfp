@@ -19,6 +19,8 @@ class Welcome extends CI_Controller
         if (!$this->LoginModel->isLoggedIn()) {
             $this->load->view("includes/header", $header);
             $this->load->view('index/landingPage');
+
+            redirect(site_url());
             return;
         }
 

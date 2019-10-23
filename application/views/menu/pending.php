@@ -18,14 +18,15 @@ defined('BASEPATH') or exit('No direct script access allowed');
 		</tr>
 	</thead>
 	<tbody>
-
-		<tr>
-			<td><?= $pending->ClassNo ?></td>
-			<td><?= $pending->TypeClass ?></td>
-			<td><?= $pending->Barangay; ?></td>
-			<td><?= date('F d, Y', strtotime($pending->DateConduct)); ?></td>
-			<td></td>
-		</tr>
+		<?php foreach($pending as $pendings) : ?>
+			<tr>
+				<td><?= $pendings->ClassNo ?></td>
+				<td><?= $pendings->TypeClass ?></td>
+				<td><?= $pendings->Barangay; ?></td>
+				<td><?= date('F d, Y', strtotime($pendings->DateConduct)); ?></td>
+				<td></td>
+			</tr>
+		<?php endforeach; ?>
 	</tbody>
 </table>
 
