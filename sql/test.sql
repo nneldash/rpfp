@@ -6,11 +6,11 @@ SELECT "User Created: Test" AS MESSAGE;
 CALL rpfp.itdmu_create_rpfp_user('root', '', 'root', 'root', 'y@com.com', 08, 080000000, 80, 40);
 SELECT "User Created: root" AS MESSAGE;
 
-CALL rpfp.itdmu_create_rpfp_user('encoder8', 'encoder8', 'rdm8', 'rdm8', 'y@com.com', 08, 080000000, 50, 40);
-SELECT "User Created: encoder8" AS MESSAGE;
+CALL rpfp.itdmu_create_rpfp_user('encoder8', 'encoder8', 'root', 'root', 'y@com.com', 08, 080000000, 50, 40);
+SELECT "User Created: root" AS MESSAGE;
 
-CALL rpfp.itdmu_create_rpfp_user('rdm8', 'rdm8', 'rdm8', 'rdm8', 'y@com.com', 08, 080000000, 80, 40);
-SELECT "User Created: rdm8" AS MESSAGE;
+CALL rpfp.itdmu_create_rpfp_user('rdm8', 'rdm8', 'root', 'root', 'y@com.com', 08, 080000000, 80, 40);
+SELECT "User Created: root" AS MESSAGE;
 
 --
 -- Dumping data for table `rpfp_class`
@@ -57,10 +57,10 @@ INSERT INTO rpfp.`couples`
             (14, 1, '11 ISANG STREET', 'PINAGKAISAHAN', 'MANDALUYONG', '1-000-102453-2', 2, '2019-03-01', 2 ),
             (15, 1, '15 ISANG STREET', 'PINAGKAISAHAN', 'MANDALUYONG', '1-000-102453-2', 2, '2019-03-01', 0 ),
             (16, 2, '2 DALAWA STREET', 'PINAGKAISAHAN', 'MANDALUYONG', '1-000-102453-2', 5, '2019-03-01', 0 ),
-            (17, 2, '3 DALAWA STREET', 'PINAGKAISAHAN', 'MANDALUYONG', '1-000-102453-2', 4, '2019-03-01', 2 ),
+            (17, 2, '3 DALAWA STREET', 'PINAGKAISAHAN', 'MANDALUYONG', '1-000-102453-2', 4, '2019-03-01', 0 ),
             (18, 2, '4 DALAWA STREET', 'PINAGKAISAHAN', 'MANDALUYONG', '1-000-102453-2', 3, '2019-03-01', 0 ),
-            (19, 2, '1 DALAWA STREET', 'PINAGKAISAHAN', 'MANDALUYONG', '1-000-102453-2', 2, '2019-03-01', 2 ),
-            (20, 2, '7 DALAWA STREET', 'PINAGKAISAHAN', 'MANDALUYONG', '1-000-102453-2', 6, '2019-03-01', 2 ),
+            (19, 2, '1 DALAWA STREET', 'PINAGKAISAHAN', 'MANDALUYONG', '1-000-102453-2', 2, '2019-03-01', 0 ),
+            (20, 2, '7 DALAWA STREET', 'PINAGKAISAHAN', 'MANDALUYONG', '1-000-102453-2', 6, '2019-03-01', 0 ),
             (21, 2, '6 DALAWA STREET', 'PINAGKAISAHAN', 'MANDALUYONG', '1-000-102453-2', 2, '2019-03-01', 0 ),
             (22, 2, '9 DALAWA STREET', 'PINAGKAISAHAN', 'MANDALUYONG', '1-000-102453-2', 1, '2019-03-01', 0 ),
             (23, 2, '8 DALAWA STREET', 'PINAGKAISAHAN', 'MANDALUYONG', '1-000-102453-2', 0, '2019-03-01', 0 ),

@@ -253,7 +253,6 @@ CREATE DEFINER=root@localhost FUNCTION login_check_if_active()
         READS SQL DATA
 BEGIN
     DECLARE ret_val INT(1) DEFAULT NULL;
-    
      SELECT TRUE INTO ret_val
        FROM rpfp.user_profile prof
       WHERE CONCAT( prof.DB_USER_ID, "@localhost" ) = USER()
@@ -489,7 +488,7 @@ BEGIN
   LEFT JOIN rpfp.lib_psgc_locations loc
          ON prof.PSGC_CODE = loc.PSGC_CODE
   LEFT JOIN rpfp.lib_psgc_locations reg
-         ON reg.PSGC_CODE = (prof.REGION_CODE * POWER( 10, 7 ))
+         ON reg.PSGC_CODE = (prof.REGION * POWER( 10, 7 ))
       WHERE prof.DB_USER_ID = name_user
         AND prof.REGION_CODE = loc.REGION_CODE
     ;
@@ -601,17 +600,15 @@ BEGIN
     DECLARE user_scope INT;
     DECLARE user_location INT;
     DECLARE multiplier INT;
-    DECLARE ret_val INT(1) DEFAULT FALSE;
+    DECLARE ret_val INT(1);
     
     CALL rpfp.lib_extract_user_name( username, name_user, db_user_name );
     SET user_scope := rpfp.profile_get_scope( username );
     SET multiplier := rpfp.lib_get_multiplier( user_scope );
     SET user_location := rpfp.profile_get_location( username, user_scope );
 
-    IF user_location = (location_id DIV POWER( 10, multiplier )) THEN
-        SET ret_val := TRUE;
-    END IF;
-    
+	SET ret_val := (user_location = (location_id DIV POWER( 10, multiplier )));
+
     RETURN ret_val;
 END$$
 /** END OF PROFILE PROCS */
@@ -1985,7 +1982,6 @@ END$$
 
 /** PROCESS REPORTS */
 CREATE DEFINER=root@localhost PROCEDURE process_demandgen (
-    IN demandgen_id INT,
     IN report_year INT,
     IN report_month INT,
     IN psgc_code INT
@@ -1993,6 +1989,8 @@ CREATE DEFINER=root@localhost PROCEDURE process_demandgen (
 proc_exit_point :
 BEGIN
 DECLARE class_4ps INT;
+DECLARE class_non4ps1 INT;
+DECLARE class_non4ps2 INT;
 DECLARE class_non4ps INT;
 DECLARE class_usapan INT;
 DECLARE class_pmc INT;
@@ -2030,11 +2028,10 @@ DECLARE report_scope VARCHAR(100);
       SELECT class_4ps;
 
       SELECT COUNT(*) 
-        INTO class_non4ps 
+        INTO class_non4ps1 
         FROM rpfp.rpfp_class rc 
    LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
        WHERE rc.TYPE_CLASS_ID = 2 
-         AND rc.TYPE_CLASS_ID = 7 
          AND YEAR(rc.DATE_CONDUCTED) = report_year 
          AND MONTH(rc.DATE_CONDUCTED) = report_month 
          AND (
@@ -2043,6 +2040,22 @@ DECLARE report_scope VARCHAR(100);
             )
     GROUP BY rc.CLASS_NUMBER
     ;
+
+      SELECT COUNT(*) 
+        INTO class_non4ps2 
+        FROM rpfp.rpfp_class rc 
+   LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
+       WHERE rc.TYPE_CLASS_ID = 7 
+         AND YEAR(rc.DATE_CONDUCTED) = report_year 
+         AND MONTH(rc.DATE_CONDUCTED) = report_month 
+         AND (
+                QUOTE(lp.REGION_CODE) = QUOTE(psgc_code)
+             OR (IFNULL( psgc_code, 0 ) = 0)
+            )
+    GROUP BY rc.CLASS_NUMBER
+    ;
+
+         SET class_non4ps = class_non4ps1 + class_non4ps2;
 
       SELECT class_non4ps;
 
@@ -2082,7 +2095,7 @@ DECLARE report_scope VARCHAR(100);
         INTO class_h2h 
         FROM rpfp.rpfp_class rc 
    LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
-       WHERE TYPE_CLASS_ID = 5 
+       WHERE rc.TYPE_CLASS_ID = 5 
          AND YEAR(rc.DATE_CONDUCTED) = report_year 
          AND MONTH(rc.DATE_CONDUCTED) = report_month 
          AND (
@@ -2098,7 +2111,7 @@ DECLARE report_scope VARCHAR(100);
         INTO class_profiled 
         FROM rpfp.rpfp_class rc 
    LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
-       WHERE TYPE_CLASS_ID = 6 
+       WHERE rc.TYPE_CLASS_ID = 6 
          AND YEAR(rc.DATE_CONDUCTED) = report_year 
          AND MONTH(rc.DATE_CONDUCTED) = report_month 
          AND (
@@ -2114,7 +2127,7 @@ DECLARE report_scope VARCHAR(100);
         INTO class_total 
         FROM rpfp.rpfp_class rc 
    LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
-         AND YEAR(rc.DATE_CONDUCTED) = report_year 
+       WHERE YEAR(rc.DATE_CONDUCTED) = report_year 
          AND MONTH(rc.DATE_CONDUCTED) = report_month 
          AND (
                 QUOTE(lp.REGION_CODE) = QUOTE(psgc_code)
@@ -2125,7 +2138,8 @@ DECLARE report_scope VARCHAR(100);
 
       SELECT class_total;
 
-      SELECT TARGET_COUNT
+      SELECT SUM(TARGET_COUNT)
+	    INTO target_couples
         FROM target_couples tc
        WHERE tc.TARGET_YEAR = report_year 
          AND tc.TARGET_MONTH = report_month
@@ -2134,6 +2148,8 @@ DECLARE report_scope VARCHAR(100);
              OR (IFNULL( psgc_code, 0 ) = 0)
             )
     ;
+	
+	SELECT target_couples;
 
       SELECT COUNT(*) 
         INTO wra_4ps 
@@ -3406,7 +3422,7 @@ CREATE TABLE fp_service (
 
 CREATE TABLE report_demandgen (
               REPORT_ID INT UNSIGNED NOT NULL AUTO_INCREMENT,
-           DEMANDGEN_ID INT NOT NULL,
+           DEMANDGEN_ID VARCHAR(100) NOT NULL,
             REPORT_YEAR INT NOT NULL,
               PSGC_CODE INT NOT NULL,
            REPORT_MONTH INT NOT NULL,
@@ -3595,21 +3611,6 @@ GRANT EXECUTE ON PROCEDURE rpfp.search_couples_approved TO 'regional_data_manage
 GRANT EXECUTE ON PROCEDURE rpfp.search_class_pending TO 'regional_data_manager';
 GRANT EXECUTE ON PROCEDURE rpfp.search_class_approved TO 'regional_data_manager';
 
-
-GRANT EXECUTE ON PROCEDURE rpfp.encoder_get_couple_fp_details TO 'focal_person';
-GRANT EXECUTE ON PROCEDURE rpfp.encoder_get_class_list_pending TO 'focal_person';
-GRANT EXECUTE ON PROCEDURE rpfp.encoder_get_class_list_approved TO 'focal_person';
-GRANT EXECUTE ON PROCEDURE rpfp.encoder_get_couples_list TO 'focal_person';
-GRANT EXECUTE ON PROCEDURE rpfp.encoder_get_couples_details TO 'focal_person';
-GRANT EXECUTE ON PROCEDURE rpfp.encoder_check_couples_details_m TO 'focal_person';
-GRANT EXECUTE ON PROCEDURE rpfp.encoder_check_couples_details_f TO 'focal_person';
-GRANT EXECUTE ON PROCEDURE rpfp.encoder_get_fp_service TO 'focal_person';
-GRANT EXECUTE ON PROCEDURE rpfp.search_couples_pending TO 'focal_person';
-GRANT EXECUTE ON PROCEDURE rpfp.search_couples_approved TO 'focal_person';
-GRANT EXECUTE ON PROCEDURE rpfp.search_class_pending TO 'focal_person';
-GRANT EXECUTE ON PROCEDURE rpfp.search_class_approved TO 'focal_person';
-
-
 GRANT EXECUTE ON PROCEDURE rpfp.process_demandgen TO 'pmed';
 GRANT EXECUTE ON PROCEDURE rpfp.process_unmet_need TO 'pmed';
 GRANT EXECUTE ON PROCEDURE rpfp.process_served_method_mix TO 'pmed';
@@ -3640,4 +3641,4 @@ SOURCE ./libraries.sql;
 
 -- --------------------------------------------------------
 
-/** END */
+/** END OF RPFP.SQL */
