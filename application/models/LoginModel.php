@@ -160,7 +160,7 @@ class LoginModel extends CI_Model
 
     private function runTrueFalseQuery($stored_function, $params = false)
     {
-        $customQuery = 'SELECT rpfp.' . $stored_function . ' as myresult;';
+        $customQuery = 'SELECT `rpfp`.' . $stored_function . '() as myresult;';
         $result = $this->runQuery($customQuery, $params);
 
         if ($result == false || (count($result) < 1) ) {

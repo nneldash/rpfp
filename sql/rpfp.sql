@@ -253,6 +253,7 @@ CREATE DEFINER=root@localhost FUNCTION login_check_if_active()
         READS SQL DATA
 BEGIN
     DECLARE ret_val INT(1) DEFAULT NULL;
+    
      SELECT TRUE INTO ret_val
        FROM rpfp.user_profile prof
       WHERE CONCAT( prof.DB_USER_ID, "@localhost" ) = USER()
@@ -3591,6 +3592,21 @@ GRANT EXECUTE ON PROCEDURE rpfp.search_couples_pending TO 'regional_data_manager
 GRANT EXECUTE ON PROCEDURE rpfp.search_couples_approved TO 'regional_data_manager';
 GRANT EXECUTE ON PROCEDURE rpfp.search_class_pending TO 'regional_data_manager';
 GRANT EXECUTE ON PROCEDURE rpfp.search_class_approved TO 'regional_data_manager';
+
+
+GRANT EXECUTE ON PROCEDURE rpfp.encoder_get_couple_fp_details TO 'focal_person';
+GRANT EXECUTE ON PROCEDURE rpfp.encoder_get_class_list_pending TO 'focal_person';
+GRANT EXECUTE ON PROCEDURE rpfp.encoder_get_class_list_approved TO 'focal_person';
+GRANT EXECUTE ON PROCEDURE rpfp.encoder_get_couples_list TO 'focal_person';
+GRANT EXECUTE ON PROCEDURE rpfp.encoder_get_couples_details TO 'focal_person';
+GRANT EXECUTE ON PROCEDURE rpfp.encoder_check_couples_details_m TO 'focal_person';
+GRANT EXECUTE ON PROCEDURE rpfp.encoder_check_couples_details_f TO 'focal_person';
+GRANT EXECUTE ON PROCEDURE rpfp.encoder_get_fp_service TO 'focal_person';
+GRANT EXECUTE ON PROCEDURE rpfp.search_couples_pending TO 'focal_person';
+GRANT EXECUTE ON PROCEDURE rpfp.search_couples_approved TO 'focal_person';
+GRANT EXECUTE ON PROCEDURE rpfp.search_class_pending TO 'focal_person';
+GRANT EXECUTE ON PROCEDURE rpfp.search_class_approved TO 'focal_person';
+
 
 GRANT EXECUTE ON PROCEDURE rpfp.process_demandgen TO 'pmed';
 GRANT EXECUTE ON PROCEDURE rpfp.process_unmet_need TO 'pmed';

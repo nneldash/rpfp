@@ -3,7 +3,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 class Forms extends CI_Controller
 {
-	public function __construct()
+    public function __construct()
     {
         parent::__construct();
         $this->load->model('FormModel');
@@ -32,7 +32,7 @@ class Forms extends CI_Controller
 
         $header['title'] =' RPFP Online | Form 1';
 
-        $this->load->Model('ProfileModel');
+        $this->load->model('ProfileModel');
         $this->load->model('FormModel');
 
         $form1 = $this->FormModel->getForm1();
@@ -60,7 +60,7 @@ class Forms extends CI_Controller
         $form1->ListCouple = $this->getInputFromListCouples();
 
         $data = ['is_save' => true];
-        if(!$this->FormModel->saveForm1($form1)) {
+        if (!$this->FormModel->saveForm1($form1)) {
             $data = ['is_save' => false];
         }
 
@@ -104,7 +104,7 @@ class Forms extends CI_Controller
 
             $couple->FirstEntry = $this->getFirstEntry($i);
             $couple->SecondEntry = $this->getSecondEntry($i);
-            $couple->ModernFp = $this->getModernFp ($i);
+            $couple->ModernFp = $this->getModernFp($i);
             $couple->TraditionalFp = $this->getTraditionalFp($i);
 
             $listCouple->append($couple);
@@ -160,7 +160,7 @@ class Forms extends CI_Controller
         $modernFp->MethodUsed = $this->input->post('method')[$i];
         $modernFp->IntentionToShift = $this->input->post('fp_method')[$i];
 
-        return $modernFp;        
+        return $modernFp;
     }
 
     public function getTraditionalFp(int $i) : TraditionalFpUserInterface
@@ -171,7 +171,7 @@ class Forms extends CI_Controller
         $traditionalFp->Status = $this->input->post('status')[$i];
         $traditionalFp->ReasonForUse = $this->input->post('reason')[$i];
 
-        return $traditionalFp;        
+        return $traditionalFp;
     }
 
     public function saveServiceSlip()
@@ -195,7 +195,7 @@ class Forms extends CI_Controller
         $data = ['is_save' => true];
         if (!$this->FormModel->saveServiceSlip($couple_id, $slip)) {
             $data = ['is_save' => false];
-        } 
+        }
 
         $this->output
             ->set_content_type('application/json')
@@ -340,8 +340,7 @@ class Forms extends CI_Controller
         } catch (\Mpdf\MpdfException $e) {
             echo $e->getMessage();
         }
-        
-    }   
+    }
 
     public function viewformb()
     {

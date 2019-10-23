@@ -96,7 +96,7 @@ class FormModel extends BaseModel
 
             $traditional->Type == N_A ? BLANK : $traditional->Id,
             $traditional->Status == N_A ? BLANK : $traditional->Status,
-            $traditional->ReasonForUse == N_A ? BLANK : $traditional->ReasonForUse        
+            $traditional->ReasonForUse == N_A ? BLANK : $traditional->ReasonForUse
         ];
 
         return $this->saveToDb($method, $params);
@@ -170,7 +170,6 @@ class FormModel extends BaseModel
         $seminar->DateConducted = '09/10/2019';
 
         return $seminar;
-
     }
 
     public function getForm1Couples() : ListCoupleInterface
@@ -196,7 +195,7 @@ class FormModel extends BaseModel
     }
 
     public function getForm1Husband() : IndividualInterface
-    {   
+    {
         $individual = new IndividualClass();
 
         $individual->Id = '1';
@@ -274,7 +273,7 @@ class FormModel extends BaseModel
         $periodReport->RegionalOffice = 'Central Luzon Region';
 
         return $periodReport;
-    } 
+    }
 
     public function getMonthlyData() : ListMonthsInterface
     {
@@ -322,7 +321,7 @@ class FormModel extends BaseModel
     }
 
     public function getFormASoloCoupleDisaggregation() : SoloCoupleDisaggregationInterface
-    {   
+    {
         $disaggregation = new SoloCoupleDisaggregationClass();
 
         $disaggregation->CoupleAttendees = '5';
