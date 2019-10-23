@@ -9,33 +9,65 @@ class CoupleModel extends BaseModel
         parent::__construct();
         $this->CI->load->library('couple_list/PendingClass');
         $this->CI->load->library('couple_list/ApproveClass');
+        $this->CI->load->library('couple_list/lists/ListPendingCouple');
+        $this->CI->load->library('couple_list/lists/ListApproveCouple');
     }
 
-    public function getPendingList() : PendingInterface
+    public function getPendingList() : ListPendingCoupleInterface
     {
-        $pending = new PendingClass();
+        $page_no = 1;
+        $items_per_page = 10;
 
-        $pending->RpfpClass = '1';
-        $pending->TypeClass = '';
-        $pending->OthersSpecify = 'RPFP';
-        $pending->Barangay = 'Addition Hills';
-        $pending->ClassNo = 'RPFP-AH-2019-00001';
-        $pending->DateConduct = '10/21/2019';
+        $pending_list = $this->fromDbGetList(
+            'ListPendingCouple',
+            'PendingClass',
+            array(
+                'RpfpClass' => 'rpfpclass',
+                'TypeClass' => 'typeclass',
+                'OthersSpecify' => 'others_specify',
+                'Barangay' => 'barangay',
+                'ClassNo' => 'class_no',
+                'DateConduct' => 'date_conduct'
+            ),
+            'encoder_get_class_list_pending',
+            array($page_no, $items_per_page)
+        );
 
-        return $pending;
+        $retval = new ListPendingCouple();
+
+        foreach($pending_list as $pendingCouples) {
+            $retval->append($pendingCouples);
+        }
+
+        return $retval;
     }
 
-    public function getApproveList() : ApproveInterface
+    public function getApproveList() : ListApproveCoupleInterface
     {
-        $pending = new ApproveClass();
+        $page_no = 1;
+        $items_per_page = 10;
 
-        $pending->RpfpClass = '1';
-        $pending->TypeClass = '';
-        $pending->OthersSpecify = 'RPFP';
-        $pending->Barangay = 'Addition Hills';
-        $pending->ClassNo = 'RPFP-AH-2019-00001';
-        $pending->DateConduct = '10/21/2019';
+        $approve_list = $this->fromDbGetList(
+            'ListApproveCouple',
+            'ApproveClass',
+            array(
+                'RpfpClass' => 'rpfpclass',
+                'TypeClass' => 'typeclass',
+                'OthersSpecify' => 'others_specify',
+                'Barangay' => 'barangay',
+                'ClassNo' => 'class_no',
+                'DateConduct' => 'date_conduct'
+            ),
+            'encoder_get_class_list_approved',
+            array($page_no, $items_per_page)
+        );
 
-        return $pending;
+        $retval = new ListApproveCouple();
+
+        foreach($approve_list as $approveCouples) {
+            $retval->append($approveCouples);
+        }
+
+        return $retval;
     }
 }
