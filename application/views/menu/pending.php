@@ -24,7 +24,13 @@ defined('BASEPATH') or exit('No direct script access allowed');
 				<td><?= $pendings->TypeClass ?></td>
 				<td><?= $pendings->Barangay; ?></td>
 				<td><?= date('F d, Y', strtotime($pendings->DateConduct)); ?></td>
-				<td></td>
+				<td class="text-center">
+					<a href="<?= base_url('forms?rpfpId='.md5($pendings->RpfpClass)); ?>" target="_blank">
+						<button class="btn btn-primary" data-toggle="tooltip" data-placement="left" title="Edit">
+							<i class="fa fa-edit"></i>
+						</button>
+					</a>
+				</td>
 			</tr>
 		<?php endforeach; ?>
 	</tbody>

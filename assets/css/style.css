@@ -91,7 +91,17 @@ table.datatable,
 	border: 2px solid #076c1b;
 	color: #333;
 }
+.btn-primary.focus, 
+.btn-primary:focus,
+.btn-primary.active, 
+.btn-primary:active, 
+.open>.dropdown-toggle.btn-primary {
+    background-color: #095017!important;
+    border-color: #095017!important;
+}
 
+/*------------------------------------------------------------------
+[ Btn-folder Styles ]*/
 .folderview:hover .fa-folder-o,
 .folderview .fa-folder-open-o {
     display: none;
