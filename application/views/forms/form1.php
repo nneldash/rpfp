@@ -87,7 +87,7 @@ $form1 = FormClass::getFormFromVariable($form1);
 						<td class="border-1 padding-0 back-eee" style="border-left: none">
 							<?php if (!$is_pdf) : ?>
 								<label class="cont border-t1">
-									<input id="4ps" type="radio" name="type_of_class" value="4Ps" />
+									<input id="4ps" type="radio" name="type_of_class" value="1" />
 									<span class="checkmark"></span>
 								</label>
 							<?php endif; ?>
@@ -99,7 +99,7 @@ $form1 = FormClass::getFormFromVariable($form1);
 						<td class="border-1 padding-0 back-eee" style="border: 1px solid">
 							<?php if (!$is_pdf) : ?>
 								<label class="cont">
-									<input id="house" type="radio" name="type_of_class" value="house_to_house" />
+									<input id="house" type="radio" name="type_of_class" value="5" />
 									<span class="checkmark"></span>
 								</label>
 							<?php endif; ?>
@@ -130,7 +130,7 @@ $form1 = FormClass::getFormFromVariable($form1);
 						<td class="border-1 width-30 padding-0 back-eee" style="border-left: none!important;">
 							<?php if (!$is_pdf) : ?>
 								<label class="cont border-t1">
-									<input id="faith" type="radio" name="type_of_class" value="faith_based_org" />
+									<input id="faith" type="radio" name="type_of_class" value="2" />
 									<span class="checkmark"></span>
 								</label>
 							<?php endif; ?>
@@ -142,7 +142,7 @@ $form1 = FormClass::getFormFromVariable($form1);
 						<td class="border-1 width-30 padding-0 back-eee">
 							<?php if (!$is_pdf) : ?>
 								<label class="cont border-t1">
-									<input id="profile" type="radio" name="type_of_class" value="profile" />
+									<input id="profile" type="radio" name="type_of_class" value="6" />
 									<span class="checkmark"></span>
 								</label>
 							<?php endif; ?>
@@ -174,7 +174,7 @@ $form1 = FormClass::getFormFromVariable($form1);
 						<td class="border-1 width-30 padding-0 back-eee" style="border-left: none">
 							<?php if (!$is_pdf) : ?>
 								<label class="cont border-t1">
-									<input id="pmc" type="radio" name="type_of_class" value="pmc" />
+									<input id="pmc" type="radio" name="type_of_class" value="3" />
 									<span class="checkmark"></span>
 								</label>
 							<?php endif; ?>
@@ -186,7 +186,7 @@ $form1 = FormClass::getFormFromVariable($form1);
 						<td class="border-1 width-30 padding-0 back-eee">
 							<?php if (!$is_pdf) : ?>
 								<label class="cont border-t1">
-									<input id="others" type="radio" name="type_of_class" value="others_check" />
+									<input id="others" type="radio" name="type_of_class" value="7" />
 									<span class="checkmark"></span>
 								</label>
 							<?php endif; ?>
@@ -228,7 +228,7 @@ $form1 = FormClass::getFormFromVariable($form1);
 						<td class="border-1 width-30 padding-0 back-eee" style="border-left: none">
 							<?php if (!$is_pdf) : ?>
 								<label class="cont border-t1">
-									<input id="usapan" type="radio" name="type_of_class" value="usapan" />
+									<input id="usapan" type="radio" name="type_of_class" value="4" />
 									<span class="checkmark"></span>
 								</label>
 							<?php endif; ?>
