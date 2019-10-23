@@ -601,14 +601,16 @@ BEGIN
     DECLARE user_scope INT;
     DECLARE user_location INT;
     DECLARE multiplier INT;
-    DECLARE ret_val INT(1);
+    DECLARE ret_val INT(1) DEFAULT FALSE;
     
     CALL rpfp.lib_extract_user_name( username, name_user, db_user_name );
     SET user_scope := rpfp.profile_get_scope( username );
     SET multiplier := rpfp.lib_get_multiplier( user_scope );
     SET user_location := rpfp.profile_get_location( username, user_scope );
 
-    SET ret_val := (user_location = (location_id DIV POWER( 10, multiplier )));
+    IF user_location = (location_id DIV POWER( 10, multiplier )) THEN
+        SET ret_val := TRUE;
+    END IF;
     
     RETURN ret_val;
 END$$
@@ -3638,4 +3640,4 @@ SOURCE ./libraries.sql;
 
 -- --------------------------------------------------------
 
-/** END OF RPFP.SQL */
+/** END */
