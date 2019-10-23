@@ -6,11 +6,11 @@ SELECT "User Created: Test" AS MESSAGE;
 CALL rpfp.itdmu_create_rpfp_user('root', '', 'root', 'root', 'y@com.com', 08, 080000000, 80, 40);
 SELECT "User Created: root" AS MESSAGE;
 
-CALL rpfp.itdmu_create_rpfp_user('encoder8', 'encoder8', 'root', 'root', 'y@com.com', 08, 080000000, 50, 40);
-SELECT "User Created: root" AS MESSAGE;
+CALL rpfp.itdmu_create_rpfp_user('encoder8', 'encoder8', 'rdm8', 'rdm8', 'y@com.com', 08, 080000000, 50, 40);
+SELECT "User Created: encoder8" AS MESSAGE;
 
-CALL rpfp.itdmu_create_rpfp_user('rdm8', 'rdm8', 'root', 'root', 'y@com.com', 08, 080000000, 80, 40);
-SELECT "User Created: root" AS MESSAGE;
+CALL rpfp.itdmu_create_rpfp_user('rdm8', 'rdm8', 'rdm8', 'rdm8', 'y@com.com', 08, 080000000, 80, 40);
+SELECT "User Created: rdm8" AS MESSAGE;
 
 --
 -- Dumping data for table `rpfp_class`

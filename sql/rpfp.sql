@@ -253,6 +253,7 @@ CREATE DEFINER=root@localhost FUNCTION login_check_if_active()
         READS SQL DATA
 BEGIN
     DECLARE ret_val INT(1) DEFAULT NULL;
+    
      SELECT TRUE INTO ret_val
        FROM rpfp.user_profile prof
       WHERE CONCAT( prof.DB_USER_ID, "@localhost" ) = USER()
@@ -600,14 +601,16 @@ BEGIN
     DECLARE user_scope INT;
     DECLARE user_location INT;
     DECLARE multiplier INT;
-    DECLARE ret_val INT(1);
+    DECLARE ret_val INT(1) DEFAULT FALSE;
     
     CALL rpfp.lib_extract_user_name( username, name_user, db_user_name );
     SET user_scope := rpfp.profile_get_scope( username );
     SET multiplier := rpfp.lib_get_multiplier( user_scope );
     SET user_location := rpfp.profile_get_location( username, user_scope );
 
-    SET ret_val := (user_location = (location_id DIV POWER( 10, multiplier )));
+    IF user_location = (location_id DIV POWER( 10, multiplier )) THEN
+        SET ret_val := TRUE;
+    END IF;
     
     RETURN ret_val;
 END$$
@@ -3592,6 +3595,21 @@ GRANT EXECUTE ON PROCEDURE rpfp.search_couples_approved TO 'regional_data_manage
 GRANT EXECUTE ON PROCEDURE rpfp.search_class_pending TO 'regional_data_manager';
 GRANT EXECUTE ON PROCEDURE rpfp.search_class_approved TO 'regional_data_manager';
 
+
+GRANT EXECUTE ON PROCEDURE rpfp.encoder_get_couple_fp_details TO 'focal_person';
+GRANT EXECUTE ON PROCEDURE rpfp.encoder_get_class_list_pending TO 'focal_person';
+GRANT EXECUTE ON PROCEDURE rpfp.encoder_get_class_list_approved TO 'focal_person';
+GRANT EXECUTE ON PROCEDURE rpfp.encoder_get_couples_list TO 'focal_person';
+GRANT EXECUTE ON PROCEDURE rpfp.encoder_get_couples_details TO 'focal_person';
+GRANT EXECUTE ON PROCEDURE rpfp.encoder_check_couples_details_m TO 'focal_person';
+GRANT EXECUTE ON PROCEDURE rpfp.encoder_check_couples_details_f TO 'focal_person';
+GRANT EXECUTE ON PROCEDURE rpfp.encoder_get_fp_service TO 'focal_person';
+GRANT EXECUTE ON PROCEDURE rpfp.search_couples_pending TO 'focal_person';
+GRANT EXECUTE ON PROCEDURE rpfp.search_couples_approved TO 'focal_person';
+GRANT EXECUTE ON PROCEDURE rpfp.search_class_pending TO 'focal_person';
+GRANT EXECUTE ON PROCEDURE rpfp.search_class_approved TO 'focal_person';
+
+
 GRANT EXECUTE ON PROCEDURE rpfp.process_demandgen TO 'pmed';
 GRANT EXECUTE ON PROCEDURE rpfp.process_unmet_need TO 'pmed';
 GRANT EXECUTE ON PROCEDURE rpfp.process_served_method_mix TO 'pmed';
@@ -3622,4 +3640,4 @@ SOURCE ./libraries.sql;
 
 -- --------------------------------------------------------
 
-/** END OF RPFP.SQL */
+/** END */

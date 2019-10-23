@@ -8,7 +8,6 @@ class LocationModel extends BaseModel
     {
         parent::__construct();
         $this->CI->load->iface('common/ListSpecificLocation');
-        
     }
     
     public function listRegions() : ListLocationInterface
@@ -26,7 +25,7 @@ class LocationModel extends BaseModel
         );
 
         $retval = new ListSpecificLocation();
-        foreach($list as $region) {
+        foreach ($list as $region) {
             $retval->append($region);
         }
 
@@ -53,7 +52,7 @@ class LocationModel extends BaseModel
         );
 
         $retval = new ListSpecificLocation();
-        foreach($list as $province) {
+        foreach ($list as $province) {
             $retval->append($province);
         }
 
@@ -84,7 +83,7 @@ class LocationModel extends BaseModel
         );
 
         $retval = new ListSpecificLocation();
-        foreach($list as $municipality) {
+        foreach ($list as $municipality) {
             $retval->append($municipality);
         }
 
@@ -119,7 +118,7 @@ class LocationModel extends BaseModel
         );
 
         $retval = new ListSpecificLocation();
-        foreach($list as $barangay) {
+        foreach ($list as $barangay) {
             $retval->append($barangay);
         }
 
@@ -157,9 +156,9 @@ class LocationModel extends BaseModel
         if (!empty($barangay)) {
             if (empty($retval->Barangay->Code) && empty($retval->City->Code) && empty($retval->Province->Code)) {
                 $retval->Region->Description = $retval->Barangay->Description;
-            } else if (empty($retval->Barangay->Code) && empty($retval->City->Code)) {
+            } elseif (empty($retval->Barangay->Code) && empty($retval->City->Code)) {
                 $retval->Province->Description = $retval->Barangay->Description;
-            } else if (empty($retval->Barangay->Code)) {
+            } elseif (empty($retval->Barangay->Code)) {
                 $retval->City->Description = $retval->Barangay->Description;
             }
         }
