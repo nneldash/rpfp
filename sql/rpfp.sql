@@ -935,9 +935,9 @@ BEGIN
                     rc.CLASS_NUMBER AS class_no,
                     rc.DATE_CONDUCTED AS date_conduct
                FROM rpfp.rpfp_class rc
-          LEFT JOIN rpfp.couples apc
-                 ON apc.RPFP_CLASS_ID = rc.RPFP_CLASS_ID
-            LEFT JOIN rpfp.lib_type_class tc ON tc.TYPE_CLASS_ID = rc.TYPE_CLASS_ID 
+          LEFT JOIN rpfp.couples apc 
+		         ON apc.RPFP_CLASS_ID = rc.RPFP_CLASS_ID
+          LEFT JOIN rpfp.lib_type_class tc ON tc.TYPE_CLASS_ID = rc.TYPE_CLASS_ID
               WHERE apc.IS_ACTIVE = status_active
                 AND (   rc.DB_USER_ID = name_user
                     OR (   is_not_encoder
@@ -1982,6 +1982,119 @@ END$$
 /** END SAVE TARGET COUPLES */
 
 /** PROCESS REPORTS */
+CREATE DEFINER=root@localhost PROCEDURE process_couples_encoded (
+    IN username VARCHAR(50),
+    IN report_year INT,
+    IN report_month INT,
+    IN psgc_code INT
+    )  MODIFIES SQL DATA
+proc_exit_point :
+BEGIN
+DECLARE class_no VARCHAR(100);
+DECLARE encoded_couples INT;
+DECLARE approved_couples INT;
+DECLARE duplicates INT;
+DECLARE invalids INT;
+    
+      SELECT rc.CLASS_NUMBER
+        INTO class_no
+        FROM rpfp.rpfp_class rc 
+   LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
+       WHERE YEAR(rc.DATE_CONDUCTED) = report_year 
+         AND MONTH(rc.DATE_CONDUCTED) = report_month
+         AND (
+                QUOTE(lp.REGION_CODE) = QUOTE(psgc_code)
+             OR (IFNULL( psgc_code, 0 ) = 0)
+            )
+    GROUP BY rc.CLASS_NUMBER
+    ;
+
+    SELECT class_no;
+
+      SELECT COUNT(apc.COUPLES_ID)
+        INTO encoded_couples
+        FROM rpfp.couples apc 
+   LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
+   LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
+       WHERE YEAR(rc.DATE_CONDUCTED) = report_year 
+         AND MONTH(rc.DATE_CONDUCTED) = report_month
+         AND (
+                QUOTE(lp.REGION_CODE) = QUOTE(psgc_code)
+             OR (IFNULL( psgc_code, 0 ) = 0)
+            )
+    GROUP BY rc.CLASS_NUMBER
+    ;
+
+    SELECT encoded_couples;
+
+      SELECT COUNT(apc.COUPLES_ID)
+        INTO approved_couples
+        FROM rpfp.couples apc 
+   LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
+   LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
+       WHERE apc.IS_ACTIVE = 0
+         AND YEAR(rc.DATE_CONDUCTED) = report_year 
+         AND MONTH(rc.DATE_CONDUCTED) = report_month
+         AND (
+                QUOTE(lp.REGION_CODE) = QUOTE(psgc_code)
+             OR (IFNULL( psgc_code, 0 ) = 0)
+            )
+    GROUP BY rc.CLASS_NUMBER
+    ;
+
+    SELECT approved_couples;
+
+      SELECT ic.FNAME, ic.LNAME, ic.EXT_NAME, ic.BDATE, COUNT(apc.COUPLES_ID)
+        INTO duplicates
+        FROM rpfp.individual ic
+   LEFT JOIN rpfp.couples apc ON apc.COUPLES_ID = ic.COUPLES_ID
+   LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
+   LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
+       WHERE apc.IS_ACTIVE = 0
+         AND YEAR(rc.DATE_CONDUCTED) = report_year 
+         AND MONTH(rc.DATE_CONDUCTED) = report_month
+         AND (
+                QUOTE(lp.REGION_CODE) = QUOTE(psgc_code)
+             OR (IFNULL( psgc_code, 0 ) = 0)
+            )
+    GROUP BY ic.FNAME, ic.LNAME, ic.EXT_NAME, ic.BDATE
+    ;
+
+    SELECT duplicates;
+
+        INSERT INTO rpfp.report_couples_encoded (
+                REPORT_YEAR,
+                REPORT_MONTH,
+                PSGC_CODE,
+                RPFP_CLASS_NO,
+                ENCODED_COUPLES,
+                APPROVED_COUPLES,
+                DUPLICATES,
+                INVALIDS,
+                DB_USER_ID,
+                DATE_PROCESSED
+            )
+        VALUES (
+                report_year,
+                report_month,
+                psgc_code,
+                class_no,
+                encoded_couples,
+                approved_couples,
+                duplicates,
+                invalids,
+                username,
+                CURRENT_DATE()
+            )
+        ;
+
+        SELECT CONCAT( "NEW ENTRY: ", LAST_INSERT_ID() ) AS MESSAGE;
+        LEAVE proc_exit_point;
+
+    SELECT "SUCCESS!" AS MESSAGE;
+    
+END$$
+
 CREATE DEFINER=root@localhost PROCEDURE process_demandgen (
     IN report_year INT,
     IN report_month INT,
@@ -3498,6 +3611,27 @@ CREATE TABLE report_served_method_mix (
              SERVED_SDM INT,
              SERVED_LAM INT,
            TOTAL_SERVED INT,
+         DATE_PROCESSED DATE,
+            PRIMARY KEY (REPORT_ID)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table report_couples_encoded
+--
+
+CREATE TABLE report_couples_encoded (
+              REPORT_ID INT UNSIGNED NOT NULL AUTO_INCREMENT,
+            REPORT_YEAR INT NOT NULL,
+              PSGC_CODE INT NOT NULL,
+           REPORT_MONTH INT NOT NULL,
+          RPFP_CLASS_NO VARCHAR(100),
+        ENCODED_COUPLES INT,
+       APPROVED_COUPLES INT,
+             DUPLICATES INT,
+               INVALIDS INT,
+             DB_USER_ID VARCHAR(50),
          DATE_PROCESSED DATE,
             PRIMARY KEY (REPORT_ID)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
