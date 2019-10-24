@@ -1344,9 +1344,11 @@ END$$
 CREATE DEFINER=root@localhost PROCEDURE encoder_check_couples_details(
     IN firstname VARCHAR(50),
     IN lastname VARCHAR(50),
+    IN extname VARCHAR(50),
     IN birthdate DATE,
     IN sex INT
     )   READS SQL DATA
+proc_exit_point :
 BEGIN
 DECLARE check_details INT;
 
@@ -1361,6 +1363,7 @@ DECLARE check_details INT;
         FROM rpfp.individual ic 
        WHERE ic.FNAME = firstname
          AND ic.LNAME = lastname
+         AND ic.EXT_NAME = extname
          AND ic.BDATE = birthdate
          AND ic.SEX = 1
     ;
@@ -1373,9 +1376,15 @@ DECLARE check_details INT;
          AND ic.BDATE = birthdate
          AND ic.SEX = 2
     ;
-    END IF
+    END IF;
 
-    SELECT check_details;
+    IF check_details = 0 THEN
+        SELECT "NO DUPLICATE DATA!" AS MESSAGE;
+    ELSE
+        SELECT "WITH DUPLICATE DATA!" AS MESSAGE;
+    END IF;
+
+    LEAVE proc_exit_point;
 END$$
 
 CREATE DEFINER=root@localhost PROCEDURE encoder_save_couple (
@@ -3509,8 +3518,7 @@ GRANT EXECUTE ON PROCEDURE rpfp.encoder_get_class_list_pending TO 'encoder';
 GRANT EXECUTE ON PROCEDURE rpfp.encoder_get_class_list_approved TO 'encoder';
 GRANT EXECUTE ON PROCEDURE rpfp.encoder_get_couples_list TO 'encoder';
 GRANT EXECUTE ON PROCEDURE rpfp.encoder_get_couples_details TO 'encoder';
-GRANT EXECUTE ON PROCEDURE rpfp.encoder_check_couples_details_m TO 'encoder';
-GRANT EXECUTE ON PROCEDURE rpfp.encoder_check_couples_details_f TO 'encoder';
+GRANT EXECUTE ON PROCEDURE rpfp.encoder_check_couples_details TO 'encoder';
 GRANT EXECUTE ON PROCEDURE rpfp.encoder_get_fp_service TO 'encoder';
 
 GRANT EXECUTE ON PROCEDURE rpfp.encoder_save_class TO 'encoder';
@@ -3519,12 +3527,6 @@ GRANT EXECUTE ON PROCEDURE rpfp.encoder_save_fp_service TO 'encoder';
 GRANT EXECUTE ON PROCEDURE rpfp.encoder_save_couple TO 'encoder';
 GRANT EXECUTE ON PROCEDURE rpfp.encoder_save_individual TO 'encoder';
 
-GRANT EXECUTE ON PROCEDURE rpfp.search_couples_pending TO 'encoder';
-GRANT EXECUTE ON PROCEDURE rpfp.search_couples_approved TO 'encoder';
-GRANT EXECUTE ON PROCEDURE rpfp.search_class_pending TO 'encoder';
-GRANT EXECUTE ON PROCEDURE rpfp.search_class_approved TO 'encoder';
-
-
 GRANT EXECUTE ON PROCEDURE rpfp.rdm_approve_couples TO 'regional_data_manager';
 GRANT EXECUTE ON PROCEDURE rpfp.rdm_save_target TO 'regional_data_manager';
 GRANT EXECUTE ON PROCEDURE rpfp.encoder_get_couple_fp_details TO 'regional_data_manager';
@@ -3532,13 +3534,8 @@ GRANT EXECUTE ON PROCEDURE rpfp.encoder_get_class_list_pending TO 'regional_data
 GRANT EXECUTE ON PROCEDURE rpfp.encoder_get_class_list_approved TO 'regional_data_manager';
 GRANT EXECUTE ON PROCEDURE rpfp.encoder_get_couples_list TO 'regional_data_manager';
 GRANT EXECUTE ON PROCEDURE rpfp.encoder_get_couples_details TO 'regional_data_manager';
-GRANT EXECUTE ON PROCEDURE rpfp.encoder_check_couples_details_m TO 'regional_data_manager';
-GRANT EXECUTE ON PROCEDURE rpfp.encoder_check_couples_details_f TO 'regional_data_manager';
+GRANT EXECUTE ON PROCEDURE rpfp.encoder_check_couples_details TO 'regional_data_manager';
 GRANT EXECUTE ON PROCEDURE rpfp.encoder_get_fp_service TO 'regional_data_manager';
-GRANT EXECUTE ON PROCEDURE rpfp.search_couples_pending TO 'regional_data_manager';
-GRANT EXECUTE ON PROCEDURE rpfp.search_couples_approved TO 'regional_data_manager';
-GRANT EXECUTE ON PROCEDURE rpfp.search_class_pending TO 'regional_data_manager';
-GRANT EXECUTE ON PROCEDURE rpfp.search_class_approved TO 'regional_data_manager';
 
 GRANT EXECUTE ON PROCEDURE rpfp.process_demandgen TO 'pmed';
 GRANT EXECUTE ON PROCEDURE rpfp.process_unmet_need TO 'pmed';
