@@ -1341,44 +1341,41 @@ ELSE
     END IF;
 END$$
 
-CREATE DEFINER=root@localhost PROCEDURE encoder_check_couples_details_m(
-    IN firstname_m VARCHAR(50),
-    IN lastname_m VARCHAR(50),
-    IN extname_m VARCHAR(50),
-    IN birthdate_m DATE
+CREATE DEFINER=root@localhost PROCEDURE encoder_check_couples_details(
+    IN firstname VARCHAR(50),
+    IN lastname VARCHAR(50),
+    IN birthdate DATE,
+    IN sex INT
     )   READS SQL DATA
 BEGIN
-DECLARE check_details_m INT;
+DECLARE check_details INT;
 
+    IF ( IFNULL( sex, 0 ) = 0 )  THEN
+        SELECT "CANNOT SEARCH RECORD WITH GIVEN PARAMETERS" AS MESSAGE;
+        LEAVE proc_exit_point;
+    END IF;
+
+    IF sex = 1 THEN
       SELECT COUNT(*) 
-        INTO check_details_m
+        INTO check_details
         FROM rpfp.individual ic 
-       WHERE ic.FNAME = firstname_m 
-         AND ic.LNAME = lastname_m
-         AND ic.EXT_NAME = extname_m
-         AND ic.BDATE = birthdate_m
+       WHERE ic.FNAME = firstname
+         AND ic.LNAME = lastname
+         AND ic.BDATE = birthdate
+         AND ic.SEX = 1
     ;
-
-    SELECT check_details_m;
-END$$
-
-CREATE DEFINER=root@localhost PROCEDURE encoder_check_couples_details_f(
-    IN firstname_f VARCHAR(50),
-    IN lastname_f VARCHAR(50),
-    IN birthdate_f DATE
-    )   READS SQL DATA
-BEGIN
-DECLARE check_details_f INT;
-
+    ELSE
       SELECT COUNT(*) 
-        INTO check_details_f
+        INTO check_details
         FROM rpfp.individual ic 
-       WHERE ic.FNAME = firstname_m 
-         AND ic.LNAME = lastname_m
-         AND ic.BDATE = birthdate_m
+       WHERE ic.FNAME = firstname
+         AND ic.LNAME = lastname
+         AND ic.BDATE = birthdate
+         AND ic.SEX = 2
     ;
+    END IF
 
-    SELECT check_details_f;
+    SELECT check_details;
 END$$
 
 CREATE DEFINER=root@localhost PROCEDURE encoder_save_couple (
