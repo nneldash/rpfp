@@ -64,7 +64,7 @@ class Forms extends CI_Controller
 
             return;
         }
-        
+
         $form1 = new FormClass();
 
         $form1->Seminar = $this->getInputFromSeminar();
@@ -131,8 +131,19 @@ class Forms extends CI_Controller
             return $individual;
         }
 
+        if ($this->input->post('sex1')[$i] != 1) {
+            return $this->getSecondEntry($i);
+        }
+
+
         $individual->Id = $this->input->post('individual_id1')[$i];
-        $individual->Name = $this->input->post('name_participant1')[$i];
+        
+        $name1 = explode(" ", $this->input->post('name_participant1')[$i]);
+        $individual->Name->Surname = (empty($name1[0]) ? "" : $name1[0]);
+        $individual->Name->Firstname = (empty($name1[1]) ? "" : $name1[1]);
+        $individual->Name->Middlename = (empty($name1[2]) ? "" : $name1[2]);
+        $individual->Name->Extname = (empty($name1[3]) ? "" : $name1[3]);
+
         $individual->Sex = $this->input->post('sex1')[$i];
         $individual->CivilStatus = $this->input->post('civil_status1')[$i];
         $individual->Birthdate = $this->input->post('birthdate')[$i];
@@ -151,8 +162,17 @@ class Forms extends CI_Controller
             return $individual;
         }
 
+        if ($this->input->post('sex2')[$i] != 2) {
+            return $this->getFirstEntry($i);
+        }
+
         $individual->Id = $this->input->post('individual_id2')[$i];
-        $individual->Name = $this->input->post('name_participant2')[$i];
+
+        $name2 = explode(" ", $this->input->post('name_participant2')[$i]);
+        $individual->Name->Surname = (empty($name2[0]) ? "" : $name2[0]);
+        $individual->Name->Firstname = (empty($name2[1]) ? "" : $name2[1]);
+        $individual->Name->Middlename = (empty($name2[2]) ? "" : $name2[2]);
+
         $individual->Sex = $this->input->post('sex2')[$i];
         $individual->CivilStatus = $this->input->post('civil_status2')[$i];
         $individual->Birthdate = $this->input->post('birthdate')[$i];
