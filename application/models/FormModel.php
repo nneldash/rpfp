@@ -19,23 +19,23 @@ class FormModel extends BaseModel
     }
 
     public function saveForm1(FormInterface $form)
-    {  
+    {     
         $class_id = $this->saveSeminar($form->Seminar);
 
         $class_id = explode(" ", $class_id);
-        
+
         if (!$class_id) {
             /** return exception or error message */
             return;
         }
-        
+
         foreach ($form->ListCouple as $current_couple) {
             $current_couple = CoupleClass::getFromVariable($current_couple);
-            
+
             if (!$this->saveCouple($class_id[2], $current_couple)) {
                 return "may error pa ito";
             }
-        }
+        }     
     }
 
     public function saveSeminar(SeminarInterface $data)
@@ -96,7 +96,7 @@ class FormModel extends BaseModel
             $modern->MethodUsed == N_A ? BLANK : $modern->MethodUsed,
             $modern->IntentionToShift == N_A ? BLANK : $modern->IntentionToShift,
 
-            $traditional->Type == N_A ? BLANK : $traditional->Id,
+            $traditional->Type == N_A ? BLANK : $traditional->Type,
             $traditional->Status == N_A ? BLANK : $traditional->Status,
             $traditional->ReasonForUse == N_A ? BLANK : $traditional->ReasonForUse
         ];

@@ -40,7 +40,7 @@ abstract class CoupleInterface extends BaseInterface
     public $TraditionalFp;
 
 
-    abstract public function Wife() : IndividualInterface;
     abstract public function Husband() : IndividualInterface;
+    abstract public function Wife() : IndividualInterface;
     abstract public static function getFromVariable($variable) : CoupleInterface;
 }
