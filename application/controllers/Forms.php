@@ -412,9 +412,27 @@ class Forms extends CI_Controller
         }
     }
 
-    public function checkDuplicate()
+    public function checkFemaleDuplicate()
     {
-        $count = 1;
-        echo json_encode($count);
+        $this->load->model('FormModel');
+        $count = $this->FormModel->getDuplicateFemale();
+
+        echo "<pre>";
+        print_r($count);
+        exit;
+
+        return $count;
+    }
+
+    public function checkMaleDuplicate()
+    {
+        $this->load->model('FormModel');
+        $count = $this->FormModel->getDuplicateMale();
+
+        echo "<pre>";
+        print_r($count);
+        exit;
+
+        return $count;
     }
 }

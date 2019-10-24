@@ -16,6 +16,9 @@ class FormModel extends BaseModel
         $this->CI->load->library('formA/SoloCoupleDisaggregationClass');
         $this->CI->load->library('formA/SoloAttendeesClass');
         $this->CI->load->iface('common/TraditionalStatuses');
+
+        $this->CI->load->library('couple_list/DuplicateFemaleClass');
+        $this->CI->load->library('couple_list/DuplicateMaleClass');
     }
 
     public function saveForm1(FormInterface $form)
@@ -335,5 +338,43 @@ class FormModel extends BaseModel
 
         $disaggregation->ListSoloAttendees->append($solo);
         return $disaggregation;
+    }
+
+    public function getDuplicateFemale() : DuplicateFemaleInterface
+    {
+        $a = new DuplicateFemaleClass();
+
+        $firstname = 'Anna Margarette';
+        $surname = 'Simon';
+        $bday = '1984-02-07';
+
+        return $this->fromDbGetSpecific(
+            'DuplicateFemaleClass',
+            array(
+                'check_details_f' => 'check_details_f'
+            ),
+            'encoder_check_couples_details_f',
+            array($firstname, $surname, $bday)
+        );
+    }
+
+    public function getDuplicateMale() : DuplicateMaleInterface
+    {
+        $a = new DuplicateMaleClass();
+
+        $firstname = 'Carl Edward';
+        $surname = 'Simon';
+        $extname = '';
+        $bday = '1981-09-09';
+
+        return $this->fromDbGetSpecific(
+            'DuplicateMaleClass',
+            array(
+                'check_details_m' => 'check_details_m'
+            ),
+            'encoder_check_couples_details_m',
+            array($firstname, $surname, $extname, $bday)
+        );
+
     }
 }

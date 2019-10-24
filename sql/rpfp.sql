@@ -1576,9 +1576,9 @@ DECLARE check_details_f INT;
       SELECT COUNT(*) 
         INTO check_details_f
         FROM rpfp.individual ic 
-       WHERE ic.FNAME = firstname_m 
-         AND ic.LNAME = lastname_m
-         AND ic.BDATE = birthdate_m
+       WHERE ic.FNAME = firstname_f 
+         AND ic.LNAME = lastname_f
+         AND ic.BDATE = birthdate_f
     ;
 
     SELECT check_details_f;

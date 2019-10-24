@@ -114,34 +114,68 @@ function checkDuplicate()
 	var i;
 	for (i = 0; i < 10; i++) {
 		var that1 = 'input[name="name_participant1['+ i +']';
+		var bday1 = 'input[name="age1['+ i +']';
+
 		var that2 = 'input[name="name_participant2['+ i +']';
-		$(that1).keydown(function(){
-			// var name = this.value;
+		var bday2 = 'input[name="age2['+ i +']';
+
+		// $(that1).change(function() {
+		// 	var name = this.value;
+		// 	var nameArr = name.split(',');
+		// 	var bday = $(this).closest('td').find(bday1).val();
+
+		// 	alert(nameArr[0]);
+		// 	alert(nameArr[1]);
+		// 	alert(nameArr[2]);
+		// 	alert(bday);
+
+		// 	$.post(base_url + 'forms/checkFemaleDuplicate')
+		// 	.done(function(result) {
+		// 		// alert(result);
+		// 	});
+
+		// 	$.post(base_url + 'forms/checkMaleDuplicate')
+		// 	.done(function(result) {
+		// 		// alert(result);
+		// 	});
+		// });
+
+		$(bday1).change(function() {
+			// var name = $(this).closest('tr').find(that1).text();
+			// var name = $(this).closest('tr.approveCheck:nth-child(1)').find('input.firstTd');
+			var name = $(this).find('tr:eq(1) ' + that1).val();
 			// var nameArr = name.split(',');
-   //  		console.log(nameArr);
 
-			$.post(base_url + 'forms/checkDuplicate')
-			.done(function(result) {
-				if(result == 1) {
-					// alert($(this));
-					// $(this).closest('td').attr('data-tip', 'Duplicate Entry');
-					// $(this).closest('td').addClass('has-duplicate');
-					$(this).addClass('has-duplicate');
-				}
-			});
+			// var name = $(this);
+
+			var bday = this.value;
+			var dateArr = bday.split('/');
+
+			alert(name.value);
+			alert(dateArr[0]);
+			// alert(nameArr[0]);
+			// alert(nameArr[1]);
+			// alert(nameArr[2]);
 		});
 
-		$(that2).keydown(function(){
-			var fname = $('input[name="name_participant2['+ i +']"]').val();
+		// $(that2).keydown(function() {
+		// 	var fname = $('input[name="name_participant2['+ i +']"]').val();
 
-			$(this).closest('td').attr('data-tip', 'Duplicate Entry');
-			$(this).closest('td').addClass('has-duplicate');
-			$(this).addClass('has-duplicate');
+		// 	$(this).closest('td').attr('data-tip', 'Duplicate Entry');
+		// 	$(this).closest('td').addClass('has-duplicate');
+		// 	$(this).addClass('has-duplicate');
 			
-			$.post(base_url + 'forms/checkDuplicate')
-			.done(function(result){
-				// alert(result);
-			});
-		});
+		// 	$.post(base_url + 'forms/checkDuplicate')
+		// 	.done(function(result){
+		// 		// alert(result);
+		// 	});
+		// });
+
+		// $(bday2).change(function() {
+		// 	var bday = this.value;
+		// 	var dateArr = bday.split('/');
+
+		// 	alert(dateArr[0]);
+		// });
 	}
 }
