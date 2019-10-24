@@ -26,7 +26,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 				<td><?= date('F d, Y', strtotime($approved->DateConduct)); ?></td>
 				<td class="text-center">
 					<a class="viewForm folderview" href="<?= base_url('forms'); ?>" target="_blank">
-						<button class="btn btn-primary" data-toggle="tooltip" data-placement="right" title="View">
+						<button class="btn btn-primary" data-toggle="tooltip" data-placement="left" title="View">
 							<i class="fa fa-folder-o"></i>
 							<i class="fa fa-folder-open-o"></i>
 						</button>

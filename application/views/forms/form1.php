@@ -73,7 +73,9 @@ $form1 = FormClass::getFormFromVariable($form1);
 						</button>
 						<ul class="dropdown-menu">
 							<li><a href="<?= base_url('menu')?>">Back</a></li>
-							<li><a class="btn-import">Import Excel</a></li>
+							<?php if($isEncoder): ?>
+								<li><a class="btn-import">Import Excel</a></li>
+							<?php endif; ?>
 							<li><a href="<?= base_url('login/logoffUser')?>">Logout</a></li>
 						</ul>
 					</div>
@@ -266,12 +268,14 @@ $form1 = FormClass::getFormFromVariable($form1);
 						<thead>
 							<tr>
 								<?php if (!$is_pdf): ?>
-									<th rowspan="2" class="text-center">
-										<label class="cont back-eee checkApprove" style="height: 37px;">
-											<input type="checkbox" name="type_of_class" id="checkAll" />
-											<span class="checkmark"></span>
-										</label>
-									</th>
+									<?php if ($isRegionalDataManager): ?>
+										<th rowspan="2" class="text-center">
+											<label class="cont back-eee checkApprove" style="height: 37px;">
+												<input type="checkbox" name="type_of_class" id="checkAll" />
+												<span class="checkmark"></span>
+											</label>
+										</th>
+									<?php endif; ?>
 								<?php endif; ?>
 								<th rowspan="2" style="border-left: none; width: 2%;"></th>
 								<th rowspan="2" class="text-center padding-0" style="width: 18%">
@@ -304,11 +308,13 @@ $form1 = FormClass::getFormFromVariable($form1);
 									</p>
 								</th>
 								<?php if(!$is_pdf): ?>
-									<th rowspan="2" class="text-center" style="border-right: none">
-										<p class="small">
-											<b>Service Slip</b>
-										</p>
-									</th>
+									<?php if($isEncoder): ?>
+										<th rowspan="2" class="text-center" style="border-right: none">
+											<p class="small">
+												<b>Service Slip</b>
+											</p>
+										</th>
+									<?php endif; ?>
 								<?php endif; ?>
 							</tr>
 							<tr>
@@ -395,13 +401,15 @@ $form1 = FormClass::getFormFromVariable($form1);
 							<?php for($i = 0; $i <= 9; $i++): ?>
 								<tr class="approveCheck">
 									<?php if (!$is_pdf): ?>
-										<td rowspan="2" class="back-eee padding-0">
-											<label class="cont">
-												<input class="check" type="checkbox" name="type_of_class" value="aproveCouple" />
-												<span class="checkmark"></span>
-											</label>
-											<input type="hidden" name="couple_id['<?= $i; ?>']" />
-										</td>
+										<?php if($isRegionalDataManager): ?>
+											<td rowspan="2" class="back-eee padding-0">
+												<label class="cont">
+													<input class="check" type="checkbox" name="approveCouple" value="aproveCouple" />
+													<span class="checkmark"></span>
+												</label>
+												<input type="hidden" name="couple_id['<?= $i; ?>']" />
+											</td>
+										<?php endif; ?>
 									<?php endif; ?>
 									<td class="text-center" style="border-left: none" rowspan="2">
 										<p class="small"><?= $i + 1; ?></p>
@@ -561,11 +569,13 @@ $form1 = FormClass::getFormFromVariable($form1);
 										<?php endif; ?>
 									</td>
 									<?php if(!$is_pdf): ?>
-										<td class="small text-center" rowspan="2">
-											<button class="btn-slip" data-toggle="tooltip" data-placement="left" title="View Service Slip">
-												<i class="fa fa-file"></i>
-											</button>
-										</td>
+										<?php if($isEncoder): ?>
+											<td class="small text-center" rowspan="2">
+												<button class="btn-slip" data-toggle="tooltip" data-placement="left" title="View Service Slip">
+													<i class="fa fa-file"></i>
+												</button>
+											</td>
+										<?php endif; ?>
 									<?php endif; ?>
 								</tr>
 								<tr>

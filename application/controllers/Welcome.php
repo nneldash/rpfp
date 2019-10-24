@@ -20,7 +20,6 @@ class Welcome extends CI_Controller
             $this->load->view("includes/header", $header);
             $this->load->view('index/landingPage');
 
-            redirect(site_url());
             return;
         }
 

@@ -19,16 +19,31 @@ class Menu extends CI_Controller
             $this->load->view("includes/header", $header);
             $this->load->view('index/landingPage');
 
-            redirect(site_url());
             return;
         }
 
-        $header['title'] = 'RPFP Online | Pending';
+        $title = 'RPFP Online | Pending';
 
         $this->load->model('CoupleModel');
         $pending = $this->CoupleModel->getPendingList();
 
-        $this->load->view('includes/admin_header', $header);
+        $this->load->model('ProfileModel');
+        $isPMED = $this->ProfileModel->isPMED();
+        $isEncoder = $this->ProfileModel->isEncoder();
+        $isFocalPerson = $this->ProfileModel->isFocalPerson();
+        $isRegionalDataManager = $this->ProfileModel->isRegionalDataManager();
+        $isITDMU = $this->ProfileModel->isITDMU();
+
+        $this->load->view('includes/admin_header', 
+            array(
+                'isEncoder' => $isEncoder, 
+                'isPMED' => $isPMED,
+                'isFocalPerson' => $isFocalPerson, 
+                'isRegionalDataManager' => $isRegionalDataManager,
+                'isITDMU' => $isITDMU,
+                'title' => $title
+            )
+        );
         $this->load->view('menu/pending', array('pending' => $pending));
         $this->load->view('includes/admin_footer');
     }
@@ -41,16 +56,31 @@ class Menu extends CI_Controller
             $this->load->view("includes/header", $header);
             $this->load->view('index/landingPage');
 
-            redirect(site_url());
             return;
         }
 
-        $header['title'] = 'RPFP Online | Approve';
+        $title = 'RPFP Online | Approve';
 
         $this->load->model('CoupleModel');
         $approve = $this->CoupleModel->getApproveList();
 
-        $this->load->view('includes/admin_header', $header);
+        $this->load->model('ProfileModel');
+        $isPMED = $this->ProfileModel->isPMED();
+        $isEncoder = $this->ProfileModel->isEncoder();
+        $isFocalPerson = $this->ProfileModel->isFocalPerson();
+        $isRegionalDataManager = $this->ProfileModel->isRegionalDataManager();
+        $isITDMU = $this->ProfileModel->isITDMU();
+
+        $this->load->view('includes/admin_header', 
+            array(
+                'isEncoder' => $isEncoder, 
+                'isPMED' => $isPMED,
+                'isFocalPerson' => $isFocalPerson, 
+                'isRegionalDataManager' => $isRegionalDataManager,
+                'isITDMU' => $isITDMU,
+                'title' => $title
+            )
+        );
         $this->load->view('menu/approve', array('approve' => $approve));
         $this->load->view('includes/admin_footer');
     }
@@ -68,13 +98,28 @@ class Menu extends CI_Controller
             $this->load->view("includes/header", $header);
             $this->load->view('index/landingPage');
 
-            redirect(site_url());
             return;
         }
 
-        $header['title'] = 'RPFP Online | Accomplishment Report';
+        $title = 'RPFP Online | Accomplishment Report';
 
-        $this->load->view('includes/header', $header);
+        $this->load->model('ProfileModel');
+        $isPMED = $this->ProfileModel->isPMED();
+        $isEncoder = $this->ProfileModel->isEncoder();
+        $isFocalPerson = $this->ProfileModel->isFocalPerson();
+        $isRegionalDataManager = $this->ProfileModel->isRegionalDataManager();
+        $isITDMU = $this->ProfileModel->isITDMU();
+
+        $this->load->view('includes/admin_header', 
+            array(
+                'isEncoder' => $isEncoder, 
+                'isPMED' => $isPMED,
+                'isFocalPerson' => $isFocalPerson, 
+                'isRegionalDataManager' => $isRegionalDataManager,
+                'isITDMU' => $isITDMU,
+                'title' => $title
+            )
+        );
         $this->load->view('menu/summary', array('is_pdf' => false), false);
         $this->load->view('includes/footer');
     }
@@ -87,13 +132,28 @@ class Menu extends CI_Controller
             $this->load->view("includes/header", $header);
             $this->load->view('index/landingPage');
 
-            redirect(site_url());
             return;
         }
 
-        $header['title'] = 'RPFP Online | Search Form 1';
+        $title = 'RPFP Online | Search Form 1';
 
-        $this->load->view('includes/admin_header', $header);
+        $this->load->model('ProfileModel');
+        $isPMED = $this->ProfileModel->isPMED();
+        $isEncoder = $this->ProfileModel->isEncoder();
+        $isFocalPerson = $this->ProfileModel->isFocalPerson();
+        $isRegionalDataManager = $this->ProfileModel->isRegionalDataManager();
+        $isITDMU = $this->ProfileModel->isITDMU();
+
+        $this->load->view('includes/admin_header', 
+            array(
+                'isEncoder' => $isEncoder, 
+                'isPMED' => $isPMED,
+                'isFocalPerson' => $isFocalPerson, 
+                'isRegionalDataManager' => $isRegionalDataManager,
+                'isITDMU' => $isITDMU,
+                'title' => $title
+            )
+        );
         $this->load->view('menu/search');
         $this->load->view('includes/admin_footer');
     }
@@ -106,7 +166,6 @@ class Menu extends CI_Controller
             $this->load->view("includes/header", $header);
             $this->load->view('index/landingPage');
 
-            redirect(site_url());
             return;
         }
 
@@ -137,13 +196,28 @@ class Menu extends CI_Controller
             $this->load->view("includes/header", $header);
             $this->load->view('index/landingPage');
 
-            redirect(site_url());
             return;
         }
 
-        $header['title'] = 'RPFP Online | Dashboard';
+        $title = 'RPFP Online | Dashboard';
 
-        $this->load->view('includes/admin_header', $header);
+        $this->load->model('ProfileModel');
+        $isPMED = $this->ProfileModel->isPMED();
+        $isEncoder = $this->ProfileModel->isEncoder();
+        $isFocalPerson = $this->ProfileModel->isFocalPerson();
+        $isRegionalDataManager = $this->ProfileModel->isRegionalDataManager();
+        $isITDMU = $this->ProfileModel->isITDMU();
+
+        $this->load->view('includes/admin_header', 
+            array(
+                'isEncoder' => $isEncoder, 
+                'isPMED' => $isPMED,
+                'isFocalPerson' => $isFocalPerson, 
+                'isRegionalDataManager' => $isRegionalDataManager,
+                'isITDMU' => $isITDMU,
+                'title' => $title
+            )
+        );
         $this->load->view('menu/dashboard');
         $this->load->view('includes/admin_footer');
     }
@@ -156,13 +230,28 @@ class Menu extends CI_Controller
             $this->load->view("includes/header", $header);
             $this->load->view('index/landingPage');
 
-            redirect(site_url());
             return;
         }
 
-        $header['title'] = 'RPFP Online | Form A Data List';
+        $title = 'RPFP Online | Form A Data List';
 
-        $this->load->view('includes/admin_header', $header);
+        $this->load->model('ProfileModel');
+        $isPMED = $this->ProfileModel->isPMED();
+        $isEncoder = $this->ProfileModel->isEncoder();
+        $isFocalPerson = $this->ProfileModel->isFocalPerson();
+        $isRegionalDataManager = $this->ProfileModel->isRegionalDataManager();
+        $isITDMU = $this->ProfileModel->isITDMU();
+
+        $this->load->view('includes/admin_header', 
+            array(
+                'isEncoder' => $isEncoder, 
+                'isPMED' => $isPMED,
+                'isFocalPerson' => $isFocalPerson, 
+                'isRegionalDataManager' => $isRegionalDataManager,
+                'isITDMU' => $isITDMU,
+                'title' => $title
+            )
+        );
         $this->load->view('menu/formAMenu');
         $this->load->view('includes/admin_footer');
     }
@@ -175,13 +264,28 @@ class Menu extends CI_Controller
             $this->load->view("includes/header", $header);
             $this->load->view('index/landingPage');
 
-            redirect(site_url());
             return;
         }
 
-        $header['title'] = 'RPFP Online | Form B Data List';
+        $title = 'RPFP Online | Form B Data List';
 
-        $this->load->view('includes/admin_header', $header);
+        $this->load->model('ProfileModel');
+        $isPMED = $this->ProfileModel->isPMED();
+        $isEncoder = $this->ProfileModel->isEncoder();
+        $isFocalPerson = $this->ProfileModel->isFocalPerson();
+        $isRegionalDataManager = $this->ProfileModel->isRegionalDataManager();
+        $isITDMU = $this->ProfileModel->isITDMU();
+
+        $this->load->view('includes/admin_header', 
+            array(
+                'isEncoder' => $isEncoder, 
+                'isPMED' => $isPMED,
+                'isFocalPerson' => $isFocalPerson, 
+                'isRegionalDataManager' => $isRegionalDataManager,
+                'isITDMU' => $isITDMU,
+                'title' => $title
+            )
+        );
         $this->load->view('menu/formBMenu');
         $this->load->view('includes/admin_footer');
     }
@@ -194,13 +298,28 @@ class Menu extends CI_Controller
             $this->load->view("includes/header", $header);
             $this->load->view('index/landingPage');
 
-            redirect(site_url());
             return;
         }
 
-        $header['title'] = 'RPFP Online | Form C Data List';
+        $title = 'RPFP Online | Form C Data List';
 
-        $this->load->view('includes/admin_header', $header);
+        $this->load->model('ProfileModel');
+        $isPMED = $this->ProfileModel->isPMED();
+        $isEncoder = $this->ProfileModel->isEncoder();
+        $isFocalPerson = $this->ProfileModel->isFocalPerson();
+        $isRegionalDataManager = $this->ProfileModel->isRegionalDataManager();
+        $isITDMU = $this->ProfileModel->isITDMU();
+
+        $this->load->view('includes/admin_header', 
+            array(
+                'isEncoder' => $isEncoder, 
+                'isPMED' => $isPMED,
+                'isFocalPerson' => $isFocalPerson, 
+                'isRegionalDataManager' => $isRegionalDataManager,
+                'isITDMU' => $isITDMU,
+                'title' => $title
+            )
+        );
         $this->load->view('menu/formCMenu');
         $this->load->view('includes/admin_footer');
     }
@@ -213,13 +332,28 @@ class Menu extends CI_Controller
             $this->load->view("includes/header", $header);
             $this->load->view('index/landingPage');
             
-            redirect(site_url());
             return;
         }
 
-        $header['title'] = 'RPFP Online | Form Accomplishment Report Data List';
+        $title = 'RPFP Online | Form Accomplishment Report Data List';
 
-        $this->load->view('includes/admin_header', $header);
+        $this->load->model('ProfileModel');
+        $isPMED = $this->ProfileModel->isPMED();
+        $isEncoder = $this->ProfileModel->isEncoder();
+        $isFocalPerson = $this->ProfileModel->isFocalPerson();
+        $isRegionalDataManager = $this->ProfileModel->isRegionalDataManager();
+        $isITDMU = $this->ProfileModel->isITDMU();
+
+        $this->load->view('includes/admin_header', 
+            array(
+                'isEncoder' => $isEncoder, 
+                'isPMED' => $isPMED,
+                'isFocalPerson' => $isFocalPerson, 
+                'isRegionalDataManager' => $isRegionalDataManager,
+                'isITDMU' => $isITDMU,
+                'title' => $title
+            )
+        );
         $this->load->view('menu/summary', array('is_pdf' => false), false);
         $this->load->view('includes/admin_footer');
     }
