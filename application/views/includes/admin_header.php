@@ -43,60 +43,57 @@
                         <div class="clearfix"></div>
                         <br />
                         <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
-                            <!-- PMED MENU -->
-                            <!-- <div class="menu_section">
-                                <ul class="nav side-menu">
-                                    <li>
-                                        <a href="<?= base_url('menu')?>">
-                                            <i class="fa fa-clipboard"></i> Form A
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="<?= base_url('menu')?>">
-                                            <i class="fa fa-clipboard"></i> Form B
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="<?= base_url('menu/approve')?>">
-                                            <i class="fa fa-clipboard"></i> Form C
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div> -->
-                            <!-- END PMED MENU -->
-                            <!-- ENCODER MENU -->
                             <div class="menu_section">
                                 <ul class="nav side-menu">
-                                    <li>
-                                        <a href="<?= base_url('forms')?>">
-                                            <i class="fa fa-venus-mars"></i> Add Couple
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="<?= base_url('menu')?>">
-                                            <i class="fa fa-clock-o"></i> Pending
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="<?= base_url('menu/approve')?>">
-                                            <i class="fa fa-thumbs-o-up"></i> Approved
-                                        </a>
-                                    </li>
-                                    <!-- <li>
-                                        <a href="</?= base_url('menu/serviceSlip')?>">
-                                            <i class="fa fa-file-text-o"></i> Service Slip
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="</?= base_url('menu/search')?>">
-                                            <i class="fa fa-search"></i> Search Form
-                                        </a>
-                                    </li> -->
-                                    <li>
-                                        <a href="<?= base_url('menu/accomplishment')?>">
-                                            <i class="fa fa-clipboard"></i> Report
-                                        </a>
-                                    </li>
+                                    <?php if($isPMED) : ?>
+                                        <li>
+                                            <a href="<?= base_url('menu')?>">
+                                                <i class="fa fa-clipboard"></i> Form A
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="<?= base_url('menu')?>">
+                                                <i class="fa fa-clipboard"></i> Form B
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="<?= base_url('menu/approve')?>">
+                                                <i class="fa fa-clipboard"></i> Form C
+                                            </a>
+                                        </li>
+                                    <?php endif; ?>
+                                    <?php if($isEncoder) :?>
+                                        <li>
+                                            <a href="<?= base_url('forms')?>">
+                                                <i class="fa fa-venus-mars"></i> Add Couple
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="<?= base_url('menu')?>">
+                                                <i class="fa fa-clock-o"></i> Pending
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="<?= base_url('menu/approve')?>">
+                                                <i class="fa fa-thumbs-o-up"></i> Approved
+                                            </a>
+                                        </li>
+                                        <!-- <li>
+                                            <a href="</?= base_url('menu/serviceSlip')?>">
+                                                <i class="fa fa-file-text-o"></i> Service Slip
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="</?= base_url('menu/search')?>">
+                                                <i class="fa fa-search"></i> Search Form
+                                            </a>
+                                        </li> -->
+                                        <li>
+                                            <a href="<?= base_url('menu/accomplishment')?>">
+                                                <i class="fa fa-clipboard"></i> Report
+                                            </a>
+                                        </li>
+                                    <?php endif; ?>
                                     <li>
                                         <a href="<?= base_url('login/logoffUser')?>">
                                             <i class="fa fa-sign-out"></i> Logout
@@ -104,7 +101,6 @@
                                     </li>
                                 </ul>
                             </div>
-                            <!-- END PMED MENU -->
                         </div>
                     </div>
                 </div>

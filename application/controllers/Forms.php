@@ -27,7 +27,6 @@ class Forms extends CI_Controller
             $this->load->view("includes/header", $header);
             $this->load->view('index/landingPage');
 
-            redirect(site_url());
             return;
         }
 
@@ -38,8 +37,19 @@ class Forms extends CI_Controller
 
         $form1 = $this->FormModel->getForm1();
 
+        $this->load->model('ProfileModel');
+        $isEncoder = $this->ProfileModel->isEncoder();
+        $isRegionalDataManager = $this->ProfileModel->isRegionalDataManager();
+
         $this->load->view('includes/header', $header);
-        $this->load->view('forms/form1', array('form1' => $form1, 'is_pdf' => false));
+        $this->load->view('forms/form1', 
+            array(
+                'form1' => $form1, 
+                'is_pdf' => false,
+                'isEncoder' => $isEncoder,
+                'isRegionalDataManager' => $isRegionalDataManager,
+            )
+        );
         $this->load->view('includes/footer');
         return;
     }
@@ -52,7 +62,6 @@ class Forms extends CI_Controller
             $this->load->view("includes/header", $header);
             $this->load->view('index/landingPage');
 
-            redirect(site_url());
             return;
         }
         
@@ -211,7 +220,6 @@ class Forms extends CI_Controller
             $this->load->view("includes/header", $header);
             $this->load->view('index/landingPage');
 
-            redirect(site_url());
             return;
         }
 
@@ -234,7 +242,6 @@ class Forms extends CI_Controller
             $this->load->view("includes/header", $header);
             $this->load->view('index/landingPage');
 
-            redirect(site_url());
             return;
         }
 
@@ -253,7 +260,6 @@ class Forms extends CI_Controller
             $this->load->view("includes/header", $header);
             $this->load->view('index/landingPage');
 
-            redirect(site_url());
             return;
         }
 
@@ -272,7 +278,6 @@ class Forms extends CI_Controller
             $this->load->view("includes/header", $header);
             $this->load->view('index/landingPage');
 
-            redirect(site_url());
             return;
         }
 
@@ -292,7 +297,6 @@ class Forms extends CI_Controller
             $this->load->view("includes/header", $header);
             $this->load->view('index/landingPage');
 
-            redirect(site_url());
             return;
         }
 
@@ -326,7 +330,6 @@ class Forms extends CI_Controller
             $this->load->view("includes/header", $header);
             $this->load->view('index/landingPage');
 
-            redirect(site_url());
             return;
         }
 
@@ -357,7 +360,6 @@ class Forms extends CI_Controller
             $this->load->view("includes/header", $header);
             $this->load->view('index/landingPage');
 
-            redirect(site_url());
             return;
         }
 
@@ -388,7 +390,6 @@ class Forms extends CI_Controller
             $this->load->view("includes/header", $header);
             $this->load->view('index/landingPage');
             
-            redirect(site_url());
             return;
         }
 
