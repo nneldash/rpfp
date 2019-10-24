@@ -47,7 +47,7 @@ $forma = FormAClass::getFormFromVariable($forma);
 		
 		<?php if(!$is_pdf) : ?>
 	        <div id="leftButton">
-	        	<a href="<?= base_url('menu') ?>" class="save">
+	        	<a href="<?= base_url('menu/formA') ?>" class="save">
                     <span>BACK</span>
                 </a>
 		    </div>

@@ -45,19 +45,46 @@
                         <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
                             <div class="menu_section">
                                 <ul class="nav side-menu">
-                                    <?php if($isPMED) : ?>
+                                    <?php if($isRegionalDataManager) : ?>
                                         <li>
                                             <a href="<?= base_url('menu')?>">
-                                                <i class="fa fa-clipboard"></i> Form A
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="<?= base_url('menu')?>">
-                                                <i class="fa fa-clipboard"></i> Form B
+                                                <i class="fa fa-clock-o"></i> Pending
                                             </a>
                                         </li>
                                         <li>
                                             <a href="<?= base_url('menu/approve')?>">
+                                                <i class="fa fa-thumbs-o-up"></i> Approved
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="<?= base_url('menu/formA')?>">
+                                                <i class="fa fa-clipboard"></i> Form A
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="<?= base_url('menu/formB')?>">
+                                                <i class="fa fa-clipboard"></i> Form B
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="<?= base_url('menu/formC')?>">
+                                                <i class="fa fa-clipboard"></i> Form C
+                                            </a>
+                                        </li>
+                                    <?php endif; ?>
+                                    <?php if($isPMED) : ?>
+                                        <li>
+                                            <a href="<?= base_url('menu/formA')?>">
+                                                <i class="fa fa-clipboard"></i> Form A
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="<?= base_url('menu/formB')?>">
+                                                <i class="fa fa-clipboard"></i> Form B
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="<?= base_url('menu/formC')?>">
                                                 <i class="fa fa-clipboard"></i> Form C
                                             </a>
                                         </li>

@@ -3,7 +3,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 $CI =& get_instance();
 $CI->load->iface('base/BaseInterface');
 
-abstract class DuplicateMaleInterface extends BaseInterface
+abstract class DuplicateCoupleInterface extends BaseInterface
 {
-    public $check_details_m;
+    public $message;
 }

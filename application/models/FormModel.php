@@ -17,8 +17,7 @@ class FormModel extends BaseModel
         $this->CI->load->library('formA/SoloAttendeesClass');
         $this->CI->load->iface('common/TraditionalStatuses');
 
-        $this->CI->load->library('couple_list/DuplicateFemaleClass');
-        $this->CI->load->library('couple_list/DuplicateMaleClass');
+        $this->CI->load->library('couple_list/DuplicateCoupleClass');
     }
 
     public function saveForm1(FormInterface $form)
@@ -340,41 +339,23 @@ class FormModel extends BaseModel
         return $disaggregation;
     }
 
-    public function getDuplicateFemale() : DuplicateFemaleInterface
+    public function getDuplicateCouple() : DuplicateCoupleInterface
     {
-        $a = new DuplicateFemaleClass();
+        $a = new DuplicateCoupleClass();
 
         $firstname = 'Anna Margarette';
         $surname = 'Simon';
-        $bday = '1984-02-07';
-
-        return $this->fromDbGetSpecific(
-            'DuplicateFemaleClass',
-            array(
-                'check_details_f' => 'check_details_f'
-            ),
-            'encoder_check_couples_details_f',
-            array($firstname, $surname, $bday)
-        );
-    }
-
-    public function getDuplicateMale() : DuplicateMaleInterface
-    {
-        $a = new DuplicateMaleClass();
-
-        $firstname = 'Carl Edward';
-        $surname = 'Simon';
         $extname = '';
-        $bday = '1981-09-09';
+        $bday = '1984-02-07';
+        $sex = '2';
 
         return $this->fromDbGetSpecific(
-            'DuplicateMaleClass',
+            'DuplicateCoupleClass',
             array(
-                'check_details_m' => 'check_details_m'
+                'message' => 'message'
             ),
-            'encoder_check_couples_details_m',
-            array($firstname, $surname, $extname, $bday)
+            'encoder_check_couples_details',
+            array($firstname, $surname, $extname, $bday, $sex)
         );
-
     }
 }

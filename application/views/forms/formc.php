@@ -44,7 +44,7 @@ $this->load->library('helpers/HtmlHelper');
 		<form id="form_validation" class="form-horizontal">
 			<?php if(!$is_pdf) : ?>
 		        <div id="leftButton">
-		        	<a href="<?= base_url('menu') ?>" class="save">
+		        	<a href="<?= base_url('menu/formC') ?>" class="save">
                         <span>BACK</span>
                     </a>
 			    </div>

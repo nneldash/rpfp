@@ -8,7 +8,7 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <img  class="login-logo navbar-brand img-size" src="<?= base_url('assets/images/popcom_logo-white.png')?>" alt="POPCOM_LOGO">
+                    <img  class="login-logo navbar-brand img-size" src="<?= base_url('assets/images/popcom_logo-white.png')?>" alt="POPCOM_LOGO" style="width: 50%;" />
                 </div>
                 <div id="navbar" class="navbar-collapse collapse">
                     <ul class="nav navbar-nav navbar-right margin-t12">

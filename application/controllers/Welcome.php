@@ -29,6 +29,16 @@ class Welcome extends CI_Controller
             return;
         }
 
+        if ($this->ProfileModel->isPMED()) {
+            redirect(site_url('Menu/formA'));
+            return;
+        }
+
+        if ($this->ProfileModel->isRegionalDataManager()) {
+            redirect(site_url('Menu'));
+            return;
+        }
+
         $this->load->view("includes/header", $header);
         $this->load->view("menu/dashboard.php");
         $this->load->view('includes/footer');
