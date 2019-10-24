@@ -580,7 +580,7 @@ BEGIN
     CALL rpfp.lib_extract_user_name( db_user, name_user, db_user_name );
     SET multiplier := rpfp.lib_get_multiplier( scope_num );
 
-     SELECT prof.PSGC_CODE DIV POWER( 10, multipler ) INTO ret_val
+     SELECT prof.PSGC_CODE DIV POWER( 10, multiplier ) INTO ret_val
        FROM rpfp.user_profile prof
       WHERE prof.DB_USER_ID = name_user
     ;
@@ -1371,16 +1371,10 @@ DECLARE check_details INT;
       SELECT COUNT(*) 
         INTO check_details
         FROM rpfp.individual ic 
-<<<<<<< HEAD
-       WHERE ic.FNAME = firstname_f 
-         AND ic.LNAME = lastname_f
-         AND ic.BDATE = birthdate_f
-=======
        WHERE ic.FNAME = firstname
          AND ic.LNAME = lastname
          AND ic.BDATE = birthdate
          AND ic.SEX = 2
->>>>>>> f90aa461b6a6fb95c36d1e83c36658e6363a4a18
     ;
     END IF;
 
