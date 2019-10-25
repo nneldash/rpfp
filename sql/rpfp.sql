@@ -932,7 +932,7 @@ BEGIN
              SELECT rc.RPFP_CLASS_ID AS rpfpclass,
                     tc.TYPE_CLASS_DESC AS typeclass,
                     rc.OTHERS_SPECIFY AS others_specify,
-                    rc.BARANGAY_ID AS barangay,
+                    lp.LOCATION_DESCRIPTION AS barangay,
                     rc.CLASS_NUMBER AS class_no,
                     rc.DATE_CONDUCTED AS date_conduct,
                     ic.LNAME AS lastname,
@@ -941,6 +941,7 @@ BEGIN
           LEFT JOIN rpfp.couples apc 
 		         ON apc.RPFP_CLASS_ID = rc.RPFP_CLASS_ID
           LEFT JOIN rpfp.lib_type_class tc ON tc.TYPE_CLASS_ID = rc.TYPE_CLASS_ID
+          LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
           LEFT JOIN rpfp.individual ic ON ic.COUPLES_ID = apc.COUPLES_ID
               WHERE apc.IS_ACTIVE = status_active
                 AND (   rc.DB_USER_ID = name_user
@@ -1378,13 +1379,13 @@ DECLARE check_details INT;
     ;
     END IF;
 
+    SELECT check_details;
+
     IF check_details = 0 THEN
         SELECT "NO DUPLICATE DATA!" AS MESSAGE;
     ELSE
         SELECT "WITH DUPLICATE DATA!" AS MESSAGE;
     END IF;
-
-    LEAVE proc_exit_point;
 END$$
 
 CREATE DEFINER=root@localhost PROCEDURE encoder_save_couple (
