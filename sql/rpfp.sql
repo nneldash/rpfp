@@ -98,6 +98,7 @@ BEGIN
        FROM rpfp.user_profile prof
       WHERE prof.DB_USER_ID = name_user
     ;
+
     IF record_id_no IS NULL THEN
         INSERT INTO rpfp.user_profile(
                     DB_USER_ID,
@@ -166,9 +167,48 @@ BEGIN
     CALL rpfp.lib_extract_user_name( db_user, name_user, db_user_name );
 
     IF NOT (name_user = 'root') THEN
-        SET @sql_stmt1 := CONCAT( "REVOKE ALL PRIVILEGES, GRANT OPTION FROM ", db_user_name );
-        PREPARE stmt1 FROM @sql_stmt1;
-        EXECUTE stmt1;
+        BEGIN
+            DECLARE CONTINUE HANDLER FOR SQLSTATE 'HY000' BEGIN END;
+
+            SET @sql_stmt1 := CONCAT( "REVOKE rpfp_login FROM ", db_user_name );
+            SET @sql_stmt2 := CONCAT( "REVOKE pmed FROM ", db_user_name );
+            SET @sql_stmt3 := CONCAT( "REVOKE regional_data_manager FROM ", db_user_name );
+            SET @sql_stmt4 := CONCAT( "REVOKE itdmu FROM ", db_user_name );
+            SET @sql_stmt5 := CONCAT( "REVOKE focal_person FROM ", db_user_name );
+            SET @sql_stmt6 := CONCAT( "REVOKE partners FROM ", db_user_name );
+            SET @sql_stmt7 := CONCAT( "REVOKE encoder FROM ", db_user_name );
+            SET @sql_stmt8 := CONCAT( "REVOKE citiwide FROM ", db_user_name );
+            SET @sql_stmt9 := CONCAT( "REVOKE provincial FROM ", db_user_name );
+            SET @sql_stmt10 := CONCAT( "REVOKE regional FROM ", db_user_name );
+            SET @sql_stmt11 := CONCAT( "REVOKE national FROM ", db_user_name );
+            SET @sql_stmt12 := CONCAT( "REVOKE no_scope FROM ", db_user_name );
+
+            PREPARE stmt1 FROM @sql_stmt1;
+            PREPARE stmt2 FROM @sql_stmt2;
+            PREPARE stmt3 FROM @sql_stmt3;
+            PREPARE stmt4 FROM @sql_stmt4;
+            PREPARE stmt5 FROM @sql_stmt5;
+            PREPARE stmt6 FROM @sql_stmt6;
+            PREPARE stmt7 FROM @sql_stmt7;
+            PREPARE stmt8 FROM @sql_stmt8;
+            PREPARE stmt9 FROM @sql_stmt9;
+            PREPARE stmt10 FROM @sql_stmt10;
+            PREPARE stmt11 FROM @sql_stmt11;
+            PREPARE stmt12 FROM @sql_stmt12;
+
+            EXECUTE stmt1;
+            EXECUTE stmt2;
+            EXECUTE stmt3;
+            EXECUTE stmt4;
+            EXECUTE stmt5;
+            EXECUTE stmt6;
+            EXECUTE stmt7;
+            EXECUTE stmt8;
+            EXECUTE stmt9;
+            EXECUTE stmt10;
+            EXECUTE stmt11;
+            EXECUTE stmt12;
+        END;
     END IF;
 
      UPDATE rpfp.user_profile prof
@@ -338,9 +378,30 @@ BEGIN
     END IF;
 
     IF NOT (name_user = 'root') THEN
-        SET @sql_stmt_role := CONCAT( "REVOKE ALL PRIVILEGES, GRANT OPTION FROM  ", db_user_name );
-        PREPARE stmt_role FROM @sql_stmt_role;
-        EXECUTE stmt_role;
+        BEGIN
+            DECLARE CONTINUE HANDLER FOR SQLSTATE 'HY000' BEGIN END;
+
+            SET @sql_stmt01 := CONCAT( "REVOKE itdmu FROM ", db_user_name );
+            SET @sql_stmt02 := CONCAT( "REVOKE pmed FROM ", db_user_name );
+            SET @sql_stmt03 := CONCAT( "REVOKE regional_data_manager FROM ", db_user_name );
+            SET @sql_stmt04 := CONCAT( "REVOKE focal_person FROM ", db_user_name );
+            SET @sql_stmt05 := CONCAT( "REVOKE partners FROM ", db_user_name );
+            SET @sql_stmt06 := CONCAT( "REVOKE encoder FROM ", db_user_name );
+
+            PREPARE stmt01 FROM @sql_stmt01;
+            PREPARE stmt02 FROM @sql_stmt02;
+            PREPARE stmt03 FROM @sql_stmt03;
+            PREPARE stmt04 FROM @sql_stmt04;
+            PREPARE stmt05 FROM @sql_stmt05;
+            PREPARE stmt06 FROM @sql_stmt06;
+
+            EXECUTE stmt01;
+            EXECUTE stmt02;
+            EXECUTE stmt03;
+            EXECUTE stmt04;
+            EXECUTE stmt05;
+            EXECUTE stmt06;
+        END;
     END IF;
 
     SET default_role := rpfp.lib_select_role( role_num );
@@ -376,6 +437,30 @@ BEGIN
         LEAVE proc_exit_point;
     END IF;
 
+    IF NOT (name_user = 'root') THEN
+        BEGIN
+            DECLARE CONTINUE HANDLER FOR SQLSTATE 'HY000' BEGIN END;
+
+            SET @sql_stmt8 := CONCAT( "REVOKE citiwide FROM ", db_user_name );
+            SET @sql_stmt9 := CONCAT( "REVOKE provincial FROM ", db_user_name );
+            SET @sql_stmt10 := CONCAT( "REVOKE regional FROM ", db_user_name );
+            SET @sql_stmt11 := CONCAT( "REVOKE national FROM ", db_user_name );
+            SET @sql_stmt12 := CONCAT( "REVOKE no_scope FROM ", db_user_name );
+
+            PREPARE stmt08 FROM @sql_stmt8;
+            PREPARE stmt09 FROM @sql_stmt8;
+            PREPARE stmt10 FROM @sql_stmt8;
+            PREPARE stmt11 FROM @sql_stmt8;
+            PREPARE stmt12 FROM @sql_stmt8;
+
+            EXECUTE stmt08;
+            EXECUTE stmt09;
+            EXECUTE stmt10;
+            EXECUTE stmt11;
+            EXECUTE stmt12;
+        END;
+    END IF;
+
     SET scope_role := rpfp.lib_select_scope( scope_reg_prov_or_muni );
     SET @sql_stmt6 := CONCAT( "GRANT ", scope_role, " TO ", db_user_name );
     PREPARE stmt6 FROM @sql_stmt6;
@@ -393,7 +478,7 @@ BEGIN
     DECLARE db_user_name VARCHAR(50);
 
     CALL rpfp.lib_extract_user_name( db_user, name_user, db_user_name );
-
+    
     SELECT TRUE INTO ret_val
       FROM mysql.ROLES_MAPPING rm
      WHERE rm.ROLE = rpfp.lib_select_role( role_num )
@@ -401,8 +486,9 @@ BEGIN
      LIMIT 1  
     ;
     
+    SET ret_val := IFNULL(ret_val, 0);
     RETURN ret_val;
-END$$
+END$$    
 
 CREATE DEFINER=root@localhost FUNCTION profile_check_if_encoder()
     RETURNS INT(1)
@@ -478,7 +564,7 @@ BEGIN
             prof.E_MAIL AS EMAIL,
             prof.LAST_NAME AS SURNAME,
             prof.FIRST_NAME AS FIRSTNAME,
-            prof.REGION_CODE AS REGION_ID,
+            reg.REGION_CODE AS REGION_ID,
             reg.LOCATION_DESCRIPTION AS REGION_NAME,
             prof.PSGC_CODE AS LOCATION_CODE,
             loc.LOCATION_DESCRIPTION AS LOCATION_NAME,
@@ -488,9 +574,10 @@ BEGIN
   LEFT JOIN rpfp.lib_psgc_locations loc
          ON prof.PSGC_CODE = loc.PSGC_CODE
   LEFT JOIN rpfp.lib_psgc_locations reg
-         ON reg.PSGC_CODE = (prof.REGION * POWER( 10, 7 ))
+         ON reg.PSGC_CODE = (prof.PSGC_CODE DIV POWER(10, 7) * POWER(10, 7))
       WHERE prof.DB_USER_ID = name_user
         AND prof.REGION_CODE = loc.REGION_CODE
+      LIMIT 1
     ;
 END$$
 
@@ -590,8 +677,7 @@ END$$
 
 CREATE DEFINER=root@localhost FUNCTION profile_check_if_allowed_location(
     username VARCHAR(50),
-    location_id INT UNSIGNED,
-    scope_num INT UNSIGNED
+    location_id INT UNSIGNED
     )   RETURNS INT(1)
         READS SQL DATA
 BEGIN
@@ -607,7 +693,10 @@ BEGIN
     SET multiplier := rpfp.lib_get_multiplier( user_scope );
     SET user_location := rpfp.profile_get_location( username, user_scope );
 
-	SET ret_val := (user_location = (location_id DIV POWER( 10, multiplier )));
+    SET ret_val := FALSE;
+    IF user_location = (location_id DIV POWER( 10, multiplier )) THEN
+	    SET ret_val := TRUE;
+    END IF;
 
     RETURN ret_val;
 END$$
@@ -892,7 +981,7 @@ BEGIN
     SET user_scope := rpfp.profile_get_scope( name_user );
     SET multiplier := rpfp.lib_get_multiplier( user_scope );
     SET user_location := rpfp.profile_get_location( name_user, user_scope );
-    SET is_not_encoder := NOT rpfp.profile_check_if_encoder();
+    SET is_not_encoder := NOT IFNULL(rpfp.profile_check_if_encoder(), FALSE);
 
     IF ( NOT EXISTS (
          SELECT rc.RPFP_CLASS_ID
@@ -1000,7 +1089,7 @@ BEGIN
     SET user_scope := rpfp.profile_get_scope( name_user );
     SET multiplier := rpfp.lib_get_multiplier( user_scope );
     SET user_location := rpfp.profile_get_location( name_user, user_scope );
-    SET is_not_encoder := NOT rpfp.profile_check_if_encoder();
+    SET is_not_encoder := NOT IFNULL(rpfp.profile_check_if_encoder(), FALSE);
 
     IF NOT EXISTS (
          SELECT apc.RPFP_CLASS_ID
@@ -1063,7 +1152,7 @@ BEGIN
     SET user_scope := rpfp.profile_get_scope( name_user );
     SET multiplier := rpfp.lib_get_multiplier( user_scope );
     SET user_location := rpfp.profile_get_location( name_user, user_scope );
-    SET is_not_encoder := NOT rpfp.profile_check_if_encoder();
+    SET is_not_encoder := NOT IFNULL(rpfp.profile_check_if_encoder(), FALSE);
 
     IF NOT EXISTS (
          SELECT apc.COUPLES_ID
@@ -1145,17 +1234,21 @@ proc_exit_point :
 BEGIN
     DECLARE name_user VARCHAR(50);
     DECLARE db_user_name VARCHAR(50);
+    DECLARE is_not_encoder INT(1);
+    DECLARE good_location INT(1);
 
-    IF NOT rpfp.profile_check_if_encoder() THEN
+    SET is_not_encoder := NOT IFNULL(rpfp.profile_check_if_encoder(), FALSE);
+    IF is_not_encoder  THEN
         SELECT "INVALID ROLE" AS MESSAGE;
         LEAVE proc_exit_point;
     END IF;
 
-    IF rpfp.profile_check_if_allowed_location(
+    SET good_location :=  rpfp.profile_check_if_allowed_location(
         USER(),
-        BARANGAYID,
-        rpfp.profile_get_scope(USER())
-    ) THEN
+        barangayid
+    );
+
+    IF NOT good_location THEN
         SELECT "INVALID LOCATION" AS MESSAGE;
         LEAVE proc_exit_point;
     END IF;
@@ -1214,7 +1307,7 @@ BEGIN
     SET user_scope := rpfp.profile_get_scope( name_user );
     SET multiplier := rpfp.lib_get_multiplier( user_scope );
     SET user_location := rpfp.profile_get_location( name_user, user_scope );
-    SET is_not_encoder := NOT rpfp.profile_check_if_encoder();
+    SET is_not_encoder := NOT IFNULL(rpfp.profile_check_if_encoder(), FALSE);
 
     IF NOT EXISTS (
          SELECT apc.COUPLES_ID
@@ -1279,7 +1372,7 @@ BEGIN
     SET user_scope := rpfp.profile_get_scope( name_user );
     SET multiplier := rpfp.lib_get_multiplier( user_scope );
     SET user_location := rpfp.profile_get_location( name_user, user_scope );
-    SET is_not_encoder := NOT rpfp.profile_check_if_encoder();
+    SET is_not_encoder := NOT IFNULL(rpfp.profile_check_if_encoder(), FALSE);
 
     IF NOT EXISTS (
          SELECT apc.COUPLES_ID
