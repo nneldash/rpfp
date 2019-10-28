@@ -98,7 +98,6 @@ BEGIN
        FROM rpfp.user_profile prof
       WHERE prof.DB_USER_ID = name_user
     ;
-
     IF record_id_no IS NULL THEN
         INSERT INTO rpfp.user_profile(
                     DB_USER_ID,
@@ -478,17 +477,17 @@ BEGIN
     DECLARE db_user_name VARCHAR(50);
 
     CALL rpfp.lib_extract_user_name( db_user, name_user, db_user_name );
-    
+
     SELECT TRUE INTO ret_val
       FROM mysql.ROLES_MAPPING rm
      WHERE rm.ROLE = rpfp.lib_select_role( role_num )
        AND rm.USER = name_user
      LIMIT 1  
     ;
-    
+
     SET ret_val := IFNULL(ret_val, 0);
     RETURN ret_val;
-END$$    
+END$$
 
 CREATE DEFINER=root@localhost FUNCTION profile_check_if_encoder()
     RETURNS INT(1)
@@ -1602,21 +1601,21 @@ BEGIN
                     CIVIL_ID,
                     EDUC_BCKGRND_ID,
                     IS_ATTENDEE
-            )
-        VALUES (
-                couplesid,
-                lastname_m,
-                firstname_m,
-                middle_m,
-                extname_m,
-                age_years_m,
-                1,
-                birthdate_m,
-                civil_status_m,
-                educ_bckgrnd_m,
-                attendee_m
-            )
-        ;
+                )
+            VALUES (
+                    couplesid,
+                    lastname_m,
+                    firstname_m,
+                    middle_m,
+                    extname_m,
+                    age_years_m,
+                    1,
+                    birthdate_m,
+                    civil_status_m,
+                    educ_bckgrnd_m,
+                    attendee_m
+                )
+            ;
 
         INSERT INTO rpfp.individual (
                     COUPLES_ID,
@@ -1629,20 +1628,20 @@ BEGIN
                     CIVIL_ID,
                     EDUC_BCKGRND_ID,
                     IS_ATTENDEE
-            )
-        VALUES (
-                couplesid,
-                lastname_f,
-                firstname_f,
-                middle_f,
-                age_years_f,
-                2,
-                birthdate_f,
-                civil_status_f,
-                educ_bckgrnd_f,
-                attendee_f
-            )
-        ;
+                )
+            VALUES (
+                    couplesid,
+                    lastname_f,
+                    firstname_f,
+                    middle_f,
+                    age_years_f,
+                    2,
+                    birthdate_f,
+                    civil_status_f,
+                    educ_bckgrnd_f,
+                    attendee_f
+                )
+            ;
 
         SELECT CONCAT( "NEW ENTRY: ", LAST_INSERT_ID() ) AS MESSAGE;
         LEAVE proc_exit_point;
@@ -1892,6 +1891,10 @@ DECLARE encoded_couples INT;
 DECLARE approved_couples INT;
 DECLARE duplicates INT;
 DECLARE invalids INT;
+DECLARE firstname VARCHAR(50);
+DECLARE lastname VARCHAR(50);
+DECLARE extname VARCHAR(50);
+DECLARE birthdate DATE;
     
       SELECT rc.CLASS_NUMBER
         INTO class_no
@@ -1941,24 +1944,6 @@ DECLARE invalids INT;
 
     SELECT approved_couples;
 
-      SELECT ic.FNAME, ic.LNAME, ic.EXT_NAME, ic.BDATE, COUNT(apc.COUPLES_ID)
-        INTO duplicates
-        FROM rpfp.individual ic
-   LEFT JOIN rpfp.couples apc ON apc.COUPLES_ID = ic.COUPLES_ID
-   LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
-   LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
-       WHERE apc.IS_ACTIVE = 0
-         AND YEAR(rc.DATE_CONDUCTED) = report_year 
-         AND MONTH(rc.DATE_CONDUCTED) = report_month
-         AND (
-                QUOTE(lp.REGION_CODE) = QUOTE(psgc_code)
-             OR (IFNULL( psgc_code, 0 ) = 0)
-            )
-    GROUP BY ic.FNAME, ic.LNAME, ic.EXT_NAME, ic.BDATE
-    ;
-
-    SELECT duplicates;
-
         INSERT INTO rpfp.report_couples_encoded (
                 REPORT_YEAR,
                 REPORT_MONTH,
@@ -1980,6 +1965,65 @@ DECLARE invalids INT;
                 approved_couples,
                 duplicates,
                 invalids,
+                username,
+                CURRENT_DATE()
+            )
+        ;
+
+        SELECT CONCAT( "NEW ENTRY: ", LAST_INSERT_ID() ) AS MESSAGE;
+        LEAVE proc_exit_point;
+
+    SELECT "SUCCESS!" AS MESSAGE;
+    
+END$$
+
+CREATE DEFINER=root@localhost PROCEDURE process_check_duplication (
+    IN username VARCHAR(50),
+    IN report_year INT,
+    IN report_month INT,
+    IN psgc_code INT
+    )  MODIFIES SQL DATA
+proc_exit_point :
+BEGIN
+DECLARE class_no VARCHAR(100);
+DECLARE duplicates INT;
+DECLARE firstname VARCHAR(50);
+DECLARE lastname VARCHAR(50);
+DECLARE extname VARCHAR(50);
+DECLARE birthdate DATE;
+    
+      SELECT ic.FNAME, ic.LNAME, ic.EXT_NAME, ic.BDATE, rc.CLASS_NUMBER, COUNT(apc.COUPLES_ID)
+        INTO firstname, lastname, extname, birthdate, class_no, duplicates
+        FROM rpfp.individual ic
+   LEFT JOIN rpfp.couples apc ON apc.COUPLES_ID = ic.COUPLES_ID
+   LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
+   LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
+       WHERE apc.IS_ACTIVE = 0
+         AND YEAR(rc.DATE_CONDUCTED) = report_year 
+         AND (
+                QUOTE(lp.REGION_CODE) = QUOTE(psgc_code)
+             OR (IFNULL( psgc_code, 0 ) = 0)
+            )
+    GROUP BY ic.FNAME, ic.LNAME, ic.EXT_NAME, ic.BDATE
+    ;
+
+    SELECT duplicates;
+
+        INSERT INTO rpfp.report_duplicate_encoded (
+                REPORT_YEAR,
+                REPORT_MONTH,
+                PSGC_CODE,
+                RPFP_CLASS_NO,
+                DUPLICATES,
+                DB_USER_ID,
+                DATE_PROCESSED
+            )
+        VALUES (
+                report_year,
+                report_month,
+                psgc_code,
+                class_no,
+                duplicates,
                 username,
                 CURRENT_DATE()
             )
@@ -3528,6 +3572,24 @@ CREATE TABLE report_couples_encoded (
        APPROVED_COUPLES INT,
              DUPLICATES INT,
                INVALIDS INT,
+             DB_USER_ID VARCHAR(50),
+         DATE_PROCESSED DATE,
+            PRIMARY KEY (REPORT_ID)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table report_couples_encoded
+--
+
+CREATE TABLE report_duplicate_encoded (
+              REPORT_ID INT UNSIGNED NOT NULL AUTO_INCREMENT,
+            REPORT_YEAR INT NOT NULL,
+              PSGC_CODE INT NOT NULL,
+           REPORT_MONTH INT NOT NULL,
+          RPFP_CLASS_NO VARCHAR(100),
+             DUPLICATES INT,
              DB_USER_ID VARCHAR(50),
          DATE_PROCESSED DATE,
             PRIMARY KEY (REPORT_ID)
