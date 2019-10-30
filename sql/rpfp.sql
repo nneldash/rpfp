@@ -998,7 +998,6 @@ BEGIN
          SELECT NULL AS rpfpclass,
                 NULL AS typeclass,
                 NULL AS others_specify,
-                NULL AS city,
                 NULL AS barangay,
                 NULL AS class_no,
                 NULL AS date_conduct,
@@ -1039,6 +1038,90 @@ BEGIN
                     )
            GROUP BY rc.CLASS_NUMBER
            ORDER BY rc.DATE_CONDUCTED DESC
+              LIMIT read_offset, items_per_page
+            ;
+        END;
+    END IF;
+END$$
+
+CREATE DEFINER=root@localhost PROCEDURE get_forms_list(
+    IN class_no VARCHAR(100),
+    IN status_active INT,
+    IN page_no INT,
+    IN items_per_page INT
+    )   READS SQL DATA
+BEGIN
+    DECLARE name_user VARCHAR(50);
+    DECLARE db_user_name VARCHAR(50);
+    DECLARE read_offset INT;
+    DECLARE user_scope INT;
+    DECLARE user_location INT;
+    DECLARE multiplier INT;
+    DECLARE is_not_encoder INT(1);
+    
+    CALL rpfp.lib_extract_user_name( USER(), name_user, db_user_name );
+    SET user_scope := rpfp.profile_get_scope( name_user );
+    SET multiplier := rpfp.lib_get_multiplier( user_scope );
+    SET user_location := rpfp.profile_get_location( name_user, user_scope );
+    SET is_not_encoder := NOT IFNULL(rpfp.profile_check_if_encoder(), FALSE);
+
+    IF ( NOT EXISTS (
+         SELECT rc.RPFP_CLASS_ID
+           FROM rpfp.rpfp_class rc
+      LEFT JOIN rpfp.couples apc
+             ON apc.RPFP_CLASS_ID = rc.RPFP_CLASS_ID
+          WHERE apc.IS_ACTIVE = status_active
+            AND (   rc.DB_USER_ID = name_user
+                 OR (   is_not_encoder
+                    AND user_location = (rc.BARANGAY_ID DIV POWER( 10, multiplier ))
+                    )
+                )
+        )
+    ) THEN
+         SELECT NULL AS rpfpclass,
+                NULL AS typeclass,
+                NULL AS others_specify,
+                NULL AS barangay,
+                NULL AS class_no,
+                NULL AS date_conduct,
+                NULL AS lastname,
+                NULL AS firstname
+        ;
+    ELSE BEGIN
+            IF (IFNULL( page_no, 0) = 0) THEN
+                /** DEFAULT PAGE NO. */
+                SET page_no := 1;
+            END IF;
+            IF (IFNULL( items_per_page, 0) = 0) THEN
+                /** DEFAULT COUNT PER PAGE*/
+                SET items_per_page := 10;
+            END IF;
+
+            SET read_offset := (page_no - 1) * items_per_page;
+
+             SELECT rc.RPFP_CLASS_ID AS rpfpclass,
+                    tc.TYPE_CLASS_DESC AS typeclass,
+                    rc.OTHERS_SPECIFY AS others_specify,
+                    lp.LOCATION_DESCRIPTION AS barangay,
+                    rc.CLASS_NUMBER AS class_no,
+                    rc.DATE_CONDUCTED AS date_conduct,
+                    ic.LNAME AS lastname,
+                    ic.FNAME AS firstname
+               FROM rpfp.rpfp_class rc
+          LEFT JOIN rpfp.couples apc 
+		         ON apc.RPFP_CLASS_ID = rc.RPFP_CLASS_ID
+          LEFT JOIN rpfp.lib_type_class tc ON tc.TYPE_CLASS_ID = rc.TYPE_CLASS_ID
+          LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
+          LEFT JOIN rpfp.individual ic ON ic.COUPLES_ID = apc.COUPLES_ID
+              WHERE rc.CLASS_NUMBER = class_no
+                AND apc.IS_ACTIVE = status_active
+                AND (   rc.DB_USER_ID = name_user
+                    OR (   is_not_encoder
+                        AND user_location = (rc.BARANGAY_ID DIV POWER( 10, multiplier ))
+                        )
+                    )
+           GROUP BY rc.RPFP_CLASS_ID
+           ORDER BY rc.RPFP_CLASS_ID DESC
               LIMIT read_offset, items_per_page
             ;
         END;
@@ -1949,7 +2032,7 @@ DECLARE birthdate DATE;
 
 DECLARE cur_class_list CURSOR FOR 
     
-      SELECT rc.CLASS_NUMBER
+      SELECT DISTINCT rc.CLASS_NUMBER
         FROM rpfp.rpfp_class rc 
    LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
        WHERE YEAR(rc.DATE_CONDUCTED) = report_year 
@@ -1958,7 +2041,6 @@ DECLARE cur_class_list CURSOR FOR
                 QUOTE(lp.REGION_CODE) = QUOTE(psgc_code)
              OR (IFNULL( psgc_code, 0 ) = 0)
             )
-    GROUP BY rc.CLASS_NUMBER
 ;
 
 DECLARE CONTINUE HANDLER 
@@ -2178,7 +2260,7 @@ DECLARE reached_total INT;
 DECLARE report_scope VARCHAR(100);
     
 -- DECLARE count_id INT;
--- DECLARE random_no VARCHAR(400);
+DECLARE random_no VARCHAR(400) DEFAULT 0 ;
 
 -- SET random_no = CONCAT("RPFP-",report_year,report_month,"-",CEILING(RAND()*10000000000));
 
@@ -2190,7 +2272,7 @@ DECLARE report_scope VARCHAR(100);
 -- END IF
 -- ;
 
-      SELECT COUNT(*) 
+      SELECT COUNT(DISTINCT rc.CLASS_NUMBER) 
         INTO class_4ps 
         FROM rpfp.rpfp_class rc 
    LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
@@ -2201,12 +2283,9 @@ DECLARE report_scope VARCHAR(100);
                 QUOTE(lp.REGION_CODE) = QUOTE(psgc_code)
              OR (IFNULL( psgc_code, 0 ) = 0)
             )
-    GROUP BY rc.CLASS_NUMBER
     ;
 
-      SELECT class_4ps;
-
-      SELECT COUNT(*) 
+      SELECT COUNT(DISTINCT rc.CLASS_NUMBER) 
         INTO class_non4ps1 
         FROM rpfp.rpfp_class rc 
    LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
@@ -2217,10 +2296,9 @@ DECLARE report_scope VARCHAR(100);
                 QUOTE(lp.REGION_CODE) = QUOTE(psgc_code)
              OR (IFNULL( psgc_code, 0 ) = 0)
             )
-    GROUP BY rc.CLASS_NUMBER
     ;
 
-      SELECT COUNT(*) 
+      SELECT COUNT(DISTINCT rc.CLASS_NUMBER) 
         INTO class_non4ps2 
         FROM rpfp.rpfp_class rc 
    LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
@@ -2231,14 +2309,11 @@ DECLARE report_scope VARCHAR(100);
                 QUOTE(lp.REGION_CODE) = QUOTE(psgc_code)
              OR (IFNULL( psgc_code, 0 ) = 0)
             )
-    GROUP BY rc.CLASS_NUMBER
     ;
 
          SET class_non4ps = class_non4ps1 + class_non4ps2;
 
-      SELECT class_non4ps;
-
-      SELECT COUNT(*) 
+      SELECT COUNT(DISTINCT rc.CLASS_NUMBER) 
         INTO class_usapan 
         FROM rpfp.rpfp_class rc 
    LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
@@ -2249,12 +2324,11 @@ DECLARE report_scope VARCHAR(100);
                 QUOTE(lp.REGION_CODE) = QUOTE(psgc_code)
              OR (IFNULL( psgc_code, 0 ) = 0)
             )
-    GROUP BY rc.CLASS_NUMBER
     ;
 
       SELECT class_usapan;
 
-      SELECT COUNT(*) 
+      SELECT COUNT(DISTINCT rc.CLASS_NUMBER) 
         INTO class_pmc 
         FROM rpfp.rpfp_class rc 
    LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
@@ -2265,12 +2339,11 @@ DECLARE report_scope VARCHAR(100);
                 QUOTE(lp.REGION_CODE) = QUOTE(psgc_code)
              OR (IFNULL( psgc_code, 0 ) = 0)
             )
-    GROUP BY rc.CLASS_NUMBER
     ;
 
       SELECT class_pmc;
 
-      SELECT COUNT(*) 
+      SELECT COUNT(DISTINCT rc.CLASS_NUMBER) 
         INTO class_h2h 
         FROM rpfp.rpfp_class rc 
    LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
@@ -2281,12 +2354,11 @@ DECLARE report_scope VARCHAR(100);
                 QUOTE(lp.REGION_CODE) = QUOTE(psgc_code)
              OR (IFNULL( psgc_code, 0 ) = 0)
             )
-    GROUP BY rc.CLASS_NUMBER
     ;
 
       SELECT class_h2h;
 
-      SELECT COUNT(*) 
+      SELECT COUNT(DISTINCT rc.CLASS_NUMBER) 
         INTO class_profiled 
         FROM rpfp.rpfp_class rc 
    LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
@@ -2297,12 +2369,9 @@ DECLARE report_scope VARCHAR(100);
                 QUOTE(lp.REGION_CODE) = QUOTE(psgc_code)
              OR (IFNULL( psgc_code, 0 ) = 0)
             )
-    GROUP BY rc.CLASS_NUMBER
     ;
 
-    SELECT class_profiled;
-
-      SELECT COUNT(*) 
+      SELECT COUNT(DISTINCT rc.CLASS_NUMBER) 
         INTO class_total 
         FROM rpfp.rpfp_class rc 
    LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
@@ -2312,10 +2381,7 @@ DECLARE report_scope VARCHAR(100);
                 QUOTE(lp.REGION_CODE) = QUOTE(psgc_code)
              OR (IFNULL( psgc_code, 0 ) = 0)
             )
-    GROUP BY rc.CLASS_NUMBER
     ;
-
-      SELECT class_total;
 
       SELECT SUM(TARGET_COUNT)
 	    INTO target_couples
@@ -2328,9 +2394,7 @@ DECLARE report_scope VARCHAR(100);
             )
     ;
 	
-	SELECT target_couples;
-
-      SELECT COUNT(*) 
+      SELECT COUNT(ic.INDV_ID) 
         INTO wra_4ps 
         FROM rpfp.individual ic
    LEFT JOIN rpfp.couples apc ON apc.COUPLES_ID = ic.COUPLES_ID
@@ -2347,9 +2411,7 @@ DECLARE report_scope VARCHAR(100);
             )
        ;
 
-      SELECT wra_4ps;
-
-      SELECT COUNT(*) 
+      SELECT COUNT(ic.INDV_ID) 
         INTO wra_non4ps 
         FROM rpfp.individual ic
    LEFT JOIN rpfp.couples apc ON apc.COUPLES_ID = ic.COUPLES_ID
@@ -2367,9 +2429,7 @@ DECLARE report_scope VARCHAR(100);
             )
        ;
 
-      SELECT wra_non4ps;
-
-      SELECT COUNT(*) 
+      SELECT COUNT(ic.INDV_ID) 
         INTO wra_usapan 
         FROM rpfp.individual ic
    LEFT JOIN rpfp.couples apc ON apc.COUPLES_ID = ic.COUPLES_ID
@@ -2386,9 +2446,7 @@ DECLARE report_scope VARCHAR(100);
             )
        ;
 
-      SELECT wra_usapan;
-
-      SELECT COUNT(*) 
+      SELECT COUNT(ic.INDV_ID) 
         INTO wra_pmc 
         FROM rpfp.individual ic
    LEFT JOIN rpfp.couples apc ON apc.COUPLES_ID = ic.COUPLES_ID
@@ -2405,9 +2463,7 @@ DECLARE report_scope VARCHAR(100);
             )
        ;
 
-      SELECT wra_pmc;
-
-      SELECT COUNT(*) 
+      SELECT COUNT(ic.INDV_ID) 
         INTO wra_h2h 
         FROM rpfp.individual ic
    LEFT JOIN rpfp.couples apc ON apc.COUPLES_ID = ic.COUPLES_ID
@@ -2424,9 +2480,7 @@ DECLARE report_scope VARCHAR(100);
             )
        ;
 
-      SELECT wra_h2h;
-
-      SELECT COUNT(*) 
+      SELECT COUNT(ic.INDV_ID) 
         INTO wra_profiled
         FROM rpfp.individual ic
    LEFT JOIN rpfp.couples apc ON apc.COUPLES_ID = ic.COUPLES_ID
@@ -2443,9 +2497,7 @@ DECLARE report_scope VARCHAR(100);
             )
        ;
 
-      SELECT wra_profiled;
-
-      SELECT COUNT(*) 
+      SELECT COUNT(ic.INDV_ID) 
         INTO wra_total 
         FROM rpfp.individual ic
    LEFT JOIN rpfp.couples apc ON apc.COUPLES_ID = ic.COUPLES_ID
@@ -2461,9 +2513,7 @@ DECLARE report_scope VARCHAR(100);
             )
        ;
 
-      SELECT wra_total;
-
-      SELECT COUNT(*) 
+      SELECT COUNT(ic.INDV_ID) 
         INTO solo_male 
         FROM rpfp.individual ic
    LEFT JOIN rpfp.couples apc ON apc.COUPLES_ID = ic.COUPLES_ID
@@ -2479,9 +2529,7 @@ DECLARE report_scope VARCHAR(100);
             )
        ;
 
-      SELECT solo_male;
-
-      SELECT COUNT(*) 
+      SELECT COUNT(ic.INDV_ID) 
         INTO solo_female 
         FROM rpfp.individual ic
    LEFT JOIN rpfp.couples apc ON apc.COUPLES_ID = ic.COUPLES_ID
@@ -2497,9 +2545,7 @@ DECLARE report_scope VARCHAR(100);
             )
        ;
 
-      SELECT solo_female;
-
-      SELECT COUNT(*) 
+      SELECT COUNT(DISTINCT ic.COUPLES_ID) 
         INTO couple_attendee 
         FROM rpfp.individual ic
    LEFT JOIN rpfp.couples apc ON apc.COUPLES_ID = ic.COUPLES_ID
@@ -2514,9 +2560,7 @@ DECLARE report_scope VARCHAR(100);
             )
        ;
 
-      SELECT couple_attendee;
-
-      SELECT COUNT(*) 
+      SELECT COUNT(apc.COUPLES_ID) 
         INTO reached_total 
         FROM rpfp.couples apc
    LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = rc.RPFP_CLASS_ID
@@ -2529,8 +2573,6 @@ DECLARE report_scope VARCHAR(100);
              OR (IFNULL( psgc_code, 0 ) = 0)
             )
        ;
-
-      SELECT reached_total;
 
         INSERT INTO rpfp.report_demandgen (
                 DEMANDGEN_ID,
@@ -2612,7 +2654,7 @@ DECLARE total_served INT;
 DECLARE report_scope VARCHAR(100);
 
 -- DECLARE count_id INT;
--- DECLARE random_no VARCHAR(400);
+DECLARE random_no VARCHAR(400) DEFAULT 0 ;
 
 -- SET random_no = CONCAT("RPFP-",report_year,report_month,"-",CEILING(RAND()*10000000000));
 
@@ -2813,7 +2855,7 @@ DECLARE total_served INT;
 DECLARE report_scope VARCHAR(100);
 
 -- DECLARE count_id INT;
--- DECLARE random_no VARCHAR(400);
+DECLARE random_no VARCHAR(400) DEFAULT 0 ;
 
 -- SET random_no = CONCAT("RPFP-",report_year,report_month,"-",CEILING(RAND()*10000000000));
 
