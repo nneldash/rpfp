@@ -1,6 +1,6 @@
 SELECT "Loading Test values" AS MESSAGE;
 
-CALL rpfp.itdmu_create_rpfp_user('test', 'test', 'rojo', 'rowell', 'x@com.com', 13, 130000000, 50, 40);
+CALL rpfp.itdmu_create_rpfp_user('test', 'test', 'rojo', 'rowell', 'x@com.com', 08, 80000000, 50, 40);
 SELECT "User Created: Test" AS MESSAGE;
 
 CALL rpfp.itdmu_create_rpfp_user('root', '', 'root', 'root', 'y@com.com', 08, 080000000, 80, 40);

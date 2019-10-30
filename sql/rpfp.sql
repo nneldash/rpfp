@@ -1878,6 +1878,29 @@ END$$
 /** END SAVE TARGET COUPLES */
 
 /** PROCESS REPORTS */
+CREATE DEFINER=root@localhost PROCEDURE encoder_process_accomplishments (
+    IN report_year INT,
+    IN report_month INT
+    )  READS SQL DATA
+proc_exit_point :
+BEGIN
+    DECLARE name_user VARCHAR(50);
+    DECLARE db_user_name VARCHAR(50);
+    DECLARE user_scope INT;
+    DECLARE user_location INT;
+    DECLARE multiplier INT;
+    DECLARE is_not_encoder INT(1);
+
+    CALL rpfp.lib_extract_user_name( USER(), name_user, db_user_name );
+    SET user_scope := rpfp.profile_get_scope( name_user );
+    SET multiplier := rpfp.lib_get_multiplier( user_scope );
+    SET user_location := rpfp.profile_get_location( name_user, user_scope );
+    SET is_not_encoder := NOT IFNULL(rpfp.profile_check_if_encoder(), FALSE);
+
+    CALL rpfp.process_accomplishment( name_user, report_year, report_month, user_location );
+
+END$$
+
 CREATE DEFINER=root@localhost PROCEDURE process_accomplishments (
     IN username VARCHAR(50),
     IN report_year INT,
@@ -1893,14 +1916,14 @@ SET random_no = CONCAT("RPFP-",report_year,report_month,"-",CEILING(RAND()*10000
 
 SELECT COUNT(*) INTO count_id FROM report_random_id WHERE RANDOM_ID = random_no;
 
-IF count_id = 0 THEN
-    CALL process_check_duplication(username,report_year,report_month,psgc_code,random_no);
-    CALL process_couples_encoded(username,report_year,report_month,psgc_code,random_no);
-ELSE
+IF count_id > 0 THEN
     SELECT "CANNOT PROCESS RECORD WITH GIVEN PARAMETERS" AS MESSAGE;
     LEAVE proc_exit_point;
 END IF
 ;
+
+    CALL process_check_duplication( username, report_year, report_month, psgc_code, random_no );
+    CALL process_couples_encoded( username, report_year, report_month, psgc_code, random_no );
 
 END$$
 
@@ -1913,7 +1936,7 @@ CREATE DEFINER=root@localhost PROCEDURE process_couples_encoded (
     )  MODIFIES SQL DATA
 proc_exit_point :
 BEGIN
-DECLARE finished INTEGER DEFAULT 0;
+DECLARE encoded_fin INTEGER DEFAULT 0;
 DECLARE class_no VARCHAR(100) DEFAULT "";
 DECLARE encoded_couples INT;
 DECLARE approved_couples INT;
@@ -1939,13 +1962,13 @@ DECLARE cur_class_list CURSOR FOR
 ;
 
 DECLARE CONTINUE HANDLER 
-        FOR NOT FOUND SET finished = 1;
+        FOR NOT FOUND SET encoded_fin = 1;
 
 OPEN cur_class_list;
 
 get_cur_class_list: LOOP
     FETCH cur_class_list INTO class_no;
-    IF finished = 1 THEN
+    IF encoded_fin = 1 THEN
         LEAVE get_cur_class_list;
     END IF;
    
@@ -2039,8 +2062,9 @@ DECLARE firstname VARCHAR(50);
 DECLARE lastname VARCHAR(50);
 DECLARE extname VARCHAR(50);
 DECLARE birthdate DATE;
+DECLARE count_record INT;
     
-DECLARE cur_class_list CURSOR FOR 
+DECLARE cur_duplicate_list CURSOR FOR 
 
       SELECT ic.FNAME, ic.LNAME, ic.EXT_NAME, ic.BDATE, rc.CLASS_NUMBER, COUNT(apc.COUPLES_ID)
         FROM rpfp.individual ic
@@ -2048,7 +2072,6 @@ DECLARE cur_class_list CURSOR FOR
    LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
    LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
        WHERE apc.IS_ACTIVE = 0
-         AND YEAR(rc.DATE_CONDUCTED) = report_year 
          AND (
                 QUOTE(lp.REGION_CODE) = QUOTE(psgc_code)
              OR (IFNULL( psgc_code, 0 ) = 0)
@@ -2059,49 +2082,63 @@ DECLARE cur_class_list CURSOR FOR
 DECLARE CONTINUE HANDLER 
         FOR NOT FOUND SET finished = 1;
 
-OPEN cur_class_list;
+OPEN cur_duplicate_list;
 
-get_cur_class_list: LOOP
-    FETCH cur_class_list INTO firstname, lastname, extname, birthdate, class_no, duplicates;
+get_cur_duplicate_list: LOOP
+    FETCH cur_duplicate_list INTO firstname, lastname, extname, birthdate, class_no, duplicates;
     IF finished = 1 THEN
-        LEAVE get_cur_class_list;
+        LEAVE get_cur_duplicate_list;
     END IF;
 
     IF duplicates > 1 THEN   
-        INSERT INTO rpfp.report_duplicate_encoded (
-                ACCOM_ID,
-                REPORT_YEAR,
-                REPORT_MONTH,
-                PSGC_CODE,
-                RPFP_CLASS_NO,
-                DUPLICATES,
-                FNAME,
-                LNAME,
-                EXT_NAME,
-                BDATE,
-                DB_USER_ID,
-                DATE_PROCESSED
-            )
-        VALUES (
-                random_id,
-                report_year,
-                report_month,
-                psgc_code,
-                class_no,
-                duplicates,
-                firstname,
-                lastname,
-                ext_name,
-                birthdate,
-                username,
-                CURRENT_DATE()
-            )
+          SELECT COUNT(*)
+            INTO count_record
+            FROM rpfp.report_duplicate_encoded rde
+           WHERE rde.FNAME = firstname
+             AND rde.LNAME = lastname
+             AND rde.EXT_NAME = extname
+             AND rde.BDATE = birthdate
+             AND rde.RPFP_CLASS_NO = class_no
+             AND rde.DB_USER_ID = username
+        ;
+
+        IF count_record = 0 THEN
+            INSERT INTO rpfp.report_duplicate_encoded (
+                    ACCOM_ID,
+                    REPORT_YEAR,
+                    REPORT_MONTH,
+                    PSGC_CODE,
+                    RPFP_CLASS_NO,
+                    DUPLICATES,
+                    FNAME,
+                    LNAME,
+                    EXT_NAME,
+                    BDATE,
+                    DB_USER_ID,
+                    DATE_PROCESSED
+                )
+            VALUES (
+                    random_id,
+                    report_year,
+                    report_month,
+                    psgc_code,
+                    class_no,
+                    duplicates,
+                    firstname,
+                    lastname,
+                    extname,
+                    birthdate,
+                    username,
+                    CURRENT_DATE()
+                )
+            ;
+        END IF
         ;
     END IF
     ;
 
-END LOOP get_cur_class_list;
-CLOSE cur_class_list;
+END LOOP get_cur_duplicate_list;
+CLOSE cur_duplicate_list;
 
         SELECT CONCAT( "NEW ENTRY: ", LAST_INSERT_ID() ) AS MESSAGE;
         LEAVE proc_exit_point;
@@ -3031,6 +3068,56 @@ END$$
 /** END PROCESS REPORTS */
 
 /** GET REPORTS */
+CREATE DEFINER=root@localhost PROCEDURE get_report_accomplishment_list(
+    IN username VARCHAR(50),
+    IN page_no INT,
+    IN items_per_page INT
+    )   READS SQL DATA
+BEGIN
+    DECLARE name_user VARCHAR(50);
+    DECLARE db_user_name VARCHAR(50);
+    DECLARE read_offset INT;
+
+    CALL rpfp.lib_extract_user_name( username, name_user, db_user_name );
+
+    IF NOT EXISTS (
+         SELECT rce.REPORT_ID
+           FROM rpfp.report_couples_encoded rce
+      LEFT JOIN rpfp.user_profile up
+             ON up.REGION_CODE = rce.PSGC_CODE
+          WHERE up.DB_USER_ID = name_user
+    ) THEN
+         SELECT NULL AS report_id,
+                NULL AS report_year,
+                NULL AS report_month,
+                NULL AS accom_id,
+                NULL AS date_processed
+        ;
+    ELSE
+        IF (IFNULL( page_no, 0) = 0) THEN
+            /** DEFAULT PAGE NO. */
+            SET page_no := 1;
+        END IF;
+        IF (IFNULL( items_per_page, 0) = 0) THEN
+            /** DEFAULT COUNT PER PAGE*/
+            SET items_per_page := 10;
+        END IF;
+
+        SET read_offset := (page_no - 1) * items_per_page;
+         SELECT rce.REPORT_ID AS report_id,
+                rce.REPORT_YEAR AS report_year,
+                rce.REPORT_MONTH AS report_month,
+                rce.ACCOM_ID AS accom_id,
+                rce.DATE_PROCESSED AS date_processed
+           FROM rpfp.report_couples_encoded rce
+          WHERE rce.DB_USER_ID = name_user
+       GROUP BY rce.ACCOM_ID
+       ORDER BY rce.DATE_PROCESSED DESC
+          LIMIT read_offset, items_per_page
+        ;
+    END IF;
+END$$
+
 CREATE DEFINER=root@localhost PROCEDURE get_report_demandgen_list(
     IN username VARCHAR(50),
     IN page_no INT,
@@ -3183,6 +3270,48 @@ END$$
 /** END GET REPORTS */
 
 /** GET REPORT DETAILS */
+CREATE DEFINER=root@localhost PROCEDURE get_report_accomplishment_details(
+    IN accom_id INT
+    )   READS SQL DATA
+BEGIN
+    IF NOT EXISTS (
+         SELECT rce.REPORT_ID
+           FROM rpfp.report_couples_encoded rce
+          WHERE rce.ACCOM_ID = accom_id
+    ) THEN
+        BEGIN
+             SELECT NULL AS report_year,
+                    NULL AS report_month,
+                    NULL AS psgc_code,
+                    NULL AS accomplishment_id,
+                    NULL AS class_no,
+                    NULL AS encoded_couples,
+                    NULL AS approved_couples,
+                    NULL AS duplicates,
+                    NULL AS invalids,
+                    NULL AS username,
+                    NULL AS date_processed
+            ;
+        END;
+    ELSE
+        BEGIN
+             SELECT rce.REPORT_YEAR AS report_year,
+                    rce.REPORT_MONTH AS report_month,
+                    rce.PSGC_CODE AS psgc_code,
+                    rce.RPFP_CLASS_NO AS class_no,
+                    rce.ENCODED_COUPLES AS encoded_couples,
+                    rce.APPROVED_COUPLES AS approved_couples,
+                    rce.DUPLICATES AS duplicates,
+                    rce.INVALIDS AS invalids,
+                    rce.DATE_PROCESSED AS date_processed
+               FROM rpfp.report_couples_encoded rce
+              WHERE rce.ACCOM_ID = accom_id
+           ORDER BY rce.REPORT_ID ASC
+            ;
+        END;
+    END IF;
+END$$
+
 CREATE DEFINER=root@localhost PROCEDURE get_report_demandgen_details(
     IN demandgen_id INT
     )   READS SQL DATA
