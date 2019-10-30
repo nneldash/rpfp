@@ -4,8 +4,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 <link href="<?= base_url('assets/css/style.css') ?>" rel="stylesheet">
 <link href="<?= base_url('assets/css/form.css') ?>" rel="stylesheet">
-<link href="<?= base_url('NewAssets/datatablesBootstrap') ?>" rel="stylesheet">
-<link href="<?= base_url('NewAssets/datatablesResponsive') ?>" rel="stylesheet">
 
 <br>
 <table id="datatable-responsive" class="table table-condensed table-striped table-hover table-bordered dt-responsive nowrap" cellspacing="0" width="100%">
@@ -36,7 +34,3 @@ defined('BASEPATH') or exit('No direct script access allowed');
 </table>
 
 <script type="text/javascript" src="<?= base_url('assets/js/listCouples.js')?>"></script>
-<script type="text/javascript" src="<?= base_url('NewAssets/datatableJs')?>"></script>
-<script type="text/javascript" src="<?= base_url('NewAssets/datatableBtJs')?>"></script>
-<script type="text/javascript" src="<?= base_url('NewAssets/datatableRpJs')?>"></script>
-<script type="text/javascript" src="<?= base_url('NewAssets/datatableBtrpJs')?>"></script>

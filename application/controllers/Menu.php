@@ -121,7 +121,7 @@ class Menu extends CI_Controller
             )
         );
         $this->load->view('menu/summary', array('is_pdf' => false), false);
-        $this->load->view('includes/footer');
+        $this->load->view('includes/admin_footer');
     }
 
     public function search()

@@ -25,5 +25,10 @@
         <script type="text/javascript" src="<?= base_url('NewAssets/progressBarJs')?>"></script>
         <script type="text/javascript" src="<?= base_url('NewAssets/customJs')?>"></script>
         <script src="<?= base_url('assets/js/systemTimeout.js')?>"></script>
+
+        <script type="text/javascript" src="<?= base_url('NewAssets/datatableJs')?>"></script>
+        <script type="text/javascript" src="<?= base_url('NewAssets/datatableBtJs')?>"></script>
+        <script type="text/javascript" src="<?= base_url('NewAssets/datatableRpJs')?>"></script>
+        <script type="text/javascript" src="<?= base_url('NewAssets/datatableBtrpJs')?>"></script>
     </body>
 </html>

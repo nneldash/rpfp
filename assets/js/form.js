@@ -130,6 +130,7 @@ function checkDuplicate()
 				$(this).closest('td').removeAttr('data-tip', 'Invalid Input!');
 				$(this).closest('td').removeClass('has-duplicate');
 				$(this).removeClass('has-duplicate');
+				$('input[name="saveform1"]').removeAttr('disabled', 'disabled');
 
 				getDate(sex);
 				getSex(sex)
@@ -141,7 +142,7 @@ function checkDuplicate()
 				$(this).closest('td').addClass('has-duplicate');
 				$(this).addClass('has-duplicate');
 			}
-		});		
+		});
 
 		// $(that2).keydown(function() {
 		// 	var fname = $('input[name="name_participant2['+ i +']"]').val();
@@ -178,6 +179,7 @@ function getSex(sex1)
 					$(this).closest('td').removeAttr('data-tip', 'Invalid Input!');
 					$(this).closest('td').removeClass('has-duplicate');
 					$(this).removeClass('has-duplicate');
+					$('input[name="saveform1"]').removeAttr('disabled', 'disabled');
 
 
 					getDate(sex2);
@@ -194,6 +196,7 @@ function getSex(sex1)
 					$(this).closest('td').removeAttr('data-tip', 'Invalid Input!');
 					$(this).closest('td').removeClass('has-duplicate');
 					$(this).removeClass('has-duplicate');
+					$('input[name="saveform1"]').removeAttr('disabled', 'disabled');
 
 					getDate(sex2);
 				} else {
@@ -230,14 +233,14 @@ function getDate(nameArr1, sex)
 			var bday = this.value;
 			var dateArr = bday.split('/');
 
-			$.post(base_url + 'forms/checkDuplicate')
+			$.post(base_url + 'forms/checkCoupleDuplicate')
 			.done(function(result){
 				alert(result);
-				if(result){
-					$(this).closest('td').attr('data-tip', 'Duplicate Entry');
-					$(this).closest('td').addClass('has-duplicate');
-					$(this).addClass('has-duplicate');
-				}
+				// if(result){
+				// 	$(this).closest('td').attr('data-tip', 'Duplicate Entry');
+				// 	$(this).closest('td').addClass('has-duplicate');
+				// 	$(this).addClass('has-duplicate');
+				// }
 			});
 
 			// alert(nameArr[0]);

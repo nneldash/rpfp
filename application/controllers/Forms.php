@@ -434,13 +434,14 @@ class Forms extends CI_Controller
 
     public function checkCoupleDuplicate()
     {
-        $this->load->model('FormModel');
-        $count = $this->FormModel->getDuplicateCouple();
+        // $this->load->model('FormModel');
+        // $count = $this->FormModel->getDuplicateCouple();
+        $count = 1;
 
-        echo "<pre>";
-        print_r($count);
-        exit;
+        // echo "<pre>";
+        // print_r($count);
+        // exit;
 
-        return $count;
+        echo json_encode($count);
     }
 }

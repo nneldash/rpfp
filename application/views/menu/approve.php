@@ -3,8 +3,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
 ?>
 
 <link href="NewAssets/fontAwesome" rel="stylesheet">
-<link href="<?= base_url('NewAssets/datatablesBootstrap') ?>" rel="stylesheet">
-<link href="<?= base_url('NewAssets/datatablesResponsive') ?>" rel="stylesheet">
 <link href="<?= base_url('assets/css/style.css') ?>" rel="stylesheet">
 <link href="<?= base_url('assets/css/form.css') ?>" rel="stylesheet">
 
@@ -37,7 +35,3 @@ defined('BASEPATH') or exit('No direct script access allowed');
 </table>
 
 <script type="text/javascript" src="<?= base_url('assets/js/listCouples.js')?>"></script>
-<script type="text/javascript" src="<?= base_url('NewAssets/datatableJs')?>"></script>
-<script type="text/javascript" src="<?= base_url('NewAssets/datatableBtJs')?>"></script>
-<script type="text/javascript" src="<?= base_url('NewAssets/datatableRpJs')?>"></script>
-<script type="text/javascript" src="<?= base_url('NewAssets/datatableBtrpJs')?>"></script>
