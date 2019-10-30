@@ -105,6 +105,11 @@
                                                 <i class="fa fa-thumbs-o-up"></i> Approved
                                             </a>
                                         </li>
+                                        <li>
+                                            <a href="<?= base_url('menu/summary')?>">
+                                                <i class="fa fa-clipboard"></i> Summary Report
+                                            </a>
+                                        </li>
                                         <!-- <li>
                                             <a href="</?= base_url('menu/serviceSlip')?>">
                                                 <i class="fa fa-file-text-o"></i> Service Slip

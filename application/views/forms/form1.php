@@ -460,7 +460,7 @@ $form1 = FormClass::getFormFromVariable($form1);
 				                                "text",
 				                                "age1[".$i."]",
 				                                "text-center birthAge",
-				                                "'mask': '99-9999 / 99'"
+				                                "'mask': '99-99-9999 / 99'"
 				                            );
 				                        ?>
 									</td>
@@ -624,7 +624,7 @@ $form1 = FormClass::getFormFromVariable($form1);
 				                                "text",
 				                                "age2[".$i."]",
 				                                "text-center birthAge",
-				                                "'mask': '99-9999 / 99'"
+				                                "'mask': '99-99-9999 / 99'"
 				                            );
 			                        	?>
 									</td>

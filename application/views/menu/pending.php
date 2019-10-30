@@ -3,6 +3,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 ?>
 
 <link href="<?= base_url('assets/css/style.css') ?>" rel="stylesheet">
+<link href="<?= base_url('assets/css/form.css') ?>" rel="stylesheet">
 <link href="<?= base_url('NewAssets/datatablesBootstrap') ?>" rel="stylesheet">
 <link href="<?= base_url('NewAssets/datatablesResponsive') ?>" rel="stylesheet">
 
@@ -20,22 +21,21 @@ defined('BASEPATH') or exit('No direct script access allowed');
 	<tbody>
 		<?php foreach($pending as $pendings) : ?>
 			<tr>
-				<td><?= $pendings->ClassNo ?></td>
+				<td id="classNo"><?= $pendings->ClassNo ?></td>
 				<td><?= $pendings->TypeClass ?></td>
 				<td><?= $pendings->Barangay; ?></td>
 				<td><?= date('F d, Y', strtotime($pendings->DateConduct)); ?></td>
-				<td class="text-center">
-					<a href="<?= base_url('forms?rpfpId='.md5($pendings->RpfpClass)); ?>" target="_blank">
-						<button class="btn btn-primary" data-toggle="tooltip" data-placement="left" title="Edit">
-							<i class="fa fa-edit"></i>
-						</button>
-					</a>
+				<td class="text-center">					
+					<button class="btn btn-primary btn-listing" data-toggle="tooltip" data-placement="left" title="View List">
+						<i class="fa fa-list"></i>
+					</button>
 				</td>
 			</tr>
 		<?php endforeach; ?>
 	</tbody>
 </table>
 
+<script type="text/javascript" src="<?= base_url('assets/js/listCouples.js')?>"></script>
 <script type="text/javascript" src="<?= base_url('NewAssets/datatableJs')?>"></script>
 <script type="text/javascript" src="<?= base_url('NewAssets/datatableBtJs')?>"></script>
 <script type="text/javascript" src="<?= base_url('NewAssets/datatableRpJs')?>"></script>

@@ -27,7 +27,9 @@ class CoupleModel extends BaseModel
                 'OthersSpecify' => 'others_specify',
                 'Barangay' => 'barangay',
                 'ClassNo' => 'class_no',
-                'DateConduct' => 'date_conduct'
+                'DateConduct' => 'date_conduct',
+                'LastName' => 'lastname',
+                'FirstName' => 'firstname'
             ),
             'encoder_get_class_list_pending',
             array($page_no, $items_per_page)
@@ -56,7 +58,9 @@ class CoupleModel extends BaseModel
                 'OthersSpecify' => 'others_specify',
                 'Barangay' => 'barangay',
                 'ClassNo' => 'class_no',
-                'DateConduct' => 'date_conduct'
+                'DateConduct' => 'date_conduct',
+                'LastName' => 'lastname',
+                'FirstName' => 'firstname'
             ),
             'encoder_get_class_list_approved',
             array($page_no, $items_per_page)
