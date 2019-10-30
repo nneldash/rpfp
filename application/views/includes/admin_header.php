@@ -15,6 +15,9 @@
         <link href="<?= base_url('assets/css/style.css') ?>" rel="stylesheet">
 
         <link href="<?= base_url('NewAssets/fontAwesome'); ?>" rel="stylesheet">
+
+        <link href="<?= base_url('NewAssets/datatablesBootstrap') ?>" rel="stylesheet">
+        <link href="<?= base_url('NewAssets/datatablesResponsive') ?>" rel="stylesheet">
         
         <script type="text/javascript" src="<?= base_url('NewAssets/templateJs')?>"></script>
         <script type="text/javascript" src="<?= base_url('NewAssets/bootstrapJs')?>"></script>
@@ -103,6 +106,11 @@
                                         <li>
                                             <a href="<?= base_url('menu/approve')?>">
                                                 <i class="fa fa-thumbs-o-up"></i> Approved
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="<?= base_url('menu/summary')?>">
+                                                <i class="fa fa-clipboard"></i> Summary Report
                                             </a>
                                         </li>
                                         <!-- <li>

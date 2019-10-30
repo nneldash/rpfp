@@ -7,9 +7,28 @@
             </div>
         </div>
 
+
+        <div id="coupleModal" class="modal fade" role="dialog" style="z-index: 9999;">
+            <div class="modal-dialog modal-lg" style="width: 75%;">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" style="color: #fff">&times;</button>
+                        <h4 class="modal-title"></h4>
+                    </div>
+                    <div class="modal-body">
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <script type="text/javascript" src="<?= base_url('NewAssets/nProgressJs')?>"></script>
         <script type="text/javascript" src="<?= base_url('NewAssets/progressBarJs')?>"></script>
         <script type="text/javascript" src="<?= base_url('NewAssets/customJs')?>"></script>
         <script src="<?= base_url('assets/js/systemTimeout.js')?>"></script>
+
+        <script type="text/javascript" src="<?= base_url('NewAssets/datatableJs')?>"></script>
+        <script type="text/javascript" src="<?= base_url('NewAssets/datatableBtJs')?>"></script>
+        <script type="text/javascript" src="<?= base_url('NewAssets/datatableRpJs')?>"></script>
+        <script type="text/javascript" src="<?= base_url('NewAssets/datatableBtrpJs')?>"></script>
     </body>
 </html>

@@ -1,6 +1,6 @@
 SELECT "Loading Test values" AS MESSAGE;
 
-CALL rpfp.itdmu_create_rpfp_user('test', 'test', 'rojo', 'rowell', 'x@com.com', 08, 080000000, 50, 40);
+CALL rpfp.itdmu_create_rpfp_user('test', 'test', 'rojo', 'rowell', 'x@com.com', 08, 80000000, 50, 40);
 SELECT "User Created: Test" AS MESSAGE;
 
 CALL rpfp.itdmu_create_rpfp_user('root', '', 'root', 'root', 'y@com.com', 08, 080000000, 80, 40);
@@ -25,15 +25,15 @@ INSERT INTO rpfp.`rpfp_class`
      VALUES (1, 1, NULL, 083747125, 'RPFP-TAC-2019-00001','2019-02-11', 'test'),
             (2, 2, NULL, 083747125, 'RPFP-TAC-2019-00001','2019-02-11', 'root'),
             (3, 2, NULL, 083747125, 'RPFP-TAC-2019-00002','2019-02-11', 'test'),
-            (4, 2, NULL, 083747125, 'RPFP-TAC-2019-00003','2019-04-11', 'root'),
-            (5, 2, NULL, 083747125, 'RPFP-TAC-2019-00004','2019-05-11', 'test'),
-            (6, 2, NULL, 083747125, 'RPFP-TAC-2019-00005','2019-06-11', 'root'),
-            (7, 2, NULL, 083747125, 'RPFP-TAC-2019-00005','2019-06-11', 'test'),
-            (8, 2, NULL, 083747125, 'RPFP-TAC-2019-00006','2019-07-11', 'root'),
-            (9, 2, NULL, 083747125, 'RPFP-TAC-2019-00006','2019-07-11', 'test'),
-            (10, 2, NULL, 083747125, 'RPFP-TAC-2019-00006','2019-07-11', 'root'),
-            (11, 1, NULL, 083747125, 'RPFP-TAC-2019-00007','2019-10-11', 'test'),
-            (12, 2, NULL, 083747125, 'RPFP-TAC-2019-00007','2019-10-11', 'root')
+            (4, 2, NULL, 083747125, 'RPFP-TAC-2019-00003','2019-02-11', 'root'),
+            (5, 2, NULL, 083747125, 'RPFP-TAC-2019-00004','2019-02-11', 'test'),
+            (6, 2, NULL, 083747125, 'RPFP-TAC-2019-00005','2019-02-11', 'root'),
+            (7, 2, NULL, 083747125, 'RPFP-TAC-2019-00005','2019-02-11', 'test'),
+            (8, 2, NULL, 083747125, 'RPFP-TAC-2019-00006','2019-03-11', 'root'),
+            (9, 2, NULL, 083747125, 'RPFP-TAC-2019-00006','2019-03-11', 'test'),
+            (10, 2, NULL, 083747125, 'RPFP-TAC-2019-00006','2019-03-11', 'root'),
+            (11, 1, NULL, 083747125, 'RPFP-TAC-2019-00007','2019-03-11', 'test'),
+            (12, 2, NULL, 083747125, 'RPFP-TAC-2019-00007','2019-03-11', 'root')
 ;
 
 -- --------------------------------------------------------

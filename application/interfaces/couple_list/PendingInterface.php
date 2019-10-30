@@ -11,4 +11,6 @@ abstract class PendingInterface extends BaseInterface
     public $Barangay;
     public $ClassNo;
     public $DateConduct;
+    public $LastName;
+    public $FirstName;
 }
