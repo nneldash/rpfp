@@ -161,14 +161,14 @@ $form1 = FormClass::getFormFromVariable($form1);
 								<?php
 		                            echo HtmlHelper::inputPdf(
 		                                $is_pdf,
-		                                // $form1->Seminar->Location->Region->Description,
-		                                "",
+		                                $form1->Seminar->Location->Region->Description,
 		                                "text",
-		                                "province",
+		                                "",
 		                                "padding-l10 underline width-70",
 										""
 		                            );
-		                        ?>
+								?>
+								<input type="hidden" name="province" value="<?=$form1->Seminar->Location->Region->Code?>">
 		                    </span>
 						</td> 
 					</tr>
@@ -218,11 +218,12 @@ $form1 = FormClass::getFormFromVariable($form1);
 		                                $is_pdf,
 		                                $form1->Seminar->Location->Barangay->Description,
 		                                "text",
-		                                "barangay",
+		                                "",
 		                                "padding-l10 underline width-70",
 		                                ""
 		                            );
-		                        ?>
+								?>
+								<input type="hidden" name="barangay" value="<?=$form1->Seminar->Location->Barangay->Code?>">
 		                    </span>
 						</td>
 					</tr>

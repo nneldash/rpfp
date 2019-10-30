@@ -79,9 +79,9 @@ class BaseModel extends CI_Model
     }
 
     protected function runQuery(&$db, $query_string, $bind_params = false)
-    {
+    {   
         $queryResult = $db->query($query_string, $bind_params, true);
-
+        
         $err = $db->error();
         if (!empty($err->code)) {
             if (!$queryResult) {
@@ -146,7 +146,7 @@ class BaseModel extends CI_Model
         for ($i=0; $i<$numParams; $i++) {
             $data[$i] = ((strpos($params[$i], N_A) === false) ? $params[$i] : '');
         }
-        
+
         $res = $this->getRows($db->database, $method, $data);
 
         if ($close_db) {

@@ -21,8 +21,16 @@ class FormModel extends BaseModel
     }
 
     public function saveForm1(FormInterface $form)
-    {     
+    {
         $class_id = $this->saveSeminar($form->Seminar);
+
+        if ($class_id == 'INVALID LOCATION') {
+            return 'error1';
+            exit;
+        } elseif ($class_id == 'INVALID ROLE') {
+            return 'error2';
+            exit;
+        }
 
         $class_id = explode(" ", $class_id);
 
@@ -48,7 +56,7 @@ class FormModel extends BaseModel
             $data->ClassId == N_A ? BLANK : $data->ClassId,
             $data->TypeOfClass->Type == N_A ? BLANK : $data->TypeOfClass->Type,
             $data->TypeOfClass->Type != 7 ? BLANK : $data->TypeOfClass->Others,
-            $data->Location->Barangay->Description  == N_A ? BLANK : $data->Location->Barangay->Description,
+            $data->Location->Barangay->Code  == N_A ? BLANK : $data->Location->Barangay->Code,
             $data->ClassNumber == N_A ? BLANK : $data->ClassNumber,
             $data->DateConducted == N_A ? BLANK : $data->DateConducted
         ];
@@ -167,10 +175,10 @@ class FormModel extends BaseModel
         $seminar->ClassId = '1';
         $seminar->TypeOfClass = AllowedSeminarTypes::FOUR_PS;
         $seminar->ClassNumber = '12345';
-        $seminar->Location->Region->Code = 30000000;
-        $seminar->Location->Region->Description = 'Central Luzon Region';
-        $seminar->Location->Barangay->Code = 30801001;
-        $seminar->Location->Barangay->Description = 'Bangkal';
+        $seminar->Location->Region->Code = 80000000;
+        $seminar->Location->Region->Description = 'REGION VIII (EASTERN VISAYAS)';
+        $seminar->Location->Barangay->Code = 82601001;
+        $seminar->Location->Barangay->Description = 'Aguinaldo';
         $seminar->DateConducted = '09/10/2019';
 
         return $seminar;

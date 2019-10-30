@@ -69,7 +69,7 @@ class Forms extends CI_Controller
 
         $form1->Seminar = $this->getInputFromSeminar();
         $form1->ListCouple = $this->getInputFromListCouples();
-        
+        // print_r($this->FormModel->saveForm1($form1));exit;
         $data = ['is_save' => true];
         if (!$this->FormModel->saveForm1($form1)) {
             $data = ['is_save' => false];
@@ -88,7 +88,7 @@ class Forms extends CI_Controller
         $seminar->TypeOfClass->Type = $this->input->post('type_of_class');
         $seminar->TypeOfClass->Others = $this->input->post('others');
         $seminar->ClassNumber = $this->input->post('class_no');
-        $seminar->Location->Barangay->Description = $this->input->post('barangay');
+        $seminar->Location->Barangay->Code = $this->input->post('barangay');
         $seminar->DateConducted = $this->input->post('date_conducted');
 
         return $seminar;
