@@ -358,8 +358,13 @@ class Menu extends CI_Controller
         $this->load->view('includes/admin_footer');
     }
 
-    public function coupleModal()
+    public function pendingCoupleModal()
     {
         $this->load->view('menu/listTables/pendingTable');
+    }
+
+    public function approveCoupleModal()
+    {
+        $this->load->view('menu/listTables/approveTable');
     }
 }

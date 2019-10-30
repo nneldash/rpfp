@@ -26,7 +26,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 				<td><?= $pendings->Barangay; ?></td>
 				<td><?= date('F d, Y', strtotime($pendings->DateConduct)); ?></td>
 				<td class="text-center">					
-					<button class="btn btn-primary btn-listing" data-toggle="tooltip" data-placement="left" title="View List">
+					<button class="btn btn-primary btn-pending-listing" data-toggle="tooltip" data-placement="left" title="View List">
 						<i class="fa fa-list"></i>
 					</button>
 				</td>
