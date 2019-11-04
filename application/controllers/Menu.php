@@ -13,19 +13,21 @@ class Menu extends CI_Controller
 
     public function index()
     {
+        return $this->pending();
+    }
+
+    public function pending()
+    {
         if (!$this->LoginModel->isLoggedIn()) {
-            $header['title'] =' RPFP Online';
-
-            $this->load->view("includes/header", $header);
-            $this->load->view('index/landingPage');
-
+            redirect('Welcome');
             return;
         }
 
-        $title = 'RPFP Online | Pending';
-
-        $this->load->model('CoupleModel');
         $pending = $this->CoupleModel->getPendingList();
+        if ($this->input->server('REQUEST_METHOD') == 'POST') {
+            $this->load->view('menu/pending', array('pending' => $pending, 'reload' => true));
+            return;
+        }
 
         $this->load->model('ProfileModel');
         $isPMED = $this->ProfileModel->isPMED();
@@ -34,14 +36,14 @@ class Menu extends CI_Controller
         $isRegionalDataManager = $this->ProfileModel->isRegionalDataManager();
         $isITDMU = $this->ProfileModel->isITDMU();
 
-        $this->load->view('includes/admin_header', 
+        $this->load->view(
+            'includes/admin_header',
             array(
-                'isEncoder' => $isEncoder, 
+                'isEncoder' => $isEncoder,
                 'isPMED' => $isPMED,
-                'isFocalPerson' => $isFocalPerson, 
+                'isFocalPerson' => $isFocalPerson,
                 'isRegionalDataManager' => $isRegionalDataManager,
-                'isITDMU' => $isITDMU,
-                'title' => $title
+                'isITDMU' => $isITDMU
             )
         );
         $this->load->view('menu/pending', array('pending' => $pending));
@@ -51,15 +53,15 @@ class Menu extends CI_Controller
     public function approve()
     {
         if (!$this->LoginModel->isLoggedIn()) {
-            $header['title'] =' RPFP Online';
-
-            $this->load->view("includes/header", $header);
-            $this->load->view('index/landingPage');
-
+            redirect('Login');
             return;
         }
 
-        $title = 'RPFP Online | Approve';
+        $approve = $this->CoupleModel->getApproveList();
+        if ($this->input->server('REQUEST_METHOD') == 'POST') {
+            $this->load->view('menu/approve', array('approve' => $approve, 'reload' => true));
+            return;
+        }
 
         $this->load->model('CoupleModel');
         $approve = $this->CoupleModel->getApproveList();
@@ -71,14 +73,14 @@ class Menu extends CI_Controller
         $isRegionalDataManager = $this->ProfileModel->isRegionalDataManager();
         $isITDMU = $this->ProfileModel->isITDMU();
 
-        $this->load->view('includes/admin_header', 
+        $this->load->view(
+            'includes/admin_header',
             array(
-                'isEncoder' => $isEncoder, 
+                'isEncoder' => $isEncoder,
                 'isPMED' => $isPMED,
-                'isFocalPerson' => $isFocalPerson, 
+                'isFocalPerson' => $isFocalPerson,
                 'isRegionalDataManager' => $isRegionalDataManager,
-                'isITDMU' => $isITDMU,
-                'title' => $title
+                'isITDMU' => $isITDMU
             )
         );
         $this->load->view('menu/approve', array('approve' => $approve));
@@ -110,11 +112,12 @@ class Menu extends CI_Controller
         $isRegionalDataManager = $this->ProfileModel->isRegionalDataManager();
         $isITDMU = $this->ProfileModel->isITDMU();
 
-        $this->load->view('includes/admin_header', 
+        $this->load->view(
+            'includes/admin_header',
             array(
-                'isEncoder' => $isEncoder, 
+                'isEncoder' => $isEncoder,
                 'isPMED' => $isPMED,
-                'isFocalPerson' => $isFocalPerson, 
+                'isFocalPerson' => $isFocalPerson,
                 'isRegionalDataManager' => $isRegionalDataManager,
                 'isITDMU' => $isITDMU,
                 'title' => $title
@@ -144,11 +147,12 @@ class Menu extends CI_Controller
         $isRegionalDataManager = $this->ProfileModel->isRegionalDataManager();
         $isITDMU = $this->ProfileModel->isITDMU();
 
-        $this->load->view('includes/admin_header', 
+        $this->load->view(
+            'includes/admin_header',
             array(
-                'isEncoder' => $isEncoder, 
+                'isEncoder' => $isEncoder,
                 'isPMED' => $isPMED,
-                'isFocalPerson' => $isFocalPerson, 
+                'isFocalPerson' => $isFocalPerson,
                 'isRegionalDataManager' => $isRegionalDataManager,
                 'isITDMU' => $isITDMU,
                 'title' => $title
@@ -208,11 +212,12 @@ class Menu extends CI_Controller
         $isRegionalDataManager = $this->ProfileModel->isRegionalDataManager();
         $isITDMU = $this->ProfileModel->isITDMU();
 
-        $this->load->view('includes/admin_header', 
+        $this->load->view(
+            'includes/admin_header',
             array(
-                'isEncoder' => $isEncoder, 
+                'isEncoder' => $isEncoder,
                 'isPMED' => $isPMED,
-                'isFocalPerson' => $isFocalPerson, 
+                'isFocalPerson' => $isFocalPerson,
                 'isRegionalDataManager' => $isRegionalDataManager,
                 'isITDMU' => $isITDMU,
                 'title' => $title
@@ -242,11 +247,12 @@ class Menu extends CI_Controller
         $isRegionalDataManager = $this->ProfileModel->isRegionalDataManager();
         $isITDMU = $this->ProfileModel->isITDMU();
 
-        $this->load->view('includes/admin_header', 
+        $this->load->view(
+            'includes/admin_header',
             array(
-                'isEncoder' => $isEncoder, 
+                'isEncoder' => $isEncoder,
                 'isPMED' => $isPMED,
-                'isFocalPerson' => $isFocalPerson, 
+                'isFocalPerson' => $isFocalPerson,
                 'isRegionalDataManager' => $isRegionalDataManager,
                 'isITDMU' => $isITDMU,
                 'title' => $title
@@ -276,11 +282,12 @@ class Menu extends CI_Controller
         $isRegionalDataManager = $this->ProfileModel->isRegionalDataManager();
         $isITDMU = $this->ProfileModel->isITDMU();
 
-        $this->load->view('includes/admin_header', 
+        $this->load->view(
+            'includes/admin_header',
             array(
-                'isEncoder' => $isEncoder, 
+                'isEncoder' => $isEncoder,
                 'isPMED' => $isPMED,
-                'isFocalPerson' => $isFocalPerson, 
+                'isFocalPerson' => $isFocalPerson,
                 'isRegionalDataManager' => $isRegionalDataManager,
                 'isITDMU' => $isITDMU,
                 'title' => $title
@@ -310,11 +317,12 @@ class Menu extends CI_Controller
         $isRegionalDataManager = $this->ProfileModel->isRegionalDataManager();
         $isITDMU = $this->ProfileModel->isITDMU();
 
-        $this->load->view('includes/admin_header', 
+        $this->load->view(
+            'includes/admin_header',
             array(
-                'isEncoder' => $isEncoder, 
+                'isEncoder' => $isEncoder,
                 'isPMED' => $isPMED,
-                'isFocalPerson' => $isFocalPerson, 
+                'isFocalPerson' => $isFocalPerson,
                 'isRegionalDataManager' => $isRegionalDataManager,
                 'isITDMU' => $isITDMU,
                 'title' => $title
@@ -344,11 +352,12 @@ class Menu extends CI_Controller
         $isRegionalDataManager = $this->ProfileModel->isRegionalDataManager();
         $isITDMU = $this->ProfileModel->isITDMU();
 
-        $this->load->view('includes/admin_header', 
+        $this->load->view(
+            'includes/admin_header',
             array(
-                'isEncoder' => $isEncoder, 
+                'isEncoder' => $isEncoder,
                 'isPMED' => $isPMED,
-                'isFocalPerson' => $isFocalPerson, 
+                'isFocalPerson' => $isFocalPerson,
                 'isRegionalDataManager' => $isRegionalDataManager,
                 'isITDMU' => $isITDMU,
                 'title' => $title
@@ -366,5 +375,22 @@ class Menu extends CI_Controller
     public function approveCoupleModal()
     {
         $this->load->view('menu/listTables/approveTable');
+    }
+
+    public function profile()
+    {
+        if (!$this->LoginModel->isLoggedIn()) {
+            redirect('Login');
+            return;
+        }
+
+        if ($this->input->server('REQUEST_METHOD') != 'POST') {
+            redirect(site_url('Menu'));
+            return;
+        }
+
+        $this->load->model('ProfileModel');
+        $profile = $this->ProfileModel->getOwnProfile();
+        $this->load->view('profile/profile.php', array('profile' => $profile));
     }
 }

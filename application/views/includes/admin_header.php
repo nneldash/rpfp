@@ -1,5 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
+<?php
+
+if (empty($title)) {
+    $title = 'RPFP Online';
+}
+
+?>    
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <meta charset="utf-8">
@@ -8,19 +15,27 @@
         <title><?= $title; ?></title>
 
         <link rel="icon" href="<?= base_url('assets/images/logo.png') ?>" type="image/gif">
-        <link href="<?= base_url('NewAssets/bootstrapCss') ?>" rel="stylesheet">
-        <link href="<?= base_url('NewAssets/nProgress') ?>" rel="stylesheet">
-        <link href="<?= base_url('NewAssets/customCss') ?>" rel="stylesheet">
 
-        <link href="<?= base_url('assets/css/style.css') ?>" rel="stylesheet">
+        <script type="text/javascript" src="<?= base_url('assets/js/scriptLoader.js')?>"></script>
 
-        <link href="<?= base_url('NewAssets/fontAwesome'); ?>" rel="stylesheet">
+        <script>loadCss(base_url + '/NewAssets/bootstrapCss');</script>
+        <script>loadCss(base_url + '/NewAssets/nProgress');</script>
+        <script>loadCss(base_url + '/NewAssets/customCss');</script>
+        <script>loadCss(base_url + '/NewAssets/fontAwesome');</script>
+        <script>loadCss(base_url + '/assets/css/style.css');</script>
 
-        <link href="<?= base_url('NewAssets/datatablesBootstrap') ?>" rel="stylesheet">
-        <link href="<?= base_url('NewAssets/datatablesResponsive') ?>" rel="stylesheet">
+        <script>loadCss(base_url + '/NewAssets/datatablesBootstrap');</script>
+        <script>loadCss(base_url + '/NewAssets/datatablesResponsive');</script>
         
-        <script type="text/javascript" src="<?= base_url('NewAssets/templateJs')?>"></script>
-        <script type="text/javascript" src="<?= base_url('NewAssets/bootstrapJs')?>"></script>
+        <script>
+            loadJs(
+                base_url + '/NewAssets/templateJs',
+                function() {
+                    loadJs(base_url + '/NewAssets/bootstrapJs');
+                    loadJs(base_url + '/assets/js/menu.js');
+                }
+            );
+        </script>
     </head>
 
     <style>
@@ -48,14 +63,19 @@
                         <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
                             <div class="menu_section">
                                 <ul class="nav side-menu">
-                                    <?php if($isRegionalDataManager) : ?>
+                                    <li>
+                                        <a href="#/Menu/profile">
+                                            <i class="fa fa-user"></i> Profile
+                                        </a>
+                                    </li>
+                                    <?php if ($isRegionalDataManager) : ?>
                                         <li>
-                                            <a href="<?= base_url('menu')?>">
+                                        <a href="#/Menu/pending">
                                                 <i class="fa fa-clock-o"></i> Pending
                                             </a>
                                         </li>
                                         <li>
-                                            <a href="<?= base_url('menu/approve')?>">
+                                            <a href="#/Menu/approve">
                                                 <i class="fa fa-thumbs-o-up"></i> Approved
                                             </a>
                                         </li>
@@ -75,7 +95,7 @@
                                             </a>
                                         </li>
                                     <?php endif; ?>
-                                    <?php if($isPMED) : ?>
+                                    <?php if ($isPMED) : ?>
                                         <li>
                                             <a href="<?= base_url('menu/formA')?>">
                                                 <i class="fa fa-clipboard"></i> Form A
@@ -92,19 +112,19 @@
                                             </a>
                                         </li>
                                     <?php endif; ?>
-                                    <?php if($isEncoder) :?>
+                                    <?php if ($isEncoder) :?>
                                         <li>
                                             <a href="<?= base_url('forms')?>">
                                                 <i class="fa fa-venus-mars"></i> Add Couple
                                             </a>
                                         </li>
                                         <li>
-                                            <a href="<?= base_url('menu')?>">
+                                            <a href="#/Menu/pending">
                                                 <i class="fa fa-clock-o"></i> Pending
                                             </a>
                                         </li>
                                         <li>
-                                            <a href="<?= base_url('menu/approve')?>">
+                                            <a href="#/Menu/approve">
                                                 <i class="fa fa-thumbs-o-up"></i> Approved
                                             </a>
                                         </li>

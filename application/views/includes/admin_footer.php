@@ -21,14 +21,29 @@
             </div>
         </div>
 
-        <script type="text/javascript" src="<?= base_url('NewAssets/nProgressJs')?>"></script>
-        <script type="text/javascript" src="<?= base_url('NewAssets/progressBarJs')?>"></script>
-        <script type="text/javascript" src="<?= base_url('NewAssets/customJs')?>"></script>
-        <script src="<?= base_url('assets/js/systemTimeout.js')?>"></script>
+        <script>
+            loadJs(base_url + '/NewAssets/templateJs', 
+                function(){ loadJs(base_url + '/NewAssets/nProgressJs',
+                    function(){ loadJs(base_url + '/NewAssets/progressBarJs',
+                        function(){ loadJs(base_url + '/NewAssets/customJs',
+                            function(){ loadJs(base_url + '/NewAssets/customJs',
+                                function(){ loadJs(base_url + '/NewAssets/customJs',
+                                    function(){ loadJs(base_url + '/assets/js/systemTimeout.js'); }
+                                );}
+                            );}
+                        );}
+                    );}
+                );}
+            );
 
-        <script type="text/javascript" src="<?= base_url('NewAssets/datatableJs')?>"></script>
-        <script type="text/javascript" src="<?= base_url('NewAssets/datatableBtJs')?>"></script>
-        <script type="text/javascript" src="<?= base_url('NewAssets/datatableRpJs')?>"></script>
-        <script type="text/javascript" src="<?= base_url('NewAssets/datatableBtrpJs')?>"></script>
+            loadJs(base_url + '/NewAssets/datatableJs',
+                function(){ loadJs(base_url + '/NewAssets/datatableBtJs',
+                    function(){ loadJs(base_url + '/NewAssets/datatableRpJs',
+                        function(){ loadJs(base_url + '/NewAssets/datatableBtrpJs.js'); }
+                    );}
+                );}
+            );
+
+        </script>        
     </body>
 </html>

@@ -82,7 +82,7 @@ function saveForm1()
 			data: formData,
 			url: base_url + '/forms/saveForm1'
 		}).done(function(result){
-			$('body').html(result);return false;
+			$('body').html(result);
 			if(result.is_save == true) {
 				Toast.fire({
 					type: 'success',

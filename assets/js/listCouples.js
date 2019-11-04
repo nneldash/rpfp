@@ -1,8 +1,6 @@
-var base_url = window.location.origin + '/rpfp';
-
-$(function(){
-	listCoupleModal();
-});
+loadJs(base_url + '/NewAssets/templateJs',
+	function() { listCoupleModal(); }
+);
 
 function listCoupleModal()
 {

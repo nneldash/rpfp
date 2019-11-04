@@ -140,6 +140,11 @@ class NewAssets extends CI_Controller
         readfile(BASEPATH . DATATABLES_RESPONSIVE_JS);
     }
 
+    public function datatableBtrpJsJs()
+    {
+        $this->datatableBtrpJs();
+    }
+
     public function datatableBtrpJs()
     {
         header('Content-Type: application/javascript');
