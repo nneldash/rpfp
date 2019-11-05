@@ -3,17 +3,26 @@ SELECT "Loading Test values" AS MESSAGE;
 CALL rpfp.itdmu_create_rpfp_user('test', 'test', 'rojo', 'rowell', 'x@com.com', 08, 80000000, 50, 40);
 SELECT "User Created: Test" AS MESSAGE;
 
-CALL rpfp.itdmu_create_rpfp_user('root', '', 'root', 'root', 'y@com.com', 08, 080000000, 80, 40);
+CALL rpfp.itdmu_create_rpfp_user('root', '', 'root', 'root', 'y@com.com', 08, 080000000, 50, 40);
 SELECT "User Created: root" AS MESSAGE;
 
 CALL rpfp.itdmu_create_rpfp_user('encoder8', 'encoder8', 'root', 'root', 'z@com.com', 08, 080000000, 50, 40);
-SELECT "User Created: root" AS MESSAGE;
+SELECT "User Created: encoder8" AS MESSAGE;
+
+CALL rpfp.itdmu_create_rpfp_user('focal8', 'focal8', 'root', 'root', 'f@com.com', 08, 080000000, 70, 40);
+SELECT "User Created: focal8" AS MESSAGE;
+
+CALL rpfp.itdmu_create_rpfp_user('partner8', 'partner8', 'root', 'root', 'v@com.com', 08, 080000000, 60, 40);
+SELECT "User Created: partner8" AS MESSAGE;
 
 CALL rpfp.itdmu_create_rpfp_user('rdm8', 'rdm8', 'root', 'root', 'w@com.com', 08, 080000000, 80, 40);
-SELECT "User Created: root" AS MESSAGE;
+SELECT "User Created: rdm8" AS MESSAGE;
 
 CALL rpfp.itdmu_create_rpfp_user('pmed', 'pmed', 'root', 'root', 'p@com.com', '', '', 90, 50);
-SELECT "User Created: root" AS MESSAGE;
+SELECT "User Created: pmed" AS MESSAGE;
+
+CALL rpfp.itdmu_create_rpfp_user('exect00', 'exect00', 'root', 'root', 'e@com.com', '', '', 100, 50);
+SELECT "User Created: exect00" AS MESSAGE;
 
 --
 -- Dumping data for table `rpfp_class`
