@@ -5,5 +5,5 @@ $CI->load->iface('base/BaseInterface');
 
 abstract class DuplicateCoupleInterface extends BaseInterface
 {
-    public $message;
+    public $CheckDetails;
 }

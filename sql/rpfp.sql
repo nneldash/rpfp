@@ -1015,7 +1015,6 @@ BEGIN
             END IF;
 
             SET read_offset := (page_no - 1) * items_per_page;
-
              SELECT rc.RPFP_CLASS_ID AS rpfpclass,
                     tc.TYPE_CLASS_DESC AS typeclass,
                     rc.OTHERS_SPECIFY AS others_specify,
@@ -1555,12 +1554,6 @@ DECLARE check_details INT;
     END IF;
 
     SELECT check_details;
-
-    IF check_details = 0 THEN
-        SELECT "NO DUPLICATE DATA!" AS MESSAGE;
-    ELSE
-        SELECT "WITH DUPLICATE DATA!" AS MESSAGE;
-    END IF;
 END$$
 
 CREATE DEFINER=root@localhost PROCEDURE encoder_save_couple (
@@ -1959,6 +1952,719 @@ BEGIN
     
 END$$
 /** END SAVE TARGET COUPLES */
+
+/** SEARCH COUPLES */
+CREATE DEFINER=root@localhost PROCEDURE search_advance_approved (
+    IN search_class VARCHAR(100),
+    IN search_date_from DATE,
+    IN search_date_to DATE,
+    IN search_couples VARCHAR(100),
+    IN search_age_from INT,
+    IN search_age_to INT,
+    IN search_status INT,
+    IN page_no INT,
+    IN items_per_page INT
+    )   READS SQL DATA
+BEGIN
+    /** 
+    SEARCH_STATUS
+        1 - unmet need
+        2 - served unmet need
+        3 - shifters
+        4 - served shifters
+    */
+    DECLARE status_approved INT DEFAULT 0;
+
+    IF( IFNULL( search_couples, 0 ) = 0 ) THEN
+        CALL rpfp.search_class(
+            search_class,
+            search_date_from,
+            search_date_to,
+            search_status,
+            search_age_from,
+            search_age_to,
+            status_approved,
+            USER(),
+            page_no,
+            items_per_page
+        );
+    ELSE
+        CALL rpfp.search_couples(
+             search_couples,
+             status_approved,
+             USER(),
+             page_no,
+             items_per_page
+        );
+    END IF;
+END$$
+
+CREATE DEFINER=root@localhost PROCEDURE search_couples_pending (
+    IN search_couples VARCHAR(100),
+    IN page_no INT,
+    IN items_per_page INT
+    )   READS SQL DATA
+BEGIN
+    DECLARE status_pending INT DEFAULT 2;
+    CALL rpfp.search_couples(
+            search_couples,
+            status_pending,
+            USER(),
+            page_no,
+            items_per_page
+    );
+
+END$$
+
+CREATE DEFINER=root@localhost PROCEDURE search_couples_approved (
+    IN search_couples VARCHAR(100),
+    IN page_no INT,
+    IN items_per_page INT
+    )   READS SQL DATA
+BEGIN
+    DECLARE status_approved INT DEFAULT 0;
+    CALL rpfp.search_couples(
+            search_couples,
+            status_approved,
+            USER(),
+            page_no,
+            items_per_page
+    );
+
+END$$
+
+CREATE DEFINER=root@localhost PROCEDURE search_couples(
+    IN search_couples VARCHAR(100),
+    IN status_active INT,
+    IN username VARCHAR(50),
+    IN page_no INT,
+    IN items_per_page INT
+    )   READS SQL DATA
+BEGIN
+    DECLARE name_user VARCHAR(50);
+    DECLARE db_user_name VARCHAR(50);
+    DECLARE read_offset INT;
+
+    CALL rpfp.lib_extract_user_name( username, name_user, db_user_name );
+
+    IF NOT EXISTS (
+         SELECT rc.RPFP_CLASS_ID
+           FROM rpfp.RPFP_CLASS rc
+      LEFT JOIN rpfp.couples apc
+             ON apc.RPFP_CLASS_ID = rc.RPFP_CLASS_ID
+          WHERE apc.IS_ACTIVE = status_active
+            AND rc.DB_USER_ID = name_user
+    ) THEN
+         SELECT NULL AS rpfpclass,
+                NULL AS typeclass,
+                NULL AS others_specify,
+                NULL AS city,
+                NULL AS barangay,
+                NULL AS class_no,
+                NULL AS date_conduct
+        ;
+    ELSE
+        IF (IFNULL( page_no, 0) = 0) THEN
+            /** DEFAULT PAGE NO. */
+            SET page_no := 1;
+        END IF;
+        IF (IFNULL( items_per_page, 0) = 0) THEN
+            /** DEFAULT COUNT PER PAGE*/
+            SET items_per_page := 10;
+        END IF;
+
+        SET read_offset := (page_no - 1) * items_per_page;
+        SELECT rc.RPFP_CLASS_ID AS rpfpclass,
+               rc.TYPE_CLASS_ID AS typeclass,
+               rc.OTHERS_SPECIFY AS others_specify,
+               lp.LOCATION_DESCRIPTION AS barangay,
+               rc.CLASS_NUMBER AS class_no,
+               rc.DATE_CONDUCTED AS date_conduct
+          FROM rpfp.rpfp_class rc 
+     LEFT JOIN rpfp.couples apc ON apc.RPFP_CLASS_ID = rc.RPFP_CLASS_ID
+     LEFT JOIN rpfp.individual ic ON ic.COUPLES_ID = apc.COUPLES_ID
+     LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID 
+         WHERE ic.FNAME = '%' + QUOTE(search_couples) + '%'
+            OR ic.LNAME = '%' + QUOTE(search_couples) + '%'
+            OR rc.CLASS_NUMBER = '%' + QUOTE(search_couples) + '%'
+            OR rc.DATE_CONDUCTED = '%' + QUOTE(search_couples) + '%'
+           AND apc.IS_ACTIVE = status_active
+           AND rc.DB_USER_ID = name_user
+      GROUP BY rc.CLASS_NUMBER
+      ORDER BY rc.DATE_CONDUCTED DESC
+         LIMIT read_offset, items_per_page
+    ; 
+    END IF;
+END$$
+
+CREATE DEFINER=root@localhost PROCEDURE search_class_pending (
+    IN search_class VARCHAR(100),
+    IN search_date_from DATE,
+    IN search_date_to DATE,
+    IN search_status INT,
+    IN page_no INT,
+    IN items_per_page INT
+    )   READS SQL DATA
+BEGIN
+    DECLARE status_pending INT DEFAULT 2;
+    CALL rpfp.search_class(
+            search_class,
+            search_date_from,
+            search_date_to,
+            status_pending,
+            USER(),
+            page_no,
+            items_per_page
+    );
+
+END$$
+
+CREATE DEFINER=root@localhost PROCEDURE search_class_approved (
+    IN search_class VARCHAR(100),
+    IN search_date_from DATE,
+    IN search_date_to DATE,
+    IN search_status INT,
+    IN page_no INT,
+    IN items_per_page INT
+    )   READS SQL DATA
+BEGIN
+    DECLARE status_approved INT DEFAULT 0;
+    CALL rpfp.search_class(
+            search_class,
+            search_date_from,
+            search_date_to,
+            status_approved,
+            USER(),
+            page_no,
+            items_per_page
+    );
+
+END$$
+
+CREATE DEFINER=root@localhost PROCEDURE search_class(
+    IN search_class VARCHAR(100),
+    IN search_date_from DATE,
+    IN search_date_to DATE,
+    IN search_age_from INT,
+    IN search_age_to INT,
+    IN search_status INT,
+    IN status_active INT,
+    IN username VARCHAR(50),
+    IN page_no INT,
+    IN items_per_page INT
+    )   READS SQL DATA
+BEGIN
+    DECLARE name_user VARCHAR(50);
+    DECLARE db_user_name VARCHAR(50);
+    DECLARE read_offset INT;
+
+    CALL rpfp.lib_extract_user_name( username, name_user, db_user_name );
+
+    IF (IFNULL( search_date_from, 0) = 0) THEN
+        SET search_date_from = NOW();
+    END IF;
+
+    IF (IFNULL( search_date_to, 0) = 0) THEN
+        SET search_date_to = NOW();
+    END IF;
+
+    IF (IFNULL( search_age_from, 0 ) = 0) THEN
+        SET search_age_from = 15;
+    END IF;
+
+    IF (IFNULL( search_age_to, 0 ) = 0) THEN
+        SET search_age_to = 49;
+    END IF;
+
+    IF (IFNULL( search_status, 0) = 0) THEN
+        IF NOT EXISTS (
+            SELECT rc.RPFP_CLASS_ID
+            FROM rpfp.RPFP_CLASS rc
+        LEFT JOIN rpfp.couples apc
+                ON apc.RPFP_CLASS_ID = rc.RPFP_CLASS_ID
+            WHERE apc.IS_ACTIVE = status_active
+                AND rc.DB_USER_ID = name_user
+        ) THEN
+            SELECT NULL AS rpfpclass,
+                    NULL AS typeclass,
+                    NULL AS others_specify,
+                    NULL AS city,
+                    NULL AS barangay,
+                    NULL AS class_no,
+                    NULL AS date_conduct
+            ;
+        ELSE
+            IF (IFNULL( page_no, 0) = 0) THEN
+                /** DEFAULT PAGE NO. */
+                SET page_no := 1;
+            END IF;
+            IF (IFNULL( items_per_page, 0) = 0) THEN
+                /** DEFAULT COUNT PER PAGE*/
+                SET items_per_page := 10;
+            END IF;
+
+            SET read_offset := (page_no - 1) * items_per_page;
+            SELECT rc.RPFP_CLASS_ID AS rpfpclass,
+                rc.TYPE_CLASS_ID AS typeclass,
+                rc.OTHERS_SPECIFY AS others_specify,
+                lp.LOCATION_DESCRIPTION AS barangay,
+                rc.CLASS_NUMBER AS class_no,
+                rc.DATE_CONDUCTED AS date_conduct
+            FROM rpfp.rpfp_class rc 
+        LEFT JOIN rpfp.couples apc ON apc.RPFP_CLASS_ID = rc.RPFP_CLASS_ID
+        LEFT JOIN rpfp.individual ic ON ic.COUPLES_ID = apc.COUPLES_ID
+        LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID 
+            WHERE rc.CLASS_NUMBER = '%' + search_class + '%'
+            AND rc.DATE_CONDUCTED >= search_date_from
+            AND rc.DATE_CONDUCTED <= search_date_to
+            AND apc.IS_ACTIVE = status_active
+            AND rc.DB_USER_ID = name_user
+        GROUP BY rc.CLASS_NUMBER
+        ORDER BY rc.DATE_CONDUCTED DESC
+            LIMIT read_offset, items_per_page
+        ; 
+        END IF;
+    ELSE
+        IF search_status = 1 THEN
+        CALL rpfp.get_class_list_unmet(
+            search_class,
+            search_date_from,
+            search_date_to,
+            search_age_from,
+            search_age_to,
+            status_active,
+            USER(),
+            page_no,
+            items_per_page
+        );
+        END IF;
+
+        IF search_status = 2 THEN
+        CALL rpfp.get_class_list_served_unmet(
+            search_class,
+            search_date_from,
+            search_date_to,
+            search_age_from,
+            search_age_to,
+            status_active,
+            USER(),
+            page_no,
+            items_per_page
+        );
+        END IF;
+        
+        IF search_status = 3 THEN
+        CALL rpfp.get_class_list_shifters(
+            search_class,
+            search_date_from,
+            search_date_to,
+            search_age_from,
+            search_age_to,
+            status_active,
+            USER(),
+            page_no,
+            items_per_page
+        );
+        END IF;
+        
+        IF search_status = 4 THEN
+        CALL rpfp.get_class_list_served_shifters(
+            search_class,
+            search_date_from,
+            search_date_to,
+            search_age_from,
+            search_age_to,
+            status_active,
+            USER(),
+            page_no,
+            items_per_page
+        );
+        END IF;
+    END IF;
+END$$
+
+CREATE DEFINER=root@localhost PROCEDURE get_class_list_unmet (
+    IN search_class VARCHAR(100),
+    IN search_date_from DATE,
+    IN search_date_to DATE,
+    IN search_age_from INT,
+    IN search_age_to INT,
+    IN status_active INT,
+    IN username VARCHAR(50),
+    IN page_no INT,
+    IN items_per_page INT
+    )   READS SQL DATA
+BEGIN
+    /** 
+    SEARCH STATUS
+        1 - unmet need
+        2 - served unmet need
+        3 - shifters
+        4 - served shifters
+    */
+    DECLARE name_user VARCHAR(50);
+    DECLARE db_user_name VARCHAR(50);
+    DECLARE read_offset INT;
+    DECLARE user_scope INT;
+    DECLARE user_location INT;
+    DECLARE multiplier INT;
+    DECLARE is_not_encoder INT(1);
+    
+    CALL rpfp.lib_extract_user_name( USER(), name_user, db_user_name );
+    SET user_scope := rpfp.profile_get_scope( name_user );
+    SET multiplier := rpfp.lib_get_multiplier( user_scope );
+    SET user_location := rpfp.profile_get_location( name_user, user_scope );
+    SET is_not_encoder := NOT IFNULL(rpfp.profile_check_if_encoder(), FALSE);
+
+    IF ( NOT EXISTS (
+         SELECT rc.RPFP_CLASS_ID
+           FROM rpfp.rpfp_class rc
+      LEFT JOIN rpfp.couples apc
+             ON apc.RPFP_CLASS_ID = rc.RPFP_CLASS_ID
+          WHERE apc.IS_ACTIVE = status_active
+            AND (   rc.DB_USER_ID = name_user
+                 OR (   is_not_encoder
+                    AND user_location = (rc.BARANGAY_ID DIV POWER( 10, multiplier ))
+                    )
+                )
+        )
+    ) THEN
+         SELECT NULL AS rpfpclass,
+                NULL AS typeclass,
+                NULL AS others_specify,
+                NULL AS barangay,
+                NULL AS class_no,
+                NULL AS date_conduct,
+                NULL AS lastname,
+                NULL AS firstname
+        ;
+    ELSE BEGIN
+            IF (IFNULL( page_no, 0) = 0) THEN
+                /** DEFAULT PAGE NO. */
+                SET page_no := 1;
+            END IF;
+            IF (IFNULL( items_per_page, 0) = 0) THEN
+                /** DEFAULT COUNT PER PAGE*/
+                SET items_per_page := 10;
+            END IF;
+
+            SET read_offset := (page_no - 1) * items_per_page;
+
+             SELECT rc.RPFP_CLASS_ID AS rpfpclass,
+                    tc.TYPE_CLASS_DESC AS typeclass,
+                    rc.OTHERS_SPECIFY AS others_specify,
+                    lp.LOCATION_DESCRIPTION AS barangay,
+                    rc.CLASS_NUMBER AS class_no,
+                    rc.DATE_CONDUCTED AS date_conduct,
+                    ic.LNAME AS lastname,
+                    ic.FNAME AS firstname
+               FROM rpfp.rpfp_class rc
+          LEFT JOIN rpfp.couples apc 
+		         ON apc.RPFP_CLASS_ID = rc.RPFP_CLASS_ID
+          LEFT JOIN rpfp.lib_type_class tc ON tc.TYPE_CLASS_ID = rc.TYPE_CLASS_ID
+          LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
+          LEFT JOIN rpfp.individual ic ON ic.COUPLES_ID = apc.COUPLES_ID
+          LEFT JOIN rpfp.fp_details fd ON fd.COUPLES_ID = apc.COUPLES_ID
+              WHERE rc.CLASS_NUMBER = '%' + search_class + '%'
+                AND rc.DATE_CONDUCTED >= search_date_from
+                AND rc.DATE_CONDUCTED <= search_date_to
+                AND ic.AGE >= 15
+                AND ic.AGE <= 49
+                AND apc.IS_ACTIVE = 0
+                AND (   fd.TFP_TYPE_ID <= 5
+                    OR fd.TFP_STATUS_ID = 1
+                    )
+                AND (   rc.DB_USER_ID = name_user
+                    OR (   is_not_encoder
+                        AND user_location = (rc.BARANGAY_ID DIV POWER( 10, multiplier ))
+                        )
+                    )
+           GROUP BY rc.CLASS_NUMBER
+           ORDER BY rc.DATE_CONDUCTED DESC
+              LIMIT read_offset, items_per_page
+            ;
+        END;
+    END IF;
+END$$
+
+CREATE DEFINER=root@localhost PROCEDURE get_class_list_served_unmet (
+    IN search_class VARCHAR(100),
+    IN search_date_from DATE,
+    IN search_date_to DATE,
+    IN search_age_from INT,
+    IN search_age_to INT,
+    IN status_active INT,
+    IN username VARCHAR(50),
+    IN page_no INT,
+    IN items_per_page INT
+    )   READS SQL DATA
+BEGIN
+    /** 
+    SEARCH STATUS
+        1 - unmet need
+        2 - served unmet need
+        3 - shifters
+        4 - served shifters
+    */
+    DECLARE name_user VARCHAR(50);
+    DECLARE db_user_name VARCHAR(50);
+    DECLARE read_offset INT;
+    DECLARE user_scope INT;
+    DECLARE user_location INT;
+    DECLARE multiplier INT;
+    DECLARE is_not_encoder INT(1);
+    
+    CALL rpfp.lib_extract_user_name( USER(), name_user, db_user_name );
+    SET user_scope := rpfp.profile_get_scope( name_user );
+    SET multiplier := rpfp.lib_get_multiplier( user_scope );
+    SET user_location := rpfp.profile_get_location( name_user, user_scope );
+    SET is_not_encoder := NOT IFNULL(rpfp.profile_check_if_encoder(), FALSE);
+
+    IF ( NOT EXISTS (
+         SELECT rc.RPFP_CLASS_ID
+           FROM rpfp.rpfp_class rc
+      LEFT JOIN rpfp.couples apc
+             ON apc.RPFP_CLASS_ID = rc.RPFP_CLASS_ID
+          WHERE apc.IS_ACTIVE = status_active
+            AND (   rc.DB_USER_ID = name_user
+                 OR (   is_not_encoder
+                    AND user_location = (rc.BARANGAY_ID DIV POWER( 10, multiplier ))
+                    )
+                )
+        )
+    ) THEN
+         SELECT NULL AS rpfpclass,
+                NULL AS typeclass,
+                NULL AS others_specify,
+                NULL AS barangay,
+                NULL AS class_no,
+                NULL AS date_conduct,
+                NULL AS lastname,
+                NULL AS firstname
+        ;
+    ELSE BEGIN        
+             SELECT rc.RPFP_CLASS_ID AS rpfpclass,
+                    tc.TYPE_CLASS_DESC AS typeclass,
+                    rc.OTHERS_SPECIFY AS others_specify,
+                    lp.LOCATION_DESCRIPTION AS barangay,
+                    rc.CLASS_NUMBER AS class_no,
+                    rc.DATE_CONDUCTED AS date_conduct,
+                    ic.LNAME AS lastname,
+                    ic.FNAME AS firstname
+               FROM rpfp.rpfp_class rc
+          LEFT JOIN rpfp.couples apc 
+		         ON apc.RPFP_CLASS_ID = rc.RPFP_CLASS_ID
+          LEFT JOIN rpfp.lib_type_class tc ON tc.TYPE_CLASS_ID = rc.TYPE_CLASS_ID
+          LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
+          LEFT JOIN rpfp.individual ic ON ic.COUPLES_ID = apc.COUPLES_ID
+          LEFT JOIN rpfp.fp_service fs ON fs.COUPLES_ID = apc.COUPLES_ID
+          LEFT JOIN rpfp.fp_details fd ON fd.COUPLES_ID = apc.COUPLES_ID
+              WHERE rc.CLASS_NUMBER = '%' + search_class + '%'
+                AND rc.DATE_CONDUCTED >= search_date_from
+                AND rc.DATE_CONDUCTED <= search_date_to
+                AND ic.AGE >= 15
+                AND ic.AGE <= 49
+                AND apc.IS_ACTIVE = 0
+                AND fs.IS_PROVIDED_SERVICE = 1
+                AND fd.TFP_TYPE_ID <= 5
+                AND fd.TFP_STATUS_ID = 1
+                AND (   rc.DB_USER_ID = name_user
+                    OR (   is_not_encoder
+                        AND user_location = (rc.BARANGAY_ID DIV POWER( 10, multiplier ))
+                        )
+                    )
+           GROUP BY rc.CLASS_NUMBER
+           ORDER BY rc.DATE_CONDUCTED DESC
+              LIMIT read_offset, items_per_page
+            ;
+        END;
+    END IF;
+END$$
+
+CREATE DEFINER=root@localhost PROCEDURE get_class_list_shifters (
+    IN search_class VARCHAR(100),
+    IN search_date_from DATE,
+    IN search_date_to DATE,
+    IN search_age_from INT,
+    IN search_age_to INT,
+    IN status_active INT,
+    IN username VARCHAR(50),
+    IN page_no INT,
+    IN items_per_page INT
+    )   READS SQL DATA
+BEGIN
+    /** 
+    SEARCH STATUS
+        1 - unmet need
+        2 - served unmet need
+        3 - shifters
+        4 - served shifters
+    */
+    DECLARE name_user VARCHAR(50);
+    DECLARE db_user_name VARCHAR(50);
+    DECLARE read_offset INT;
+    DECLARE user_scope INT;
+    DECLARE user_location INT;
+    DECLARE multiplier INT;
+    DECLARE is_not_encoder INT(1);
+    
+    CALL rpfp.lib_extract_user_name( USER(), name_user, db_user_name );
+    SET user_scope := rpfp.profile_get_scope( name_user );
+    SET multiplier := rpfp.lib_get_multiplier( user_scope );
+    SET user_location := rpfp.profile_get_location( name_user, user_scope );
+    SET is_not_encoder := NOT IFNULL(rpfp.profile_check_if_encoder(), FALSE);
+
+    IF ( NOT EXISTS (
+         SELECT rc.RPFP_CLASS_ID
+           FROM rpfp.rpfp_class rc
+      LEFT JOIN rpfp.couples apc
+             ON apc.RPFP_CLASS_ID = rc.RPFP_CLASS_ID
+          WHERE apc.IS_ACTIVE = status_active
+            AND (   rc.DB_USER_ID = name_user
+                 OR (   is_not_encoder
+                    AND user_location = (rc.BARANGAY_ID DIV POWER( 10, multiplier ))
+                    )
+                )
+        )
+    ) THEN
+         SELECT NULL AS rpfpclass,
+                NULL AS typeclass,
+                NULL AS others_specify,
+                NULL AS barangay,
+                NULL AS class_no,
+                NULL AS date_conduct,
+                NULL AS lastname,
+                NULL AS firstname
+        ;
+    ELSE BEGIN           
+             SELECT rc.RPFP_CLASS_ID AS rpfpclass,
+                    tc.TYPE_CLASS_DESC AS typeclass,
+                    rc.OTHERS_SPECIFY AS others_specify,
+                    lp.LOCATION_DESCRIPTION AS barangay,
+                    rc.CLASS_NUMBER AS class_no,
+                    rc.DATE_CONDUCTED AS date_conduct,
+                    ic.LNAME AS lastname,
+                    ic.FNAME AS firstname
+               FROM rpfp.rpfp_class rc
+          LEFT JOIN rpfp.couples apc 
+		         ON apc.RPFP_CLASS_ID = rc.RPFP_CLASS_ID
+          LEFT JOIN rpfp.lib_type_class tc ON tc.TYPE_CLASS_ID = rc.TYPE_CLASS_ID
+          LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
+          LEFT JOIN rpfp.individual ic ON ic.COUPLES_ID = apc.COUPLES_ID
+          LEFT JOIN rpfp.fp_details fd ON fd.COUPLES_ID = apc.COUPLES_ID
+              WHERE rc.CLASS_NUMBER = '%' + search_class + '%'
+                AND rc.DATE_CONDUCTED >= search_date_from
+                AND rc.DATE_CONDUCTED <= search_date_to
+                AND ic.AGE >= search_age_from
+                AND ic.AGE <= search_age_to
+                AND apc.IS_ACTIVE = 0
+                AND fd.MFP_INTENTION_SHIFT_ID >= 1
+                AND (   rc.DB_USER_ID = name_user
+                    OR (   is_not_encoder
+                        AND user_location = (rc.BARANGAY_ID DIV POWER( 10, multiplier ))
+                        )
+                    )
+           GROUP BY rc.CLASS_NUMBER
+           ORDER BY rc.DATE_CONDUCTED DESC
+              LIMIT read_offset, items_per_page
+            ;
+        END;
+    END IF;
+END$$
+
+CREATE DEFINER=root@localhost PROCEDURE get_class_list_served_shifters (
+    IN search_class VARCHAR(100),
+    IN search_date_from DATE,
+    IN search_date_to DATE,
+    IN search_age_from INT,
+    IN search_age_to INT,
+    IN status_active INT,
+    IN username VARCHAR(50),
+    IN page_no INT,
+    IN items_per_page INT
+    )   READS SQL DATA
+BEGIN
+    /** 
+    SEARCH STATUS
+        1 - unmet need
+        2 - served unmet need
+        3 - shifters
+        4 - served shifters
+    */
+    DECLARE name_user VARCHAR(50);
+    DECLARE db_user_name VARCHAR(50);
+    DECLARE read_offset INT;
+    DECLARE user_scope INT;
+    DECLARE user_location INT;
+    DECLARE multiplier INT;
+    DECLARE is_not_encoder INT(1);
+    
+    CALL rpfp.lib_extract_user_name( USER(), name_user, db_user_name );
+    SET user_scope := rpfp.profile_get_scope( name_user );
+    SET multiplier := rpfp.lib_get_multiplier( user_scope );
+    SET user_location := rpfp.profile_get_location( name_user, user_scope );
+    SET is_not_encoder := NOT IFNULL(rpfp.profile_check_if_encoder(), FALSE);
+
+    IF ( NOT EXISTS (
+         SELECT rc.RPFP_CLASS_ID
+           FROM rpfp.rpfp_class rc
+      LEFT JOIN rpfp.couples apc
+             ON apc.RPFP_CLASS_ID = rc.RPFP_CLASS_ID
+          WHERE apc.IS_ACTIVE = status_active
+            AND (   rc.DB_USER_ID = name_user
+                 OR (   is_not_encoder
+                    AND user_location = (rc.BARANGAY_ID DIV POWER( 10, multiplier ))
+                    )
+                )
+        )
+    ) THEN
+         SELECT NULL AS rpfpclass,
+                NULL AS typeclass,
+                NULL AS others_specify,
+                NULL AS barangay,
+                NULL AS class_no,
+                NULL AS date_conduct,
+                NULL AS lastname,
+                NULL AS firstname
+        ;
+    ELSE BEGIN              
+             SELECT rc.RPFP_CLASS_ID AS rpfpclass,
+                    tc.TYPE_CLASS_DESC AS typeclass,
+                    rc.OTHERS_SPECIFY AS others_specify,
+                    lp.LOCATION_DESCRIPTION AS barangay,
+                    rc.CLASS_NUMBER AS class_no,
+                    rc.DATE_CONDUCTED AS date_conduct,
+                    ic.LNAME AS lastname,
+                    ic.FNAME AS firstname
+               FROM rpfp.rpfp_class rc
+          LEFT JOIN rpfp.couples apc 
+		         ON apc.RPFP_CLASS_ID = rc.RPFP_CLASS_ID
+          LEFT JOIN rpfp.lib_type_class tc ON tc.TYPE_CLASS_ID = rc.TYPE_CLASS_ID
+          LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
+          LEFT JOIN rpfp.individual ic ON ic.COUPLES_ID = apc.COUPLES_ID
+          LEFT JOIN rpfp.fp_service fs ON fs.COUPLES_ID = apc.COUPLES_ID
+          LEFT JOIN rpfp.fp_details fd ON fd.COUPLES_ID = apc.COUPLES_ID
+              WHERE rc.CLASS_NUMBER = '%' + search_class + '%'
+                AND rc.DATE_CONDUCTED >= search_date_from
+                AND rc.DATE_CONDUCTED <= search_date_to
+                AND ic.AGE >= search_age_from
+                AND ic.AGE <= search_age_to
+                AND apc.IS_ACTIVE = 0
+                AND fs.IS_PROVIDED_SERVICE = 1
+                AND fd.MFP_INTENTION_SHIFT_ID >= 1
+                AND (   rc.DB_USER_ID = name_user
+                    OR (   is_not_encoder
+                        AND user_location = (rc.BARANGAY_ID DIV POWER( 10, multiplier ))
+                        )
+                    )
+           GROUP BY rc.CLASS_NUMBER
+           ORDER BY rc.DATE_CONDUCTED DESC
+              LIMIT read_offset, items_per_page
+            ;
+        END;
+    END IF;
+END$$
+/** END SEARCH COUPLES */
 
 /** PROCESS REPORTS */
 CREATE DEFINER=root@localhost PROCEDURE encoder_process_accomplishments (
@@ -3522,6 +4228,459 @@ BEGIN
     END IF;
 END$$
 /** END GET REPORT DETAILS */
+
+/** GET DASHBOARD DATA */
+CREATE DEFINER=root@localhost PROCEDURE get_snapshot_details(
+    IN served_id INT
+    )   READS SQL DATA
+BEGIN
+    DECLARE couples_encoded_total INT;
+    DECLARE couples_encoded_current INT;
+    DECLARE couples_encoded_4ps INT;
+    DECLARE couples_encoded_non4ps INT;
+    DECLARE couples_encoded_fbos INT;
+    DECLARE couples_encoded_pmc INT;
+    DECLARE couples_encoded_usapan INT;
+    DECLARE couples_encoded_others INT;
+    DECLARE traditional_withdrawal INT;
+    DECLARE traditional_rhythm INT;
+    DECLARE traditional_calendar INT;
+    DECLARE traditional_abstinence INT;
+    DECLARE traditional_herbal INT;
+    DECLARE traditional_no_method INT;
+    DECLARE couples_with_intention INT;
+    DECLARE couples_undecided INT;
+    DECLARE couples_pregnant INT;
+    DECLARE couples_no_intention INT;
+
+    SELECT COUNT( apc.COUPLES_ID )
+      INTO couples_encoded_total
+      FROM rpfp.couples apc
+     WHERE apc.IS_ACTIVE = 0
+    ;
+
+    SELECT COUNT( apc.COUPLES_ID )
+      INTO couples_encoded_current
+      FROM rpfp.couples apc 
+ LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
+     WHERE YEAR(rc.DATE_CONDUCTED) = YEAR(NOW())
+       AND MONTH(rc.DATE_CONDUCTED) <= MONTH(NOW())
+       AND apc.IS_ACTIVE = 0
+    ;
+
+    SELECT COUNT( apc.COUPLES_ID )
+      INTO couples_encoded_4ps
+      FROM rpfp.couples apc 
+ LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
+     WHERE YEAR(rc.DATE_CONDUCTED) = YEAR(NOW())
+       AND apc.IS_ACTIVE = 0
+       AND rc.TYPE_CLASS_ID = 1
+    ;
+
+    SELECT COUNT( apc.COUPLES_ID )
+      INTO couples_encoded_non4ps
+      FROM rpfp.couples apc 
+ LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
+     WHERE YEAR(rc.DATE_CONDUCTED) = YEAR(NOW())
+       AND apc.IS_ACTIVE = 0
+       AND rc.TYPE_CLASS_ID = 2
+    ;
+
+    SELECT COUNT( apc.COUPLES_ID )
+      INTO couples_encoded_fbos
+      FROM rpfp.couples apc 
+ LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
+     WHERE YEAR(rc.DATE_CONDUCTED) = YEAR(NOW())
+       AND apc.IS_ACTIVE = 0
+       AND rc.TYPE_CLASS_ID = 3
+    ;
+
+    SELECT COUNT( apc.COUPLES_ID )
+      INTO couples_encoded_pmc
+      FROM rpfp.couples apc 
+ LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
+     WHERE YEAR(rc.DATE_CONDUCTED) = YEAR(NOW())
+       AND apc.IS_ACTIVE = 0
+       AND rc.TYPE_CLASS_ID = 4
+    ;
+
+    SELECT COUNT( apc.COUPLES_ID )
+      INTO couples_encoded_usapan
+      FROM rpfp.couples apc 
+ LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
+     WHERE YEAR(rc.DATE_CONDUCTED) = YEAR(NOW())
+       AND apc.IS_ACTIVE = 0
+       AND rc.TYPE_CLASS_ID = 5
+    ;
+
+    SELECT COUNT( apc.COUPLES_ID )
+      INTO couples_encoded_others
+      FROM rpfp.couples apc 
+ LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
+     WHERE YEAR(rc.DATE_CONDUCTED) = YEAR(NOW())
+       AND apc.IS_ACTIVE = 0
+       AND rc.TYPE_CLASS_ID >= 6
+    ;
+
+    SELECT COUNT( apc.COUPLES_ID )
+      INTO traditional_withdrawal
+      FROM rpfp.couples apc 
+ LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
+ LEFT JOIN rpfp.fp_details fd ON fd.COUPLES_ID = apc.COUPLES_ID
+     WHERE YEAR(rc.DATE_CONDUCTED) = YEAR(NOW())
+       AND apc.IS_ACTIVE = 0
+       AND fd.TFP_TYPE_ID = 1
+    ;
+
+    SELECT COUNT( apc.COUPLES_ID )
+      INTO traditional_rhythm
+      FROM rpfp.couples apc 
+ LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
+ LEFT JOIN rpfp.fp_details fd ON fd.COUPLES_ID = apc.COUPLES_ID
+     WHERE YEAR(rc.DATE_CONDUCTED) = YEAR(NOW())
+       AND apc.IS_ACTIVE = 0
+       AND fd.TFP_TYPE_ID = 2
+    ;
+
+    SELECT COUNT( apc.COUPLES_ID )
+      INTO traditional_calendar
+      FROM rpfp.couples apc 
+ LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
+ LEFT JOIN rpfp.fp_details fd ON fd.COUPLES_ID = apc.COUPLES_ID
+     WHERE YEAR(rc.DATE_CONDUCTED) = YEAR(NOW())
+       AND apc.IS_ACTIVE = 0
+       AND fd.TFP_TYPE_ID = 3
+    ;
+
+    SELECT COUNT( apc.COUPLES_ID )
+      INTO traditional_abstinence
+      FROM rpfp.couples apc 
+ LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
+ LEFT JOIN rpfp.fp_details fd ON fd.COUPLES_ID = apc.COUPLES_ID
+     WHERE YEAR(rc.DATE_CONDUCTED) = YEAR(NOW())
+       AND apc.IS_ACTIVE = 0
+       AND fd.TFP_TYPE_ID = 4
+    ;
+
+    SELECT COUNT( apc.COUPLES_ID )
+      INTO traditional_herbal
+      FROM rpfp.couples apc 
+ LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
+ LEFT JOIN rpfp.fp_details fd ON fd.COUPLES_ID = apc.COUPLES_ID
+     WHERE YEAR(rc.DATE_CONDUCTED) = YEAR(NOW())
+       AND apc.IS_ACTIVE = 0
+       AND fd.TFP_TYPE_ID = 5
+    ;
+
+    SELECT COUNT( apc.COUPLES_ID )
+      INTO traditional_no_method
+      FROM rpfp.couples apc 
+ LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
+ LEFT JOIN rpfp.fp_details fd ON fd.COUPLES_ID = apc.COUPLES_ID
+     WHERE YEAR(rc.DATE_CONDUCTED) = YEAR(NOW())
+       AND apc.IS_ACTIVE = 0
+       AND fd.TFP_TYPE_ID = 6
+    ;
+
+    SELECT COUNT( apc.COUPLES_ID )
+      INTO couples_with_intention
+      FROM rpfp.couples apc 
+ LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
+ LEFT JOIN rpfp.fp_details fd ON fd.COUPLES_ID = apc.COUPLES_ID
+     WHERE YEAR(rc.DATE_CONDUCTED) = YEAR(NOW())
+       AND apc.IS_ACTIVE = 0
+       AND fd.TFP_STATUS_ID = 1
+    ;
+
+    SELECT COUNT( apc.COUPLES_ID )
+      INTO couples_undecided
+      FROM rpfp.couples apc 
+ LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
+ LEFT JOIN rpfp.fp_details fd ON fd.COUPLES_ID = apc.COUPLES_ID
+     WHERE YEAR(rc.DATE_CONDUCTED) = YEAR(NOW())
+       AND apc.IS_ACTIVE = 0
+       AND fd.TFP_STATUS_ID = 2
+    ;
+
+    SELECT COUNT( apc.COUPLES_ID )
+      INTO couples_pregnant
+      FROM rpfp.couples apc 
+ LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
+ LEFT JOIN rpfp.fp_details fd ON fd.COUPLES_ID = apc.COUPLES_ID
+     WHERE YEAR(rc.DATE_CONDUCTED) = YEAR(NOW())
+       AND apc.IS_ACTIVE = 0
+       AND fd.TFP_STATUS_ID = 3
+    ;
+
+    SELECT COUNT( apc.COUPLES_ID )
+      INTO couples_no_intention
+      FROM rpfp.couples apc 
+ LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
+ LEFT JOIN rpfp.fp_details fd ON fd.COUPLES_ID = apc.COUPLES_ID
+     WHERE YEAR(rc.DATE_CONDUCTED) = YEAR(NOW())
+       AND apc.IS_ACTIVE = 0
+       AND fd.TFP_STATUS_ID = 4
+    ;
+
+    
+    SELECT couples_encoded_total;
+    SELECT couples_encoded_current;
+    SELECT couples_encoded_4ps;
+    SELECT couples_encoded_non4ps;
+    SELECT couples_encoded_fbos;
+    SELECT couples_encoded_pmc;
+    SELECT couples_encoded_usapan;
+    SELECT couples_encoded_others;
+    SELECT traditional_withdrawal;
+    SELECT traditional_rhythm;
+    SELECT traditional_calendar;
+    SELECT traditional_abstinence;
+    SELECT traditional_herbal;
+    SELECT traditional_no_method;
+    SELECT couples_with_intention;
+    SELECT couples_undecided;
+    SELECT couples_pregnant;
+    SELECT couples_no_intention;
+
+END$$
+
+CREATE DEFINER=root@localhost PROCEDURE get_percentage_encoded(
+    IN report_year INT
+    )   READS SQL DATA
+BEGIN
+    DECLARE report_month INT;
+    DECLARE couples_encoded_r01 INT;
+    DECLARE couples_encoded_r02 INT;
+    DECLARE couples_encoded_r03 INT;
+    DECLARE couples_encoded_r4a INT;
+    DECLARE couples_encoded_r4b INT;
+    DECLARE couples_encoded_r05 INT;
+    DECLARE couples_encoded_r06 INT;
+    DECLARE couples_encoded_r07 INT;
+    DECLARE couples_encoded_r08 INT;
+    DECLARE couples_encoded_r09 INT;
+    DECLARE couples_encoded_r10 INT;
+    DECLARE couples_encoded_r11 INT;
+    DECLARE couples_encoded_r12 INT;
+    DECLARE couples_encoded_r13 INT;
+    DECLARE couples_encoded_barmm INT;
+    DECLARE couples_encoded_car INT;
+    DECLARE couples_encoded_ncr INT;
+
+    IF ( IFNULL( report_year, 0 ) = 0 ) THEN
+        SET report_year = YEAR(NOW());
+        SET report_month = MONTH(NOW());
+    ELSE
+        SET report_month = 12;
+    END IF
+    ;
+
+    SELECT COUNT( apc.COUPLES_ID )
+      INTO couples_encoded_r01
+      FROM rpfp.couples apc
+ LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
+ LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
+     WHERE YEAR(rc.DATE_CONDUCTED) = report_year
+       AND MONTH(rc.DATE_CONDUCTED) <= report_month
+       AND apc.IS_ACTIVE = 0
+       AND lp.REGION_CODE = 01
+    ;
+
+    SELECT COUNT( apc.COUPLES_ID )
+      INTO couples_encoded_r02
+      FROM rpfp.couples apc
+ LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
+ LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
+     WHERE YEAR(rc.DATE_CONDUCTED) = report_year
+       AND MONTH(rc.DATE_CONDUCTED) <= report_month
+       AND apc.IS_ACTIVE = 0
+       AND lp.REGION_CODE = 02
+    ;
+
+    SELECT COUNT( apc.COUPLES_ID )
+      INTO couples_encoded_r03
+      FROM rpfp.couples apc
+ LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
+ LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
+     WHERE YEAR(rc.DATE_CONDUCTED) = report_year
+       AND MONTH(rc.DATE_CONDUCTED) <= report_month
+       AND apc.IS_ACTIVE = 0
+       AND lp.REGION_CODE = 03
+    ;
+
+    SELECT COUNT( apc.COUPLES_ID )
+      INTO couples_encoded_r4a
+      FROM rpfp.couples apc
+ LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
+ LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
+     WHERE YEAR(rc.DATE_CONDUCTED) = report_year
+       AND MONTH(rc.DATE_CONDUCTED) <= report_month
+       AND apc.IS_ACTIVE = 0
+       AND lp.REGION_CODE = 04
+    ;
+
+    SELECT COUNT( apc.COUPLES_ID )
+      INTO couples_encoded_r4b
+      FROM rpfp.couples apc
+ LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
+ LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
+     WHERE YEAR(rc.DATE_CONDUCTED) = report_year
+       AND MONTH(rc.DATE_CONDUCTED) <= report_month
+       AND apc.IS_ACTIVE = 0
+       AND lp.REGION_CODE = 17
+    ;
+
+    SELECT COUNT( apc.COUPLES_ID )
+      INTO couples_encoded_r05
+      FROM rpfp.couples apc
+ LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
+ LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
+     WHERE YEAR(rc.DATE_CONDUCTED) = report_year
+       AND MONTH(rc.DATE_CONDUCTED) <= report_month
+       AND apc.IS_ACTIVE = 0
+       AND lp.REGION_CODE = 05
+    ;
+
+    SELECT COUNT( apc.COUPLES_ID )
+      INTO couples_encoded_r06
+      FROM rpfp.couples apc
+ LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
+ LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
+     WHERE YEAR(rc.DATE_CONDUCTED) = report_year
+       AND MONTH(rc.DATE_CONDUCTED) <= report_month
+       AND apc.IS_ACTIVE = 0
+       AND lp.REGION_CODE = 06
+    ;
+
+    SELECT COUNT( apc.COUPLES_ID )
+      INTO couples_encoded_r07
+      FROM rpfp.couples apc
+ LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
+ LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
+     WHERE YEAR(rc.DATE_CONDUCTED) = report_year
+       AND MONTH(rc.DATE_CONDUCTED) <= report_month
+       AND apc.IS_ACTIVE = 0
+       AND lp.REGION_CODE = 07
+    ;
+
+    SELECT COUNT( apc.COUPLES_ID )
+      INTO couples_encoded_r08
+      FROM rpfp.couples apc
+ LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
+ LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
+     WHERE YEAR(rc.DATE_CONDUCTED) = report_year
+       AND MONTH(rc.DATE_CONDUCTED) <= report_month
+       AND apc.IS_ACTIVE = 0
+       AND lp.REGION_CODE = 08
+    ;
+
+    SELECT COUNT( apc.COUPLES_ID )
+      INTO couples_encoded_r09
+      FROM rpfp.couples apc
+ LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
+ LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
+     WHERE YEAR(rc.DATE_CONDUCTED) = report_year
+       AND MONTH(rc.DATE_CONDUCTED) <= report_month
+       AND apc.IS_ACTIVE = 0
+       AND lp.REGION_CODE = 09
+    ;
+
+    SELECT COUNT( apc.COUPLES_ID )
+      INTO couples_encoded_r10
+      FROM rpfp.couples apc
+ LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
+ LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
+     WHERE YEAR(rc.DATE_CONDUCTED) = report_year
+       AND MONTH(rc.DATE_CONDUCTED) <= report_month
+       AND apc.IS_ACTIVE = 0
+       AND lp.REGION_CODE = 10
+    ;
+
+    SELECT COUNT( apc.COUPLES_ID )
+      INTO couples_encoded_r11
+      FROM rpfp.couples apc
+ LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
+ LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
+     WHERE YEAR(rc.DATE_CONDUCTED) = report_year
+       AND MONTH(rc.DATE_CONDUCTED) <= report_month
+       AND apc.IS_ACTIVE = 0
+       AND lp.REGION_CODE = 11
+    ;
+
+    SELECT COUNT( apc.COUPLES_ID )
+      INTO couples_encoded_r12
+      FROM rpfp.couples apc
+ LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
+ LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
+     WHERE YEAR(rc.DATE_CONDUCTED) = report_year
+       AND MONTH(rc.DATE_CONDUCTED) <= report_month
+       AND apc.IS_ACTIVE = 0
+       AND lp.REGION_CODE = 12
+    ;
+
+    SELECT COUNT( apc.COUPLES_ID )
+      INTO couples_encoded_ncr
+      FROM rpfp.couples apc
+ LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
+ LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
+     WHERE YEAR(rc.DATE_CONDUCTED) = report_year
+       AND MONTH(rc.DATE_CONDUCTED) <= report_month
+       AND apc.IS_ACTIVE = 0
+       AND lp.REGION_CODE = 13
+    ;
+
+    SELECT COUNT( apc.COUPLES_ID )
+      INTO couples_encoded_car
+      FROM rpfp.couples apc
+ LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
+ LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
+     WHERE YEAR(rc.DATE_CONDUCTED) = report_year
+       AND MONTH(rc.DATE_CONDUCTED) <= report_month
+       AND apc.IS_ACTIVE = 0
+       AND lp.REGION_CODE = 14
+    ;
+
+    SELECT COUNT( apc.COUPLES_ID )
+      INTO couples_encoded_barmm
+      FROM rpfp.couples apc
+ LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
+ LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
+     WHERE YEAR(rc.DATE_CONDUCTED) = report_year
+       AND MONTH(rc.DATE_CONDUCTED) <= report_month
+       AND apc.IS_ACTIVE = 0
+       AND lp.REGION_CODE = 15
+    ;
+
+    SELECT COUNT( apc.COUPLES_ID )
+      INTO couples_encoded_r13
+      FROM rpfp.couples apc
+ LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
+ LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
+     WHERE YEAR(rc.DATE_CONDUCTED) = report_year
+       AND MONTH(rc.DATE_CONDUCTED) <= report_month
+       AND apc.IS_ACTIVE = 0
+       AND lp.REGION_CODE = 16
+    ;
+    
+    SELECT couples_encoded_r01;
+    SELECT couples_encoded_r02;
+    SELECT couples_encoded_r03;
+    SELECT couples_encoded_r4a;
+    SELECT couples_encoded_r4b;
+    SELECT couples_encoded_r05;
+    SELECT couples_encoded_r06;
+    SELECT couples_encoded_r07;
+    SELECT couples_encoded_r08;
+    SELECT couples_encoded_r09;
+    SELECT couples_encoded_r10;
+    SELECT couples_encoded_r11;
+    SELECT couples_encoded_r12;
+    SELECT couples_encoded_r13;
+    SELECT couples_encoded_barmm;
+    SELECT couples_encoded_car;
+    SELECT couples_encoded_ncr;
+END$$
+/** END GET DASHBOARD DATA */
 
 DELIMITER ;
 --
