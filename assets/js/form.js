@@ -11,6 +11,29 @@ $(function() {
 
 	checkDuplicate();
 
+	// for (i = 0; i < 10; i++) {
+	// 	var sex1 = 'input[name="sex1['+ i +']';
+	// 	var sex2 = 'input[name="sex2['+ i +']';
+	// 	var bday1 = 'input[name="age1['+ i +']';
+	// 	var bday2 = 'input[name="age2['+ i +']';
+
+	// 	$(sex1).change(function() {
+	// 		changeSex();
+	// 	});
+
+	// 	$(sex2).change(function() {
+	// 		getSex();
+	// 	});
+
+	// 	$(bday1).change(function() {
+	// 		getDate();
+	// 	});
+
+	// 	$(bday2).change(function() {
+	// 		getDate();
+	// 	});
+	// }
+
 	Inputmask().mask(".birthAge");
 });
 
@@ -117,12 +140,23 @@ function checkDuplicate()
 		var that1 = 'input[name="name_participant1['+ i +']';
 		var that2 = 'input[name="name_participant2['+ i +']';
 
-		var sex1 = 'input[name="sex1['+ i +']';	
-
 		$(that1).change(function() {
 			var name = this.value;
-			getDate(name);
+			changeSex(name);
+		});		
+
+		$(that2).change(function() {
+			var name = this.value;
+			getSex(name);
 		});
+	}
+}
+
+function changeSex(name)
+{
+	var i;
+	for (i = 0; i < 10; i++) {
+		var sex1 = 'input[name="sex1['+ i +']';	
 
 		$(sex1).change(function() {
 			var sex = this.value;
@@ -132,8 +166,14 @@ function checkDuplicate()
 				$(this).removeClass('has-duplicate');
 				$('input[name="saveform1"]').removeAttr('disabled', 'disabled');
 
-				getDate(sex);
-				getSex(sex)
+				if (sex === 'M' || sex === 'm') {
+					gender = 1;
+				} else if (sex === 'F' || sex === 'f') {
+					gender = 2;
+				}
+
+				getSex(name, sex);
+				getDate(name, gender);
 			} else {
 				alert('Invalid Input!');
 
@@ -143,30 +183,10 @@ function checkDuplicate()
 				$(this).addClass('has-duplicate');
 			}
 		});
-
-		// $(that2).keydown(function() {
-		// 	var fname = $('input[name="name_participant2['+ i +']"]').val();
-
-		// 	$(this).closest('td').attr('data-tip', 'Duplicate Entry');
-		// 	$(this).closest('td').addClass('has-duplicate');
-		// 	$(this).addClass('has-duplicate');
-			
-		// 	$.post(base_url + 'forms/checkDuplicate')
-		// 	.done(function(result){
-		// 		// alert(result);
-		// 	});
-		// });
-
-		// $(bday2).change(function() {
-		// 	var bday = this.value;
-		// 	var dateArr = bday.split('/');
-
-		// 	alert(dateArr[0]);
-		// });
 	}
 }
 
-function getSex(sex1)
+function getSex(name, sex1)
 {
 	var i;
 	for (i = 0; i < 10; i++) {
@@ -176,13 +196,13 @@ function getSex(sex1)
 			var sex2 = this.value;
 			if (sex1 === 'F' || sex1 === 'f') {
 				if (sex2 === 'M' || sex2 === 'm') {
+					gender = 1;
 					$(this).closest('td').removeAttr('data-tip', 'Invalid Input!');
 					$(this).closest('td').removeClass('has-duplicate');
 					$(this).removeClass('has-duplicate');
 					$('input[name="saveform1"]').removeAttr('disabled', 'disabled');
 
-
-					getDate(sex2);
+					getDate(name, gender);
 				} else {
 					alert('Input value must be "M"');
 
@@ -193,12 +213,13 @@ function getSex(sex1)
 				}
 			} else if (sex1 === 'M' || sex1 === 'm') {
 				if (sex2 === 'F' || sex2 === 'f') {
+					gender = 2;
 					$(this).closest('td').removeAttr('data-tip', 'Invalid Input!');
 					$(this).closest('td').removeClass('has-duplicate');
 					$(this).removeClass('has-duplicate');
 					$('input[name="saveform1"]').removeAttr('disabled', 'disabled');
 
-					getDate(sex2);
+					getDate(name, gender);
 				} else {
 					alert('Input value must be "F"');
 
@@ -229,25 +250,49 @@ function getDate(nameArr1, sex)
 		var name = nameArr1;
 		var nameArr = name.split(',');
 
+		var firstname = nameArr[0];
+		var surname = $.trim(nameArr[1]);
+		var extname = $.trim(nameArr[2]);
+
 		$(bday1).change(function() {
 			var bday = this.value;
-			var dateArr = bday.split('/');
+			var bdayAge = bday.split('/');
+			var dateArr = bdayAge[0].split('-');
 
-			$.post(base_url + 'forms/checkCoupleDuplicate')
-			.done(function(result){
-				alert(result);
-				// if(result){
-				// 	$(this).closest('td').attr('data-tip', 'Duplicate Entry');
-				// 	$(this).closest('td').addClass('has-duplicate');
-				// 	$(this).addClass('has-duplicate');
-				// }
+			var month = $.trim(dateArr[0]);
+			var day = $.trim(dateArr[1]);
+			var year = $.trim(dateArr[2]);
+
+			var bday = dateArr[2] + '-' +dateArr[0] + '-' + dateArr[1];
+
+			$.post(base_url + '/forms/checkCoupleDuplicate', {
+				'firstname' : firstname, 
+				'surname' : surname, 
+				'extname' : extname, 
+				'sex' : sex, 
+				'bday' : bday
+			}).done(function(result){
+				duplicate(result, bday1);
 			});
-
-			// alert(nameArr[0]);
-			// alert(nameArr[1]);
-			// alert(nameArr[2]);
-			// alert(sex);
-			// alert(dateArr[0]);
 		});
+	}
+}
+
+function duplicate(result, thisProp)
+{
+	$('#isDuplicate').val(result);
+	var val = $('#isDuplicate').val();
+
+	alert(thisProp);
+
+	if(val === 1){
+		$(this).closest('.approveCheck').attr('data-tip', 'Duplicate Entry');
+		$(this).closest('.approveCheck').addClass('has-duplicate');
+		$(this).addClass('has-duplicate');
+		$('input[name="saveform1"]').removeAttr('disabled', 'disabled');
+	} else {
+		$('#isDuplicate').closest('tr').removeAttr('data-tip', 'Duplicate Entry');
+		$('#isDuplicate').closest('tr').removeClass('has-duplicate');
+		$('#isDuplicate').removeClass('has-duplicate');
 	}
 }

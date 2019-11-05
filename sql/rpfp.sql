@@ -1,4 +1,4 @@
-/** 
+* 
     THIS UTILIZES OTHER FILES TO FILL-IN DATA
         1. psgc.sql
 
@@ -1556,11 +1556,11 @@ DECLARE check_details INT;
 
     SELECT check_details;
 
-    IF check_details = 0 THEN
-        SELECT "NO DUPLICATE DATA!" AS MESSAGE;
-    ELSE
-        SELECT "WITH DUPLICATE DATA!" AS MESSAGE;
-    END IF;
+    -- IF check_details = 0 THEN
+    --     SELECT "NO DUPLICATE DATA!" AS MESSAGE;
+    -- ELSE
+    --     SELECT "WITH DUPLICATE DATA!" AS MESSAGE;
+    -- END IF;
 END$$
 
 CREATE DEFINER=root@localhost PROCEDURE encoder_save_couple (
@@ -4027,4 +4027,4 @@ SOURCE ./libraries.sql;
 
 -- --------------------------------------------------------
 
-/** END OF RPFP.SQL */
+/** END OF RPFP.SQL 

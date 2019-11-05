@@ -414,6 +414,7 @@ $form1 = FormClass::getFormFromVariable($form1);
 									<?php endif; ?>
 									<td class="text-center" style="border-left: none" rowspan="2">
 										<p class="small"><?= $i + 1; ?></p>
+										<input type="hidden" id="isDuplicate" value="" name="duplicate['<?= $i; ?>']" />
 									</td>
 									
 									<td class="small" style="padding: 5px;">
@@ -461,7 +462,7 @@ $form1 = FormClass::getFormFromVariable($form1);
 				                                "text",
 				                                "age1[".$i."]",
 				                                "text-center birthAge",
-				                                "'mask': '99-99-9999 / 99'"
+				                                "'mask': '99-99-9999/99'"
 				                            );
 				                        ?>
 									</td>
@@ -625,7 +626,7 @@ $form1 = FormClass::getFormFromVariable($form1);
 				                                "text",
 				                                "age2[".$i."]",
 				                                "text-center birthAge",
-				                                "'mask': '99-99-9999 / 99'"
+				                                "'mask': '99-99-9999/99'"
 				                            );
 			                        	?>
 									</td>

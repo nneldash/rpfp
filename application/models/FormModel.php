@@ -349,18 +349,16 @@ class FormModel extends BaseModel
 
     public function getDuplicateCouple() : DuplicateCoupleInterface
     {
-        $a = new DuplicateCoupleClass();
-
-        $firstname = 'Anna Margarette';
-        $surname = 'Simon';
-        $extname = '';
-        $bday = '1984-02-07';
-        $sex = '2';
-
+        $firstname  = $this->input->post('firstname');
+        $surname    = $this->input->post('surname');
+        $extname    = $this->input->post('extname');
+        $bday       = $this->input->post('bday');
+        $sex        = $this->input->post('sex');
+        
         return $this->fromDbGetSpecific(
             'DuplicateCoupleClass',
             array(
-                'message' => 'message'
+                'CheckDetails' => 'check_details'
             ),
             'encoder_check_couples_details',
             array($firstname, $surname, $extname, $bday, $sex)
