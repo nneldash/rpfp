@@ -159,29 +159,40 @@ class FormModel extends BaseModel
         return $slip;
     }
 
-    public function getForm1(): FormInterface
+    public function getForm1(int $is_active, $page_no, $items_per_page): FormInterface
     {
         $form1 = new FormClass();
 
-        $form1->Seminar = $this->getForm1Seminar();
-        $form1->ListCouple = $this->getForm1Couples();
+        $form1->Seminar = $this->getForm1Seminar($is_active, $page_no, $items_per_page);
+        // $form1->ListCouple = $this->getForm1Couples();
         return $form1;
     }
 
-    public function getForm1Seminar() : SeminarInterface
+    public function getForm1Seminar(int $is_active, $page_no, $items_per_page) : SeminarInterface
     {
-        $seminar = new SeminarClass();
-
-        $seminar->ClassId = '1';
-        $seminar->TypeOfClass = AllowedSeminarTypes::FOUR_PS;
-        $seminar->ClassNumber = '12345';
-        $seminar->Location->Region->Code = 80000000;
-        $seminar->Location->Region->Description = 'REGION VIII (EASTERN VISAYAS)';
-        $seminar->Location->Barangay->Code = 82601001;
-        $seminar->Location->Barangay->Description = 'Aguinaldo';
-        $seminar->DateConducted = '09/10/2019';
-
-        return $seminar;
+        return $this->fromDbGetSpecific(
+            'SeminarClass',
+            array(
+                'ClassId' => 'rpfpclass',
+                'TypeOfClass' => array(
+                    'Type' => 'typeclass',
+                    'Others' => 'others_specify'
+                ),
+                'ClassNumber' => 'class_no',
+                'DateConducted' => 'date_conduct',
+                'Location' => array(
+                    'Barangay' => array(
+                        'Description' => 'barangay'
+                    )
+                )
+            ),
+            'get_class_list',
+            array(
+                $is_active,
+                $page_no,
+                $items_per_page
+            )
+        );
     }
 
     public function getForm1Couples() : ListCoupleInterface

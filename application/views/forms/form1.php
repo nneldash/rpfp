@@ -3,7 +3,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
 $this->load->library('helpers/HtmlHelper');
 
 $form1 = FormClass::getFormFromVariable($form1);
-
 ?>
 
 <?php if($is_pdf){ ?>

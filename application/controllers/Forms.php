@@ -35,7 +35,11 @@ class Forms extends CI_Controller
         $this->load->model('ProfileModel');
         $this->load->model('FormModel');
 
-        $form1 = $this->FormModel->getForm1();
+        $is_active = 2;
+        $page_no = 0;
+        $items_per_page = 0;
+
+        $form1 = $this->FormModel->getForm1($is_active, $page_no, $items_per_page);
 
         $this->load->model('ProfileModel');
         $isEncoder = $this->ProfileModel->isEncoder();
