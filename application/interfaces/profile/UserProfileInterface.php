@@ -22,4 +22,7 @@ abstract class UserProfileInterface extends BaseInterface
 
     /** @var Scopes */
     public $ScopeOfWork;
+
+    /** @var string */
+    public $PicProfile;
 }

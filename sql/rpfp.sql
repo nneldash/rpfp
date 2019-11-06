@@ -699,7 +699,60 @@ BEGIN
 
     RETURN ret_val;
 END$$
+
+CREATE DEFINER=root@localhost PROCEDURE profile_get_own_pic(
+    db_user VARCHAR(50) CHARSET utf8 COLLATE utf8_unicode_ci,
+    scope_num INT
+    )   READS SQL DATA
+BEGIN
+    CALL rpfp.profile_get_pic(USER());
+END$$
+
+CREATE DEFINER=root@localhost PROCEDURE profile_get_pic(
+    db_user VARCHAR(50) CHARSET utf8 COLLATE utf8_unicode_ci
+    )   READS SQL DATA
+BEGIN
+    DECLARE name_user VARCHAR(50);
+    DECLARE db_user_name VARCHAR(50);
+
+    CALL rpfp.lib_extract_user_name( db_user, name_user, db_user_name );
+
+     SELECT prof.PROFILE_PIC
+       FROM rpfp.user_profile prof
+      WHERE prof.DB_USER_ID = name_user
+    ;
+
+    return ret_val;
+END$$
+
+CREATE DEFINER=root@localhost PROCEDURE profile_save_own_pic_filename(
+    pic_filename VARCHAR(50) CHARSET utf8 COLLATE utf8_unicode_ci
+    )   READS SQL DATA
+BEGIN
+
+    CALL rpfp.profile_save_pic_filename( USER(), pic_filename );
+
+END$$
+
+CREATE DEFINER=root@localhost PROCEDURE profile_save_pic_filename(
+    db_user VARCHAR(50) CHARSET utf8 COLLATE utf8_unicode_ci,
+    pic_filename VARCHAR(50) CHARSET utf8 COLLATE utf8_unicode_ci
+    )   READS SQL DATA
+BEGIN
+    DECLARE name_user VARCHAR(50);
+    DECLARE db_user_name VARCHAR(50);
+
+    CALL rpfp.lib_extract_user_name( db_user, name_user, db_user_name );
+
+     UPDATE rpfp.user_profile prof
+        SET prof.PROFILE_PIC = pic_filename
+      WHERE prof.DB_USER_ID = name_user
+    ;
+    
+END$$
+
 /** END OF PROFILE PROCS */
+
 
 /** LIBRARIES */
 CREATE DEFINER=root@localhost PROCEDURE lib_get_full_location(
@@ -4699,6 +4752,7 @@ CREATE TABLE user_profile (
               E_MAIL VARCHAR(100),
            LAST_NAME VARCHAR(50) NOT NULL,
           FIRST_NAME VARCHAR(50) NOT NULL,
+         PROFILE_PIC VARCHAR(50),
          REGION_CODE INT UNSIGNED,
            PSGC_CODE INT UNSIGNED,
  INITIAL_PASS_COLUMN INT(1) UNSIGNED NOT NULL DEFAULT TRUE,
