@@ -81,7 +81,6 @@ class BaseModel extends CI_Model
     protected function runQuery(&$db, $query_string, $bind_params = false)
     {   
         $queryResult = $db->query($query_string, $bind_params, true);
-        
         $err = $db->error();
         if (!empty($err->code)) {
             if (!$queryResult) {

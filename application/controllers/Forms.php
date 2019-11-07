@@ -35,11 +35,9 @@ class Forms extends CI_Controller
         $this->load->model('ProfileModel');
         $this->load->model('FormModel');
 
-        $is_active = 2;
-        $page_no = 0;
-        $items_per_page = 0;
+        $classId = $this->input->get('rpfpId');
 
-        $form1 = $this->FormModel->getForm1($is_active, $page_no, $items_per_page);
+        $form1 = $this->FormModel->getForm1($classId);
 
         $this->load->model('ProfileModel');
         $isEncoder = $this->ProfileModel->isEncoder();
@@ -73,7 +71,7 @@ class Forms extends CI_Controller
 
         $form1->Seminar = $this->getInputFromSeminar();
         $form1->ListCouple = $this->getInputFromListCouples();
-        // print_r($this->FormModel->saveForm1($form1));exit;
+        print_r($this->FormModel->saveForm1($form1));exit;
         $data = ['is_save' => true];
         if (!$this->FormModel->saveForm1($form1)) {
             $data = ['is_save' => false];

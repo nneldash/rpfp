@@ -23,7 +23,6 @@ class FormModel extends BaseModel
     public function saveForm1(FormInterface $form)
     {
         $class_id = $this->saveSeminar($form->Seminar);
-
         if ($class_id == 'INVALID LOCATION') {
             return 'error1';
             exit;
@@ -33,7 +32,7 @@ class FormModel extends BaseModel
         }
 
         $class_id = explode(" ", $class_id);
-
+        
         if (!$class_id) {
             /** return exception or error message */
             return;
@@ -66,6 +65,7 @@ class FormModel extends BaseModel
 
     public function saveCouple(int $class_id, CoupleInterface $couple)
     {
+        print_r($class_id);exit;
         $method = "encoder_save_couple";
         $husband = $couple->Husband();
         $wife = $couple->Wife();
@@ -82,33 +82,33 @@ class FormModel extends BaseModel
             $couple->Address_HH_No == N_A ? BLANK : $couple->Address_HH_No,
             $couple->NumberOfChildren == N_A ? BLANK : $couple->NumberOfChildren,
 
-            $husband->Id == N_A ? BLANK : $husband->Id,
-            $husband->Name->Surname == N_A ? BLANK : $husband->Name->Surname,
-            $husband->Name->Firstname == N_A ? BLANK : $husband->Name->Firstname,
-            $husband->Name->Middlename == N_A ? BLANK : $husband->Name->Middlename,
-            $husband->Name->Extname == N_A ? BLANK : $husband->Name->Extname,
-            $husband->Age == N_A ? BLANK : $husband->Age,
-            $husband->Birthdate == N_A ? BLANK : $husband->Birthdate->format('Y-m-d'),
-            $husband->CivilStatus == N_A ? BLANK : $husband->CivilStatus,
-            $husband->HighestEducation == N_A ? BLANK : $husband->HighestEducation,
-            $husband->Attendee == N_A ? BLANK : $husband->Attendee,
+            // $husband->Id == N_A ? BLANK : $husband->Id,
+            // $husband->Name->Surname == N_A ? BLANK : $husband->Name->Surname,
+            // $husband->Name->Firstname == N_A ? BLANK : $husband->Name->Firstname,
+            // $husband->Name->Middlename == N_A ? BLANK : $husband->Name->Middlename,
+            // $husband->Name->Extname == N_A ? BLANK : $husband->Name->Extname,
+            // $husband->Age == N_A ? BLANK : $husband->Age,
+            // $husband->Birthdate == N_A ? BLANK : $husband->Birthdate->format('Y-m-d'),
+            // $husband->CivilStatus == N_A ? BLANK : $husband->CivilStatus,
+            // $husband->HighestEducation == N_A ? BLANK : $husband->HighestEducation,
+            // $husband->Attendee == N_A ? BLANK : $husband->Attendee,
 
-            $wife->Id == N_A ? BLANK : $wife->Id,
-            $wife->Name->Surname == N_A ? BLANK : $wife->Name->Surname,
-            $wife->Name->Firstname == N_A ? BLANK : $wife->Name->Firstname,
-            $wife->Name->Middlename == N_A ? BLANK : $wife->Name->Middlename,
-            $wife->Age == N_A ? BLANK : $wife->Age,
-            $wife->Birthdate == N_A ? BLANK : $wife->Birthdate->format('Y-m-d'),
-            $wife->CivilStatus == N_A ? BLANK : $wife->CivilStatus,
-            $wife->HighestEducation == N_A ? BLANK : $wife->HighestEducation,
-            $wife->Attendee == N_A ? BLANK : $wife->Attendee,
+            // $wife->Id == N_A ? BLANK : $wife->Id,
+            // $wife->Name->Surname == N_A ? BLANK : $wife->Name->Surname,
+            // $wife->Name->Firstname == N_A ? BLANK : $wife->Name->Firstname,
+            // $wife->Name->Middlename == N_A ? BLANK : $wife->Name->Middlename,
+            // $wife->Age == N_A ? BLANK : $wife->Age,
+            // $wife->Birthdate == N_A ? BLANK : $wife->Birthdate->format('Y-m-d'),
+            // $wife->CivilStatus == N_A ? BLANK : $wife->CivilStatus,
+            // $wife->HighestEducation == N_A ? BLANK : $wife->HighestEducation,
+            // $wife->Attendee == N_A ? BLANK : $wife->Attendee,
 
-            $modern->MethodUsed == N_A ? BLANK : $modern->MethodUsed,
-            $modern->IntentionToShift == N_A ? BLANK : $modern->IntentionToShift,
+            // $modern->MethodUsed == N_A ? BLANK : $modern->MethodUsed,
+            // $modern->IntentionToShift == N_A ? BLANK : $modern->IntentionToShift,
 
-            $traditional->Type == N_A ? BLANK : $traditional->Type,
-            $traditional->Status == N_A ? BLANK : $traditional->Status,
-            $traditional->ReasonForUse == N_A ? BLANK : $traditional->ReasonForUse
+            // $traditional->Type == N_A ? BLANK : $traditional->Type,
+            // $traditional->Status == N_A ? BLANK : $traditional->Status,
+            // $traditional->ReasonForUse == N_A ? BLANK : $traditional->ReasonForUse
         ];
 
         return $this->saveToDb($method, $params);
@@ -159,16 +159,16 @@ class FormModel extends BaseModel
         return $slip;
     }
 
-    public function getForm1(int $is_active, $page_no, $items_per_page): FormInterface
+    public function getForm1($classId): FormInterface
     {
         $form1 = new FormClass();
 
-        $form1->Seminar = $this->getForm1Seminar($is_active, $page_no, $items_per_page);
-        // $form1->ListCouple = $this->getForm1Couples();
+        $form1->Seminar = $this->getForm1Seminar($classId);
+        $form1->ListCouple = $this->getForm1Couples();
         return $form1;
     }
 
-    public function getForm1Seminar(int $is_active, $page_no, $items_per_page) : SeminarInterface
+    public function getForm1Seminar($classId) : SeminarInterface
     {
         return $this->fromDbGetSpecific(
             'SeminarClass',
@@ -186,11 +186,9 @@ class FormModel extends BaseModel
                     )
                 )
             ),
-            'get_class_list',
+            'get_class_details',
             array(
-                $is_active,
-                $page_no,
-                $items_per_page
+                $classId
             )
         );
     }

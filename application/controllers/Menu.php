@@ -369,7 +369,10 @@ class Menu extends CI_Controller
 
     public function pendingCoupleModal()
     {
-        $this->load->view('menu/listTables/pendingTable');
+        $classId = $this->input->post('classId');
+        
+        $formList = $this->CoupleModel->getFormList($classId);
+        $this->load->view('menu/listTables/pendingTable', array('forms' => $formList));
     }
 
     public function approveCoupleModal()

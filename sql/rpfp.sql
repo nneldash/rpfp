@@ -1112,8 +1112,6 @@ BEGIN
                 NULL AS barangay,
                 NULL AS class_no,
                 NULL AS date_conduct,
-                NULL AS lastname,
-                NULL AS firstname
         ;
     ELSE BEGIN
              SELECT rc.RPFP_CLASS_ID AS rpfpclass,

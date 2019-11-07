@@ -74,4 +74,36 @@ class CoupleModel extends BaseModel
 
         return $retval;
     }
+
+    public function getFormList($classId) : ListPendingCoupleInterface
+    {
+        $is_active = 0;
+        $page_no = 1;
+        $items_per_page = 10;
+        
+        $pending_list = $this->fromDbGetList(
+            'ListPendingCouple',
+            'PendingClass',
+            array(
+                'RpfpClass' => 'rpfpclass',
+                'TypeClass' => 'typeclass',
+                'OthersSpecify' => 'others_specify',
+                'Barangay' => 'barangay',
+                'ClassNo' => 'class_no',
+                'DateConduct' => 'date_conduct',
+                'LastName' => 'lastname',
+                'FirstName' => 'firstname'
+            ),
+            'get_forms_list',
+            array($classId, $is_active, $page_no, $items_per_page)
+        );
+
+        $retval = new ListPendingCouple();
+
+        foreach($pending_list as $pendingCouples) {
+            $retval->append($pendingCouples);
+        }
+
+        return $retval;
+    }
 }
