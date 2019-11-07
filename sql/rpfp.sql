@@ -722,7 +722,7 @@ BEGIN
       WHERE prof.DB_USER_ID = name_user
     ;
 
-    return ret_val;
+    -- return ret_val;
 END$$
 
 CREATE DEFINER=root@localhost PROCEDURE profile_save_own_pic_filename(
@@ -1091,6 +1091,42 @@ BEGIN
            GROUP BY rc.CLASS_NUMBER
            ORDER BY rc.DATE_CONDUCTED DESC
               LIMIT read_offset, items_per_page
+            ;
+        END;
+    END IF;
+END$$
+
+CREATE DEFINER=root@localhost PROCEDURE get_class_details(
+    IN record_id INT
+    )   READS SQL DATA
+BEGIN
+    IF ( NOT EXISTS (
+         SELECT rc.CLASS_NUMBER
+           FROM rpfp.rpfp_class rc
+          WHERE rc.RPFP_CLASS_ID = record_id
+        )
+    ) THEN
+         SELECT NULL AS rpfpclass,
+                NULL AS typeclass,
+                NULL AS others_specify,
+                NULL AS barangay,
+                NULL AS class_no,
+                NULL AS date_conduct,
+                NULL AS lastname,
+                NULL AS firstname
+        ;
+    ELSE BEGIN
+             SELECT rc.RPFP_CLASS_ID AS rpfpclass,
+                    tc.TYPE_CLASS_DESC AS typeclass,
+                    rc.OTHERS_SPECIFY AS others_specify,
+                    lp.LOCATION_DESCRIPTION AS barangay,
+                    rc.CLASS_NUMBER AS class_no,
+                    rc.DATE_CONDUCTED AS date_conduct
+               FROM rpfp.rpfp_class rc
+          LEFT JOIN rpfp.lib_type_class tc ON tc.TYPE_CLASS_ID = rc.TYPE_CLASS_ID
+          LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
+              WHERE rc.RPFP_CLASS_ID = record_id
+           GROUP BY rc.CLASS_NUMBER
             ;
         END;
     END IF;
