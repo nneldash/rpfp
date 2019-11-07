@@ -29,11 +29,40 @@ $form1 = FormClass::getFormFromVariable($form1);
 		.highlight > td > input {
 			background: rgb(220, 244, 239);
 		}
+
+		a {
+			text-decoration: none;
+			display: inline-block;
+			padding: 8px 16px;
+		}
+
+		a:hover {
+			background-color: #ddd;
+			color: black;
+		}
+
+		.previous {
+			background-color: #f1f1f1;
+			color: black;
+		}
+
+		.next {
+			background-color: #4CAF50;
+			color: white;
+		}
+
+		.round {
+			border-radius: 50%;
+		}
 	</style>
 <?php } ?>
 
 <link href="<?= base_url('assets/css/form.css') ?>" rel="stylesheet">
 
+<div class="container-fluid text-center">
+	<a href="#" class="previous">&laquo; Previous</a>
+	<a href="#" class="next">Next &raquo;</a>
+</div>
 <div class="body-padding">
 	<div class="border-2">
 		<div class="row">
@@ -399,7 +428,7 @@ $form1 = FormClass::getFormFromVariable($form1);
 						</thead>
 						<tbody>
 							<?php for($i = 0; $i <= 9; $i++): ?>
-								<tr class="approveCheck">
+								<tr class="approveCheck tr1<?= $i?>">
 									<?php if (!$is_pdf): ?>
 										<?php if($isRegionalDataManager): ?>
 											<td rowspan="2" class="back-eee padding-0">
@@ -413,18 +442,18 @@ $form1 = FormClass::getFormFromVariable($form1);
 									<?php endif; ?>
 									<td class="text-center" style="border-left: none" rowspan="2">
 										<p class="small"><?= $i + 1; ?></p>
-										<input type="hidden" id="isDuplicate" value="" name="duplicate['<?= $i; ?>']" />
 									</td>
 									
 									<td class="small" style="padding: 5px;">
 										<input type="hidden" name="individual_id1['<?= $i; ?>']"/>
+										<input type="hidden" class="loopIndex1" value="<?= $i;?>" />
 										<?php
 				                            echo HtmlHelper::inputPdf(
 				                                $is_pdf,
 				                                "",
 				                                "text",
 				                                "name_participant1[".$i."]",
-				                                "padding-l10",
+				                                "padding-l10 namePart1",
 				                                ""
 				                            );
 				                        ?>
@@ -436,7 +465,7 @@ $form1 = FormClass::getFormFromVariable($form1);
 				                                "",
 				                                "text",
 				                                "sex1[".$i."]",
-				                                "text-center sexValid",
+				                                "text-center sexValid gender1",
 				                                "1"
 				                            );
 				                        ?>
@@ -453,17 +482,20 @@ $form1 = FormClass::getFormFromVariable($form1);
 				                            );
 				                        ?>
 									</td>
-									<td class="small text-center">
-				                        <?php
-				                            echo HtmlHelper::inputMaskPdf(
-				                            	$is_pdf,
-				                            	"",
-				                                "text",
-				                                "age1[".$i."]",
-				                                "text-center birthAge",
-				                                "'mask': '99-99-9999/99'"
-				                            );
-				                        ?>
+									<td class="small">
+										<div style="display: inline-flex; border: 1px solid transparent;">
+					                        <?php
+					                            echo HtmlHelper::inputMaskPdf(
+					                            	$is_pdf,
+					                            	"",
+					                                "text",
+					                                "age1[".$i."]",
+					                                "text-center birthAge bday1",
+					                                "'mask': '99-99-9999'"
+					                            );
+					                        ?> /
+					                        <input type="text" name="age1[<?=$i?>]" maxlength="2" class="text-center getAge1" readonly />
+										</div>								
 									</td>
 									<td class="small text-center" rowspan="2">
 										<?php
@@ -579,16 +611,17 @@ $form1 = FormClass::getFormFromVariable($form1);
 										<?php endif; ?>
 									<?php endif; ?>
 								</tr>
-								<tr>
+								<tr class="tr2<?= $i; ?>">
 									<td class="small" style="padding: 5px;">
-									<input type="hidden" name="individual_id2['.$i.']"/>
+										<input type="hidden" name="individual_id2['<?= $i; ?>']"/>
+										<input type="hidden" class="loopIndex2" value="<?= $i;?>" />
 										<?php
 				                            echo HtmlHelper::inputPdf(
 				                            	$is_pdf,
 				                                "",
 				                                "text",
 				                                "name_participant2[".$i."]",
-				                                "padding-l10",
+				                                "padding-l10 namePart2",
 				                                ""
 				                            );
 				                        ?>
@@ -600,7 +633,7 @@ $form1 = FormClass::getFormFromVariable($form1);
 				                                "",
 				                                "text",
 				                                "sex2[".$i."]",
-				                                "text-center",
+				                                "text-center gender2",
 				                                "1"
 				                            );
 				                        ?>
@@ -617,17 +650,20 @@ $form1 = FormClass::getFormFromVariable($form1);
 				                            );
 				                        ?>
 									</td>
-									<td class="small text-center">
-										<?php
-			                            	echo HtmlHelper::inputMaskPdf(
-				                            	$is_pdf,
-				                            	"",
-				                                "text",
-				                                "age2[".$i."]",
-				                                "text-center birthAge",
-				                                "'mask': '99-99-9999/99'"
-				                            );
-			                        	?>
+									<td class="small">
+										<div style="display: inline-flex; border: 1px solid transparent;">
+											<?php
+				                            	echo HtmlHelper::inputMaskPdf(
+					                            	$is_pdf,
+					                            	"",
+					                                "text",
+					                                "age2[".$i."]",
+					                                "text-center birthAge bday2",
+					                                "'mask': '99-99-9999'"
+					                            );
+				                        	?> /
+				                        	<input type="text" name="age2[<?=$i?>]" maxlength="2" class="text-center getAge2" readonly />
+										</div>
 									</td>
 									<td class="small text-center">
 										<?php
