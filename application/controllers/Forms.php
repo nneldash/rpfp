@@ -36,7 +36,7 @@ class Forms extends CI_Controller
         $this->load->model('FormModel');
 
         $classId = $this->input->get('rpfpId');
-
+        
         $form1 = $this->FormModel->getForm1($classId);
 
         $this->load->model('ProfileModel');
@@ -116,8 +116,8 @@ class Forms extends CI_Controller
 
             $couple->FirstEntry = $this->getFirstEntry($i);
             $couple->SecondEntry = $this->getSecondEntry($i);
-            $couple->ModernFp = $this->getModernFp($i);
-            $couple->TraditionalFp = $this->getTraditionalFp($i);
+            // $couple->ModernFp = $this->getModernFp($i);
+            // $couple->TraditionalFp = $this->getTraditionalFp($i);
 
             $listCouple->append($couple);
         }
@@ -133,9 +133,9 @@ class Forms extends CI_Controller
             return $individual;
         }
 
-        if ($this->input->post('sex1')[$i] != 1) {
-            return $this->getSecondEntry($i);
-        }
+        // if ($this->input->post('sex1')[$i] != 1) {
+        //     return $this->getSecondEntry($i);
+        // }
 
 
         $individual->Id = $this->input->post('individual_id1')[$i];
@@ -164,9 +164,9 @@ class Forms extends CI_Controller
             return $individual;
         }
 
-        if ($this->input->post('sex2')[$i] != 2) {
-            return $this->getFirstEntry($i);
-        }
+        // if ($this->input->post('sex2')[$i] != 2) {
+        //     return $this->getFirstEntry($i);
+        // }
 
         $individual->Id = $this->input->post('individual_id2')[$i];
 

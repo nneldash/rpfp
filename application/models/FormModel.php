@@ -23,28 +23,27 @@ class FormModel extends BaseModel
     public function saveForm1(FormInterface $form)
     {
         $class_id = $this->saveSeminar($form->Seminar);
+
         if ($class_id == 'INVALID LOCATION') {
             return 'error1';
             exit;
         } elseif ($class_id == 'INVALID ROLE') {
             return 'error2';
             exit;
+        } elseif ($class_id == 'SAVE SUCCESSFUL') {
+            $class_id = $form->Seminar->ClassId;
+        } else {
+            $class_id = explode(" ", $class_id);
+            $class_id = $class_id[2];
         }
 
-        $class_id = explode(" ", $class_id);
-        
-        if (!$class_id) {
+        if (!$class_id) { 
             /** return exception or error message */
             return;
         }
 
-        foreach ($form->ListCouple as $current_couple) {
-            $current_couple = CoupleClass::getFromVariable($current_couple);
-
-            if (!$this->saveCouple($class_id[2], $current_couple)) {
-                return "may error pa ito";
-            }
-        }     
+        print_r($this->saveCouple($class_id, $form->ListCouple));
+  
     }
 
     public function saveSeminar(SeminarInterface $data)
@@ -63,24 +62,75 @@ class FormModel extends BaseModel
         return $this->saveToDb($method, $params);
     }
 
-    public function saveCouple(int $class_id, CoupleInterface $couple)
+    public function saveCouple(int $class_id, ListCoupleInterface $listCouple)
     {
-        print_r($class_id);exit;
-        $method = "encoder_save_couple";
-        $husband = $couple->Husband();
-        $wife = $couple->Wife();
-        $traditional = $couple->TraditionalFp;
-        $modern = $couple->ModernFp;
-
-        $params = [
-            $class_id == 0 ? BLANK : $class_id,
-            $couple->Id == N_A ? BLANK : $couple->Id,
+        foreach ($listCouple as $current_couple) {
+            $couple = CoupleClass::getFromVariable($current_couple);
             
-            $couple->Address_St == N_A ? BLANK : $couple->Address_St,
-            $couple->Address_Brgy == N_A ? BLANK : $couple->Address_Brgy,
-            $couple->Address_City == N_A ? BLANK : $couple->Address_City,
-            $couple->Address_HH_No == N_A ? BLANK : $couple->Address_HH_No,
-            $couple->NumberOfChildren == N_A ? BLANK : $couple->NumberOfChildren,
+            $method = "encoder_save_couple";
+
+            $params1 = [
+                $couple->Id == N_A ? BLANK : $couple->Id,
+                $class_id == 0 ? BLANK : $class_id,
+                
+                $couple->Address_St == N_A ? BLANK : $couple->Address_St,
+                $couple->Address_Brgy == N_A ? BLANK : $couple->Address_Brgy,
+                $couple->Address_City == N_A ? BLANK : $couple->Address_City,
+                $couple->Address_HH_No == N_A ? BLANK : $couple->Address_HH_No,
+                $couple->NumberOfChildren == N_A ? BLANK : $couple->NumberOfChildren
+            ];
+            
+            $couple_id = $this->saveToDb($method, $params1);
+            
+            $couple_id = explode(" ", $couple_id);
+            $couple_id = $couple_id[2];
+            
+            $husband = $couple->FirstEntry;
+            $wife = $couple->SecondEntry;
+
+            $method2 = 'encoder_save_individual';
+
+            $params2 = [
+                $couple_id == 0 ? BLANK : $couple_id,
+                $husband->Id == N_A ? BLANK : $husband->Id,
+                $husband->Name->Surname == N_A ? BLANK : $husband->Name->Surname,
+                $husband->Name->Firstname == N_A ? BLANK : $husband->Name->Firstname,
+                $husband->Name->Middlename == N_A ? BLANK : $husband->Name->Middlename,
+                $husband->Name->Extname == N_A ? BLANK : $husband->Name->Extname,
+                $husband->Age == N_A ? BLANK : $husband->Age,
+                $husband->Birthdate == N_A ? BLANK : $husband->Birthdate->format('Y-m-d'),
+                $husband->CivilStatus == N_A ? BLANK : $husband->CivilStatus,
+                $husband->HighestEducation == N_A ? BLANK : $husband->HighestEducation,
+                $husband->Attendee == N_A ? BLANK : $husband->Attendee,
+
+                $wife->Id == N_A ? BLANK : $wife->Id,
+                $wife->Name->Surname == N_A ? BLANK : $wife->Name->Surname,
+                $wife->Name->Firstname == N_A ? BLANK : $wife->Name->Firstname,
+                $wife->Name->Middlename == N_A ? BLANK : $wife->Name->Middlename,
+                $wife->Age == N_A ? BLANK : $wife->Age,
+                $wife->Birthdate == N_A ? BLANK : $wife->Birthdate->format('Y-m-d'),
+                $wife->CivilStatus == N_A ? BLANK : $wife->CivilStatus,
+                $wife->HighestEducation == N_A ? BLANK : $wife->HighestEducation,
+                $wife->Attendee == N_A ? BLANK : $wife->Attendee
+            ];
+            
+            $this->saveToDb($method2, $params2);
+        }
+        // $method = "encoder_save_couple";
+        // $husband = $couple->Husband();
+        // $wife = $couple->Wife();
+        // $traditional = $couple->TraditionalFp;
+        // $modern = $couple->ModernFp;
+
+        // $params = [
+        //     $class_id == 0 ? BLANK : $class_id,
+        //     $couple->Id == N_A ? BLANK : $couple->Id,
+            
+        //     $couple->Address_St == N_A ? BLANK : $couple->Address_St,
+        //     $couple->Address_Brgy == N_A ? BLANK : $couple->Address_Brgy,
+        //     $couple->Address_City == N_A ? BLANK : $couple->Address_City,
+        //     $couple->Address_HH_No == N_A ? BLANK : $couple->Address_HH_No,
+        //     $couple->NumberOfChildren == N_A ? BLANK : $couple->NumberOfChildren,
 
             // $husband->Id == N_A ? BLANK : $husband->Id,
             // $husband->Name->Surname == N_A ? BLANK : $husband->Name->Surname,
@@ -109,9 +159,9 @@ class FormModel extends BaseModel
             // $traditional->Type == N_A ? BLANK : $traditional->Type,
             // $traditional->Status == N_A ? BLANK : $traditional->Status,
             // $traditional->ReasonForUse == N_A ? BLANK : $traditional->ReasonForUse
-        ];
+        // ];
 
-        return $this->saveToDb($method, $params);
+        // return $this->saveToDb($method, $params);
     }
 
     public function saveServiceSlip(int $couple_id, ServiceSlipInterface $data)
@@ -168,7 +218,7 @@ class FormModel extends BaseModel
         return $form1;
     }
 
-    public function getForm1Seminar($classId) : SeminarInterface
+    public function getForm1Seminar($classId = null) : SeminarInterface
     {
         return $this->fromDbGetSpecific(
             'SeminarClass',
@@ -182,6 +232,7 @@ class FormModel extends BaseModel
                 'DateConducted' => 'date_conduct',
                 'Location' => array(
                     'Barangay' => array(
+                        'Code' => 'psgc_code',
                         'Description' => 'barangay'
                     )
                 )

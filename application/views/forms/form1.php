@@ -109,7 +109,7 @@ $form1 = FormClass::getFormFromVariable($form1);
 					</div>
 			    </div>
 			<?php endif; ?>
-			<input type="hidden" name="class_id" />
+			<input type="hidden" name="class_id" value="<?= (!empty($_GET['rpfpId']) ? $_GET['rpfpId'] : 0); ?>"/>
 			<div class="border-t1 table-responsive">
 				<div style="padding-top: 10px"></div>
 				<table style="float: left" class="table">
@@ -251,7 +251,7 @@ $form1 = FormClass::getFormFromVariable($form1);
 		                                ""
 		                            );
 								?>
-								<input type="hidden" name="barangay" value="<?=$form1->Seminar->Location->Barangay->Code?>">
+								<input type="hidde" name="barangay" value="<?=$form1->Seminar->Location->Barangay->Code?>">
 		                    </span>
 						</td>
 					</tr>
