@@ -128,7 +128,7 @@ class Login extends CI_Controller
 
     public function logoffSystem()
     {
-        $header['title'] = 'RPFP - Login';
+        $header['title'] = 'Online RPFP Monitoring System - Login';
 
         if ($this->input->get('timeout') == 1) {
             $this->loadLoginPage($header);

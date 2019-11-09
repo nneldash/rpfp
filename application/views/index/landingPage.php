@@ -22,8 +22,8 @@
             <div class="container">
                 <div class="row">
                     <div class="col-xs-12 header-margin">
-                        <h3 class="aubrey">Welcome to RPFP version 3!</h3>
-                        <p class="aubrey subheader">Responsible Parenthood and Family Planning</p>
+                        <h3 class="aubrey">Welcome to the Online RPFP Monitoring System</h3>
+                        <p class="aubrey subheader">A Project of the Responsible Parenthood and Family Planning Program of the Commission on Population and Development</p>
                     </div>
                 </div>
             </div>

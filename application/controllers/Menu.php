@@ -95,7 +95,7 @@ class Menu extends CI_Controller
     public function summary()
     {
         if (!$this->LoginModel->isLoggedIn()) {
-            $header['title'] =' RPFP Online';
+            $header['title'] =' Online RPFP Monitoring System';
 
             $this->load->view("includes/header", $header);
             $this->load->view('index/landingPage');
@@ -103,7 +103,7 @@ class Menu extends CI_Controller
             return;
         }
 
-        $title = 'RPFP Online | Accomplishment Report';
+        $title = 'Online RPFP Monitoring System | Accomplishment Report';
 
         $this->load->model('ProfileModel');
         $isPMED = $this->ProfileModel->isPMED();
@@ -130,7 +130,7 @@ class Menu extends CI_Controller
     public function search()
     {
         if (!$this->LoginModel->isLoggedIn()) {
-            $header['title'] =' RPFP Online';
+            $header['title'] =' Online RPFP Monitoring System';
 
             $this->load->view("includes/header", $header);
             $this->load->view('index/landingPage');
@@ -138,7 +138,7 @@ class Menu extends CI_Controller
             return;
         }
 
-        $title = 'RPFP Online | Search Form 1';
+        $title = 'Online RPFP Monitoring System | Search Form 1';
 
         $this->load->model('ProfileModel');
         $isPMED = $this->ProfileModel->isPMED();
@@ -165,7 +165,7 @@ class Menu extends CI_Controller
     public function printSummary()
     {
         if (!$this->LoginModel->isLoggedIn()) {
-            $header['title'] =' RPFP Online';
+            $header['title'] =' Online RPFP Monitoring System';
 
             $this->load->view("includes/header", $header);
             $this->load->view('index/landingPage');
@@ -184,7 +184,7 @@ class Menu extends CI_Controller
 
             $html = $this->load->view('menu/summary', array('is_pdf' => true), true);
 
-            $mpdf->SetTitle('RPFP Online | Accomplishment Report');
+            $mpdf->SetTitle('Online RPFP Monitoring System | Accomplishment Report');
             $mpdf->WriteHTML($html);
             $mpdf->Output(date('Ymd') . ' - Accomplishment Report.pdf', 'I');
         } catch (\Mpdf\MpdfException $e) {
@@ -195,7 +195,7 @@ class Menu extends CI_Controller
     public function dashboard()
     {
         if (!$this->LoginModel->isLoggedIn()) {
-            $header['title'] =' RPFP Online';
+            $header['title'] =' Online RPFP Monitoring System';
 
             $this->load->view("includes/header", $header);
             $this->load->view('index/landingPage');
@@ -203,7 +203,7 @@ class Menu extends CI_Controller
             return;
         }
 
-        $title = 'RPFP Online | Dashboard';
+        $title = 'Online RPFP Monitoring System | Dashboard';
 
         $this->load->model('ProfileModel');
         $isPMED = $this->ProfileModel->isPMED();
@@ -230,7 +230,7 @@ class Menu extends CI_Controller
     public function formA()
     {
         if (!$this->LoginModel->isLoggedIn()) {
-            $header['title'] =' RPFP Online';
+            $header['title'] =' Online RPFP Monitoring System';
 
             $this->load->view("includes/header", $header);
             $this->load->view('index/landingPage');
@@ -238,7 +238,7 @@ class Menu extends CI_Controller
             return;
         }
 
-        $title = 'RPFP Online | Form A Data List';
+        $title = 'Online RPFP Monitoring System | Form A Data List';
 
         $this->load->model('ProfileModel');
         $isPMED = $this->ProfileModel->isPMED();
@@ -265,7 +265,7 @@ class Menu extends CI_Controller
     public function formB()
     {
         if (!$this->LoginModel->isLoggedIn()) {
-            $header['title'] =' RPFP Online';
+            $header['title'] =' Online RPFP Monitoring System';
 
             $this->load->view("includes/header", $header);
             $this->load->view('index/landingPage');
@@ -273,7 +273,7 @@ class Menu extends CI_Controller
             return;
         }
 
-        $title = 'RPFP Online | Form B Data List';
+        $title = 'Online RPFP Monitoring System | Form B Data List';
 
         $this->load->model('ProfileModel');
         $isPMED = $this->ProfileModel->isPMED();
@@ -300,7 +300,7 @@ class Menu extends CI_Controller
     public function formC()
     {
         if (!$this->LoginModel->isLoggedIn()) {
-            $header['title'] =' RPFP Online';
+            $header['title'] =' Online RPFP Monitoring System';
 
             $this->load->view("includes/header", $header);
             $this->load->view('index/landingPage');
@@ -308,7 +308,7 @@ class Menu extends CI_Controller
             return;
         }
 
-        $title = 'RPFP Online | Form C Data List';
+        $title = 'Online RPFP Monitoring System | Form C Data List';
 
         $this->load->model('ProfileModel');
         $isPMED = $this->ProfileModel->isPMED();
@@ -335,7 +335,7 @@ class Menu extends CI_Controller
     public function accomplishment()
     {
         if (!$this->LoginModel->isLoggedIn()) {
-            $header['title'] =' RPFP Online';
+            $header['title'] =' Online RPFP Monitoring System';
 
             $this->load->view("includes/header", $header);
             $this->load->view('index/landingPage');
@@ -343,7 +343,7 @@ class Menu extends CI_Controller
             return;
         }
 
-        $title = 'RPFP Online | Form Accomplishment Report Data List';
+        $title = 'Online RPFP Monitoring System | Form Accomplishment Report Data List';
 
         $this->load->model('ProfileModel');
         $isPMED = $this->ProfileModel->isPMED();

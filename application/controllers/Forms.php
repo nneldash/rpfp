@@ -22,7 +22,7 @@ class Forms extends CI_Controller
         }
 
         if (!$this->LoginModel->isLoggedIn()) {
-            $header['title'] =' RPFP Online';
+            $header['title'] =' Online RPFP Monitoring System';
 
             $this->load->view("includes/header", $header);
             $this->load->view('index/landingPage');
@@ -30,7 +30,7 @@ class Forms extends CI_Controller
             return;
         }
 
-        $header['title'] =' RPFP Online | Form 1';
+        $header['title'] =' Online RPFP Monitoring System | Form 1';
 
         $this->load->model('ProfileModel');
         $this->load->model('FormModel');
@@ -59,7 +59,7 @@ class Forms extends CI_Controller
     public function saveForm1()
     {
         if (!$this->LoginModel->isLoggedIn()) {
-            $header['title'] =' RPFP Online';
+            $header['title'] =' Online RPFP Monitoring System';
 
             $this->load->view("includes/header", $header);
             $this->load->view('index/landingPage');
@@ -237,7 +237,7 @@ class Forms extends CI_Controller
     public function formA()
     {
         if (!$this->LoginModel->isLoggedIn()) {
-            $header['title'] =' RPFP Online';
+            $header['title'] =' Online RPFP Monitoring System';
 
             $this->load->view("includes/header", $header);
             $this->load->view('index/landingPage');
@@ -245,7 +245,7 @@ class Forms extends CI_Controller
             return;
         }
 
-        $header['title'] = 'RPFP Online | Form A';
+        $header['title'] = 'Online RPFP Monitoring System | Form A';
 
         $this->load->model('FormModel');
 
@@ -259,7 +259,7 @@ class Forms extends CI_Controller
     public function formB()
     {
         if (!$this->LoginModel->isLoggedIn()) {
-            $header['title'] =' RPFP Online';
+            $header['title'] =' Online RPFP Monitoring System';
 
             $this->load->view("includes/header", $header);
             $this->load->view('index/landingPage');
@@ -267,7 +267,7 @@ class Forms extends CI_Controller
             return;
         }
 
-        $header['title'] = 'RPFP Online | Form B';
+        $header['title'] = 'Online RPFP Monitoring System | Form B';
 
         $this->load->view('includes/header', $header);
         $this->load->view('forms/formb', array('is_pdf' => false));
@@ -277,7 +277,7 @@ class Forms extends CI_Controller
     public function formC()
     {
         if (!$this->LoginModel->isLoggedIn()) {
-            $header['title'] =' RPFP Online';
+            $header['title'] =' Online RPFP Monitoring System';
 
             $this->load->view("includes/header", $header);
             $this->load->view('index/landingPage');
@@ -285,7 +285,7 @@ class Forms extends CI_Controller
             return;
         }
 
-        $header['title'] = 'RPFP Online | Form C';
+        $header['title'] = 'Online RPFP Monitoring System | Form C';
 
         $this->load->view('includes/header', $header);
         $this->load->view('forms/formc', array('is_pdf' => false));
@@ -295,7 +295,7 @@ class Forms extends CI_Controller
     public function serviceSlip()
     {
         if (!$this->LoginModel->isLoggedIn()) {
-            $header['title'] =' RPFP Online';
+            $header['title'] =' Online RPFP Monitoring System';
 
             $this->load->view("includes/header", $header);
             $this->load->view('index/landingPage');
@@ -307,14 +307,14 @@ class Forms extends CI_Controller
 
         $serviceSlip = $this->FormModel->getServiceSlip();
 
-        $header['title'] = 'RPFP Online | Service Slip';
+        $header['title'] = 'Online RPFP Monitoring System | Service Slip';
         $this->load->view('forms/serviceSlip', array('slip' => $serviceSlip, 'is_pdf' => false));
     }
 
     public function viewform1()
     {
         if (!$this->LoginModel->isLoggedIn()) {
-            $header['title'] =' RPFP Online';
+            $header['title'] =' Online RPFP Monitoring System';
 
             $this->load->view("includes/header", $header);
             $this->load->view('index/landingPage');
@@ -336,7 +336,7 @@ class Forms extends CI_Controller
 
             $html = $this->load->view('forms/form1', array('form1' => $form1, 'is_pdf' => true), true);
 
-            $mpdf->setTitle('RPFP Online | Form 1');
+            $mpdf->setTitle('Online RPFP Monitoring System | Form 1');
             $mpdf->WriteHTML($html);
             $mpdf->Output(date('Ymd') . ' - Form 1.pdf', 'I');
         } catch (\Mpdf\MpdfException $e) {
@@ -347,7 +347,7 @@ class Forms extends CI_Controller
     public function viewforma()
     {
         if (!$this->LoginModel->isLoggedIn()) {
-            $header['title'] =' RPFP Online';
+            $header['title'] =' Online RPFP Monitoring System';
 
             $this->load->view("includes/header", $header);
             $this->load->view('index/landingPage');
@@ -366,7 +366,7 @@ class Forms extends CI_Controller
 
             $html = $this->load->view('forms/forma', array('is_pdf' => true), true);
 
-            $mpdf->setTitle('RPFP Online | Form A');
+            $mpdf->setTitle('Online RPFP Monitoring System | Form A');
             $mpdf->WriteHTML($html);
             $mpdf->Output(date('Ymd') . ' - Form A.pdf', 'I');
         } catch (\Mpdf\MpdfException $e) {
@@ -377,7 +377,7 @@ class Forms extends CI_Controller
     public function viewformb()
     {
         if (!$this->LoginModel->isLoggedIn()) {
-            $header['title'] =' RPFP Online';
+            $header['title'] =' Online RPFP Monitoring System';
 
             $this->load->view("includes/header", $header);
             $this->load->view('index/landingPage');
@@ -396,7 +396,7 @@ class Forms extends CI_Controller
 
             $html = $this->load->view('forms/formb', array('is_pdf' => true), true);
 
-            $mpdf->setTitle('RPFP Online | Form B');
+            $mpdf->setTitle('Online RPFP Monitoring System | Form B');
             $mpdf->WriteHTML($html);
             $mpdf->Output(date('Ymd') . ' - Form B.pdf', 'I');
         } catch (\Mpdf\MpdfException $e) {
@@ -407,7 +407,7 @@ class Forms extends CI_Controller
     public function viewformc()
     {
         if (!$this->LoginModel->isLoggedIn()) {
-            $header['title'] =' RPFP Online';
+            $header['title'] =' Online RPFP Monitoring System';
 
             $this->load->view("includes/header", $header);
             $this->load->view('index/landingPage');
@@ -426,7 +426,7 @@ class Forms extends CI_Controller
             
             $html = $this->load->view('forms/formC', array('is_pdf' => true), true);
 
-            $mpdf->setTitle('RPFP Online | Form C');
+            $mpdf->setTitle('Online RPFP Monitoring System | Form C');
             $mpdf->WriteHTML($html);
             $mpdf->Output(date('Ymd') . ' - Form C.pdf', 'I');
         } catch (\Mpdf\MpdfException $e) {

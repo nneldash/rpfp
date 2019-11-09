@@ -18,7 +18,7 @@ class Profile extends CI_Controller
     public function index($params = array()) 
     {
         if (!$this->LoginModel->isLoggedIn()) {
-            $header['title'] =' RPFP Online';
+            $header['title'] =' Online RPFP Monitoring System';
 
             $this->load->view("includes/header", $header);
             $this->load->view('index/landingPage');
@@ -27,7 +27,7 @@ class Profile extends CI_Controller
         }
 
         $profile = $this->getOwnProfile();
-        $the_title = 'Profile | RPFP Online';
+        $the_title = 'Profile | Online RPFP Monitoring System';
 
         $this->load->view('includes/header', array('title' => $the_title));
         $this->load->view('profile/profile.php', array('profile' => $profile));

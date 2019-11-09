@@ -2,7 +2,7 @@
 defined('BASEPATH') or exit('No direct script access allowed');
 
 if (empty($title)) {
-    $title = 'RPFP Online | Pending';
+    $title = 'Online RPFP Monitoring System | Pending';
 }
 ?>
 <script>document.querySelector("head title").innerHTML = '<?=$title?>';</script>
