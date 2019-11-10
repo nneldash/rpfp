@@ -9,6 +9,8 @@ class Menu extends CI_Controller
         $this->load->model('CoupleModel');
         $this->load->library('couple_list/ApproveClass');
         $this->load->library('couple_list/PendingClass');
+        $this->load->model('AccomplishmentModel');
+        $this->load->library('accomplishment_list/AccomplishmentClass');
     }
 
     public function index()
@@ -94,14 +96,28 @@ class Menu extends CI_Controller
 
     public function summary()
     {
+    //     if (!$this->LoginModel->isLoggedIn()) {
+    //         $header['title'] =' Online RPFP Monitoring System';
+
+    //         $this->load->view("includes/header", $header);
+    //         $this->load->view('index/landingPage');
+
+    //         return;
+    //     }
+
         if (!$this->LoginModel->isLoggedIn()) {
-            $header['title'] =' Online RPFP Monitoring System';
-
-            $this->load->view("includes/header", $header);
-            $this->load->view('index/landingPage');
-
+            redirect('Login');
             return;
         }
+
+        // $accomplishment = $this->AccomplishmentModel->getAccomplishmentList();
+        // if ($this->input->server('REQUEST_METHOD') == 'POST') {
+        //     $this->load->view('menu/summary', array('accomplishment' => $accomplishment, 'reload' => true));
+        //     return;
+        // }
+
+        // $this->load->model('AccomplishmentModel');
+        // $accomplishment = $this->AccomplishmentModel->getAccomplishmentList();
 
         $title = 'Online RPFP Monitoring System | Accomplishment Report';
 
@@ -332,40 +348,40 @@ class Menu extends CI_Controller
         $this->load->view('includes/admin_footer');
     }
 
-    public function accomplishment()
-    {
-        if (!$this->LoginModel->isLoggedIn()) {
-            $header['title'] =' Online RPFP Monitoring System';
+    // public function accomplishment()
+    // {
+    //     if (!$this->LoginModel->isLoggedIn()) {
+    //         $header['title'] =' Online RPFP Monitoring System';
 
-            $this->load->view("includes/header", $header);
-            $this->load->view('index/landingPage');
+    //         $this->load->view("includes/header", $header);
+    //         $this->load->view('index/landingPage');
             
-            return;
-        }
+    //         return;
+    //     }
 
-        $title = 'Online RPFP Monitoring System | Form Accomplishment Report Data List';
+    //     $title = 'Online RPFP Monitoring System | Form Accomplishment Report Data List';
 
-        $this->load->model('ProfileModel');
-        $isPMED = $this->ProfileModel->isPMED();
-        $isEncoder = $this->ProfileModel->isEncoder();
-        $isFocalPerson = $this->ProfileModel->isFocalPerson();
-        $isRegionalDataManager = $this->ProfileModel->isRegionalDataManager();
-        $isITDMU = $this->ProfileModel->isITDMU();
+    //     $this->load->model('ProfileModel');
+    //     $isPMED = $this->ProfileModel->isPMED();
+    //     $isEncoder = $this->ProfileModel->isEncoder();
+    //     $isFocalPerson = $this->ProfileModel->isFocalPerson();
+    //     $isRegionalDataManager = $this->ProfileModel->isRegionalDataManager();
+    //     $isITDMU = $this->ProfileModel->isITDMU();
 
-        $this->load->view(
-            'includes/admin_header',
-            array(
-                'isEncoder' => $isEncoder,
-                'isPMED' => $isPMED,
-                'isFocalPerson' => $isFocalPerson,
-                'isRegionalDataManager' => $isRegionalDataManager,
-                'isITDMU' => $isITDMU,
-                'title' => $title
-            )
-        );
-        $this->load->view('menu/summary', array('is_pdf' => false), false);
-        $this->load->view('includes/admin_footer');
-    }
+    //     $this->load->view(
+    //         'includes/admin_header',
+    //         array(
+    //             'isEncoder' => $isEncoder,
+    //             'isPMED' => $isPMED,
+    //             'isFocalPerson' => $isFocalPerson,
+    //             'isRegionalDataManager' => $isRegionalDataManager,
+    //             'isITDMU' => $isITDMU,
+    //             'title' => $title
+    //         )
+    //     );
+    //     $this->load->view('menu/summary', array('is_pdf' => false), false);
+    //     $this->load->view('includes/admin_footer');
+    // }
 
     public function pendingCoupleModal()
     {

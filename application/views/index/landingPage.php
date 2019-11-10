@@ -8,7 +8,7 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <img  class="login-logo navbar-brand img-size" src="<?= base_url('assets/images/popcom_logo-white.png')?>" alt="POPCOM_LOGO" style="width: 50%;" />
+                    <!-- <img  class="login-logo navbar-brand img-size" src="<?= base_url('assets/images/popcom_logo-white.png')?>" alt="POPCOM_LOGO" style="width: 50%;" /> -->
                 </div>
                 <div id="navbar" class="navbar-collapse collapse">
                     <ul class="nav navbar-nav navbar-right margin-t12">
@@ -22,8 +22,8 @@
             <div class="container">
                 <div class="row">
                     <div class="col-xs-12 header-margin">
-                        <h3 class="aubrey">Welcome to the Online RPFP Monitoring System</h3>
-                        <p class="aubrey subheader">A Project of the Responsible Parenthood and Family Planning Program of the Commission on Population and Development</p>
+                        <h3 class="sans">Welcome to the Online RPFP Monitoring System Release Version 3.0</h3>
+                        <p class="sans subheader">A Project of the Responsible Parenthood and Family Planning Program of the Commission on Population and Development</p>
                     </div>
                 </div>
             </div>
