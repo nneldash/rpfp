@@ -3,7 +3,7 @@
 <?php
 
 if (empty($title)) {
-    $title = 'RPFP Online';
+    $title = 'Online RPFP Monitoring System';
 }
 
 ?>    
@@ -143,11 +143,11 @@ if (empty($title)) {
                                                 <i class="fa fa-search"></i> Search Form
                                             </a>
                                         </li> -->
-                                        <li>
+                                        <!-- <li>
                                             <a href="<?= base_url('menu/accomplishment')?>">
                                                 <i class="fa fa-clipboard"></i> Report
                                             </a>
-                                        </li>
+                                        </li> -->
                                     <?php endif; ?>
                                     <li>
                                         <a href="<?= base_url('login/logoffUser')?>">
