@@ -121,7 +121,7 @@ function checkDuplicate()
 		var name = $(this).val();
 		var loopIndex = $(this).closest('tr').find('input[class="loopIndex2"]').val();
 
-		changeSex(name, loopIndex);
+		getSex(name, loopIndex);
 	});
 }
 
@@ -129,24 +129,25 @@ function changeSex(name, index)
 {
 	$('.gender1').change(function(){
 		var sex = $(this).val();
-		if (sex === 'F' || sex === 'f' || sex === 'M' || sex === 'm') {
+		var sex = sex.toUpperCase();
+
+		if (sex === 'F' || sex === 'M') {
+			$('.tr2' + index + ' td .getSex1').val(sex);
+
 			$(this).closest('td').removeAttr('data-tip', 'Invalid Input!');
 			$(this).closest('td').removeClass('has-duplicate');
 			$(this).removeClass('has-duplicate');
-			$('input[name="saveform1"]').removeAttr('disabled', 'disabled');
 
-			if (sex === 'M' || sex === 'm') {
+			if (sex === 'M') {
 				gender = 1;
-			} else if (sex === 'F' || sex === 'f') {
+			} else if (sex === 'F') {
 				gender = 2;
 			}
 
-			getSex(name, sex, index);
-			getDate(name, gender, index);
+			getDate1(name, gender, index);
 		} else {
 			alert('Invalid Input!');
 
-			$('input[name="saveform1"]').attr('disabled', 'disabled');
 			$(this).closest('td').attr('data-tip', 'Invalid Input!');
 			$(this).closest('td').addClass('has-duplicate');
 			$(this).addClass('has-duplicate');
@@ -154,65 +155,63 @@ function changeSex(name, index)
 	});
 }
 
-function getSex(name, sex1, index)
+function getSex(name, index)
 {
+	var sex1 = $('.tr2' + index + ' td .getSex1').val();
+
 	$('.gender2').change(function() {
 		var sex2 = $(this).val();
-		if (sex1 === 'F' || sex1 === 'f') {
-			if (sex2 === 'M' || sex2 === 'm') {
+		var sex2 = sex2.toUpperCase();
+		if (sex1 === 'F') {
+			if (sex2 === 'M') {
 				gender = 1;
-				$(this).closest('td').removeAttr('data-tip', 'Invalid Input!');
+				$(this).closest('td').removeAttr('data-tip', 'Invalid Data!');
 				$(this).closest('td').removeClass('has-duplicate');
 				$(this).removeClass('has-duplicate');
-				$('input[name="saveform1"]').removeAttr('disabled', 'disabled');
 
-				getDate(name, gender, index);
+				getDate2(name, gender, index);
 			} else {
-				alert('Input value must be "M"');
+				alert('Data value must be "M"');
 
-				$('input[name="saveform1"]').attr('disabled', 'disabled');
-				$(this).closest('td').attr('data-tip', 'Invalid Input!');
+				$(this).closest('td').attr('data-tip', 'Invalid Data!');
 				$(this).closest('td').addClass('has-duplicate');
 				$(this).addClass('has-duplicate');
 			}
-		} else if (sex1 === 'M' || sex1 === 'm') {
-			if (sex2 === 'F' || sex2 === 'f') {
+		} else if (sex1 === 'M') {
+			if (sex2 === 'F') {
 				gender = 2;
-				$(this).closest('td').removeAttr('data-tip', 'Invalid Input!');
+				$(this).closest('td').removeAttr('data-tip', 'Invalid Data!');
 				$(this).closest('td').removeClass('has-duplicate');
 				$(this).removeClass('has-duplicate');
-				$('input[name="saveform1"]').removeAttr('disabled', 'disabled');
 
-				getDate(name, gender, index);
+				getDate2(name, gender, index);
 			} else {
-				alert('Input value must be "F"');
+				alert('Data value must be "F"');
 
-				$('input[name="saveform1"]').attr('disabled', 'disabled');
-				$(this).closest('td').attr('data-tip', 'Invalid Input!');
+				$(this).closest('td').attr('data-tip', 'Invalid Data!');
 				$(this).closest('td').addClass('has-duplicate');
 				$(this).addClass('has-duplicate');
 			}
 		} else {
-			alert('Invalid Input!');
+			alert('Invalid Data!');
 
-			$('input[name="saveform1"]').attr('disabled', 'disabled');
-			$(this).closest('td').attr('data-tip', 'Invalid Input!');
+			$(this).closest('td').attr('data-tip', 'Invalid Data!');
 			$(this).closest('td').addClass('has-duplicate');
 			$(this).addClass('has-duplicate');
 		}
 	});
 }
 
-function getDate(name, sex, index)
+function getDate1(name, sex, index)
 {
-	var name = name;
-	var nameArr = name.split(',');
 
-	var firstname = nameArr[0];
-	var surname = $.trim(nameArr[1]);
-	var extname = $.trim(nameArr[2]);
+	$('.tr1' + index + ' td .bday1').change(function(){
+		var nameArr = name.split(',');
 
-	$('.bday1').change(function(){
+		var firstname = nameArr[0];
+		var surname = $.trim(nameArr[1]);
+		var extname = $.trim(nameArr[2]);
+
 		var bday1 = $(this).val();
 		dob = new Date(bday1);
 		var today = new Date();
@@ -235,19 +234,34 @@ function getDate(name, sex, index)
 			'sex' 		: sex, 
 			'bday' 		: bday
 		}).done(function(result){
-			if(result === '1'){
-				$('.tr1' + index).addClass('has-duplicate');
-				$('.tr1' + index + ' td input').addClass('has-duplicate');
-				$('input[name="saveform1"]').attr('disabled', 'disabled');
-			} else {
-				$('.tr1' + index).removeClass('has-duplicate');
-				$('.tr1' + index + ' td input').removeClass('has-duplicate');
-				$('input[name="saveform1"]').removeAttr('disabled', 'disabled');
+			if (result === '1') {
+				$('.tr1' + index + ' td #isDuplicate1').val(result);
+				preventSave1(index);
 			}
+
+			var isDuplicate = $('.tr1' + index + ' td #isDuplicate1').val();
+			
+			if (isDuplicate === '1') {
+				$('.tr1' + index + ' td').addClass('has-duplicate');
+				$('.tr1' + index + ' td input').addClass('has-duplicate');				
+			} else {
+				$('.tr1' + index + ' td').removeClass('has-duplicate');
+				$('.tr1' + index + ' td input').removeClass('has-duplicate');
+			}
+
 		});
 	});
+}
 
-	$('.bday2').change(function(){
+function getDate2(name, sex, index)
+{
+	$('.tr2' + index + ' td .bday2').change(function(){
+		var nameArr = name.split(',');
+
+		var firstname = nameArr[0];
+		var surname = $.trim(nameArr[1]);
+		var extname = $.trim(nameArr[2]);
+
 		var bday2 = $(this).val();
 		dob = new Date(bday2);
 		var today = new Date();
@@ -270,15 +284,32 @@ function getDate(name, sex, index)
 			'sex' 		: sex, 
 			'bday' 		: bday
 		}).done(function(result){
-			if(result === '1'){
-				$('.tr2' + index).addClass('has-duplicate');
-				$('.tr2' + index + ' td input').addClass('has-duplicate');
-				$('input[name="saveform1"]').attr('disabled', 'disabled');
+			if (result === '1') {
+				$('.tr2' + index + ' td #isDuplicate2').val(result);
+				preventSave2(index);
 			} else {
-				$('.tr2' + index).removeClass('has-duplicate');
-				$('.tr2' + index + ' td input').removeClass('has-duplicate');
 				$('input[name="saveform1"]').removeAttr('disabled', 'disabled');
+			}
+
+			var isDuplicate = $('.tr2' + index + ' td #isDuplicate2').val();
+			
+			if (isDuplicate === '1') {
+				$('.tr2' + index + ' td').addClass('has-duplicate');
+				$('.tr2' + index + ' td input').addClass('has-duplicate');					
+			} else {
+				$('.tr2' + index + ' td').removeClass('has-duplicate');
+				$('.tr2' + index + ' td input').removeClass('has-duplicate');
 			}
 		});
 	});
+}
+
+function preventSave1(index)
+{
+	$('input[name="saveform1"]').attr('disabled', 'disabled');
+}
+
+function preventSave2(index)
+{
+	$('input[name="saveform1"]').attr('disabled', 'disabled');
 }

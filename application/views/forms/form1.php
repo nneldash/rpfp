@@ -29,28 +29,23 @@ $form1 = FormClass::getFormFromVariable($form1);
 		.highlight > td > input {
 			background: rgb(220, 244, 239);
 		}
-
 		a {
 			text-decoration: none;
 			display: inline-block;
 			padding: 8px 16px;
 		}
-
 		a:hover {
 			background-color: #ddd;
 			color: black;
 		}
-
 		.previous {
 			background-color: #f1f1f1;
 			color: black;
 		}
-
 		.next {
 			background-color: #4CAF50;
 			color: white;
 		}
-
 		.round {
 			border-radius: 50%;
 		}
@@ -109,7 +104,7 @@ $form1 = FormClass::getFormFromVariable($form1);
 					</div>
 			    </div>
 			<?php endif; ?>
-			<input type="hidden" name="class_id" value="<?= (!empty($_GET['rpfpId']) ? $_GET['rpfpId'] : 0); ?>"/>
+			<input type="hidden" name="class_id" value="<?= (!empty($_GET['rpfpId']) ? $_GET['rpfpId'] : 0); ?>" />
 			<div class="border-t1 table-responsive">
 				<div style="padding-top: 10px"></div>
 				<table style="float: left" class="table">
@@ -251,7 +246,7 @@ $form1 = FormClass::getFormFromVariable($form1);
 		                                ""
 		                            );
 								?>
-								<input type="hidde" name="barangay" value="<?=$form1->Seminar->Location->Barangay->Code?>">
+								<input type="hidden" name="barangay" value="<?=$form1->Seminar->Location->Barangay->Code?>">
 		                    </span>
 						</td>
 					</tr>
@@ -445,6 +440,7 @@ $form1 = FormClass::getFormFromVariable($form1);
 									</td>
 									
 									<td class="small" style="padding: 5px;">
+										<input type="hidden" id="isDuplicate1" value="" />
 										<input type="hidden" name="individual_id1['<?= $i; ?>']"/>
 										<input type="hidden" class="loopIndex1" value="<?= $i;?>" />
 										<?php
@@ -453,7 +449,7 @@ $form1 = FormClass::getFormFromVariable($form1);
 				                                "",
 				                                "text",
 				                                "name_participant1[".$i."]",
-				                                "padding-l10 namePart1",
+				                                "padding-l10 namePart1 dupHighlight",
 				                                ""
 				                            );
 				                        ?>
@@ -465,7 +461,7 @@ $form1 = FormClass::getFormFromVariable($form1);
 				                                "",
 				                                "text",
 				                                "sex1[".$i."]",
-				                                "text-center sexValid gender1",
+				                                "text-center sexValid gender1 dupHighlight",
 				                                "1"
 				                            );
 				                        ?>
@@ -490,7 +486,7 @@ $form1 = FormClass::getFormFromVariable($form1);
 					                            	"",
 					                                "text",
 					                                "age1[".$i."]",
-					                                "text-center birthAge bday1",
+					                                "text-center birthAge bday1 dupHighlight",
 					                                "'mask': '99-99-9999'"
 					                            );
 					                        ?> /
@@ -613,6 +609,7 @@ $form1 = FormClass::getFormFromVariable($form1);
 								</tr>
 								<tr class="tr2<?= $i; ?>">
 									<td class="small" style="padding: 5px;">
+										<input type="hidden" id="isDuplicate2" value="" />
 										<input type="hidden" name="individual_id2['<?= $i; ?>']"/>
 										<input type="hidden" class="loopIndex2" value="<?= $i;?>" />
 										<?php
@@ -627,6 +624,7 @@ $form1 = FormClass::getFormFromVariable($form1);
 				                        ?>
 									</td>
 									<td class="small text-center">
+										<input type="hidden" value="" class="getSex1" />
 										<?php
 				                            echo HtmlHelper::inputPdf(
 				                            	$is_pdf,
