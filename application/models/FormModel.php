@@ -115,53 +115,25 @@ class FormModel extends BaseModel
             ];
             
             $this->saveToDb($method2, $params2);
+
+            $modern = $couple->ModernFp;
+            $traditional = $couple->TraditionalFp;
+
+            $method3 = 'encoder_save_fp_details';
+
+            $params3 = [
+                $modern->Id == N_A ? BLANK : $modern->Id,
+                $couple_id == 0 ? BLANK : $couple_id,
+                $modern->MethodUsed == N_A ? BLANK : $modern->MethodUsed,
+                $modern->IntentionToShift == N_A ? BLANK : $modern->IntentionToShift,
+
+                $traditional->Type == N_A ? BLANK : $traditional->Type,
+                $traditional->Status == N_A ? BLANK : $traditional->Status,
+                $traditional->ReasonForUse == N_A ? BLANK : $traditional->ReasonForUse
+            ];
+
+           $this->saveToDb($method3, $params3);
         }
-        // $method = "encoder_save_couple";
-        // $husband = $couple->Husband();
-        // $wife = $couple->Wife();
-        // $traditional = $couple->TraditionalFp;
-        // $modern = $couple->ModernFp;
-
-        // $params = [
-        //     $class_id == 0 ? BLANK : $class_id,
-        //     $couple->Id == N_A ? BLANK : $couple->Id,
-            
-        //     $couple->Address_St == N_A ? BLANK : $couple->Address_St,
-        //     $couple->Address_Brgy == N_A ? BLANK : $couple->Address_Brgy,
-        //     $couple->Address_City == N_A ? BLANK : $couple->Address_City,
-        //     $couple->Address_HH_No == N_A ? BLANK : $couple->Address_HH_No,
-        //     $couple->NumberOfChildren == N_A ? BLANK : $couple->NumberOfChildren,
-
-            // $husband->Id == N_A ? BLANK : $husband->Id,
-            // $husband->Name->Surname == N_A ? BLANK : $husband->Name->Surname,
-            // $husband->Name->Firstname == N_A ? BLANK : $husband->Name->Firstname,
-            // $husband->Name->Middlename == N_A ? BLANK : $husband->Name->Middlename,
-            // $husband->Name->Extname == N_A ? BLANK : $husband->Name->Extname,
-            // $husband->Age == N_A ? BLANK : $husband->Age,
-            // $husband->Birthdate == N_A ? BLANK : $husband->Birthdate->format('Y-m-d'),
-            // $husband->CivilStatus == N_A ? BLANK : $husband->CivilStatus,
-            // $husband->HighestEducation == N_A ? BLANK : $husband->HighestEducation,
-            // $husband->Attendee == N_A ? BLANK : $husband->Attendee,
-
-            // $wife->Id == N_A ? BLANK : $wife->Id,
-            // $wife->Name->Surname == N_A ? BLANK : $wife->Name->Surname,
-            // $wife->Name->Firstname == N_A ? BLANK : $wife->Name->Firstname,
-            // $wife->Name->Middlename == N_A ? BLANK : $wife->Name->Middlename,
-            // $wife->Age == N_A ? BLANK : $wife->Age,
-            // $wife->Birthdate == N_A ? BLANK : $wife->Birthdate->format('Y-m-d'),
-            // $wife->CivilStatus == N_A ? BLANK : $wife->CivilStatus,
-            // $wife->HighestEducation == N_A ? BLANK : $wife->HighestEducation,
-            // $wife->Attendee == N_A ? BLANK : $wife->Attendee,
-
-            // $modern->MethodUsed == N_A ? BLANK : $modern->MethodUsed,
-            // $modern->IntentionToShift == N_A ? BLANK : $modern->IntentionToShift,
-
-            // $traditional->Type == N_A ? BLANK : $traditional->Type,
-            // $traditional->Status == N_A ? BLANK : $traditional->Status,
-            // $traditional->ReasonForUse == N_A ? BLANK : $traditional->ReasonForUse
-        // ];
-
-        // return $this->saveToDb($method, $params);
     }
 
     public function saveServiceSlip(int $couple_id, ServiceSlipInterface $data)

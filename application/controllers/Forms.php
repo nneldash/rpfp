@@ -116,8 +116,8 @@ class Forms extends CI_Controller
 
             $couple->FirstEntry = $this->getFirstEntry($i);
             $couple->SecondEntry = $this->getSecondEntry($i);
-            // $couple->ModernFp = $this->getModernFp($i);
-            // $couple->TraditionalFp = $this->getTraditionalFp($i);
+            $couple->ModernFp = $this->getModernFp($i);
+            $couple->TraditionalFp = $this->getTraditionalFp($i);
 
             $listCouple->append($couple);
         }

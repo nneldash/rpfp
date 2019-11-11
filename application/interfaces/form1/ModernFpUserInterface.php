@@ -6,6 +6,9 @@ $CI->load->iface('common/ModernMethods');
 
 abstract class ModernFpUserInterface extends BaseInterface
 {
+    /** @var int */
+    public $Id;
+    
     /** @var ModernMethods */
     public $MethodUsed;
 
