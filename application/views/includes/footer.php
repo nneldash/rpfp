@@ -25,7 +25,13 @@
 		</div>
 		
 	</body>	
-	<script type="text/javascript" src="<?= base_url('NewAssets/bootstrapJs')?>"></script>
-	<script type="text/javascript" src="<?= base_url('NewAssets/sweetalertJs')?>"></script>
-	<script src="<?= base_url('assets/js/systemTimeout.js')?>"></script>
+
+	<script>
+		loadJs(base_url + 'NewAssets/bootstrapJs',
+			function() {
+				loadJs(base_url + 'NewAssets/sweetalertJs');
+				loadJs(base_url + 'assets/js/systemTimeout.js');
+			}
+		);
+	</script>	
 </html>

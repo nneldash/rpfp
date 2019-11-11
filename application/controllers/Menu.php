@@ -6,6 +6,12 @@ class Menu extends CI_Controller
     public function __construct()
     {
         parent::__construct();
+        if (!$this->LoginModel->isLoggedIn()) {
+            redirect('Login');
+            return;
+        }
+
+        $this->load->model('ProfileModel');
         $this->load->model('CoupleModel');
         $this->load->library('couple_list/ApproveClass');
         $this->load->library('couple_list/PendingClass');
@@ -15,7 +21,26 @@ class Menu extends CI_Controller
 
     public function index()
     {
-        return $this->pending();
+        $isPMED = $this->ProfileModel->isPMED();
+        $isEncoder = $this->ProfileModel->isEncoder();
+        $isFocalPerson = $this->ProfileModel->isFocalPerson();
+        $isRegionalDataManager = $this->ProfileModel->isRegionalDataManager();
+        $isITDMU = $this->ProfileModel->isITDMU();
+
+        $this->load->view(
+            'includes/admin_header',
+            array(
+                'isEncoder' => $isEncoder,
+                'isPMED' => $isPMED,
+                'isFocalPerson' => $isFocalPerson,
+                'isRegionalDataManager' => $isRegionalDataManager,
+                'isITDMU' => $isITDMU
+            )
+        );
+
+        if (empty($this->do_not_render_footer)) {
+            $this->footer();
+        }        
     }
 
     public function pending()
@@ -26,67 +51,29 @@ class Menu extends CI_Controller
         }
 
         $pending = $this->CoupleModel->getPendingList();
-        if ($this->input->server('REQUEST_METHOD') == 'POST') {
-            $this->load->view('menu/pending', array('pending' => $pending, 'reload' => true));
+        if ($this->input->server(REQUEST_METHOD) == POST) {
+            $this->load->view('menu/pending', array('pending' => $pending, RELOAD => true));
             return;
         }
 
-        $this->load->model('ProfileModel');
-        $isPMED = $this->ProfileModel->isPMED();
-        $isEncoder = $this->ProfileModel->isEncoder();
-        $isFocalPerson = $this->ProfileModel->isFocalPerson();
-        $isRegionalDataManager = $this->ProfileModel->isRegionalDataManager();
-        $isITDMU = $this->ProfileModel->isITDMU();
-
-        $this->load->view(
-            'includes/admin_header',
-            array(
-                'isEncoder' => $isEncoder,
-                'isPMED' => $isPMED,
-                'isFocalPerson' => $isFocalPerson,
-                'isRegionalDataManager' => $isRegionalDataManager,
-                'isITDMU' => $isITDMU
-            )
-        );
+        $this->do_not_render_footer = true;
+        $this->index();
         $this->load->view('menu/pending', array('pending' => $pending));
-        $this->load->view('includes/admin_footer');
+        $this->footer();
     }
 
     public function approve()
     {
-        if (!$this->LoginModel->isLoggedIn()) {
-            redirect('Login');
+        $approve = $this->CoupleModel->getApproveList();
+        if ($this->input->server(REQUEST_METHOD) == POST) {
+            $this->load->view('menu/approve', array('approve' => $approve, RELOAD => true));
             return;
         }
 
-        $approve = $this->CoupleModel->getApproveList();
-        if ($this->input->server('REQUEST_METHOD') == 'POST') {
-            $this->load->view('menu/approve', array('approve' => $approve, 'reload' => true));
-            return;
-        }
-
-        $this->load->model('CoupleModel');
-        $approve = $this->CoupleModel->getApproveList();
-
-        $this->load->model('ProfileModel');
-        $isPMED = $this->ProfileModel->isPMED();
-        $isEncoder = $this->ProfileModel->isEncoder();
-        $isFocalPerson = $this->ProfileModel->isFocalPerson();
-        $isRegionalDataManager = $this->ProfileModel->isRegionalDataManager();
-        $isITDMU = $this->ProfileModel->isITDMU();
-
-        $this->load->view(
-            'includes/admin_header',
-            array(
-                'isEncoder' => $isEncoder,
-                'isPMED' => $isPMED,
-                'isFocalPerson' => $isFocalPerson,
-                'isRegionalDataManager' => $isRegionalDataManager,
-                'isITDMU' => $isITDMU
-            )
-        );
+        $this->do_not_render_footer = true;
+        $this->index();
         $this->load->view('menu/approve', array('approve' => $approve));
-        $this->load->view('includes/admin_footer');
+        $this->footer();        
     }
 
     public function importExcel()
@@ -96,14 +83,6 @@ class Menu extends CI_Controller
 
     public function accomplishment()
     {
-    //     if (!$this->LoginModel->isLoggedIn()) {
-    //         $header['title'] =' Online RPFP Monitoring System';
-
-    //         $this->load->view("includes/header", $header);
-    //         $this->load->view('index/landingPage');
-
-    //         return;
-    //     }
         if (!$this->LoginModel->isLoggedIn()) {
             redirect('Login');
             return;
@@ -112,82 +91,31 @@ class Menu extends CI_Controller
         $this->load->model('AccomplishmentModel');
         $accomplishment = $this->AccomplishmentModel->getAccomplishmentList();
 
-        if ($this->input->server('REQUEST_METHOD') == 'POST') {
-            $this->load->view('menu/accomplishment', array('accomplishment' => $accomplishment, 'reload' => true));
+        if ($this->input->server(REQUEST_METHOD) == POST) {
+            $this->load->view('menu/accomplishment', array('accomplishment' => $accomplishment, RELOAD => true));
             return;
         }
-
-        // $accomplishment = $this->AccomplishmentModel->getAccomplishmentList();
-
-        $title = 'Online RPFP Monitoring System | Accomplishment Report';
-
-        $this->load->model('ProfileModel');
-        $isPMED = $this->ProfileModel->isPMED();
-        $isEncoder = $this->ProfileModel->isEncoder();
-        $isFocalPerson = $this->ProfileModel->isFocalPerson();
-        $isRegionalDataManager = $this->ProfileModel->isRegionalDataManager();
-        $isITDMU = $this->ProfileModel->isITDMU();
-
-        $this->load->view(
-            'includes/admin_header',
-            array(
-                'isEncoder' => $isEncoder,
-                'isPMED' => $isPMED,
-                'isFocalPerson' => $isFocalPerson,
-                'isRegionalDataManager' => $isRegionalDataManager,
-                'isITDMU' => $isITDMU
-            )
-        );
+        $this->do_not_render_footer = true;
+        $this->index();
         $this->load->view('menu/accomplishment', array('accomplishment' => $accomplishment));
-        $this->load->view('includes/admin_footer');
+        $this->footer();
     }
 
     public function search()
     {
-        if (!$this->LoginModel->isLoggedIn()) {
-            $header['title'] =' Online RPFP Monitoring System';
-
-            $this->load->view("includes/header", $header);
-            $this->load->view('index/landingPage');
-
+        if ($this->input->server(REQUEST_METHOD) == POST) {
+            this->load->view('menu/search', array(RELOAD => true));
             return;
         }
 
-        $title = 'Online RPFP Monitoring System | Search Form 1';
-
-        $this->load->model('ProfileModel');
-        $isPMED = $this->ProfileModel->isPMED();
-        $isEncoder = $this->ProfileModel->isEncoder();
-        $isFocalPerson = $this->ProfileModel->isFocalPerson();
-        $isRegionalDataManager = $this->ProfileModel->isRegionalDataManager();
-        $isITDMU = $this->ProfileModel->isITDMU();
-
-        $this->load->view(
-            'includes/admin_header',
-            array(
-                'isEncoder' => $isEncoder,
-                'isPMED' => $isPMED,
-                'isFocalPerson' => $isFocalPerson,
-                'isRegionalDataManager' => $isRegionalDataManager,
-                'isITDMU' => $isITDMU,
-                'title' => $title
-            )
-        );
+        $this->do_not_render_footer = true;
+        $this->index();
         $this->load->view('menu/search');
-        $this->load->view('includes/admin_footer');
+        $this->footer();
     }
 
     public function printAccomplishment()
     {
-        if (!$this->LoginModel->isLoggedIn()) {
-            $header['title'] =' Online RPFP Monitoring System';
-
-            $this->load->view("includes/header", $header);
-            $this->load->view('index/landingPage');
-
-            return;
-        }
-
         $mpdfConfig = array(
             'format' => 'A4',
             'orientation' => 'P'
@@ -209,178 +137,57 @@ class Menu extends CI_Controller
 
     public function dashboard()
     {
-        if (!$this->LoginModel->isLoggedIn()) {
-            $header['title'] =' Online RPFP Monitoring System';
-
-            $this->load->view("includes/header", $header);
-            $this->load->view('index/landingPage');
-
+        if ($this->input->server(REQUEST_METHOD) == POST) {
+            $this->load->view('menu/dashboard', array(RELOAD => true));
             return;
         }
 
-        $title = 'Online RPFP Monitoring System | Dashboard';
-
-        $this->load->model('ProfileModel');
-        $isPMED = $this->ProfileModel->isPMED();
-        $isEncoder = $this->ProfileModel->isEncoder();
-        $isFocalPerson = $this->ProfileModel->isFocalPerson();
-        $isRegionalDataManager = $this->ProfileModel->isRegionalDataManager();
-        $isITDMU = $this->ProfileModel->isITDMU();
-
-        $this->load->view(
-            'includes/admin_header',
-            array(
-                'isEncoder' => $isEncoder,
-                'isPMED' => $isPMED,
-                'isFocalPerson' => $isFocalPerson,
-                'isRegionalDataManager' => $isRegionalDataManager,
-                'isITDMU' => $isITDMU,
-                'title' => $title
-            )
-        );
+        $this->do_not_render_footer = true;
+        $this->index();
         $this->load->view('menu/dashboard');
-        $this->load->view('includes/admin_footer');
+        $this->footer();
     }
 
     public function formA()
     {
-        if (!$this->LoginModel->isLoggedIn()) {
-            $header['title'] =' Online RPFP Monitoring System';
-
-            $this->load->view("includes/header", $header);
-            $this->load->view('index/landingPage');
-
+        if ($this->input->server(REQUEST_METHOD) == POST) {
+            $this->load->view('menu/formAMenu', array(RELOAD => true));
             return;
         }
 
-        $title = 'Online RPFP Monitoring System | Form A Data List';
-
-        $this->load->model('ProfileModel');
-        $isPMED = $this->ProfileModel->isPMED();
-        $isEncoder = $this->ProfileModel->isEncoder();
-        $isFocalPerson = $this->ProfileModel->isFocalPerson();
-        $isRegionalDataManager = $this->ProfileModel->isRegionalDataManager();
-        $isITDMU = $this->ProfileModel->isITDMU();
-
-        $this->load->view(
-            'includes/admin_header',
-            array(
-                'isEncoder' => $isEncoder,
-                'isPMED' => $isPMED,
-                'isFocalPerson' => $isFocalPerson,
-                'isRegionalDataManager' => $isRegionalDataManager,
-                'isITDMU' => $isITDMU,
-                'title' => $title
-            )
-        );
+        $this->do_not_render_footer = true;
+        $this->index();
         $this->load->view('menu/formAMenu');
-        $this->load->view('includes/admin_footer');
+        $this->footer();
+
     }
 
     public function formB()
     {
-        if (!$this->LoginModel->isLoggedIn()) {
-            $header['title'] =' Online RPFP Monitoring System';
-
-            $this->load->view("includes/header", $header);
-            $this->load->view('index/landingPage');
-
+        if ($this->input->server(REQUEST_METHOD) == POST) {
+            $this->load->view('menu/formBMenu', array(RELOAD => true));
             return;
         }
-
-        $title = 'Online RPFP Monitoring System | Form B Data List';
-
-        $this->load->model('ProfileModel');
-        $isPMED = $this->ProfileModel->isPMED();
-        $isEncoder = $this->ProfileModel->isEncoder();
-        $isFocalPerson = $this->ProfileModel->isFocalPerson();
-        $isRegionalDataManager = $this->ProfileModel->isRegionalDataManager();
-        $isITDMU = $this->ProfileModel->isITDMU();
-
-        $this->load->view(
-            'includes/admin_header',
-            array(
-                'isEncoder' => $isEncoder,
-                'isPMED' => $isPMED,
-                'isFocalPerson' => $isFocalPerson,
-                'isRegionalDataManager' => $isRegionalDataManager,
-                'isITDMU' => $isITDMU,
-                'title' => $title
-            )
-        );
+        
+        $this->do_not_render_footer = true;
+        $this->index();
         $this->load->view('menu/formBMenu');
-        $this->load->view('includes/admin_footer');
+        $this->footer();
     }
 
     public function formC()
     {
-        if (!$this->LoginModel->isLoggedIn()) {
-            $header['title'] =' Online RPFP Monitoring System';
-
-            $this->load->view("includes/header", $header);
-            $this->load->view('index/landingPage');
-
+        if ($this->input->server(REQUEST_METHOD) == POST) {
+            $this->load->view('menu/formCMenu', array(RELOAD => true));
             return;
         }
 
-        $title = 'Online RPFP Monitoring System | Form C Data List';
-
-        $this->load->model('ProfileModel');
-        $isPMED = $this->ProfileModel->isPMED();
-        $isEncoder = $this->ProfileModel->isEncoder();
-        $isFocalPerson = $this->ProfileModel->isFocalPerson();
-        $isRegionalDataManager = $this->ProfileModel->isRegionalDataManager();
-        $isITDMU = $this->ProfileModel->isITDMU();
-
-        $this->load->view(
-            'includes/admin_header',
-            array(
-                'isEncoder' => $isEncoder,
-                'isPMED' => $isPMED,
-                'isFocalPerson' => $isFocalPerson,
-                'isRegionalDataManager' => $isRegionalDataManager,
-                'isITDMU' => $isITDMU,
-                'title' => $title
-            )
-        );
+        $this->do_not_render_footer = true;
+        $this->index();
         $this->load->view('menu/formCMenu');
-        $this->load->view('includes/admin_footer');
+        $this->footer();
+
     }
-
-    // public function accomplishment()
-    // {
-    //     if (!$this->LoginModel->isLoggedIn()) {
-    //         $header['title'] =' Online RPFP Monitoring System';
-
-    //         $this->load->view("includes/header", $header);
-    //         $this->load->view('index/landingPage');
-            
-    //         return;
-    //     }
-
-    //     $title = 'Online RPFP Monitoring System | Form Accomplishment Report Data List';
-
-    //     $this->load->model('ProfileModel');
-    //     $isPMED = $this->ProfileModel->isPMED();
-    //     $isEncoder = $this->ProfileModel->isEncoder();
-    //     $isFocalPerson = $this->ProfileModel->isFocalPerson();
-    //     $isRegionalDataManager = $this->ProfileModel->isRegionalDataManager();
-    //     $isITDMU = $this->ProfileModel->isITDMU();
-
-    //     $this->load->view(
-    //         'includes/admin_header',
-    //         array(
-    //             'isEncoder' => $isEncoder,
-    //             'isPMED' => $isPMED,
-    //             'isFocalPerson' => $isFocalPerson,
-    //             'isRegionalDataManager' => $isRegionalDataManager,
-    //             'isITDMU' => $isITDMU,
-    //             'title' => $title
-    //         )
-    //     );
-    //     $this->load->view('menu/accomplishment', array('is_pdf' => false), false);
-    //     $this->load->view('includes/admin_footer');
-    // }
 
     public function pendingCoupleModal()
     {

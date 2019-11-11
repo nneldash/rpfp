@@ -13,4 +13,11 @@ $(document).ready(function(){
             });
         }
     });
+
+    if (!window.hasOwnProperty( "default_tab" )) {
+        var active_a = $('ul.nav.side-menu li a[href="#/Menu/pending"]')[0];
+        active_a.click();
+        var active_li = $(active_a.parentElement);
+        active_li.addClass('active');
+    }
 });

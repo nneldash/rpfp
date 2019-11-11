@@ -7,8 +7,8 @@ if (empty($title)) {
 ?>
 <script>document.querySelector("head title").innerHTML = '<?=$title?>';</script>
 
-<script>loadCss(base_url + '/assets/css/style.css');</script>
-<script>loadCss(base_url + '/assets/css/form.css');</script>
+<link href="<?= base_url('assets/css/style.css') ?>" rel="stylesheet">
+<link href="<?= base_url('assets/css/form.css') ?>" rel="stylesheet">
 
 <br>
 <table id="datatable-responsive" class="table table-condensed table-striped table-hover table-bordered dt-responsive nowrap accomplishmentList" cellspacing="0" width="100%">

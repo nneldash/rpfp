@@ -7,9 +7,9 @@ if (empty($title)) {
 ?>
 <script>document.querySelector("head title").innerHTML = '<?=$title?>';</script>
 
-<script>loadCss(base_url + '/NewAssets/fontAwesome');</script>
-<script>loadCss(base_url + '/assets/css/style.css');</script>
-<script>loadCss(base_url + '/assets/css/form.css');</script>
+<link href="<?= base_url('NewAssets/fontAwesome'); ?>" rel="stylesheet" />
+<link href="<?= base_url('assets/css/style.css'); ?>" rel="stylesheet" />
+<link href="<?= base_url('assets/css/form.css'); ?>" rel="stylesheet" />
 
 <br>
 <table id="datatable-responsive" class="table table-condensed table-striped table-hover table-bordered dt-responsive nowrap" cellspacing="0" width="100%">
@@ -40,9 +40,9 @@ if (empty($title)) {
 </table>
 
 <script>
-    loadJs(base_url + '/NewAssets/templateJs',
-        function() { loadJs(base_url + '/assets/js/listCouples.js'); }
-    );
+    loadJs(base_url + 'NewAssets/templateJs', function() {
+        loadJs(base_url + 'assets/js/listCouples.js');
+    });
 
     <?php
     if (!empty($reload)) {

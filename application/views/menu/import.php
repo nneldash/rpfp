@@ -15,9 +15,14 @@
 <div id="out" hidden></div>
 <div id="htmlout" hidden></div>
 
-<script src="<?= base_url('NewAssets/cpExcel'); ?>"></script>
-<script src="<?= base_url('NewAssets/shimJs'); ?>"></script>
-<script src="<?= base_url('NewAssets/jsZip'); ?>"></script>
-<script src="<?= base_url('NewAssets/xlsxJs'); ?>"></script>
-
-<script src="<?= base_url('assets/js/import.js'); ?>"></script>
+<script>
+    loadJs(base_url + 'NewAssets/cpExcel', function() {
+        loadJs(base_url + 'NewAssets/shimJs', function() {
+            loadJs(base_url + 'NewAssets/jsZip', function() {
+                loadJs(base_url + 'NewAssets/xlsxJs', function() {
+                    loadJs(base_url + 'assets/js/import.js');
+                });
+            });
+        });
+    });
+</script>
