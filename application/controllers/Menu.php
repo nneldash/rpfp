@@ -94,7 +94,7 @@ class Menu extends CI_Controller
         $this->load->view('menu/import');
     }
 
-    public function summary()
+    public function accomplishment()
     {
     //     if (!$this->LoginModel->isLoggedIn()) {
     //         $header['title'] =' Online RPFP Monitoring System';
@@ -104,19 +104,19 @@ class Menu extends CI_Controller
 
     //         return;
     //     }
-
         if (!$this->LoginModel->isLoggedIn()) {
             redirect('Login');
             return;
         }
+        
+        $this->load->model('AccomplishmentModel');
+        $accomplishment = $this->AccomplishmentModel->getAccomplishmentList();
 
-        // $accomplishment = $this->AccomplishmentModel->getAccomplishmentList();
-        // if ($this->input->server('REQUEST_METHOD') == 'POST') {
-        //     $this->load->view('menu/summary', array('accomplishment' => $accomplishment, 'reload' => true));
-        //     return;
-        // }
+        if ($this->input->server('REQUEST_METHOD') == 'POST') {
+            $this->load->view('menu/accomplishment', array('accomplishment' => $accomplishment, 'reload' => true));
+            return;
+        }
 
-        // $this->load->model('AccomplishmentModel');
         // $accomplishment = $this->AccomplishmentModel->getAccomplishmentList();
 
         $title = 'Online RPFP Monitoring System | Accomplishment Report';
@@ -135,11 +135,10 @@ class Menu extends CI_Controller
                 'isPMED' => $isPMED,
                 'isFocalPerson' => $isFocalPerson,
                 'isRegionalDataManager' => $isRegionalDataManager,
-                'isITDMU' => $isITDMU,
-                'title' => $title
+                'isITDMU' => $isITDMU
             )
         );
-        $this->load->view('menu/summary', array('is_pdf' => false), false);
+        $this->load->view('menu/accomplishment', array('accomplishment' => $accomplishment));
         $this->load->view('includes/admin_footer');
     }
 
@@ -178,7 +177,7 @@ class Menu extends CI_Controller
         $this->load->view('includes/admin_footer');
     }
 
-    public function printSummary()
+    public function printAccomplishment()
     {
         if (!$this->LoginModel->isLoggedIn()) {
             $header['title'] =' Online RPFP Monitoring System';
@@ -198,7 +197,7 @@ class Menu extends CI_Controller
             $mpdf = new \Mpdf\Mpdf($mpdfConfig);
             $mpdf->debug = true;
 
-            $html = $this->load->view('menu/summary', array('is_pdf' => true), true);
+            $html = $this->load->view('menu/accomplishment', array('is_pdf' => true), true);
 
             $mpdf->SetTitle('Online RPFP Monitoring System | Accomplishment Report');
             $mpdf->WriteHTML($html);
@@ -379,7 +378,7 @@ class Menu extends CI_Controller
     //             'title' => $title
     //         )
     //     );
-    //     $this->load->view('menu/summary', array('is_pdf' => false), false);
+    //     $this->load->view('menu/accomplishment', array('is_pdf' => false), false);
     //     $this->load->view('includes/admin_footer');
     // }
 

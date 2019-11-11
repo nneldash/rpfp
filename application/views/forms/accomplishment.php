@@ -28,7 +28,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 		</div>		
 		<?php if(!$is_pdf) : ?>
 		    <div id="rightButton">
-	        	<a href="<?= base_url('menu/printSummary') ?>" class="save" target="_blank">
+	        	<a href="<?= base_url('menu/printAccomplishment') ?>" class="save" target="_blank">
                     <span>PRINT</span>
                 </a>
 		    </div>

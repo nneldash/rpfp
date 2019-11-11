@@ -8,14 +8,17 @@ class AccomplishmentModel extends BaseModel
     {
         parent::__construct();
         $this->CI->load->library('accomplishment_list/AccomplishmentClass');
+        $this->CI->load->library('accomplishment_list/lists/ListAccomplishment');
     }
 
     public function getAccomplishmentList() : ListAccomplishmentInterface
     {
+        $username = $_SESSION['username'];
         $page_no = 1;
         $items_per_page = 10;
 
-        $accomplishment_list = $this->fromDbGetReportList(
+        $accomplishment_list = $this->fromDbGetList(
+            'ListAccomplishment',
             'AccomplishmentClass',
             array(
                 'ReportID' => 'report_id',
@@ -25,12 +28,12 @@ class AccomplishmentModel extends BaseModel
                 'DateProcessed' => 'date_processed'
             ),
             'get_report_accomplishment_list',
-            array('',$page_no, $items_per_page)
+            array($username, $page_no, $items_per_page)
         );
 
-        $retval = new AccomplishmentClass();
+        $retval = new ListAccomplishment();
 
-        foreach($acomplishment_list as $accomplishment) {
+        foreach($accomplishment_list as $accomplishment) {
             $retval->append($accomplishment);
         }
 

@@ -23,7 +23,7 @@
                             <div class="panel-heading" >
                                 <div class="row">
                                     <div class="col-xs-12 text-center">
-                                        <img class="login-logo" src="<?=base_url('assets/images/popcom_logo.png')?>" alt="POPCOM_LOGO" width="80%">
+                                        <img class="login-logo" src="<?=base_url('assets/images/login_logo.png')?>" alt="POPCOM_LOGO" width="10%">
                                     </div>
                                 </div>
                             </div>

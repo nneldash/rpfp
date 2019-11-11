@@ -234,6 +234,28 @@ class Forms extends CI_Controller
             ->set_output(json_encode($data));
     }
 
+    public function accomplishment()
+    {
+        if (!$this->LoginModel->isLoggedIn()) {
+            $header['title'] =' Online RPFP Monitoring System';
+
+            $this->load->view("includes/header", $header);
+            $this->load->view('index/landingPage');
+
+            return;
+        }
+
+        $header['title'] = 'Online RPFP Monitoring System | Accomplishment Report';
+
+        $this->load->model('FormModel');
+
+        $accomplishment = $this->FormModel->getAccomplishment();
+
+        $this->load->view('includes/header', $header);
+        $this->load->view('forms/accomplishment', array('accomplishment' => $accomplishment, 'is_pdf' => false));
+        $this->load->view('includes/footer');
+    }
+
     public function formA()
     {
         if (!$this->LoginModel->isLoggedIn()) {
