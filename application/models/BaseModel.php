@@ -92,41 +92,41 @@ class BaseModel extends CI_Model
         return $queryResult;
     }
 
-    // protected function fromDbGetReportList(
-    //     $listReport,
-    //     $classDbArray,
-    //     $proc,
-    //     $params = array(),
-    //     DbInstance &$db = null,
-    //     $libFolder = ''
-    // ) : ArrayObject
-    // {
-    //     $list = new ArrayObject();
-    //     if (!empty($listReport)) {
-    //         $list = new $listReport();
-    //     }
+    protected function fromDbGetReportList(
+        $listReport,
+        $classDbArray,
+        $proc,
+        $params = array(),
+        DbInstance &$db = null,
+        $libFolder = ''
+    ) : ArrayObject
+    {
+        $list = new ArrayObject();
+        if (!empty($listReport)) {
+            $list = new $listReport();
+        }
 
-    //     $rows = $this->runStoredProcAndGetResults($proc, $params, $db);
+        $rows = $this->runStoredProcAndGetResults($proc, $params, $db);
 
-    //     if ($rows !== false && (count($rows) > 0)) {
-    //         $test_lib_folder = $libFolder;
-    //         try {
-    //             $this->CI->load->library($test_lib_folder . '/' . $listReport);
-    //         } catch (Exception $e) {
-    //             $test_lib_folder = 'common';
-    //             $this->CI->load->library($test_lib_folder . '/' . $listReport);
-    //         }
+        if ($rows !== false && (count($rows) > 0)) {
+            $test_lib_folder = $libFolder;
+            try {
+                $this->CI->load->library($test_lib_folder . '/' . $listReport);
+            } catch (Exception $e) {
+                $test_lib_folder = 'common';
+                $this->CI->load->library($test_lib_folder . '/' . $listReport);
+            }
 
-    //         foreach ($rows as $data) {
-    //             $item = new $listReport();
+            foreach ($rows as $data) {
+                $item = new $listReport();
 
-    //             $this->fillItem($item, $classDbArray, $data);
-    //             $list->append($item);
-    //         }
-    //     }
+                $this->fillItem($item, $classDbArray, $data);
+                $list->append($item);
+            }
+        }
 
-    //     return $list;
-    // }
+        return $list;
+    }
 
     protected function getRows(&$db, $query_string, $bind_params = false)
     {

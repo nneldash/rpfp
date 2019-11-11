@@ -1109,6 +1109,7 @@ BEGIN
          SELECT NULL AS rpfpclass,
                 NULL AS typeclass,
                 NULL AS others_specify,
+                NULL AS psgc_code,
                 NULL AS barangay,
                 NULL AS class_no,
                 NULL AS date_conduct
@@ -1117,6 +1118,7 @@ BEGIN
              SELECT rc.RPFP_CLASS_ID AS rpfpclass,
                     tc.TYPE_CLASS_DESC AS typeclass,
                     rc.OTHERS_SPECIFY AS others_specify,
+                    lp.PSGC_CODE AS psgc_code,
                     lp.LOCATION_DESCRIPTION AS barangay,
                     rc.CLASS_NUMBER AS class_no,
                     rc.DATE_CONDUCTED AS date_conduct
@@ -2754,7 +2756,7 @@ END$$
 /** END SEARCH COUPLES */
 
 /** PROCESS REPORTS */
-CREATE DEFINER=root@localhost PROCEDURE encoder_process_accomplishments (
+CREATE DEFINER=root@localhost PROCEDURE encoder_process_accomplishment (
     IN report_year INT,
     IN report_month INT
     )  READS SQL DATA
@@ -2777,7 +2779,7 @@ BEGIN
 
 END$$
 
-CREATE DEFINER=root@localhost PROCEDURE process_accomplishments (
+CREATE DEFINER=root@localhost PROCEDURE process_accomplishment (
     IN username VARCHAR(50),
     IN report_year INT,
     IN report_month INT,
@@ -5235,6 +5237,7 @@ GRANT EXECUTE ON PROCEDURE rpfp.encoder_save_couple TO 'encoder';
 GRANT EXECUTE ON PROCEDURE rpfp.encoder_save_individual TO 'encoder';
 GRANT EXECUTE ON PROCEDURE rpfp.get_report_accomplishment_list TO 'encoder';
 GRANT EXECUTE ON PROCEDURE rpfp.get_class_details TO 'encoder';
+GRANT EXECUTE ON PROCEDURE rpfp.get_forms_list TO 'encoder';
 
 GRANT EXECUTE ON PROCEDURE rpfp.rdm_approve_couples TO 'regional_data_manager';
 GRANT EXECUTE ON PROCEDURE rpfp.rdm_save_target TO 'regional_data_manager';

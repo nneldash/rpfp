@@ -18,6 +18,7 @@ class FormModel extends BaseModel
         $this->CI->load->iface('common/TraditionalStatuses');
 
         $this->CI->load->library('couple_list/DuplicateCoupleClass');
+        $this->CI->load->library('accomplishment_list/AccomplishmentClass');
     }
 
     public function saveForm1(FormInterface $form)
@@ -325,6 +326,15 @@ class FormModel extends BaseModel
         $traditionalFp->ReasonForUse = ReasonsForUsing::LIMITING;
 
         return $traditionalFp;
+    }
+
+    public function getAccomplishment(): AccomplishmentInterface
+    {
+        $accomplishment = new AccomplishmentClass();
+       
+        // $accomplishment->Period = $this->getPeriodReport();
+        // $accomplishment->ListMonth = $this->getMonthlyData();
+        return $accomplishment;
     }
 
     public function getFormA(): FormAInterface

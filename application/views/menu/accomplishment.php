@@ -11,7 +11,7 @@ if (empty($title)) {
 <script>loadCss(base_url + '/assets/css/form.css');</script>
 
 <br>
-<table id="datatable-responsive" class="table table-condensed table-striped table-hover table-bordered dt-responsive nowrap accomplishmentReport" cellspacing="0" width="100%">
+<table id="datatable-responsive" class="table table-condensed table-striped table-hover table-bordered dt-responsive nowrap accomplishmentList" cellspacing="0" width="100%">
     <thead>
         <tr>
             <th>Report #</th>
@@ -21,23 +21,24 @@ if (empty($title)) {
         </tr>
     </thead>
     <tbody>
-        <!-- <?php foreach ($accomplishment as $accomplished) : ?>
+        <?php foreach ($accomplishment as $accomplished) : ?>
             <tr>
                 <td><?= $accomplished->ReportNo ?></td>
-                <td><?= $accomplished->ReportYear ?> - <?= $accomplished->ReportMonth ?></td>
+                <td><?= $accomplished->ReportYear ?> - <?php if ($accomplished->ReportMonth != 0) { echo strftime("%b" ,mktime(0,0,0, $accomplished->ReportMonth )); } else { echo $accomplished->ReportMonth; } ?></td>
                 <td><?= date('F d, Y', strtotime($accomplished->DateProcessed)); ?></td>
                 <td class="text-center">
-                    <button class="btn btn-primary btn-accomplishment" data-toggle="tooltip" data-placement="left" title="View">
-                        <i class="fa fa-view"></i>
+                    <a class="viewForm folderview" href="<?= base_url('forms/accomplishment'); ?>" target="_blank">
+                    <button class="btn btn-primary" data-toggle="tooltip" data-placement="left" title="View">
+                        <i class="fa fa-eye"></i>
                     </button>					
                 </td>
             </tr>
-        <?php endforeach; ?> -->
+        <?php endforeach; ?>
     </tbody>
 </table>
 
 <script>
     $(document).ready( function () {
-        var table = $('.accomplishmentReport').DataTable();
+        var table = $('.accomplishmentList').DataTable();
     });
 </script>
