@@ -36,6 +36,7 @@ class Forms extends CI_Controller
         $this->load->model('FormModel');
 
         $classId = $this->input->get('rpfpId');
+        // print_r($class_no);exit;
         
         $form1 = $this->FormModel->getForm1($classId);
 
@@ -72,9 +73,10 @@ class Forms extends CI_Controller
         $form1->Seminar = $this->getInputFromSeminar();
         $form1->ListCouple = $this->getInputFromListCouples();
         print_r($this->FormModel->saveForm1($form1));exit;
-        $data = ['is_save' => true];
         if (!$this->FormModel->saveForm1($form1)) {
             $data = ['is_save' => false];
+        } else {
+            $data = ['is_save' => true];
         }
 
         $this->output
