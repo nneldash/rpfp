@@ -14,47 +14,21 @@ defined('BASEPATH') or exit('No direct script access allowed');
 			</tr>
 		</thead>
 		<tbody>
-		<?php foreach($forms as $form): ?>
-			<tr>
-				<td><?= $form->ClassNo; ?></td>
-				<td><?= $form->TypeClass; ?></td>
-				<td><?= $form->Barangay; ?></td>
-				<td><?= date('F d, Y', strtotime($form->DateConduct)); ?></td>
-				<td class="text-center">
-					<a href="<?= base_url('forms?rpfpId='.($form->RpfpClass)); ?>" target="_blank">
-						<button class="btn btn-primary" data-toggle="tooltip" data-placement="left" title="Edit">
-							<i class="fa fa-edit"></i>
-						</button>
-					</a>
-				</td>
-			</tr>
-		<?php endforeach; ?>
-			<!-- <tr>
-				<td>RPFP-TAC-2019-00001</td>
-				<td>4Ps</td>
-				<td>Barangay 92 (Apitong)</td>
-				<td>February 11, 2019</td>
-				<td class="text-center">
-					<a href="<?= base_url('forms?rpfpId='.md5(2)); ?>" target="_blank">
-						<button class="btn btn-primary" data-toggle="tooltip" data-placement="left" title="Edit">
-							<i class="fa fa-edit"></i>
-						</button>
-					</a>
-				</td>
-			</tr>
-			<tr>
-				<td>RPFP-TAC-2019-00001</td>
-				<td>4Ps</td>
-				<td>Barangay 92 (Apitong)</td>
-				<td>February 11, 2019</td>
-				<td class="text-center">
-					<a href="<?= base_url('forms?rpfpId='.md5(3)); ?>" target="_blank">
-						<button class="btn btn-primary" data-toggle="tooltip" data-placement="left" title="Edit">
-							<i class="fa fa-edit"></i>
-						</button>
-					</a>
-				</td>
-			</tr> -->
+			<?php foreach($forms as $form): ?>
+				<tr>
+					<td><?= $form->ClassNo; ?></td>
+					<td><?= $form->TypeClass; ?></td>
+					<td><?= $form->Barangay; ?></td>
+					<td><?= date('F d, Y', strtotime($form->DateConduct)); ?></td>
+					<td class="text-center">
+						<a href="<?= base_url('forms?rpfpId='.($form->RpfpClass)); ?>" target="_blank">
+							<button class="btn btn-primary" data-toggle="tooltip" data-placement="left" title="Edit">
+								<i class="fa fa-edit"></i>
+							</button>
+						</a>
+					</td>
+				</tr>
+			<?php endforeach; ?>
 		</tbody>
 	</table>
 </div>
