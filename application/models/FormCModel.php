@@ -2,24 +2,24 @@
 $this->CI =& get_instance();
 $this->CI->load->model('BaseModel');
 
-class FormAModel extends BaseModel
+class FormCModel extends BaseModel
 {
     public function __construct()
     {
         parent::__construct();
-        $this->CI->load->library('formA/FormAClass');
-        $this->CI->load->library('formA/lists/ListFormA');
+        $this->CI->load->library('formC/FormCClass');
+        $this->CI->load->library('formC/lists/ListFormC');
     }
 
-    public function getFormAList() : ListFormAInterface
+    public function getFormCList() : ListFormCInterface
     {
         $username = $_SESSION['username'];
         $page_no = 1;
         $items_per_page = 10;
 
-        $forma_list = $this->fromDbGetList(
-            'ListFormA',
-            'FormAClass',
+        $formc_list = $this->fromDbGetList(
+            'ListFormC',
+            'FormCClass',
             array(
                 'ReportID' => 'report_id',
                 'ReportYear' => 'report_year',
@@ -27,14 +27,14 @@ class FormAModel extends BaseModel
                 // 'ReportNo' => 'demandgen_id',
                 'DateProcessed' => 'date_processed'
             ),
-            'get_report_demandgen_list',
+            'get_report_served_method_mix_list',
             array($username, $page_no, $items_per_page)
         );
 
-        $retval = new ListFormA();
+        $retval = new ListFormC();
 
-        foreach($forma_list as $form_A) {
-            $retval->append($form_A);
+        foreach($formc_list as $form_C) {
+            $retval->append($form_C);
         }
 
         return $retval;

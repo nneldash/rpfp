@@ -2,24 +2,24 @@
 $this->CI =& get_instance();
 $this->CI->load->model('BaseModel');
 
-class FormAModel extends BaseModel
+class FormBModel extends BaseModel
 {
     public function __construct()
     {
         parent::__construct();
-        $this->CI->load->library('formA/FormAClass');
-        $this->CI->load->library('formA/lists/ListFormA');
+        $this->CI->load->library('formB/FormBClass');
+        $this->CI->load->library('formB/lists/ListFormB');
     }
 
-    public function getFormAList() : ListFormAInterface
+    public function getFormBList() : ListFormBInterface
     {
         $username = $_SESSION['username'];
         $page_no = 1;
         $items_per_page = 10;
 
-        $forma_list = $this->fromDbGetList(
-            'ListFormA',
-            'FormAClass',
+        $formb_list = $this->fromDbGetList(
+            'ListFormB',
+            'FormBClass',
             array(
                 'ReportID' => 'report_id',
                 'ReportYear' => 'report_year',
@@ -27,14 +27,14 @@ class FormAModel extends BaseModel
                 // 'ReportNo' => 'demandgen_id',
                 'DateProcessed' => 'date_processed'
             ),
-            'get_report_demandgen_list',
+            'get_report_unmet_need_list',
             array($username, $page_no, $items_per_page)
         );
 
-        $retval = new ListFormA();
+        $retval = new ListFormB();
 
-        foreach($forma_list as $form_A) {
-            $retval->append($form_A);
+        foreach($formb_list as $form_B) {
+            $retval->append($form_B);
         }
 
         return $retval;

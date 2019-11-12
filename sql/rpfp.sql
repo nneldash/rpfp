@@ -3990,6 +3990,7 @@ BEGIN
         END IF;
 
         SET read_offset := (page_no - 1) * items_per_page;
+
          SELECT rd.REPORT_ID AS report_id,
                 rd.REPORT_YEAR AS report_year,
                 rd.REPORT_MONTH AS report_month,
@@ -5212,7 +5213,6 @@ GRANT EXECUTE ON PROCEDURE rpfp.lib_list_provinces TO 'rpfp_login';
 GRANT EXECUTE ON PROCEDURE rpfp.lib_list_cities TO 'rpfp_login';
 GRANT EXECUTE ON PROCEDURE rpfp.lib_list_brgy TO 'rpfp_login';
 
-
 GRANT EXECUTE ON PROCEDURE rpfp.itdmu_create_rpfp_user TO 'itdmu';
 GRANT EXECUTE ON PROCEDURE rpfp.itdmu_update_first_login TO 'itdmu';
 GRANT EXECUTE ON PROCEDURE rpfp.itdmu_change_user_password TO 'itdmu';
@@ -5221,7 +5221,6 @@ GRANT EXECUTE ON PROCEDURE rpfp.profile_set_role TO 'itdmu';
 GRANT EXECUTE ON PROCEDURE rpfp.profile_set_scope TO 'itdmu';
 GRANT EXECUTE ON PROCEDURE rpfp.profile_save_profile TO 'itdmu';
 
-
 GRANT EXECUTE ON PROCEDURE rpfp.encoder_get_couple_fp_details TO 'encoder';
 GRANT EXECUTE ON PROCEDURE rpfp.encoder_get_class_list_pending TO 'encoder';
 GRANT EXECUTE ON PROCEDURE rpfp.encoder_get_class_list_approved TO 'encoder';
@@ -5229,7 +5228,6 @@ GRANT EXECUTE ON PROCEDURE rpfp.encoder_get_couples_list TO 'encoder';
 GRANT EXECUTE ON PROCEDURE rpfp.encoder_get_couples_details TO 'encoder';
 GRANT EXECUTE ON PROCEDURE rpfp.encoder_check_couples_details TO 'encoder';
 GRANT EXECUTE ON PROCEDURE rpfp.encoder_get_fp_service TO 'encoder';
-
 GRANT EXECUTE ON PROCEDURE rpfp.encoder_save_class TO 'encoder';
 GRANT EXECUTE ON PROCEDURE rpfp.encoder_save_fp_details TO 'encoder';
 GRANT EXECUTE ON PROCEDURE rpfp.encoder_save_fp_service TO 'encoder';
@@ -5248,6 +5246,9 @@ GRANT EXECUTE ON PROCEDURE rpfp.encoder_get_couples_list TO 'regional_data_manag
 GRANT EXECUTE ON PROCEDURE rpfp.encoder_get_couples_details TO 'regional_data_manager';
 GRANT EXECUTE ON PROCEDURE rpfp.encoder_check_couples_details TO 'regional_data_manager';
 GRANT EXECUTE ON PROCEDURE rpfp.encoder_get_fp_service TO 'regional_data_manager';
+GRANT EXECUTE ON PROCEDURE rpfp.get_report_demandgen_list TO 'regional_data_manager';
+GRANT EXECUTE ON PROCEDURE rpfp.get_report_unmet_need_list TO 'regional_data_manager';
+GRANT EXECUTE ON PROCEDURE rpfp.get_report_served_method_mix_list TO 'regional_data_manager';
 
 GRANT EXECUTE ON PROCEDURE rpfp.process_demandgen TO 'pmed';
 GRANT EXECUTE ON PROCEDURE rpfp.process_unmet_need TO 'pmed';

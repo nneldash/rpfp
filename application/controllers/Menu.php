@@ -17,6 +17,12 @@ class Menu extends CI_Controller
         $this->load->library('couple_list/PendingClass');
         $this->load->model('AccomplishmentModel');
         $this->load->library('accomplishment_list/AccomplishmentClass');
+        $this->load->model('FormAModel');
+        $this->load->library('formA/FormAClass');
+        $this->load->model('FormBModel');
+        $this->load->library('formB/FormBClass');
+        $this->load->model('FormCModel');
+        $this->load->library('formC/FormCClass');
     }
 
     public function index()
@@ -150,43 +156,44 @@ class Menu extends CI_Controller
 
     public function formA()
     {
+        $forma = $this->FormAModel->getFormAList();
         if ($this->input->server(REQUEST_METHOD) == POST) {
-            $this->load->view('menu/formAMenu', array(RELOAD => true));
+            $this->load->view('menu/formAMenu', array('form_A' => $forma, RELOAD => true));
             return;
         }
 
         $this->do_not_render_footer = true;
         $this->index();
-        $this->load->view('menu/formAMenu');
-        $this->footer();
-
+        $this->load->view('menu/formAMenu', array('form_A' => $forma));
+        $this->footer();        
     }
 
     public function formB()
     {
+        $formb = $this->FormBModel->getFormBList();
         if ($this->input->server(REQUEST_METHOD) == POST) {
-            $this->load->view('menu/formBMenu', array(RELOAD => true));
+            $this->load->view('menu/formBMenu', array('form_B' => $formb, RELOAD => true));
             return;
         }
-        
+
         $this->do_not_render_footer = true;
         $this->index();
-        $this->load->view('menu/formBMenu');
-        $this->footer();
+        $this->load->view('menu/formBMenu', array('form_B' => $formb));
+        $this->footer();        
     }
 
     public function formC()
     {
+        $formc = $this->FormCModel->getFormCList();
         if ($this->input->server(REQUEST_METHOD) == POST) {
-            $this->load->view('menu/formCMenu', array(RELOAD => true));
+            $this->load->view('menu/formCMenu', array('form_C' => $formc, RELOAD => true));
             return;
         }
 
         $this->do_not_render_footer = true;
         $this->index();
-        $this->load->view('menu/formCMenu');
-        $this->footer();
-
+        $this->load->view('menu/formCMenu', array('form_C' => $formc));
+        $this->footer();        
     }
 
     public function pendingCoupleModal()
