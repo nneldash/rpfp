@@ -88,23 +88,18 @@ class Menu extends CI_Controller
 
     public function accomplishment()
     {
-        if (!$this->LoginModel->isLoggedIn()) {
-            redirect('Login');
-            return;
-        }
-        
-        $this->load->model('AccomplishmentModel');
         $accomplishment = $this->AccomplishmentModel->getAccomplishmentList();
-
         if ($this->input->server(REQUEST_METHOD) == POST) {
             $this->load->view('menu/accomplishment', array('accomplishment' => $accomplishment, RELOAD => true));
             return;
         }
+
         $this->do_not_render_footer = true;
         $this->index();
         $this->load->view('menu/accomplishment', array('accomplishment' => $accomplishment));
-        $this->footer();
+        $this->footer();        
     }
+
 
     public function search()
     {

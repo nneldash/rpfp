@@ -136,7 +136,7 @@ if (empty($title)) {
                                             </a>
                                         </li>
                                         <li>
-                                        <a href="<?= base_url('menu/accomplishment')?>">
+                                        <a href="#/Menu/accomplishment">
                                                 <i class="fa fa-clipboard"></i> Accomplishment Report
                                             </a>
                                         </li>
