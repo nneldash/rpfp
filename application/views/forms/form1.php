@@ -894,8 +894,15 @@ $form1 = FormClass::getFormFromVariable($form1);
 </div>
 
 <?php if(!$is_pdf) : ?>
-	<script type="text/javascript" src="<?= base_url('assets/js/form.js')?>"></script>
-	<script type="text/javascript" src="<?= base_url('NewAssets/inputMaskJs')?>"></script>
-	<script type="text/javascript" src="<?= base_url('NewAssets/jqueryMaskJs')?>"></script>
-	<script type="text/javascript" src="<?= base_url('NewAssets/inputExtJs')?>"></script>
+	<script>
+		loadJs(base_url + 'NewAssets/templateJs',
+			function() {
+				loadJs(base_url + 'NewAssets/inputMaskJs', function() {
+					loadJs(base_url + 'assets/js/form.js');
+				});
+				loadJs(base_url + 'NewAssets/jqueryMaskJs');
+				loadJs(base_url + 'NewAssets/inputExtJs');
+			}
+		);
+	</script>
 <?php endif; ?>

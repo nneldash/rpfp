@@ -1,5 +1,4 @@
 /** PREVENT SAVE FORM UPON CLICK OF SERVICE SLIP */
-var base_url = window.location.origin + '/rpfp';
 
 $(function() {
   	serviceModal();

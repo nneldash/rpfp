@@ -1,6 +1,8 @@
-loadJs(base_url + '/NewAssets/templateJs',
-	function() { listCoupleModal(); }
-);
+loadJs(base_url + 'NewAssets/templateJs', function() {
+	loadJs(base_url + 'NewAssets/bootstrapJs', function() {
+		listCoupleModal();
+	});
+});
 
 function listCoupleModal()
 {

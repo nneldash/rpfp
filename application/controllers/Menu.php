@@ -43,6 +43,11 @@ class Menu extends CI_Controller
         }        
     }
 
+    private function footer()
+    {
+        $this->load->view('includes/admin_footer');
+    }
+
     public function pending()
     {
         if (!$this->LoginModel->isLoggedIn()) {
@@ -104,7 +109,7 @@ class Menu extends CI_Controller
     public function search()
     {
         if ($this->input->server(REQUEST_METHOD) == POST) {
-            this->load->view('menu/search', array(RELOAD => true));
+            $this->load->view('menu/search', array(RELOAD => true));
             return;
         }
 

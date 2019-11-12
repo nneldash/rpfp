@@ -20,30 +20,5 @@
                 </div>
             </div>
         </div>
-
-        <script>
-            loadJs(base_url + 'NewAssets/templateJs', 
-                function(){ loadJs(base_url + 'NewAssets/nProgressJs',
-                    function(){ loadJs(base_url + 'NewAssets/progressBarJs',
-                        function(){ loadJs(base_url + 'NewAssets/customJs',
-                            function(){ loadJs(base_url + 'NewAssets/customJs',
-                                function(){ loadJs(base_url + 'NewAssets/customJs',
-                                    function(){ loadJs(base_url + 'assets/js/systemTimeout.js'); }
-                                );}
-                            );}
-                        );}
-                    );}
-                );}
-            );
-
-            loadJs(base_url + 'NewAssets/datatableJs',
-                function(){ loadJs(base_url + 'NewAssets/datatableBtJs',
-                    function(){ loadJs(base_url + 'NewAssets/datatableRpJs',
-                        function(){ loadJs(base_url + 'NewAssets/datatableBtrpJs.js'); }
-                    );}
-                );}
-            );
-
-        </script>        
     </body>
 </html>

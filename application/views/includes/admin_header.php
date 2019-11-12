@@ -28,13 +28,21 @@ if (empty($title)) {
         <link href="<?= base_url('NewAssets/datatablesResponsive'); ?>" rel="stylesheet" />
 
         <script>
-            loadJs(base_url + 'NewAssets/templateJs',
-                function() {
-                    loadJs(base_url + 'NewAssets/bootstrapJs');
-                    loadJs(base_url + 'assets/js/menu.js');
-                }
-            );
+            loadJs(base_url + 'NewAssets/templateJs', function() {
+                loadJs(base_url + 'assets/js/menu.js', function() {
+                    loadJs(base_url + 'NewAssets/nProgressJs', function() {
+                        loadJs(base_url + 'NewAssets/bootstrapJs', function() {
+                            loadJs(base_url + 'NewAssets/progressBarJs', function() {
+                                loadJs(base_url + 'NewAssets/customJs', function() {
+                                    loadJs(base_url + 'assets/js/systemTimeout.js');
+                                });
+                            });
+                        });
+                    });
+                });
+            });
         </script>
+
     </head>
 
     <style>
