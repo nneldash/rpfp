@@ -18,24 +18,31 @@ if (empty($title)) {
 
         <script type="text/javascript" src="<?= base_url('assets/js/scriptLoader.js')?>"></script>
 
-        <script>loadCss(base_url + '/NewAssets/bootstrapCss');</script>
-        <script>loadCss(base_url + '/NewAssets/nProgress');</script>
-        <script>loadCss(base_url + '/NewAssets/customCss');</script>
-        <script>loadCss(base_url + '/NewAssets/fontAwesome');</script>
-        <script>loadCss(base_url + '/assets/css/style.css');</script>
+        <link href="<?= base_url('NewAssets/bootstrapCss'); ?>" rel="stylesheet" />
+        <link href="<?= base_url('NewAssets/nProgress'); ?>" rel="stylesheet" />
+        <link href="<?= base_url('NewAssets/customCss'); ?>" rel="stylesheet" />
+        <link href="<?= base_url('NewAssets/fontAwesome'); ?>" rel="stylesheet" />
+        <link href="<?= base_url('assets/css/style.css'); ?>" rel="stylesheet" />
 
-        <script>loadCss(base_url + '/NewAssets/datatablesBootstrap');</script>
-        <script>loadCss(base_url + '/NewAssets/datatablesResponsive');</script>
-        
+        <link href="<?= base_url('NewAssets/datatablesBootstrap'); ?>" rel="stylesheet" />
+        <link href="<?= base_url('NewAssets/datatablesResponsive'); ?>" rel="stylesheet" />
+
         <script>
-            loadJs(
-                base_url + '/NewAssets/templateJs',
-                function() {
-                    loadJs(base_url + '/NewAssets/bootstrapJs');
-                    loadJs(base_url + '/assets/js/menu.js');
-                }
-            );
+            loadJs(base_url + 'NewAssets/templateJs', function() {
+                loadJs(base_url + 'assets/js/menu.js', function() {
+                    loadJs(base_url + 'NewAssets/nProgressJs', function() {
+                        loadJs(base_url + 'NewAssets/bootstrapJs', function() {
+                            loadJs(base_url + 'NewAssets/progressBarJs', function() {
+                                loadJs(base_url + 'NewAssets/customJs', function() {
+                                    loadJs(base_url + 'assets/js/systemTimeout.js');
+                                });
+                            });
+                        });
+                    });
+                });
+            });
         </script>
+
     </head>
 
     <style>
@@ -129,7 +136,7 @@ if (empty($title)) {
                                             </a>
                                         </li>
                                         <li>
-                                            <a href="<?= base_url('menu/accomplishment')?>">
+                                        <a href="#/Menu/accomplishment">
                                                 <i class="fa fa-clipboard"></i> Accomplishment Report
                                             </a>
                                         </li>

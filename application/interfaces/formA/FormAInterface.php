@@ -11,4 +11,9 @@ abstract class FormAInterface extends BaseInterface
     public $Period;
     /** @var ListMonthsInterface */
     public $ListMonth;
+
+    public $ReportNo;
+    public $ReportYear;
+    public $ReportMonth;
+    public $DateProcessed;
 }

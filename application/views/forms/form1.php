@@ -112,7 +112,9 @@ $form1 = FormClass::getFormFromVariable($form1);
 						<td class="border-1 padding-0 back-eee" style="border-left: none">
 							<?php if (!$is_pdf) : ?>
 								<label class="cont border-t1">
-									<input id="4ps" type="radio" name="type_of_class" value="1" />
+									<input id="4ps" type="radio" name="type_of_class" value="1" 
+										<?= $form1->Seminar->TypeOfClass->Type == '4Ps' ? 'checked' : '' ?>
+									/>
 									<span class="checkmark"></span>
 								</label>
 							<?php endif; ?>
@@ -124,7 +126,9 @@ $form1 = FormClass::getFormFromVariable($form1);
 						<td class="border-1 padding-0 back-eee" style="border: 1px solid">
 							<?php if (!$is_pdf) : ?>
 								<label class="cont">
-									<input id="house" type="radio" name="type_of_class" value="5" />
+									<input id="house" type="radio" name="type_of_class" value="5" 
+										<?= $form1->Seminar->TypeOfClass->Type == 'House-to-House' ? 'checked' : '' ?>
+									/>
 									<span class="checkmark"></span>
 								</label>
 							<?php endif; ?>
@@ -155,7 +159,9 @@ $form1 = FormClass::getFormFromVariable($form1);
 						<td class="border-1 width-30 padding-0 back-eee" style="border-left: none!important;">
 							<?php if (!$is_pdf) : ?>
 								<label class="cont border-t1">
-									<input id="faith" type="radio" name="type_of_class" value="2" />
+									<input id="faith" type="radio" name="type_of_class" value="2" 
+										<?= $form1->Seminar->TypeOfClass->Type == 'Faith-Based Organization' ? 'checked' : '' ?> 
+									/>
 									<span class="checkmark"></span>
 								</label>
 							<?php endif; ?>
@@ -167,7 +173,9 @@ $form1 = FormClass::getFormFromVariable($form1);
 						<td class="border-1 width-30 padding-0 back-eee">
 							<?php if (!$is_pdf) : ?>
 								<label class="cont border-t1">
-									<input id="profile" type="radio" name="type_of_class" value="6" />
+									<input id="profile" type="radio" name="type_of_class" value="6" 
+										<?= $form1->Seminar->TypeOfClass->Type == 'Profile only' ? 'checked' : '' ?>
+									/>
 									<span class="checkmark"></span>
 								</label>
 							<?php endif; ?>
@@ -199,7 +207,9 @@ $form1 = FormClass::getFormFromVariable($form1);
 						<td class="border-1 width-30 padding-0 back-eee" style="border-left: none">
 							<?php if (!$is_pdf) : ?>
 								<label class="cont border-t1">
-									<input id="pmc" type="radio" name="type_of_class" value="3" />
+									<input id="pmc" type="radio" name="type_of_class" value="3" 
+										<?= $form1->Seminar->TypeOfClass->Type == 'PMC' ? 'checked' : '' ?>
+									/>
 									<span class="checkmark"></span>
 								</label>
 							<?php endif; ?>
@@ -211,7 +221,9 @@ $form1 = FormClass::getFormFromVariable($form1);
 						<td class="border-1 width-30 padding-0 back-eee">
 							<?php if (!$is_pdf) : ?>
 								<label class="cont border-t1">
-									<input id="others" type="radio" name="type_of_class" value="7" />
+									<input id="others" type="radio" name="type_of_class" value="7" 
+										<?= $form1->Seminar->TypeOfClass->Type == 'Others' ? 'checked' : '' ?>
+									/>
 									<span class="checkmark"></span>
 								</label>
 							<?php endif; ?>
@@ -221,7 +233,7 @@ $form1 = FormClass::getFormFromVariable($form1);
 								<?php
 		                            echo HtmlHelper::inputPdf(
 		                                $is_pdf,
-		                                "",
+		                                isset($form1->Seminar->TypeOfClass->Others) ? $form1->Seminar->TypeOfClass->Others : '',
 		                                "text",
 		                                "others",
 		                                "padding-l10 underline width-20 disabled-others",
@@ -254,7 +266,9 @@ $form1 = FormClass::getFormFromVariable($form1);
 						<td class="border-1 width-30 padding-0 back-eee" style="border-left: none">
 							<?php if (!$is_pdf) : ?>
 								<label class="cont border-t1">
-									<input id="usapan" type="radio" name="type_of_class" value="4" />
+									<input id="usapan" type="radio" name="type_of_class" value="4" 
+										<?= $form1->Seminar->TypeOfClass->Type == 'Usapan' ? 'checked' : '' ?>
+									/>
 									<span class="checkmark"></span>
 								</label>
 							<?php endif; ?>
@@ -271,16 +285,7 @@ $form1 = FormClass::getFormFromVariable($form1);
 						</td>
 						<td class="border-0">
 							<span class="small">
-								<?php
-		                            echo HtmlHelper::inputPdf(
-		                                $is_pdf,
-		                                $form1->Seminar->DateConducted,
-		                                "date",
-		                                "date_conducted",
-		                                "padding-l10 underline width-70",
-		                                ""
-		                            );
-		                        ?>
+								<input type="date" name="date_conducted" value="<?= $form1->Seminar->DateConducted; ?>" class="padding-l10 underline width-70" />
 		                    </span>
 						</td>
 					</tr>
@@ -894,8 +899,15 @@ $form1 = FormClass::getFormFromVariable($form1);
 </div>
 
 <?php if(!$is_pdf) : ?>
-	<script type="text/javascript" src="<?= base_url('assets/js/form.js')?>"></script>
-	<script type="text/javascript" src="<?= base_url('NewAssets/inputMaskJs')?>"></script>
-	<script type="text/javascript" src="<?= base_url('NewAssets/jqueryMaskJs')?>"></script>
-	<script type="text/javascript" src="<?= base_url('NewAssets/inputExtJs')?>"></script>
+	<script>
+		loadJs(base_url + 'NewAssets/templateJs',
+			function() {
+				loadJs(base_url + 'NewAssets/inputMaskJs', function() {
+					loadJs(base_url + 'assets/js/form.js');
+				});
+				loadJs(base_url + 'NewAssets/jqueryMaskJs');
+				loadJs(base_url + 'NewAssets/inputExtJs');
+			}
+		);
+	</script>
 <?php endif; ?>

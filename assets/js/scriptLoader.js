@@ -3,7 +3,7 @@
  * https://stackoverflow.com/questions/14644558/call-javascript-function-after-script-is-loaded
  * 
 */
-var base_url = window.location.origin + '/rpfp';
+var base_url = window.location.origin + '/rpfp/';
 
 function isScriptLoaded(src, is_js = true)
 {

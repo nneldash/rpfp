@@ -8,4 +8,9 @@ abstract class FormBInterface extends BaseInterface
 {
     /** @var ListMonthsInterface */
     public $ListMonth;
+
+    public $ReportNo;
+    public $ReportYear;
+    public $ReportMonth;
+    public $DateProcessed;
 }

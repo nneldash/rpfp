@@ -109,6 +109,9 @@ defined('_VALUE') or define('_VALUE', 'value');
 defined('N_A') or define('N_A', 'N/A');
 defined('NOT_FOUND') or define('NOT_FOUND', ' NOT FOUND!!!');
 defined('BLANK') or define('BLANK', '');
+defined('REQUEST_METHOD') or define('REQUEST_METHOD', 'REQUEST_METHOD');
+defined('POST') or define('POST', 'POST');
+defined('RELOAD') or define('RELOAD', 'reload');
 
 defined('BOOTSRAP_CSS') or define('BOOTSRAP_CSS', '/../node_modules/bootstrap/dist/css/bootstrap.min.css');
 defined('BOOTSRAP_JS') or define('BOOTSRAP_JS', '/../node_modules/bootstrap/dist/js/bootstrap.min.js');
