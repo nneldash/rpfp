@@ -14,7 +14,7 @@ function listCoupleModal()
 
 		$('#coupleModal').modal();
 
-		$.post(base_url + '/menu/pendingCoupleModal', {'classId' : classNo})
+		$.post(base_url + 'menu/pendingCoupleModal', {'classId' : classNo})
 		.done(function(html){
 			$('.modal-body').html(html);
 		});
@@ -28,7 +28,7 @@ function listCoupleModal()
 
 		$('#coupleModal').modal();
 
-		$.post(base_url + '/menu/approveCoupleModal')
+		$.post(base_url + '/menu/approveCoupleModal', {'classId' : classNo})
 		.done(function(html){
 			$('.modal-body').html(html);
 		});

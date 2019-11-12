@@ -4,6 +4,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
 if (empty($title)) {
     $title = 'Online RPFP Monitoring System | Approve';
 }
+
+$count = count($approve);
 ?>
 <script>document.querySelector("head title").innerHTML = '<?=$title?>';</script>
 
@@ -23,19 +25,25 @@ if (empty($title)) {
         </tr>
     </thead>
     <tbody>
-        <?php foreach ($approve as $approved) : ?>
+        <?php if ($count >= 1) { ?>
+            <?php foreach ($approve as $approved) : ?>
+                <tr>
+                    <td><?= $approved->ClassNo ?></td>
+                    <td><?= $approved->TypeClass ?></td>
+                    <td><?= $approved->Barangay; ?></td>
+                    <td><?= date('F d, Y', strtotime($approved->DateConduct)); ?></td>
+                    <td class="text-center">
+                        <button class="btn btn-primary btn-approve-listing" data-toggle="tooltip" data-placement="left" title="View List">
+                            <i class="fa fa-list"></i>
+                        </button>					
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+        <?php } else { ?>
             <tr>
-                <td><?= $approved->ClassNo ?></td>
-                <td><?= $approved->TypeClass ?></td>
-                <td><?= $approved->Barangay; ?></td>
-                <td><?= date('F d, Y', strtotime($approved->DateConduct)); ?></td>
-                <td class="text-center">
-                    <button class="btn btn-primary btn-approve-listing" data-toggle="tooltip" data-placement="left" title="View List">
-                        <i class="fa fa-list"></i>
-                    </button>					
-                </td>
+                <td class="text-center" colspan="5">No result(s) found.</td>
             </tr>
-        <?php endforeach; ?>
+        <?php } ?>
     </tbody>
 </table>
 

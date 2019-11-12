@@ -199,7 +199,10 @@ class Menu extends CI_Controller
 
     public function approveCoupleModal()
     {
-        $this->load->view('menu/listTables/approveTable');
+        $classId = $this->input->post('classId');
+        
+        $formList = $this->CoupleModel->getFormList($classId);
+        $this->load->view('menu/listTables/approveTable', array('forms' => $formList));
     }
 
     public function profile()
