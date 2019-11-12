@@ -104,7 +104,7 @@ $form1 = FormClass::getFormFromVariable($form1);
 					</div>
 			    </div>
 			<?php endif; ?>
-			<input type="hidden" name="class_id" value="<?= (!empty($_GET['rpfpId']) ? $_GET['rpfpId'] : 0); ?>" />
+			<input type="hidde" name="class_id" value="<?= (!empty($_GET['rpfpId']) ? $_GET['rpfpId'] : 0); ?>" />
 			<div class="border-t1 table-responsive">
 				<div style="padding-top: 10px"></div>
 				<table style="float: left" class="table">
@@ -441,7 +441,7 @@ $form1 = FormClass::getFormFromVariable($form1);
 									
 									<td class="small" style="padding: 5px;">
 										<input type="hidden" id="isDuplicate1" value="" />
-										<input type="hidden" name="individual_id1['<?= $i; ?>']"/>
+										<input type="hidde" name="individual_id1['<?= $i; ?>']" value=""/>
 										<input type="hidden" class="loopIndex1" value="<?= $i;?>" />
 										<?php
 				                            echo HtmlHelper::inputPdf(

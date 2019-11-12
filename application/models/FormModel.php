@@ -43,7 +43,13 @@ class FormModel extends BaseModel
             return;
         }
 
-        print_r($this->saveCouple($class_id, $form->ListCouple));
+       $couple = $this->saveCouple($class_id, $form->ListCouple);
+        
+       if (!$couple) {
+           return false;
+       }
+
+       return true; 
   
     }
 
@@ -187,7 +193,10 @@ class FormModel extends BaseModel
         $form1 = new FormClass();
 
         $form1->Seminar = $this->getForm1Seminar($classId);
-        $form1->ListCouple = $this->getForm1Couples();
+        $classNo = $form1->Seminar->ClassNumber;
+
+        $form1->ListCouple = $this->getForm1Couples($classNo);
+
         return $form1;
     }
 
@@ -217,26 +226,38 @@ class FormModel extends BaseModel
         );
     }
 
-    public function getForm1Couples() : ListCoupleInterface
+    public function getForm1Couples($classNo = null) : ListCoupleInterface
     {
-        $list = new ListCoupleClass();
-        $couple = new CoupleClass();
-        
-        $couple->Id = '1';
-        $couple->Address_St = 'Bulacan St';
-        $couple->Address_Brgy = 'Barangay Bulacan';
-        $couple->Address_City = 'Bulacan City';
-        $couple->Address_HH_No = '0000';
-        $couple->NumberOfChildren = '12';
 
-
-        $couple->FirstEntry = $this->getForm1Husband();
-        $couple->SecondEntry = $this->getForm1Wife();
-        $couple->ModernFp = $this->getForm1ModernFpUser();
-        $couple->TraditionalFp = $this->getForm1TraditionalFpUser();
-
-        $list->append($couple);
-        return $list;
+        return $this->fromDbGetList(
+            'ListCoupleClass',
+            'CoupleClass',
+            array(
+                'Id' => 'couplesid',
+                'FirstEntry' => array (
+                    'Id' => 'indvid',
+                    'Name' => array(
+                        'Surname' => 'lastname',
+                        'Firstname' => 'firstname',
+                        'Middlename' => 'middle',
+                        'Extname' => 'ext'
+                    ),
+                    'Age' => 'age',
+                    'Sex' => 'sex',
+                    'Birthdate' => 'birth_month',
+                    'CivilStatus' => 'civil',
+                    'HighestEducation' => 'educ_bckgrnd',
+                    'Attendee' => 'attendee'
+                ),
+                'Address_St' => 'address_no_st',
+                'Address_Brgy' => 'address_brgy',
+                'Address_City' => 'address_city',
+                'Address_HH_No' => 'household_no',
+                'NumberOfChildren' => 'number_child'
+            ),
+            'encoder_get_couples_details',
+            array($classNo)
+        );
     }
 
     public function getForm1Husband() : IndividualInterface
