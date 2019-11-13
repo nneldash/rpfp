@@ -9,4 +9,9 @@ abstract class AccomplishmentInterface extends BaseInterface
     public $ReportYear;
     public $ReportMonth;
     public $DateProcessed;
+    
+    public $ClassNo;
+    public $EncodedCouples;
+    public $ApprovedCouples;
+    public $Duplicates;
 }

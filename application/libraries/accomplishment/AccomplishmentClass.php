@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 $CI =& get_instance();
-$CI->load->iface('accomplishment_list/AccomplishmentInterface');
+$CI->load->iface('accomplishment/AccomplishmentInterface');
 
 class AccomplishmentClass extends AccomplishmentInterface
 {

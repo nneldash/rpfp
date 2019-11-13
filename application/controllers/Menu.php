@@ -16,7 +16,7 @@ class Menu extends CI_Controller
         $this->load->library('couple_list/ApproveClass');
         $this->load->library('couple_list/PendingClass');
         $this->load->model('AccomplishmentModel');
-        $this->load->library('accomplishment_list/AccomplishmentClass');
+        $this->load->library('accomplishment/AccomplishmentClass');
         $this->load->model('FormAModel');
         $this->load->library('formA/FormAClass');
         $this->load->model('FormBModel');

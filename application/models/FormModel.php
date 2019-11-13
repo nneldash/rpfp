@@ -18,7 +18,8 @@ class FormModel extends BaseModel
         $this->CI->load->iface('common/TraditionalStatuses');
 
         $this->CI->load->library('couple_list/DuplicateCoupleClass');
-        $this->CI->load->library('accomplishment_list/AccomplishmentClass');
+        $this->CI->load->library('accomplishment/AccomplishmentClass');
+        $this->CI->load->library('accomplishment/lists/ReportAccomplishment');
     }
 
     public function saveForm1(FormInterface $form)

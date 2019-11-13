@@ -93,7 +93,8 @@ class BaseModel extends CI_Model
     }
 
     protected function fromDbGetReportList(
-        $listReport,
+        $listClass,
+        $itemClass,
         $classDbArray,
         $proc,
         $params = array(),
@@ -102,8 +103,8 @@ class BaseModel extends CI_Model
     ) : ArrayObject
     {
         $list = new ArrayObject();
-        if (!empty($listReport)) {
-            $list = new $listReport();
+        if (!empty($listClass)) {
+            $list = new $listClass();
         }
 
         $rows = $this->runStoredProcAndGetResults($proc, $params, $db);
@@ -111,14 +112,14 @@ class BaseModel extends CI_Model
         if ($rows !== false && (count($rows) > 0)) {
             $test_lib_folder = $libFolder;
             try {
-                $this->CI->load->library($test_lib_folder . '/' . $listReport);
+                $this->CI->load->library($test_lib_folder . '/' . $itemClass);
             } catch (Exception $e) {
                 $test_lib_folder = 'common';
-                $this->CI->load->library($test_lib_folder . '/' . $listReport);
+                $this->CI->load->library($test_lib_folder . '/' . $itemClass);
             }
 
             foreach ($rows as $data) {
-                $item = new $listReport();
+                $item = new $itemClass();
 
                 $this->fillItem($item, $classDbArray, $data);
                 $list->append($item);

@@ -46,17 +46,44 @@ defined('BASEPATH') or exit('No direct script access allowed');
         				</tr>
         			</thead>
         			<tbody>
-						<?php foreach ($accomplishment as $accomplished) : ?>
+						<?php
+							$encoded_couples = 0;
+							$approved_couples = 0;
+							$duplicates = 0;
+						foreach ($accomplishment as $accomplished) : ?>
 							<tr>
-								<td><?= $accomplished->ReportNo ?></td>
-								<td><?= $accomplished->ReportYear ?> - <?php if ($accomplished->ReportMonth != 0) { echo strftime("%b" ,mktime(0,0,0, $accomplished->ReportMonth )); } else { echo $accomplished->ReportMonth; } ?></td>
-								<td><?= date('F d, Y', strtotime($accomplished->DateProcessed)); ?></td>
-								<td class="text-center">
-									<a class="viewForm folderview" href="<?= base_url('forms/accomplishment'); ?>" target="_blank">
-									<button class="btn btn-primary" data-toggle="tooltip" data-placement="left" title="View">
-										<i class="fa fa-folder-open"></i>
-									</button>					
+								<td><?= $accomplished->ClassNo ?></td>
+								<td>
+									<?php 
+										if($accomplished->EncodedCouples != 'N/A') {
+											echo $accomplished->EncodedCouples;
+											$encoded_couples+= $accomplished->EncodedCouples;
+										} else {
+											echo 0;
+										}
+									?>
 								</td>
+								<td>
+									<?php 
+										if($accomplished->ApprovedCouples != 'N/A') {
+											echo $accomplished->ApprovedCouples;
+											$approved_couples+= $accomplished->ApprovedCouples; 
+										} else {
+											echo 0;
+										}
+									?>
+								</td>
+								<td>
+									<?php 
+										if($accomplished->Duplicates != 'N/A') {
+											echo $accomplished->Duplicates;
+											$duplicates+= $accomplished->Duplicates; 
+										} else {
+											echo 0;
+										}
+									?>
+								</td>
+								<td> </td>
 							</tr>
 						<?php endforeach; ?>
     				</tbody>
@@ -69,22 +96,22 @@ defined('BASEPATH') or exit('No direct script access allowed');
         					</td>
         					<td class="text-center">
         						<p class="text-bold text-italic">
-        							873
+        							<?= $encoded_couples ?>
         						</p>
         					</td>
         					<td class="text-center">
         						<p class="text-bold text-italic">
-        							867
+        							<?= $approved_couples ?>
         						</p>
         					</td>
         					<td class="text-center">
         						<p class="text-bold text-italic">
-        							6
+        							<?= $duplicates ?>
         						</p>
         					</td>
         					<td class="text-center">
         						<p class="text-bold text-italic">
-        							156
+        							
         						</p>
         					</td>
         				</tr>
@@ -94,7 +121,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
         					</td>
         					<td style="border-right: 0; border-left: 0;"></td>
         					<td colspan="2" class="text-right" style="border-left: 0; padding-right: 4%;">
-        						<h4 class="text-bold">867</h4>
+        						<h4 class="text-bold">
+        							<?= $approved_couples ?>
+								</h4>
         					</td>
         				</tr>
         			</tfoot>
