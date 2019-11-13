@@ -13,7 +13,6 @@ class FormAModel extends BaseModel
 
     public function getFormAList() : ListFormAInterface
     {
-        $username = $_SESSION['username'];
         $page_no = 1;
         $items_per_page = 10;
 
@@ -28,7 +27,7 @@ class FormAModel extends BaseModel
                 'DateProcessed' => 'date_processed'
             ),
             'get_report_demandgen_list',
-            array($username, $page_no, $items_per_page)
+            array($page_no, $items_per_page)
         );
 
         $retval = new ListFormA();

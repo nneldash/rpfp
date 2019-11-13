@@ -12,7 +12,7 @@ abstract class FormAInterface extends BaseInterface
     /** @var ListMonthsInterface */
     public $ListMonth;
 
-    public $ReportNo;
+    public $ReportID;
     public $ReportYear;
     public $ReportMonth;
     public $DateProcessed;

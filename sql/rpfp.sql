@@ -651,7 +651,13 @@ BEGIN
     RETURN profile_get_region( USER() );
 END$$
 
-    
+CREATE DEFINER=root@localhost FUNCTION profile_get_own_role()
+        RETURNS INT
+        READS SQL DATA
+BEGIN
+    RETURN profile_get_role( USER() );
+END$$
+
 CREATE DEFINER=root@localhost FUNCTION profile_get_location(
     db_user VARCHAR(50) CHARSET utf8 COLLATE utf8_unicode_ci,
     scope_num INT
@@ -4051,29 +4057,46 @@ BEGIN
 END$$
 
 CREATE DEFINER=root@localhost PROCEDURE get_report_demandgen_list(
-    IN username VARCHAR(50),
     IN page_no INT,
     IN items_per_page INT
     )   READS SQL DATA
+proc_exit_point :
 BEGIN
-    DECLARE name_user VARCHAR(50);
-    DECLARE db_user_name VARCHAR(50);
     DECLARE read_offset INT;
+    DECLARE role_of_user INT;
 
-    CALL rpfp.lib_extract_user_name( username, name_user, db_user_name );
+    SET role_of_user := rpfp.profile_get_own_role();
+
+    IF role_of_user = 90 THEN
+        CALL pmed_get_report_demandgen_list(page_no, items_per_page);
+        LEAVE proc_exit_point;
+    END IF;
+
+    IF role_of_user = 80 THEN
+        CALL rdm_get_report_demandgen_list(page_no, items_per_page);
+        LEAVE proc_exit_point;
+    END IF;
+
+END$$
+
+CREATE DEFINER=root@localhost PROCEDURE pmed_get_report_demandgen_list(
+    IN page_no INT,
+    IN items_per_page INT
+    )   READS SQL DATA
+proc_exit_point :
+BEGIN
+    DECLARE read_offset INT;
 
     IF NOT EXISTS (
          SELECT rd.REPORT_ID
            FROM rpfp.report_demandgen rd
-      LEFT JOIN rpfp.user_profile up
-             ON up.REGION_CODE = rd.PSGC_CODE
-          WHERE up.DB_USER_ID = name_user
     ) THEN
          SELECT NULL AS report_id,
                 NULL AS report_year,
                 NULL AS report_month,
                 NULL AS date_processed
         ;
+        LEAVE proc_exit_point;
     ELSE
         IF (IFNULL( page_no, 0) = 0) THEN
             /** DEFAULT PAGE NO. */
@@ -4091,13 +4114,61 @@ BEGIN
                 rd.REPORT_MONTH AS report_month,
                 rd.DATE_PROCESSED AS date_processed
            FROM rpfp.report_demandgen rd
-      LEFT JOIN rpfp.user_profile up
-             ON up.REGION_CODE = rd.PSGC_CODE
-          WHERE up.DB_USER_ID = name_user
-       GROUP BY rd.DEMANDGEN_ID
+    --    GROUP BY rd.DEMANDGEN_ID
        ORDER BY rd.DATE_PROCESSED DESC
           LIMIT read_offset, items_per_page
         ;
+        
+        LEAVE proc_exit_point;
+    END IF;
+END$$
+
+CREATE DEFINER=root@localhost PROCEDURE rdm_get_report_demandgen_list(
+    IN page_no INT,
+    IN items_per_page INT
+    )   READS SQL DATA
+proc_exit_point :
+BEGIN
+    DECLARE read_offset INT;
+    DECLARE region_of_user INT;
+
+    SET region_of_user := rpfp.profile_get_own_region();
+
+    IF NOT EXISTS (
+         SELECT rd.REPORT_ID
+           FROM rpfp.report_demandgen rd
+          WHERE rd.PSGC_CODE = region_of_user
+    ) THEN
+         SELECT NULL AS report_id,
+                NULL AS report_year,
+                NULL AS report_month,
+                NULL AS date_processed
+        ;
+        LEAVE proc_exit_point;
+    ELSE
+        IF (IFNULL( page_no, 0) = 0) THEN
+            /** DEFAULT PAGE NO. */
+            SET page_no := 1;
+        END IF;
+        IF (IFNULL( items_per_page, 0) = 0) THEN
+            /** DEFAULT COUNT PER PAGE*/
+            SET items_per_page := 10;
+        END IF;
+
+        SET read_offset := (page_no - 1) * items_per_page;
+
+         SELECT rd.REPORT_ID AS report_id,
+                rd.REPORT_YEAR AS report_year,
+                rd.REPORT_MONTH AS report_month,
+                rd.DATE_PROCESSED AS date_processed
+           FROM rpfp.report_demandgen rd
+          WHERE rd.PSGC_CODE = region_of_user
+    --    GROUP BY rd.DEMANDGEN_ID
+       ORDER BY rd.DATE_PROCESSED DESC
+          LIMIT read_offset, items_per_page
+        ;
+        
+        LEAVE proc_exit_point;
     END IF;
 END$$
 
