@@ -199,6 +199,7 @@ class Forms extends CI_Controller
     {
         $modernFp = new ModernFpUserClass();
 
+        $modernFp->Id = $this->input->post('fp_id')[$i];
         $modernFp->MethodUsed = $this->input->post('method')[$i];
         $modernFp->IntentionToShift = $this->input->post('fp_method')[$i];
 
