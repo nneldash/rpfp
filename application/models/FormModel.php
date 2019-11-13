@@ -239,7 +239,7 @@ class FormModel extends BaseModel
                     'Id' => 'indvid',
                     'Name' => array(
                         'Surname' => 'lastname',
-                        'Firstname' => 'firstname',
+                        'Firstname' => 'firstname', 
                         'Middlename' => 'middle',
                         'Extname' => 'ext'
                     ),
@@ -254,52 +254,23 @@ class FormModel extends BaseModel
                 'Address_Brgy' => 'address_brgy',
                 'Address_City' => 'address_city',
                 'Address_HH_No' => 'household_no',
-                'NumberOfChildren' => 'number_child'
+                'NumberOfChildren' => 'number_child',
+                'ModernFp' => array(
+                    'Id' => 'fp_id',
+                    'MethodUsed' => 'mfp_method',
+                    'IntentionToShift' => 'mfp_intention_shift'
+                ),
+                'TraditionalFp' => array(
+                    'Type' => 'tfp_type',
+                    'Status' => 'tfp_status',
+                    'ReasonForUse' => 'tfp_reason'
+                )
             ),
-            'encoder_get_couples_details',
+            'encoder_get_couples_with_fp_details',
             array($classNo)
         );
     }
 
-    public function getForm1Husband() : IndividualInterface
-    {
-        $individual = new IndividualClass();
-
-        $individual->Id = '1';
-        $individual->Name->Surname = 'Fan';
-        $individual->Name->Firstname = 'Chou';
-        $individual->Name->Middlename = '';
-        $individual->Name->Extname = '';
-        $individual->Sex = Sexes::MALE;
-        $individual->CivilStatus = CivilStatuses::MARRIED;
-        $individual->Birthdate = '12/31/1996';
-        $individual->Age = '22';
-        $individual->ResidentialAddress = 'Mandaluyong City, Metro Manila';
-        $individual->HighestEducation = EducationBackgrounds::HIGH_SCHOOL_GRADUATE;
-        $individual->Attendee = true;
-
-        return $individual;
-    }
-
-    public function getForm1Wife() : IndividualInterface
-    {
-        $individual = new IndividualClass();
-
-        $individual->Id = '2';
-        $individual->Name->Surname = 'Montana';
-        $individual->Name->Firstname = 'Hanabi';
-        $individual->Name->Middlename = '';
-        $individual->Name->Extname = '';
-        $individual->Sex = Sexes::FEMALE;
-        $individual->CivilStatus = CivilStatuses::MARRIED;
-        $individual->Birthdate = '12/31/1996';
-        $individual->Age = '22';
-        $individual->ResidentialAddress = 'Mandaluyong City, Metro Manila';
-        $individual->HighestEducation = EducationBackgrounds::VOCATIONAL;
-        $individual->Attendee = true;
-
-        return $individual;
-    }
 
     public function getForm1ModernFpUser() : ModernFpUserInterface
     {

@@ -1392,6 +1392,101 @@ BEGIN
     END IF;
 END$$
 
+CREATE DEFINER=root@localhost PROCEDURE encoder_get_couples_with_fp_details(
+    IN class_num VARCHAR(50)
+    )   READS SQL DATA
+BEGIN
+    DECLARE name_user VARCHAR(50);
+    DECLARE db_user_name VARCHAR(50);
+    DECLARE user_scope INT;
+    DECLARE user_location INT;
+    DECLARE multiplier INT;
+    DECLARE is_not_encoder INT(1);
+    
+    CALL rpfp.lib_extract_user_name( USER(), name_user, db_user_name );
+    SET user_scope := rpfp.profile_get_scope( name_user );
+    SET multiplier := rpfp.lib_get_multiplier( user_scope );
+    SET user_location := rpfp.profile_get_location( name_user, user_scope );
+    SET is_not_encoder := NOT IFNULL(rpfp.profile_check_if_encoder(), FALSE);
+
+    IF NOT EXISTS (
+         SELECT apc.COUPLES_ID
+           FROM rpfp.couples apc
+      LEFT JOIN rpfp.rpfp_class rc
+             ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
+          WHERE rc.CLASS_NUMBER = class_num
+            AND (   rc.DB_USER_ID = name_user
+                OR (   is_not_encoder
+                    AND user_location = (rc.BARANGAY_ID DIV POWER( 10, multiplier ))
+                    )
+                )
+    ) THEN
+         SELECT NULL AS couplesid,
+                NULL AS indvid,
+                NULL AS lastname,
+                NULL AS firstname,
+                NULL AS middle,
+                NULL AS ext,
+                NULL AS age,
+                NULL AS sex,
+                NULL AS birth_month,
+                NULL AS civil,
+                NULL AS educ_bckgrnd,
+                NULL AS attendee,
+                NULL AS address_no_st,
+                NULL AS address_brgy,
+                NULL AS address_city,
+                NULL AS household_no,
+                NULL AS number_child,
+                NULL AS fp_id,
+                NULL AS mfp_method,
+                NULL AS mfp_intention_shift,
+                NULL AS tfp_type,
+                NULL AS tfp_status,
+                NULL AS tfp_reason
+        ;
+    ELSE
+         SELECT apc.COUPLES_ID AS couplesid,
+         		ic.INDV_ID AS indvid,
+                ic.LNAME AS lastname,
+                ic.FNAME AS firstname,
+                ic.MNAME AS middle,
+                ic.EXT_NAME AS ext,
+                ic.AGE AS age,
+                ic.SEX AS sex,
+                ic.BDATE AS birth_month,
+                ic.CIVIL_ID AS civil,
+                ic.EDUC_BCKGRND_ID AS educ_bckgrnd,
+                ic.IS_ATTENDEE AS attendee,
+                apc.ADDRESS_NO_ST AS address_no_st,
+                apc.ADDRESS_BRGY AS address_brgy,
+                apc.ADDRESS_CITY AS address_city,
+                apc.HH_ID_NO AS household_no,
+                apc.NO_CHILDREN AS number_child,
+                fp.FP_DETAILS_ID AS fp_id,
+                fp.MFP_METHOD_USED_ID AS mfp_method,
+                fp.MFP_INTENTION_SHIFT_ID AS mfp_intention_shift,
+                fp.TFP_TYPE_ID AS tfp_type,
+                fp.TFP_STATUS_ID AS tfp_status,
+                fp.REASON_INTENDING_USE_ID AS tfp_reason
+           FROM rpfp.rpfp_class rc
+      LEFT JOIN rpfp.couples apc
+             ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
+      LEFT JOIN rpfp.individual ic
+             ON ic.COUPLES_ID = apc.COUPLES_ID
+      LEFT JOIN rpfp.fp_details fp
+             ON fp.COUPLES_ID = ic.COUPLES_ID
+          WHERE rc.CLASS_NUMBER = class_num
+            AND (   rc.DB_USER_ID = name_user
+                OR (   is_not_encoder
+                    AND user_location = (rc.BARANGAY_ID DIV POWER( 10, multiplier ))
+                    )
+                )
+       ORDER BY ic.INDV_ID ASC
+        ;
+    END IF;
+END$$
+
 CREATE DEFINER=root@localhost PROCEDURE encoder_save_class(
     IN classid INT UNSIGNED,
     IN type_class INT,
