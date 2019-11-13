@@ -46,24 +46,22 @@ $count = count($pending);
     </tbody>
 </table>
 
+<button id="refresh">refresher</button>
 <script>
-    loadJs(base_url + '/NewAssets/templateJs', function() {
-        loadJs(base_url + '/assets/js/listCouples.js');
+    loadJs(base_url + 'NewAssets/templateJs', function() {
+        loadJs(base_url + 'assets/js/listCouples.js');
         loadJs(base_url + 'NewAssets/datatableJs', function() {
             loadJs(base_url + 'NewAssets/datatableBtJs', function() {
                 loadJs(base_url + 'NewAssets/datatableRpJs', function() {
-                    loadJs(base_url + 'NewAssets/datatableBtrpJs.js');
-                    <?php
-                        if (!empty($reload)) {
-                        ?>
-                            $("#datatable-responsive").DataTable();
-                        <?php
-                        }
-                    ?>    
+                    loadJs(base_url + 'NewAssets/datatableBtrpJs.js', function() {
+                        loadJs(base_url + 'assets/js/pending.js', function() {
+                            if (<?= (!empty($reload) ? 'true' : 'false') ?>) {
+                                refresh_now();
+                            }
+                        });
+                    });
                 });
             });
         });
-
-
     });
 </script>

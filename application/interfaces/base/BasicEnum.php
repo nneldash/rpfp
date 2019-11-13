@@ -39,4 +39,8 @@ abstract class BasicEnum
         $values = array_values(self::getConstants());
         return in_array($value, $values, $strict);
     }
+
+    abstract static function enumerate() : array;
+    abstract static function getString(int $key) : string;
+    abstract static function count() : int;
 }
