@@ -4173,23 +4173,37 @@ BEGIN
 END$$
 
 CREATE DEFINER=root@localhost PROCEDURE get_report_unmet_need_list(
-    IN username VARCHAR(50),
+    IN page_no INT,
+    IN items_per_page INT
+    )   READS SQL DATA
+proc_exit_point :
+BEGIN
+    DECLARE read_offset INT;
+    DECLARE role_of_user INT;
+
+    SET role_of_user := rpfp.profile_get_own_role();
+
+    IF role_of_user = 90 THEN
+        CALL pmed_get_report_unmet_need_list(page_no, items_per_page);
+        LEAVE proc_exit_point;
+    END IF;
+
+    IF role_of_user = 80 THEN
+        CALL rdm_get_report_unmet_need_list(page_no, items_per_page);
+        LEAVE proc_exit_point;
+    END IF;
+END$$
+
+CREATE DEFINER=root@localhost PROCEDURE pmed_get_report_unmet_need_list(
     IN page_no INT,
     IN items_per_page INT
     )   READS SQL DATA
 BEGIN
-    DECLARE name_user VARCHAR(50);
-    DECLARE db_user_name VARCHAR(50);
     DECLARE read_offset INT;
-
-    CALL rpfp.lib_extract_user_name( username, name_user, db_user_name );
 
     IF NOT EXISTS (
          SELECT ru.REPORT_ID
            FROM rpfp.report_unmet_need ru
-      LEFT JOIN rpfp.user_profile up
-             ON up.REGION_CODE = ru.PSGC_CODE
-          WHERE up.DB_USER_ID = name_user
     ) THEN
          SELECT NULL AS report_id,
                 NULL AS report_year,
@@ -4212,9 +4226,50 @@ BEGIN
                 ru.REPORT_MONTH AS report_month,
                 ru.DATE_PROCESSED AS date_processed
            FROM rpfp.report_unmet_need ru
-      LEFT JOIN rpfp.user_profile up
-             ON up.REGION_CODE = ru.PSGC_CODE
-          WHERE up.DB_USER_ID = name_user
+       GROUP BY ru.UNMET_ID
+       ORDER BY ru.DATE_PROCESSED DESC
+          LIMIT read_offset, items_per_page
+        ;
+    END IF;
+END$$
+
+CREATE DEFINER=root@localhost PROCEDURE rdm_get_report_unmet_need_list(
+    IN page_no INT,
+    IN items_per_page INT
+    )   READS SQL DATA
+BEGIN
+    DECLARE read_offset INT;
+    DECLARE region_of_user INT;
+
+    SET region_of_user := rpfp.profile_get_own_region();
+
+    IF NOT EXISTS (
+         SELECT ru.REPORT_ID
+           FROM rpfp.report_unmet_need ru
+          WHERE ru.PSGC_CODE = region_of_user
+    ) THEN
+         SELECT NULL AS report_id,
+                NULL AS report_year,
+                NULL AS report_month,
+                NULL AS date_processed
+        ;
+    ELSE
+        IF (IFNULL( page_no, 0) = 0) THEN
+            /** DEFAULT PAGE NO. */
+            SET page_no := 1;
+        END IF;
+        IF (IFNULL( items_per_page, 0) = 0) THEN
+            /** DEFAULT COUNT PER PAGE*/
+            SET items_per_page := 10;
+        END IF;
+
+        SET read_offset := (page_no - 1) * items_per_page;
+         SELECT ru.REPORT_ID AS report_id,
+                ru.REPORT_YEAR AS report_year,
+                ru.REPORT_MONTH AS report_month,
+                ru.DATE_PROCESSED AS date_processed
+           FROM rpfp.report_unmet_need ru
+          WHERE ru.PSGC_CODE = region_of_user
        GROUP BY ru.UNMET_ID
        ORDER BY ru.DATE_PROCESSED DESC
           LIMIT read_offset, items_per_page
@@ -4223,23 +4278,40 @@ BEGIN
 END$$
 
 CREATE DEFINER=root@localhost PROCEDURE get_report_served_method_mix_list(
-    IN username VARCHAR(50),
+    IN page_no INT,
+    IN items_per_page INT
+    )   READS SQL DATA
+proc_exit_point :
+BEGIN
+    DECLARE read_offset INT;
+    DECLARE role_of_user INT;
+
+    SET role_of_user := rpfp.profile_get_own_role();
+
+    IF role_of_user = 90 THEN
+        CALL pmed_get_report_served_method_mix_list(page_no, items_per_page);
+        LEAVE proc_exit_point;
+    END IF;
+
+    IF role_of_user = 80 THEN
+        CALL rdm_get_report_served_method_mix_list(page_no, items_per_page);
+        LEAVE proc_exit_point;
+    END IF;
+END$$
+
+CREATE DEFINER=root@localhost PROCEDURE pmed_get_report_served_method_mix_list(
     IN page_no INT,
     IN items_per_page INT
     )   READS SQL DATA
 BEGIN
-    DECLARE name_user VARCHAR(50);
-    DECLARE db_user_name VARCHAR(50);
     DECLARE read_offset INT;
+    DECLARE region_of_user INT;
 
-    CALL rpfp.lib_extract_user_name( username, name_user, db_user_name );
+    SET region_of_user := rpfp.profile_get_own_region();
 
     IF NOT EXISTS (
          SELECT rs.REPORT_ID
            FROM rpfp.report_served_method_mix rs
-      LEFT JOIN rpfp.user_profile up
-             ON up.REGION_CODE = rs.PSGC_CODE
-          WHERE up.DB_USER_ID = name_user
     ) THEN
          SELECT NULL AS report_id,
                 NULL AS report_year,
@@ -4262,9 +4334,50 @@ BEGIN
                 rs.REPORT_MONTH AS report_month,
                 rs.DATE_PROCESSED AS date_processed
            FROM rpfp.report_served_method_mix rs
-      LEFT JOIN rpfp.user_profile up
-             ON up.REGION_CODE = rs.PSGC_CODE
-          WHERE up.DB_USER_ID = name_user
+       GROUP BY rs.SERVED_ID
+       ORDER BY rs.DATE_PROCESSED DESC
+          LIMIT read_offset, items_per_page
+        ;
+    END IF;
+END$$
+
+CREATE DEFINER=root@localhost PROCEDURE rdm_get_report_served_method_mix_list(
+    IN page_no INT,
+    IN items_per_page INT
+    )   READS SQL DATA
+BEGIN
+    DECLARE read_offset INT;
+    DECLARE region_of_user INT;
+
+    SET region_of_user := rpfp.profile_get_own_region();
+
+    IF NOT EXISTS (
+         SELECT rs.REPORT_ID
+           FROM rpfp.report_served_method_mix rs
+          WHERE rs.PSGC_CODE = region_of_user
+    ) THEN
+         SELECT NULL AS report_id,
+                NULL AS report_year,
+                NULL AS report_month,
+                NULL AS date_processed
+        ;
+    ELSE
+        IF (IFNULL( page_no, 0) = 0) THEN
+            /** DEFAULT PAGE NO. */
+            SET page_no := 1;
+        END IF;
+        IF (IFNULL( items_per_page, 0) = 0) THEN
+            /** DEFAULT COUNT PER PAGE*/
+            SET items_per_page := 10;
+        END IF;
+
+        SET read_offset := (page_no - 1) * items_per_page;
+         SELECT rs.REPORT_ID AS report_id,
+                rs.REPORT_YEAR AS report_year,
+                rs.REPORT_MONTH AS report_month,
+                rs.DATE_PROCESSED AS date_processed
+           FROM rpfp.report_served_method_mix rs
+          WHERE rs.PSGC_CODE = region_of_user
        GROUP BY rs.SERVED_ID
        ORDER BY rs.DATE_PROCESSED DESC
           LIMIT read_offset, items_per_page
@@ -5403,6 +5516,7 @@ GRANT EXECUTE ON PROCEDURE rpfp.get_report_accomplishment_list TO 'encoder';
 GRANT EXECUTE ON PROCEDURE rpfp.get_class_details TO 'encoder';
 GRANT EXECUTE ON PROCEDURE rpfp.get_forms_list TO 'encoder';
 GRANT EXECUTE ON PROCEDURE rpfp.get_report_accomplishment_details TO 'encoder';
+GRANT EXECUTE ON PROCEDURE rpfp.encoder_get_couples_with_fp_details TO 'encoder';
 
 GRANT EXECUTE ON PROCEDURE rpfp.rdm_approve_couples TO 'regional_data_manager';
 GRANT EXECUTE ON PROCEDURE rpfp.rdm_save_target TO 'regional_data_manager';

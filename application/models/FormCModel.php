@@ -13,7 +13,7 @@ class FormCModel extends BaseModel
 
     public function getFormCList() : ListFormCInterface
     {
-        $username = $_SESSION['username'];
+        // $username = $_SESSION['username'];
         $page_no = 1;
         $items_per_page = 10;
 
@@ -28,7 +28,7 @@ class FormCModel extends BaseModel
                 'DateProcessed' => 'date_processed'
             ),
             'get_report_served_method_mix_list',
-            array($username, $page_no, $items_per_page)
+            array($page_no, $items_per_page)
         );
 
         $retval = new ListFormC();
