@@ -428,6 +428,8 @@ $form1 = FormClass::getFormFromVariable($form1);
 						</thead>
 						<tbody>
 							<?php for($i = 0; $i <= 9; $i++): ?>
+								<?php $dummy = new CoupleClass(); ?>
+								<?php $couple = (empty($form1->ListCouple[$i]) ? $dummy : $form1->ListCouple[$i]); ?>
 								<tr class="approveCheck tr1<?= $i?>">
 									<?php if (!$is_pdf): ?>
 										<?php if($isRegionalDataManager): ?>
@@ -436,22 +438,23 @@ $form1 = FormClass::getFormFromVariable($form1);
 													<input class="check" type="checkbox" name="approveCouple" value="aproveCouple" />
 													<span class="checkmark"></span>
 												</label>
-												<input type="hidden" name="couple_id['<?= $i; ?>']" />
 											</td>
 										<?php endif; ?>
 									<?php endif; ?>
 									<td class="text-center" style="border-left: none" rowspan="2">
+									
 										<p class="small"><?= $i + 1; ?></p>
 									</td>
 									
 									<td class="small" style="padding: 5px;">
+										<input type="hidden" name="couple_id['<?= $i; ?>']" value="<?= $couple->Id; ?>" />
 										<input type="hidden" id="isDuplicate1" value="" />
-										<input type="hidde" name="individual_id1['<?= $i; ?>']" value=""/>
+										<input type="hidden" name="individual_id1['<?= $i; ?>']" value="<?= ($couple->FirstEntry->Id != 'N/A' ? $couple->FirstEntry->Id : 0) ?>"/>
 										<input type="hidden" class="loopIndex1" value="<?= $i;?>" />
 										<?php
 				                            echo HtmlHelper::inputPdf(
 				                                $is_pdf,
-				                                "",
+				                                ($couple->FirstEntry->Name->Surname != 'N/A' ? $couple->FirstEntry->Name->Surname.',' : '').' '.($couple->FirstEntry->Name->Firstname != 'N/A' ? $couple->FirstEntry->Name->Firstname : '').' '.($couple->FirstEntry->Name->Middlename != 'N/A' ? $couple->FirstEntry->Name->Middlename : '').' '.($couple->FirstEntry->Name->Extname != 'N/A' ? $couple->FirstEntry->Name->Extname : ''),
 				                                "text",
 				                                "name_participant1[".$i."]",
 				                                "padding-l10 namePart1 dupHighlight",
@@ -463,7 +466,7 @@ $form1 = FormClass::getFormFromVariable($form1);
 										<?php
 				                            echo HtmlHelper::inputPdf(
 				                            	$is_pdf,
-				                                "",
+				                                ($couple->FirstEntry->Sex == 2) ? 'F' : (($couple->FirstEntry->Sex == 'N/A') ? '' : 'M'),
 				                                "text",
 				                                "sex1[".$i."]",
 				                                "text-center sexValid gender1 dupHighlight",
@@ -475,7 +478,7 @@ $form1 = FormClass::getFormFromVariable($form1);
 										<?php
 				                            echo HtmlHelper::inputPdf(
 				                            	$is_pdf,
-				                            	"",
+				                            	($couple->FirstEntry->CivilStatus != 'N/A' ? $couple->FirstEntry->CivilStatus : ''),
 				                                "text",
 				                                "civil_status1[".$i."]",
 				                                "text-center",
@@ -488,11 +491,11 @@ $form1 = FormClass::getFormFromVariable($form1);
 					                        <?php
 					                            echo HtmlHelper::inputMaskPdf(
 					                            	$is_pdf,
-					                            	"",
+					                            	$couple->FirstEntry->Birthdate.'/'.$couple->FirstEntry->Age,
 					                                "text",
 					                                "age1[".$i."]",
 					                                "text-center birthAge bday1 dupHighlight",
-					                                "'mask': '99-99-9999'"
+					                                "'mask': '9999-99-99'"
 					                            );
 					                        ?> /
 					                        <input type="text" name="age1[<?=$i?>]" maxlength="2" class="text-center getAge1" readonly />
@@ -502,7 +505,7 @@ $form1 = FormClass::getFormFromVariable($form1);
 										<?php
 				                            echo HtmlHelper::inputPdf(
 				                            	$is_pdf,
-				                            	"",
+				                            	($couple->Address_St != 'N/A' ? $couple->Address_St : ''),
 				                                "text",
 				                                "address[".$i."]",
 				                                "height-50 padding-l10",
@@ -514,7 +517,7 @@ $form1 = FormClass::getFormFromVariable($form1);
 										<?php
 				                            echo HtmlHelper::inputPdf(
 				                            	$is_pdf,
-				                            	"",
+				                            	($couple->FirstEntry->HighestEducation != 'N/A' ? $couple->FirstEntry->HighestEducation : ''),
 				                                "text",
 				                                "educ1[".$i."]",
 				                                "text-center",
@@ -526,7 +529,7 @@ $form1 = FormClass::getFormFromVariable($form1);
 										<?php
 				                            echo HtmlHelper::inputPdf(
 				                            	$is_pdf,
-				                            	"",
+				                            	($couple->NumberOfChildren != 'N/A' ? $couple->NumberOfChildren : 0),
 				                                "text",
 				                                "no_of_children[".$i."]",
 				                                "height-50 text-center",
@@ -535,10 +538,11 @@ $form1 = FormClass::getFormFromVariable($form1);
 				                        ?>
 									</td>
 									<td class="small text-center" rowspan="2">
+										<input type="hidden" name="fp_id[<?=$i?>]" value="<?= ($couple->ModernFp->Id != 'N/A' ? $couple->ModernFp->Id : 0) ?>">
 										<?php
 				                            echo HtmlHelper::inputPdf(
 				                            	$is_pdf,
-				                            	"",
+				                            	($couple->ModernFp->MethodUsed != 'N/A' ? $couple->ModernFp->MethodUsed : ''),
 				                                "text",
 				                                "method[".$i."]",
 				                                "height-50 text-center",
@@ -550,7 +554,7 @@ $form1 = FormClass::getFormFromVariable($form1);
 										<?php
 				                            echo HtmlHelper::inputPdf(
 				                            	$is_pdf,
-				                            	"",
+				                            	($couple->ModernFp->IntentionToShift != 'N/A' ? $couple->ModernFp->IntentionToShift : ''),
 				                                "text",
 				                                "fp_method[".$i."]",
 				                                "height-50 text-center",
@@ -562,7 +566,7 @@ $form1 = FormClass::getFormFromVariable($form1);
 										<?php
 				                            echo HtmlHelper::inputPdf(
 				                            	$is_pdf,
-				                            	"",
+				                            	($couple->TraditionalFp->Type != 'N/A' ? $couple->TraditionalFp->Type : ''),
 				                                "text",
 				                                "type[".$i."]",
 				                                "height-50 text-center",
@@ -574,7 +578,7 @@ $form1 = FormClass::getFormFromVariable($form1);
 										<?php
 				                            echo HtmlHelper::inputPdf(
 				                            	$is_pdf,
-				                            	"",
+				                            	($couple->TraditionalFp->Status != 'N/A' ? $couple->TraditionalFp->Status : ''),
 				                                "text",
 				                                "status[".$i."]",
 				                                "height-50 text-center",
@@ -586,7 +590,7 @@ $form1 = FormClass::getFormFromVariable($form1);
 										<?php
 				                            echo HtmlHelper::inputPdf(
 				                            	$is_pdf,
-				                            	"",
+				                            	($couple->TraditionalFp->ReasonForUse != 'N/A' ? $couple->TraditionalFp->ReasonForUse : ''),
 				                                "text",
 				                                "reason[".$i."]",
 				                                "height-50 text-center",
@@ -615,12 +619,12 @@ $form1 = FormClass::getFormFromVariable($form1);
 								<tr class="tr2<?= $i; ?>">
 									<td class="small" style="padding: 5px;">
 										<input type="hidden" id="isDuplicate2" value="" />
-										<input type="hidden" name="individual_id2['<?= $i; ?>']"/>
+										<input type="hidden" name="individual_id2['<?= $i; ?>']" value="<?= ($couple->SecondEntry->Id != 'N/A' ? $couple->SecondEntry->Id : 0) ?>"/>
 										<input type="hidden" class="loopIndex2" value="<?= $i;?>" />
 										<?php
 				                            echo HtmlHelper::inputPdf(
 				                            	$is_pdf,
-				                                "",
+				                                ($couple->SecondEntry->Name->Surname != 'N/A' ? $couple->SecondEntry->Name->Surname.',' : '').' '.($couple->SecondEntry->Name->Firstname != 'N/A' ? $couple->SecondEntry->Name->Firstname : '').' '.($couple->SecondEntry->Name->Middlename != 'N/A' ? $couple->SecondEntry->Name->Middlename : '').' '.($couple->SecondEntry->Name->Extname != 'N/A' ? $couple->SecondEntry->Name->Extname : ''),
 				                                "text",
 				                                "name_participant2[".$i."]",
 				                                "padding-l10 namePart2",
@@ -633,7 +637,7 @@ $form1 = FormClass::getFormFromVariable($form1);
 										<?php
 				                            echo HtmlHelper::inputPdf(
 				                            	$is_pdf,
-				                                "",
+				                                ($couple->FirstEntry->Sex == 2) ? 'M' : (($couple->FirstEntry->Sex == 'N/A') ? '' : 'F'),
 				                                "text",
 				                                "sex2[".$i."]",
 				                                "text-center gender2",
@@ -645,7 +649,7 @@ $form1 = FormClass::getFormFromVariable($form1);
 										<?php
 				                            echo HtmlHelper::inputPdf(
 				                            	$is_pdf,
-				                            	"",
+				                            	($couple->SecondEntry->CivilStatus != 'N/A'),
 				                                "text",
 				                                "civil_status2[".$i."]",
 				                                "text-center",
@@ -658,11 +662,11 @@ $form1 = FormClass::getFormFromVariable($form1);
 											<?php
 				                            	echo HtmlHelper::inputMaskPdf(
 					                            	$is_pdf,
-					                            	"",
+					                            	$couple->SecondEntry->Birthdate.'/'.$couple->SecondEntry->Age,
 					                                "text",
 					                                "age2[".$i."]",
 					                                "text-center birthAge bday2",
-					                                "'mask': '99-99-9999'"
+					                                "'mask': '9999-99-99'"
 					                            );
 				                        	?> /
 				                        	<input type="text" name="age2[<?=$i?>]" maxlength="2" class="text-center getAge2" readonly />
@@ -672,7 +676,7 @@ $form1 = FormClass::getFormFromVariable($form1);
 										<?php
 			                            echo HtmlHelper::inputPdf(
 			                            	$is_pdf,
-			                            	"",
+			                            	$couple->SecondEntry->HighestEducation,
 			                                "text",
 			                                "educ2[".$i."]",
 			                                "text-center",

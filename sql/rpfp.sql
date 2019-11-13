@@ -1422,17 +1422,28 @@ BEGIN
                 )
     ) THEN
          SELECT NULL AS couplesid,
-                NULL AS indvid,
-                NULL AS lastname,
-                NULL AS firstname,
-                NULL AS middle,
-                NULL AS ext,
-                NULL AS age,
-                NULL AS sex,
-                NULL AS birth_month,
-                NULL AS civil,
-                NULL AS educ_bckgrnd,
-                NULL AS attendee,
+                NULL AS indvid_female,
+                NULL AS lastname_female,
+                NULL AS firstname_female,
+                NULL AS middle_female,
+                NULL AS ext_female,
+                NULL AS age_female,
+                NULL AS sex_female,
+                NULL AS birth_month_female,
+                NULL AS civil_female,
+                NULL AS educ_bckgrnd_female,
+                NULL AS attendee_female,
+                NULL AS indvid_male,
+                NULL AS lastname_male,
+                NULL AS firstname_male,
+                NULL AS middle_male,
+                NULL AS ext_male,
+                NULL AS age_male,
+                NULL AS sex_male,
+                NULL AS birth_month_male,
+                NULL AS civil_male,
+                NULL AS educ_bckgrnd_male,
+                NULL AS attendee_male,
                 NULL AS address_no_st,
                 NULL AS address_brgy,
                 NULL AS address_city,
@@ -1447,17 +1458,28 @@ BEGIN
         ;
     ELSE
          SELECT apc.COUPLES_ID AS couplesid,
-         		ic.INDV_ID AS indvid,
-                ic.LNAME AS lastname,
-                ic.FNAME AS firstname,
-                ic.MNAME AS middle,
-                ic.EXT_NAME AS ext,
-                ic.AGE AS age,
-                ic.SEX AS sex,
-                ic.BDATE AS birth_month,
-                ic.CIVIL_ID AS civil,
-                ic.EDUC_BCKGRND_ID AS educ_bckgrnd,
-                ic.IS_ATTENDEE AS attendee,
+         		ic_female.INDV_ID AS indvid_female,
+                ic_female.LNAME AS lastname_female,
+                ic_female.FNAME AS firstname_female,
+                ic_female.MNAME AS middle_female,
+                ic_female.EXT_NAME AS ext_female,
+                ic_female.AGE AS age_female,
+                ic_female.SEX AS sex_female,
+                ic_female.BDATE AS birth_month_female,
+                ic_female.CIVIL_ID AS civil_female,
+                ic_female.EDUC_BCKGRND_ID AS educ_bckgrnd_female,
+                ic_female.IS_ATTENDEE AS attendee_female,
+         		ic_male.INDV_ID AS indvid_male,
+                ic_male.LNAME AS lastname_male,
+                ic_male.FNAME AS firstname_male,
+                ic_male.MNAME AS middle_male,
+                ic_male.EXT_NAME AS ext_male,
+                ic_male.AGE AS age_male,
+                ic_male.SEX AS sex_male,
+                ic_male.BDATE AS birth_month_male,
+                ic_male.CIVIL_ID AS civil_male,
+                ic_male.EDUC_BCKGRND_ID AS educ_bckgrnd_male,
+                ic_male.IS_ATTENDEE AS attendee_male,                
                 apc.ADDRESS_NO_ST AS address_no_st,
                 apc.ADDRESS_BRGY AS address_brgy,
                 apc.ADDRESS_CITY AS address_city,
@@ -1472,17 +1494,21 @@ BEGIN
            FROM rpfp.rpfp_class rc
       LEFT JOIN rpfp.couples apc
              ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
-      LEFT JOIN rpfp.individual ic
-             ON ic.COUPLES_ID = apc.COUPLES_ID
+      LEFT JOIN rpfp.individual ic_male
+                 ON ic_male.COUPLES_ID = apc.COUPLES_ID
+                AND ic_male.SEX = 1
+      LEFT JOIN rpfp.individual ic_female
+                 ON ic_female.COUPLES_ID = apc.COUPLES_ID
+                AND ic_female.SEX = 2
       LEFT JOIN rpfp.fp_details fp
-             ON fp.COUPLES_ID = ic.COUPLES_ID
+             ON fp.COUPLES_ID = apc.COUPLES_ID
           WHERE rc.CLASS_NUMBER = class_num
             AND (   rc.DB_USER_ID = name_user
                 OR (   is_not_encoder
                     AND user_location = (rc.BARANGAY_ID DIV POWER( 10, multiplier ))
                     )
                 )
-       ORDER BY ic.INDV_ID ASC
+       ORDER BY apc.COUPLES_ID ASC
         ;
     END IF;
 END$$

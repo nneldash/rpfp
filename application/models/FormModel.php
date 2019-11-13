@@ -235,19 +235,34 @@ class FormModel extends BaseModel
             array(
                 'Id' => 'couplesid',
                 'FirstEntry' => array (
-                    'Id' => 'indvid',
+                    'Id' => 'indvid_female',
                     'Name' => array(
-                        'Surname' => 'lastname',
-                        'Firstname' => 'firstname', 
-                        'Middlename' => 'middle',
-                        'Extname' => 'ext'
+                        'Surname' => 'lastname_female',
+                        'Firstname' => 'firstname_female', 
+                        'Middlename' => 'middle_female',
+                        'Extname' => 'ext_female'
                     ),
-                    'Age' => 'age',
-                    'Sex' => 'sex',
-                    'Birthdate' => 'birth_month',
-                    'CivilStatus' => 'civil',
-                    'HighestEducation' => 'educ_bckgrnd',
-                    'Attendee' => 'attendee'
+                    'Age' => 'age_female',
+                    'Sex' => 'sex_female',
+                    'Birthdate' => 'birth_month_female',
+                    'CivilStatus' => 'civil_female',
+                    'HighestEducation' => 'educ_bckgrnd_female',
+                    'Attendee' => 'attendee_female'
+                ),
+                'SecondEntry' => array (
+                    'Id' => 'indvid_male',
+                    'Name' => array(
+                        'Surname' => 'lastname_male',
+                        'Firstname' => 'firstname_male', 
+                        'Middlename' => 'middle_male',
+                        'Extname' => 'ext_male'
+                    ),
+                    'Age' => 'age_male',
+                    'Sex' => 'sex_male',
+                    'Birthdate' => 'birth_month_male',
+                    'CivilStatus' => 'civil_male',
+                    'HighestEducation' => 'educ_bckgrnd_male',
+                    'Attendee' => 'attendee_male'
                 ),
                 'Address_St' => 'address_no_st',
                 'Address_Brgy' => 'address_brgy',
