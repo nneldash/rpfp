@@ -34,7 +34,7 @@ $count = count($accomplishment);
                     <td><?= $accomplished->ReportYear ?> - <?php if ($accomplished->ReportMonth != 0) { echo strftime("%b" ,mktime(0,0,0, $accomplished->ReportMonth )); } else { echo $accomplished->ReportMonth; } ?></td>
                     <td><?= date('F d, Y', strtotime($accomplished->DateProcessed)); ?></td>
                     <td class="text-center">
-                        <a class="viewForm folderview" href="<?= base_url('forms/accomplishment'); ?>" target="_blank">
+                        <a class="viewForm folderview" href="<?= base_url('forms/accomplishment?ReportNo='. $accomplished->ReportNo); ?>" target="_blank">
                         <button class="btn btn-primary" data-toggle="tooltip" data-placement="left" title="View">
                             <i class="fa fa-folder-open"></i>
                         </button>					

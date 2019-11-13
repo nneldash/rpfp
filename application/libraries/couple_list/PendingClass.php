@@ -9,4 +9,12 @@ class PendingClass extends PendingInterface
     {
         parent::__construct($params);
     }
+
+    public static function getFromVariable($variable) : PendingInterface
+    {
+        if ($variable instanceof PendingInterface) {
+            return $variable;
+        }
+        return new PendingClass();
+    }
 }

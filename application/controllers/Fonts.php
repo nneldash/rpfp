@@ -10,7 +10,7 @@ class Fonts extends CI_Controller
 
     public function index()
     {
-        $this->load->view('login/homepage');
+        redirect('Menu');
     }
 
     public function _remap($params = null)
@@ -29,13 +29,19 @@ class Fonts extends CI_Controller
             $newParams = substr($newParams, 0);
         }
 
-        header('application/font');
         $initial_path = FONTS_FOLDER_APP;
-        if(file_exists( file_exists( dirname(__FILE__)) . FONTS_FOLDER_FA . $newParams)) {
+        if (file_exists( file_exists( dirname(__FILE__)) . FONTS_FOLDER_FA . $newParams)) {
             $initial_path = FONTS_FOLDER_FA;
         }
-        readfile(BASEPATH . $initial_path . $newParams);
+        if (file_exists(BASEPATH . $initial_path . $newParams)) {
+            $this->output->set_content_type('application/font');
+            readfile(BASEPATH . $initial_path . $newParams);
+            return;
+        }
         
+        $this->output
+                ->set_content_type('application/json')
+                ->set_output(json_encode(array('data' => 'null')));
     }
 
     

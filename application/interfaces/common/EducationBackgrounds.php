@@ -15,4 +15,28 @@ abstract class EducationBackgrounds extends BasicEnum
     const COLLEGE_GRADUATE = 8;
     const POST_GRADUATE = 9;
 
+    public static function enumerate() : array
+    {
+        return array(
+            EducationBackgrounds::NO_EDUCATION => 'No Formal Education',
+            EducationBackgrounds::ELEMENTARY_LEVEL => 'Elementary Level',
+            EducationBackgrounds::ELEMENTARY_GRADUATE => 'Elementary Graduate',
+            EducationBackgrounds::HIGH_SCHOOL_LEVEL => 'High School Level',
+            EducationBackgrounds::HIGH_SCHOOL_GRADUATE => 'High School Graduate',
+            EducationBackgrounds::VOCATIONAL => 'Vocational Level',
+            EducationBackgrounds::COLLEGE_LEVEL => 'College Level',
+            EducationBackgrounds::COLLEGE_GRADUATE => 'College Graduate',
+            EducationBackgrounds::POST_GRADUATE => 'Post Graduate Degree Holder'
+        );
+    }
+
+    public static function getString(int $key) : string
+    {
+        return (EducationBackgrounds::enumerate()[$key]);
+    }
+
+    public static function count() : int
+    {
+        return 9;
+    }
 }

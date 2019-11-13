@@ -4230,7 +4230,7 @@ END$$
 
 /** GET REPORT DETAILS */
 CREATE DEFINER=root@localhost PROCEDURE get_report_accomplishment_details(
-    IN accom_id INT
+    IN accom_id VARCHAR(100)
     )   READS SQL DATA
 BEGIN
     IF NOT EXISTS (
@@ -5357,6 +5357,7 @@ GRANT EXECUTE ON PROCEDURE rpfp.encoder_save_individual TO 'encoder';
 GRANT EXECUTE ON PROCEDURE rpfp.get_report_accomplishment_list TO 'encoder';
 GRANT EXECUTE ON PROCEDURE rpfp.get_class_details TO 'encoder';
 GRANT EXECUTE ON PROCEDURE rpfp.get_forms_list TO 'encoder';
+GRANT EXECUTE ON PROCEDURE rpfp.get_report_accomplishment_details TO 'encoder';
 
 GRANT EXECUTE ON PROCEDURE rpfp.rdm_approve_couples TO 'regional_data_manager';
 GRANT EXECUTE ON PROCEDURE rpfp.rdm_save_target TO 'regional_data_manager';

@@ -17,4 +17,32 @@ abstract class ModernMethods extends BasicEnum
     const SYMPTO_THERMAL = 10;
     const SDM = 11;
     const LAM = 12;
+
+    public static function enumerate() : array
+    {
+        return array(
+            ModernMethods::CONDOM => 'Condom',
+            ModernMethods::IUD => 'IUD',
+            ModernMethods::PILLS => 'Pills',
+            ModernMethods::INJECTABLE => 'Injectable',
+            ModernMethods::VASECTOMY => 'Vasectomy',
+            ModernMethods::TUBAL_LIGATION => 'Tubal Ligation',
+            ModernMethods::IMPLANT => 'Implant',
+            ModernMethods::CMM_BILLINGS => 'CMM Billings',
+            ModernMethods::BBT => 'BBT',
+            ModernMethods::SYMPTO_THERMAL => 'Sympto-Thermal',
+            ModernMethods::SDM => 'SDM',
+            ModernMethods::LAM => 'LAM'
+        );
+    }
+
+    public static function getString(int $key) : string
+    {
+        return (ModernMethods::enumerate()[$key]);
+    }
+
+    public static function count() : int
+    {
+        return 12;
+    }
 }

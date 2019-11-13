@@ -7,8 +7,9 @@ class AccomplishmentModel extends BaseModel
     public function __construct()
     {
         parent::__construct();
-        $this->CI->load->library('accomplishment_list/AccomplishmentClass');
-        $this->CI->load->library('accomplishment_list/lists/ListAccomplishment');
+        $this->CI->load->library('accomplishment/AccomplishmentClass');
+        $this->CI->load->library('accomplishment/lists/ListAccomplishment');
+        $this->CI->load->library('accomplishment/lists/ReportAccomplishment');
     }
 
     public function getAccomplishmentList() : ListAccomplishmentInterface
@@ -34,6 +35,32 @@ class AccomplishmentModel extends BaseModel
         $retval = new ListAccomplishment();
 
         foreach($accomplishment_list as $accomplishment) {
+            $retval->append($accomplishment);
+        }
+
+        return $retval;
+    }
+
+    public function getAccomplishmentReport($accomid) : ReportAccomplishmentInterface
+    {
+        // $accomid = 'RPFP-20192-1523379294';
+
+        $accomplishment_report = $this->fromDbGetReportList(
+            'ReportAccomplishment',
+            'AccomplishmentClass',
+            array(
+                'ClassNo' => 'class_no',
+                'EncodedCouples' => 'encoded_couples',
+                'ApprovedCouples' => 'approved_couples',
+                'Duplicates' => 'duplicates'
+            ),
+            'get_report_accomplishment_details',
+            array($accomid)
+        );
+
+        $retval = new ReportAccomplishment();
+
+        foreach($accomplishment_report as $accomplishment) {
             $retval->append($accomplishment);
         }
 

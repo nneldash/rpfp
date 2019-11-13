@@ -6,6 +6,12 @@ class Forms extends CI_Controller
     public function __construct()
     {
         parent::__construct();
+        if (!$this->LoginModel->isLoggedIn()) {
+            redirect('Login');
+            return;
+        }
+
+        $this->load->model('ProfileModel');
         $this->load->model('FormModel');
         $this->load->library('form1/FormClass');
         $this->load->library('form1/CoupleClass');
@@ -13,6 +19,8 @@ class Forms extends CI_Controller
         $this->load->library('form1/ModernFpUserClass');
         $this->load->library('form1/TraditionalFpUserClass');
         $this->load->library('service_slip/ServiceSlipClass');
+        $this->load->model('AccomplishmentModel');
+        $this->load->library('accomplishment/AccomplishmentClass');
     }
 
     public function index()
@@ -248,15 +256,16 @@ class Forms extends CI_Controller
             return;
         }
 
-        $header['title'] = 'Online RPFP Monitoring System | Accomplishment Report';
+        $header['title'] = 'Online RPFP Monitoring System | Form A';
 
         $this->load->model('FormModel');
 
-        $accomplishment = $this->FormModel->getAccomplishment();
+        $reportNo = $_GET['ReportNo'];
+        $accomplishment = $this->AccomplishmentModel->getAccomplishmentReport($reportNo);
 
         $this->load->view('includes/header', $header);
         $this->load->view('forms/accomplishment', array('accomplishment' => $accomplishment, 'is_pdf' => false));
-        $this->load->view('includes/footer');
+        $this->load->view('includes/footer');     
     }
 
     public function formA()

@@ -10,4 +10,25 @@ abstract class CivilStatuses extends BasicEnum
     const WIDOW = 3;
     const SEPARATED = 4;
     const LIVE_IN = 5;
+
+    public static function enumerate() : array
+    {
+        return array(
+            CivilStatuses::MARRIED => 'Married',
+            CivilStatuses::SINGLE => 'Single',
+            CivilStatuses::WIDOW => 'Widow/Widower',
+            CivilStatuses::SEPARATED => 'Separated',
+            CivilStatuses::LIVE_IN => 'Living-in'
+        );
+    }
+
+    public static function getString(int $key) : string
+    {
+        return (CivilStatuses::enumerate()[$key]);
+    }
+
+    public static function count() : int
+    {
+        return 5;
+    }
 }
