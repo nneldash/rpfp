@@ -19,4 +19,15 @@ class UserProfile extends UserProfileInterface
         }
         return new UserProfile($profile);
     }
+
+    public function isEncoder()
+    {
+        return $this->Role == Roles::ENCODER;
+    }
+
+    public function isFocal()
+    {
+        return $this->Role == Roles::FOCAL_PERSON;
+    }
+
 }
