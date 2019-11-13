@@ -33,7 +33,7 @@ if (empty($title)) {
                 <td class="text-center">
                     <a class="viewForm folderview" href="<?= base_url('forms/formb'); ?>" target="_blank">
                     <button class="btn btn-primary" data-toggle="tooltip" data-placement="left" title="View">
-                        <i class="fa fa-eye"></i>
+                        <i class="fa fa-folder-open"></i>
                     </button>					
                 </td>
             </tr>

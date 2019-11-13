@@ -13,6 +13,10 @@ $count = count($accomplishment);
 <link href="<?= base_url('assets/css/form.css') ?>" rel="stylesheet">
 
 <br>
+<div style="text-transform: none; width: 15%;">                    
+    <input type="submit" class="save" value="Generate Report" name="genAccomplishment" />
+</div>
+<br>
 <table id="datatable-responsive" class="table table-condensed table-striped table-hover table-bordered dt-responsive nowrap accomplishmentList" cellspacing="0" width="100%">
     <thead>
         <tr>
@@ -32,7 +36,7 @@ $count = count($accomplishment);
                     <td class="text-center">
                         <a class="viewForm folderview" href="<?= base_url('forms/accomplishment'); ?>" target="_blank">
                         <button class="btn btn-primary" data-toggle="tooltip" data-placement="left" title="View">
-                            <i class="fa fa-eye"></i>
+                            <i class="fa fa-folder-open"></i>
                         </button>					
                     </td>
                 </tr>
