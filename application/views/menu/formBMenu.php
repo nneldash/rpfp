@@ -26,17 +26,23 @@ if (empty($title)) {
     </thead>
     <tbody>
         <?php foreach ($form_B as $formb) : ?>
-            <tr>
-                <td><?= $formb->ReportNo ?></td>
-                <td><?= $formb->ReportYear ?> - <?php if ($formb->ReportMonth != 0) { echo strftime("%b" ,mktime(0,0,0, $formb->ReportMonth )); } else { echo $formb->ReportMonth; } ?></td>
-                <td><?= date('F d, Y', strtotime($formb->DateProcessed)); ?></td>
-                <td class="text-center">
-                    <a class="viewForm folderview" href="<?= base_url('forms/formb'); ?>" target="_blank">
-                    <button class="btn btn-primary" data-toggle="tooltip" data-placement="left" title="View">
-                        <i class="fa fa-folder-open"></i>
-                    </button>					
-                </td>
-            </tr>
+            <?php if ($formb->ReportNo != 'N/A') { ?>
+                <tr>
+                    <td><?= $formb->ReportNo ?></td>
+                    <td><?= $formb->ReportYear ?> - <?php if ($formb->ReportMonth != 0) { echo strftime("%b" ,mktime(0,0,0, $formb->ReportMonth )); } else { echo $formb->ReportMonth; } ?></td>
+                    <td><?= date('F d, Y', strtotime($formb->DateProcessed)); ?></td>
+                    <td class="text-center">
+                        <a class="viewForm folderview" href="<?= base_url('forms/formb'); ?>" target="_blank">
+                        <button class="btn btn-primary" data-toggle="tooltip" data-placement="left" title="View">
+                            <i class="fa fa-folder-open"></i>
+                        </button>					
+                    </td>
+                </tr>
+            <?php } else { ?>
+                <tr>
+                    <td class="text-center" colspan="4">No result(s) found.</td>
+                </tr>
+            <?php } ?>
         <?php endforeach; ?>
     </tbody>
 </table>

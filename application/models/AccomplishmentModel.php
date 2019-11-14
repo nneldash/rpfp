@@ -68,13 +68,13 @@ class AccomplishmentModel extends BaseModel
 
     public function saveAccomplishment($username, $psgc_code, GenerateAccomplishmentInterface $data) 
     {
-        $method = 'process_accomplishments';
+        $method = 'process_accomplishment';
 
         $params =[
             $username == N_A ? BLANK : $username,
             $data->ReportYear == N_A ? BLANK : $data->ReportYear,
             $data->ReportMonth == N_A ? BLANK : $data->ReportMonth,
-            $pscgc_code == N_A ? BLANK : $pscgc_code
+            $psgc_code == N_A ? BLANK : $psgc_code
         ];
 
         return $this->saveToDb($method, $params);
