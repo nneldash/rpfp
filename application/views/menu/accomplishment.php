@@ -11,9 +11,10 @@ $count = count($accomplishment);
 
 <link href="<?= base_url('assets/css/style.css') ?>" rel="stylesheet">
 <link href="<?= base_url('assets/css/form.css') ?>" rel="stylesheet">
+<script src="<?= base_url('assets/js/accomplishment.js') ?>"></script>
 
 <br>
-<div style="text-transform: none; width: 15%;">                    
+<div style="text-transform: none; width: 15%;">
     <input type="submit" class="save" value="Generate Report" name="genAccomplishment" />
 </div>
 <br>

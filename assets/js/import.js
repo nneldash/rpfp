@@ -88,9 +88,6 @@ var process_wb = (function() {
 	    $('input[name=class_no]').val(array[112]);
 	    $('input[name=province]').val(array[128]);
 	    $('input[name=barangay]').val(array[145]);
-
-
-
 	    $('input[name=date_conducted]').val('2019-02-11');
 
 
@@ -100,32 +97,35 @@ var process_wb = (function() {
 	    var b = 264;
 
 		for (i = 0; i < 10; i++) {
-		    $('input[name="name_participant1['+ i +']"').val(array[a]);
-		    $('input[name="sex1['+ i +']"').val(array[a+2]);
-		    $('input[name="civil_status1['+ i +']"').val(array[a+3]);
-		    $('input[name="age1['+ i +']"').val(array[a+4]);
-		    $('input[name="address['+ i +']"').val(array[a+5]);
-		    $('input[name="educ1['+ i +']"').val(array[a+6]);
+			console.log(array[a]);
+			console.log(array[a+2]);
+
+		    // $('input[name="name_participant1['+ i +']"').val(array[a]);
+		    // $('input[name="sex1['+ i +']"').val(array[a+2]);
+		    // $('input[name="civil_status1['+ i +']"').val(array[a+3]);
+		    // $('input[name="age1['+ i +']"').val(array[a+4]);
+		    // $('input[name="address['+ i +']"').val(array[a+5]);
+		    // $('input[name="educ1['+ i +']"').val(array[a+6]);
 
 
-		    $('input[name="no_of_children['+ i +']"').val(array[a+7]);
-		    $('input[name="method['+ i +']"').val(array[a+8]);
-		    $('input[name="fp_method['+ i +']"').val(array[a+9]);
-		    $('input[name="type['+ i +']"').val(array[a+10]);
-		    $('input[name="status['+ i +']"').val(array[a+11]);
-		    $('input[name="reason['+ i +']"').val(array[a+12]);
+		    // $('input[name="no_of_children['+ i +']"').val(array[a+7]);
+		    // $('input[name="method['+ i +']"').val(array[a+8]);
+		    // $('input[name="fp_method['+ i +']"').val(array[a+9]);
+		    // $('input[name="type['+ i +']"').val(array[a+10]);
+		    // $('input[name="status['+ i +']"').val(array[a+11]);
+		    // $('input[name="reason['+ i +']"').val(array[a+12]);
 
-	    	if(array[a+13] !== '') {
-	    		$('input[name="type['+ i +']"').prop('checked', true);
-	    	} else {
-	    		$('input[name="type['+ i +']"').prop('checked', false);
-	    	}
+	    	// if(array[a+13] !== '') {
+	    	// 	$('input[name="type['+ i +']"').prop('checked', true);
+	    	// } else {
+	    	// 	$('input[name="type['+ i +']"').prop('checked', false);
+	    	// }
 
-	    	$('input[name="name_participant2['+ i +']"').val(array[b]);
-		    $('input[name="sex2['+ i +']"').val(array[b+2]);
-		    $('input[name="civil_status2['+ i +']"').val(array[b+3]);
-		    $('input[name="age2['+ i +']"').val(array[b+4]);
-		    $('input[name="educ2['+ i +']"').val(array[b+6]);
+	    	// $('input[name="name_participant2['+ i +']"').val(array[b]);
+		    // $('input[name="sex2['+ i +']"').val(array[b+2]);
+		    // $('input[name="civil_status2['+ i +']"').val(array[b+3]);
+		    // $('input[name="age2['+ i +']"').val(array[b+4]);
+		    // $('input[name="educ2['+ i +']"').val(array[b+6]);
 
 	    	if(array[b+13] !== '') {
 	    		$('input[name="type2['+ i +']"').prop('checked', true);
@@ -224,7 +224,7 @@ _gaq.push(['_trackPageview']);
 // UPLOAD LOADER
 function _(el) {
 	return document.getElementById(el);
-	alert(el);
+	// alert(el);
 }
 
 function uploadFile() {

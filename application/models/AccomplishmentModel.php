@@ -10,6 +10,7 @@ class AccomplishmentModel extends BaseModel
         $this->CI->load->library('accomplishment/AccomplishmentClass');
         $this->CI->load->library('accomplishment/lists/ListAccomplishment');
         $this->CI->load->library('accomplishment/lists/ReportAccomplishment');
+        $this->CI->load->library('accomplishment/GenerateAccomplishmentClass');
     }
 
     public function getAccomplishmentList() : ListAccomplishmentInterface
@@ -43,8 +44,6 @@ class AccomplishmentModel extends BaseModel
 
     public function getAccomplishmentReport($accomid) : ReportAccomplishmentInterface
     {
-        // $accomid = 'RPFP-20192-1523379294';
-
         $accomplishment_report = $this->fromDbGetReportList(
             'ReportAccomplishment',
             'AccomplishmentClass',
@@ -65,5 +64,19 @@ class AccomplishmentModel extends BaseModel
         }
 
         return $retval;
+    }
+
+    public function saveAccomplishment($username, $psgc_code, GenerateAccomplishmentInterface $data) 
+    {
+        $method = 'process_accomplishments';
+
+        $params =[
+            $username == N_A ? BLANK : $username,
+            $data->ReportYear == N_A ? BLANK : $data->ReportYear,
+            $data->ReportMonth == N_A ? BLANK : $data->ReportMonth,
+            $pscgc_code == N_A ? BLANK : $pscgc_code
+        ];
+
+        return $this->saveToDb($method, $params);
     }
 }

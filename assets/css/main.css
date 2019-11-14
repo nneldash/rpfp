@@ -11,6 +11,15 @@ html {
     color: #333;
 }
 
+footer {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    background-color: #fff;
+    text-align: center;
+}
+
 .panel {
     border-radius: 0;
 }
@@ -516,9 +525,10 @@ iframe {
 [ Custom CSS ]*/
 .bg-img {
     background-image: url(../images/family.png); 
-    background-repeat: repeat-x; 
+    background-repeat: no-repeat; 
     background-position: bottom; 
     background-size: cover;
+    background-attachment: fixed;
 }
 .img-size {
     width: 25%;
