@@ -45,7 +45,7 @@ class FormModel extends BaseModel
         }
 
        $couple = $this->saveCouple($class_id, $form->ListCouple);
-        
+        print_r($couple);exit;
        if (!$couple) {
            return false;
        }
@@ -89,9 +89,15 @@ class FormModel extends BaseModel
             ];
             
             $couple_id = $this->saveToDb($method, $params1);
-            
-            $couple_id = explode(" ", $couple_id);
-            $couple_id = $couple_id[2];
+
+            if ($couple_id == 'CANNOT SAVE RECORD WITH GIVEN PARAMETERS') {
+                return false;
+            } elseif ($couple_id == 'UPDATED!') {
+                $couple_id = $couple->Id;
+            } else {
+                $couple_id = explode(" ", $couple_id);
+                $couple_id = $couple_id[2];
+            }
             
             $husband = $couple->FirstEntry;
             $wife = $couple->SecondEntry;
@@ -121,7 +127,6 @@ class FormModel extends BaseModel
                 $wife->HighestEducation == N_A ? BLANK : $wife->HighestEducation,
                 $wife->Attendee == N_A ? BLANK : $wife->Attendee
             ];
-            
             $this->saveToDb($method2, $params2);
 
             $modern = $couple->ModernFp;
@@ -140,7 +145,7 @@ class FormModel extends BaseModel
                 $traditional->ReasonForUse == N_A ? BLANK : $traditional->ReasonForUse
             ];
 
-           $this->saveToDb($method3, $params3);
+        //    $this->saveToDb($method3, $params3);
         }
     }
 

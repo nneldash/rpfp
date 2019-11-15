@@ -74,6 +74,7 @@ function saveForm1()
 		
 		var formData = $('#form_validation').serialize();
 		
+		
 		$.ajax({
 			type: 'POST',
 			data: formData,

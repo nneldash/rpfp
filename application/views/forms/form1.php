@@ -461,14 +461,35 @@ $form1 = FormClass::getFormFromVariable($form1);
 									</td>
 									
 									<td class="small" style="padding: 5px;">
-										<input type="hidden" name="couple_id['<?= $i; ?>']" value="<?= $couple->Id; ?>" />
 										<input type="hidden" id="isDuplicate1" value="" />
-										<input type="hidden" name="individual_id1['<?= $i; ?>']" value="<?= ($couple->FirstEntry->Id != 'N/A' ? $couple->FirstEntry->Id : 0) ?>"/>
 										<input type="hidden" class="loopIndex1" value="<?= $i;?>" />
 										<?php
 				                            echo HtmlHelper::inputPdf(
 				                                $is_pdf,
+				                                ($couple->Id != 'N/A' ? $couple->Id : ''),
+				                                "hidde",
+				                                "couple_id[".$i."]",
+				                                "padding-l10 namePart1 dupHighlight",
+				                                ""
+				                            );
+				                        ?>
+										<?php
+				                            echo HtmlHelper::inputPdf(
+				                                $is_pdf,
+				                                ($couple->FirstEntry->Id != 'N/A' ? $couple->FirstEntry->Id : ''),
+				                                "hidde",
+				                                "individual_id1[".$i."]",
+				                                "padding-l10 namePart1 dupHighlight",
+				                                ""
+				                            );
+				                        ?>
+										<?php
+				                            echo HtmlHelper::inputPdf(
+				                                $is_pdf,
+				                                ($couple->FirstEntry->Name->Surname != 'N/A' ? $couple->FirstEntry->Name->Surname.',' : '').' '.($couple->FirstEntry->Name->Firstname != 'N/A' ? $couple->FirstEntry->Name->Firstname : '').' '.($couple->FirstEntry->Name->Middlename != 'N/A' ? $couple->FirstEntry->Name->Middlename : '').' '.($couple->FirstEntry->Name->Extname != 'N/A' ? $couple->FirstEntry->Name->Extname : ''),
+=======
 				                                ($couple->FirstEntry->Name->Firstname != 'N/A' ? $couple->FirstEntry->Name->Firstname : '').($couple->FirstEntry->Name->Surname != 'N/A' ? ', '.$couple->FirstEntry->Name->Surname : '').($couple->FirstEntry->Name->Middlename != 'N/A' ? ', '.$couple->FirstEntry->Name->Middlename : '').($couple->FirstEntry->Name->Extname != 'N/A' ? ', '.$couple->FirstEntry->Name->Extname : ''),
+>>>>>>> c6b7a9f3eb8188ed649f8c0608f4cbeb676a1407
 				                                "text",
 				                                "name_participant1[".$i."]",
 				                                "padding-l10 namePart1 dupHighlight",
@@ -633,12 +654,24 @@ $form1 = FormClass::getFormFromVariable($form1);
 								<tr class="tr2<?= $i; ?>">
 									<td class="small" style="padding: 5px;">
 										<input type="hidden" id="isDuplicate2" value="" />
-										<input type="hidden" name="individual_id2['<?= $i; ?>']" value="<?= ($couple->SecondEntry->Id != 'N/A' ? $couple->SecondEntry->Id : 0) ?>"/>
 										<input type="hidden" class="loopIndex2" value="<?= $i;?>" />
 										<?php
 				                            echo HtmlHelper::inputPdf(
 				                            	$is_pdf,
+<<<<<<< HEAD
+				                                ($couple->SecondEntry->Id != 'N/A' ? $couple->SecondEntry->Id : ''),
+				                                "hidde",
+				                                "individual_id2[".$i."]",
+				                                "padding-l10 namePart2",
+				                                ""
+				                            );
+				                        ?>
+										<?php
+				                            echo HtmlHelper::inputPdf(
+				                            	$is_pdf,
+				                                ($couple->SecondEntry->Name->Surname != 'N/A' ? $couple->SecondEntry->Name->Surname.',' : '').' '.($couple->SecondEntry->Name->Firstname != 'N/A' ? $couple->SecondEntry->Name->Firstname : '').' '.($couple->SecondEntry->Name->Middlename != 'N/A' ? $couple->SecondEntry->Name->Middlename : '').' '.($couple->SecondEntry->Name->Extname != 'N/A' ? $couple->SecondEntry->Name->Extname : ''),
 				                            	($couple->SecondEntry->Name->Firstname != 'N/A' ? $couple->SecondEntry->Name->Firstname : '').($couple->SecondEntry->Name->Surname != 'N/A' ? ', '.$couple->SecondEntry->Name->Surname : '').($couple->SecondEntry->Name->Middlename != 'N/A' ? ', '.$couple->SecondEntry->Name->Middlename : '').($couple->SecondEntry->Name->Extname != 'N/A' ? ', '.$couple->SecondEntry->Name->Extname : ''),
+>>>>>>> c6b7a9f3eb8188ed649f8c0608f4cbeb676a1407
 				                                "text",
 				                                "name_participant2[".$i."]",
 				                                "padding-l10 namePart2",
@@ -651,7 +684,7 @@ $form1 = FormClass::getFormFromVariable($form1);
 										<?php
 				                            echo HtmlHelper::inputPdf(
 				                            	$is_pdf,
-				                                ($couple->FirstEntry->Sex == 2) ? 'M' : (($couple->FirstEntry->Sex == 'N/A') ? '' : 'F'),
+				                                ($couple->SecondEntry->Sex == 1) ? 'M' : (($couple->SecondEntry->Sex == 'N/A') ? '' : 'F'),
 				                                "text",
 				                                "sex2[".$i."]",
 				                                "text-center gender2",
@@ -690,7 +723,7 @@ $form1 = FormClass::getFormFromVariable($form1);
 										<?php
 			                            echo HtmlHelper::inputPdf(
 			                            	$is_pdf,
-			                            	$couple->SecondEntry->HighestEducation,
+			                            	($couple->SecondEntry->HighestEducation != 'N/A' ? $couple->SecondEntry->HighestEducation : ''),
 			                                "text",
 			                                "educ2[".$i."]",
 			                                "text-center",
