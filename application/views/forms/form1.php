@@ -466,7 +466,6 @@ $form1 = FormClass::getFormFromVariable($form1);
 										<?php
 				                            echo HtmlHelper::inputPdf(
 				                                $is_pdf,
-<<<<<<< HEAD
 				                                ($couple->Id != 'N/A' ? $couple->Id : ''),
 				                                "hidde",
 				                                "couple_id[".$i."]",
@@ -671,7 +670,6 @@ $form1 = FormClass::getFormFromVariable($form1);
 				                            echo HtmlHelper::inputPdf(
 				                            	$is_pdf,
 				                                ($couple->SecondEntry->Name->Surname != 'N/A' ? $couple->SecondEntry->Name->Surname.',' : '').' '.($couple->SecondEntry->Name->Firstname != 'N/A' ? $couple->SecondEntry->Name->Firstname : '').' '.($couple->SecondEntry->Name->Middlename != 'N/A' ? $couple->SecondEntry->Name->Middlename : '').' '.($couple->SecondEntry->Name->Extname != 'N/A' ? $couple->SecondEntry->Name->Extname : ''),
-=======
 				                            	($couple->SecondEntry->Name->Firstname != 'N/A' ? $couple->SecondEntry->Name->Firstname : '').($couple->SecondEntry->Name->Surname != 'N/A' ? ', '.$couple->SecondEntry->Name->Surname : '').($couple->SecondEntry->Name->Middlename != 'N/A' ? ', '.$couple->SecondEntry->Name->Middlename : '').($couple->SecondEntry->Name->Extname != 'N/A' ? ', '.$couple->SecondEntry->Name->Extname : ''),
 >>>>>>> c6b7a9f3eb8188ed649f8c0608f4cbeb676a1407
 				                                "text",
