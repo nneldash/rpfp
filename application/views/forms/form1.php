@@ -525,7 +525,7 @@ $form1 = FormClass::getFormFromVariable($form1);
 					                            	$is_pdf,
 					                            	$bday.'/'.$couple->FirstEntry->Age,
 					                                "text",
-					                                "age1[".$i."]",
+					                                "bday1[".$i."]",
 					                                "text-center birthAge bday1 dupHighlight",
 					                                "'mask': '99-99-9999'"
 					                            );
@@ -705,7 +705,7 @@ $form1 = FormClass::getFormFromVariable($form1);
 					                            	$is_pdf,
 					                            	$bday2.'/'.$couple->SecondEntry->Age,
 					                                "text",
-					                                "age2[".$i."]",
+					                                "bday2[".$i."]",
 					                                "text-center birthAge bday2",
 					                                "'mask': '99-99-9999'"
 					                            );

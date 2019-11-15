@@ -45,13 +45,13 @@ var process_wb = (function() {
 
 	    $('#importModal').modal('hide');
 
-	    if(typeof array[101] !== '') $('#4ps').prop('checked', true);
-	    if(typeof array[104] !== '') $('#house').prop('checked', true);
-	    if(typeof array[117] !== '') $('#faith').prop('checked', true);
-	    if(typeof array[120] !== '') $('#profile').prop('checked', true);
-	    if(typeof array[133] !== '') $('#pmc').prop('checked', true);
-	    if(typeof array[136] !== '') $('#others').prop('checked', true);
-	   	if(typeof array[150] !== '') $('#usapan').prop('checked', true);
+	    if(typeof array[101] !== '') $('#4ps').prop('checked', 'checked');
+	    if(typeof array[104] !== '') $('#house').prop('checked', 'checked');
+	    if(typeof array[117] !== '') $('#faith').prop('checked', 'checked');
+	    if(typeof array[120] !== '') $('#profile').prop('checked', 'checked');
+	    if(typeof array[133] !== '') $('#pmc').prop('checked', 'checked');
+	    if(typeof array[136] !== '') $('#others').prop('checked', 'checked');
+	   	if(typeof array[150] !== '') $('#usapan').prop('checked', 'checked');
 
 	   	if(typeof array[101] === '') $('#4ps').prop('checked', false);
 	    if(typeof array[104] === '') $('#house').prop('checked', false);
@@ -61,29 +61,29 @@ var process_wb = (function() {
 	    if(typeof array[136] === '') $('#others').prop('checked', false);
 	   	if(typeof array[150] === '') $('#usapan').prop('checked', false);
 	    
-	  //   if(array[101] !== '')  {
-	  //   	$('#4ps').prop('checked', true);
-	  //   } else if(array[104] !== '') {
-			// $('#house').prop('checked', true);
-	  //   } else if(array[117] !== '') {
-	  //   	$('#faith').prop('checked', true);
-	  //   } else if(array[120] !== '') {
- 		// 	$('#profile').prop('checked', true);
-	  //   } else if(array[133] !== '') {
-	  //   	$('#pmc').prop('checked', true);
-	  //   } else if(array[136] !== '') {
-	  //   	$('#others').prop('checked', true);
-	  //   } else if(array[150] !== '') {
-			// $('#usapan').prop('checked', true);
-	  //   } else {
-	  //   	$('#4ps').prop('checked', false);
-			// $('#house').prop('checked', false);
-	  //   	$('#faith').prop('checked', false);
- 		// 	$('#profile').prop('checked', false);
-	  //   	$('#pmc').prop('checked', false);
-	  //   	$('#others').prop('checked', false);
-			// $('#usapan').prop('checked', false);
-	  //   }
+	    if(array[101] !== '')  {
+	    	$('#4ps').prop('checked', 'checked');
+	    } else if(array[104] !== '') {
+			$('#house').prop('checked', 'checked');
+	    } else if(array[117] !== '') {
+	    	$('#faith').prop('checked', 'checked');
+	    } else if(array[120] !== '') {
+ 			$('#profile').prop('checked', 'checked');
+	    } else if(array[133] !== '') {
+	    	$('#pmc').prop('checked', 'checked');
+	    } else if(array[136] !== '') {
+	    	$('#others').prop('checked', 'checked');
+	    } else if(array[150] !== '') {
+			$('#usapan').prop('checked', 'checked');
+	    } else {
+	    	$('#4ps').prop('checked', false);
+			$('#house').prop('checked', false);
+	    	$('#faith').prop('checked', false);
+ 			$('#profile').prop('checked', false);
+	    	$('#pmc').prop('checked', false);
+	    	$('#others').prop('checked', false);
+			$('#usapan').prop('checked', false);
+	    }
 
 	    $('input[name=class_no]').val(array[112]);
 	    $('input[name=province]').val(array[128]);
@@ -92,42 +92,56 @@ var process_wb = (function() {
 
 
 	    var i;
-	    var inc = 32;
+	    var inc = 38;
 	    var a = 248;
-	    var b = 264;
+	    var b = 267;
 
 		for (i = 0; i < 10; i++) {
-			console.log(array[a]);
-			console.log(array[a+2]);
+			var name1 = array[a] + ', ' + array[a+1] + ', ' + array[a+2] + ', ' + array[a+3];
+			var name2 = array[b] + ', ' + array[b+1] + ', ' + array[b+2] + ', ' + array[b+3];
 
-		    // $('input[name="name_participant1['+ i +']"').val(array[a]);
-		    // $('input[name="sex1['+ i +']"').val(array[a+2]);
-		    // $('input[name="civil_status1['+ i +']"').val(array[a+3]);
-		    // $('input[name="age1['+ i +']"').val(array[a+4]);
-		    // $('input[name="address['+ i +']"').val(array[a+5]);
-		    // $('input[name="educ1['+ i +']"').val(array[a+6]);
+			var bdayAge1 = array[a+7].split(' ');
+			var age1 = bdayAge1[1];
+
+			var bday1 = bdayAge1[0].split('/');
+			var bday1 = bday1[0]+bday1[1]+bday1[2];
+
+			var bdayAge2 = array[b+7].split(' ');
+			var age2 = bdayAge2[1];
+			
+			var bday2 = bdayAge2[0].split('/');
+			var bday2 = bday2[0]+bday2[1]+bday2[2];
+
+		    $('input[name="name_participant1['+ i +']"').val(name1);
+		    $('input[name="sex1['+ i +']"').val(array[a+5]);
+		    $('input[name="civil_status1['+ i +']"').val(array[a+6]);
+		    $('input[name="bday1['+ i +']"').val(bday1);
+		    $('input[name="age1['+ i +']"').val(age1);
+		    $('input[name="address['+ i +']"').val(array[a+8]);
+		    $('input[name="educ1['+ i +']"').val(array[a+9]);
 
 
-		    // $('input[name="no_of_children['+ i +']"').val(array[a+7]);
-		    // $('input[name="method['+ i +']"').val(array[a+8]);
-		    // $('input[name="fp_method['+ i +']"').val(array[a+9]);
-		    // $('input[name="type['+ i +']"').val(array[a+10]);
-		    // $('input[name="status['+ i +']"').val(array[a+11]);
-		    // $('input[name="reason['+ i +']"').val(array[a+12]);
+		    $('input[name="no_of_children['+ i +']"').val(array[a+10]);
+		    $('input[name="method['+ i +']"').val(array[a+11]);
+		    $('input[name="fp_method['+ i +']"').val(array[a+12]);
+		    $('input[name="type['+ i +']"').val(array[a+13]);
+		    $('input[name="status['+ i +']"').val(array[a+14]);
+		    $('input[name="reason['+ i +']"').val(array[a+15]);
 
-	    	// if(array[a+13] !== '') {
-	    	// 	$('input[name="type['+ i +']"').prop('checked', true);
-	    	// } else {
-	    	// 	$('input[name="type['+ i +']"').prop('checked', false);
-	    	// }
+	    	if(array[a+16] !== '') {
+	    		$('input[name="type['+ i +']"').prop('checked', true);
+	    	} else {
+	    		$('input[name="type['+ i +']"').prop('checked', false);
+	    	}
 
-	    	// $('input[name="name_participant2['+ i +']"').val(array[b]);
-		    // $('input[name="sex2['+ i +']"').val(array[b+2]);
-		    // $('input[name="civil_status2['+ i +']"').val(array[b+3]);
-		    // $('input[name="age2['+ i +']"').val(array[b+4]);
-		    // $('input[name="educ2['+ i +']"').val(array[b+6]);
+	    	$('input[name="name_participant2['+ i +']"').val(name2);
+		    $('input[name="sex2['+ i +']"').val(array[b+5]);
+		    $('input[name="civil_status2['+ i +']"').val(array[b+6]);
+		    $('input[name="bday2['+ i +']"').val(bday2);
+		    $('input[name="age2['+ i +']"').val(age2);
+		    $('input[name="educ2['+ i +']"').val(array[b+8]);
 
-	    	if(array[b+13] !== '') {
+	    	if(array[b+16] !== '') {
 	    		$('input[name="type2['+ i +']"').prop('checked', true);
 	    	} else {
 	    		$('input[name="type2['+ i +']"').prop('checked', false);

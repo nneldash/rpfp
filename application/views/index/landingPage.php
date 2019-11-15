@@ -1,4 +1,5 @@
         <link href="<?= base_url('assets/css/main.css') ?>" rel="stylesheet">
+        <script type="text/javascript" src="<?= base_url('NewAssets/jquery'); ?>"></script>
         <nav class="navbar navbar-default navbar-fixed-top" id="myScrollspy">
             <div class="container">
                 <div class="navbar-header">
