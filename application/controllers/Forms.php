@@ -67,6 +67,8 @@ class Forms extends CI_Controller
 
     public function saveForm1()
     {
+        // echo '<pre>';
+        // print_r($_POST);exit;
         if (!$this->LoginModel->isLoggedIn()) {
             $header['title'] =' Online RPFP Monitoring System';
 
@@ -110,7 +112,7 @@ class Forms extends CI_Controller
     {
         $listCouple = new ListCoupleClass();
         
-        for ($i = 0; $i < $this->input->post('name_participant1'); $i++) {
+        for ($i = 0; $i <= 9; $i++) {
             if (!$this->input->post('name_participant1')[$i] && !$this->input->post('name_participant2')[$i]) {
                 break;
             }
