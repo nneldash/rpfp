@@ -21,6 +21,8 @@ class Forms extends CI_Controller
         $this->load->library('service_slip/ServiceSlipClass');
         $this->load->model('AccomplishmentModel');
         $this->load->library('accomplishment/AccomplishmentClass');
+        $this->load->model('FormAModel');
+        $this->load->library('formA/FormAClass');
     }
 
     public function index()
@@ -281,12 +283,14 @@ class Forms extends CI_Controller
 
         $header['title'] = 'Online RPFP Monitoring System | Form A';
 
-        $this->load->model('FormModel');
+        $this->load->model('FormAModel');
 
-        $formA = $this->FormModel->getFormA();
+        $reportMonth = $_GET['ReportMonth'];
+        $reportYear = $_GET['ReportYear'];
+        $formA = $this->FormAModel->getFormAReport($reportMonth,$reportYear);
 
         $this->load->view('includes/header', $header);
-        $this->load->view('forms/forma', array('forma' => $formA, 'is_pdf' => false));
+        $this->load->view('forms/forma', array('form_A' => $formA, 'is_pdf' => false));
         $this->load->view('includes/footer');
     }
 

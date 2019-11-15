@@ -4456,13 +4456,18 @@ BEGIN
 END$$
 
 CREATE DEFINER=root@localhost PROCEDURE get_report_demandgen_details(
-    IN demandgen_id INT
+    IN report_month INT,
+    IN report_year INT
     )   READS SQL DATA
 BEGIN
+    DECLARE region_of_user INT;
+
+    SET region_of_user := rpfp.profile_get_own_region();
+
     IF NOT EXISTS (
          SELECT rd.REPORT_ID
            FROM rpfp.report_demandgen rd
-          WHERE rd.DEMANDGEN_ID = demandgen_id
+          WHERE rd.REPORT_YEAR = report_year
     ) THEN
         BEGIN
              SELECT NULL AS report_year,
@@ -4516,8 +4521,13 @@ BEGIN
                     rd.REACHED_TOTAL AS reached_total,
                     rd.DATE_PROCESSED AS date_processed
                FROM rpfp.report_demandgen rd
-              WHERE rd.DEMANDGEN_ID = demandgen_id
-           ORDER BY rd.report_id ASC
+              WHERE rd.REPORT_YEAR = report_year
+                AND rd.REPORT_MONTH >= 1
+                AND rd.REPORT_MONTH <= report_month
+                AND rd.PSGC_CODE = region_of_user
+           GROUP BY rd.REPORT_MONTH
+           ORDER BY rd.REPORT_ID DESC
+              LIMIT 1
             ;
         END;
     END IF;
@@ -5556,6 +5566,9 @@ GRANT EXECUTE ON PROCEDURE rpfp.encoder_get_fp_service TO 'regional_data_manager
 GRANT EXECUTE ON PROCEDURE rpfp.get_report_demandgen_list TO 'regional_data_manager';
 GRANT EXECUTE ON PROCEDURE rpfp.get_report_unmet_need_list TO 'regional_data_manager';
 GRANT EXECUTE ON PROCEDURE rpfp.get_report_served_method_mix_list TO 'regional_data_manager';
+GRANT EXECUTE ON PROCEDURE rpfp.get_report_demandgen_details TO 'regional_data_manager';
+GRANT EXECUTE ON PROCEDURE rpfp.get_report_unmet_need_details TO 'regional_data_manager';
+GRANT EXECUTE ON PROCEDURE rpfp.get_report_served_method_mix_details TO 'regional_data_manager';
 
 GRANT EXECUTE ON PROCEDURE rpfp.process_demandgen TO 'pmed';
 GRANT EXECUTE ON PROCEDURE rpfp.process_unmet_need TO 'pmed';

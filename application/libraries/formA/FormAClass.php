@@ -4,6 +4,7 @@ $CI =& get_instance();
 $CI->load->iface('formA/FormAInterface');
 $CI->load->library('formA/PeriodReportClass');
 $CI->load->library('formA/lists/ListMonthsClass');
+// $CI->load->iface('formA/FormAInterface');
 
 class FormAClass extends FormAInterface
 {
@@ -15,11 +16,11 @@ class FormAClass extends FormAInterface
         parent::__construct($params);
     }
 
-    public static function getFormFromVariable($form) : FormAInterface
+    public static function getFormFromVariable($forma) : FormAInterface
     {
-        if ($form instanceof FormAInterface) {
-            return $form;
+        if ($forma instanceof FormAInterface) {
+            return $forma;
         }
-        return new FormClass($form);
+        return new FormAClass($forma);
     }
 }

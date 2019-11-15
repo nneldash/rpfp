@@ -2,9 +2,26 @@
 defined('BASEPATH') or exit('No direct script access allowed');
 $this->load->library('helpers/HtmlHelper');
 
-$forma = FormAClass::getFormFromVariable($forma);
+$forma = FormAClass::getFormFromVariable($form_A);
 // echo '<pre>';
 // print_r($forma);exit;
+$count = 0;
+$class4Ps = 0;
+$classNon4Ps = 0;
+$classUsapan = 0;
+$classPMC = 0;
+$classH2H = 0;
+$classProfiled = 0;
+$targetCouples = 0;
+
+$sub_class4Ps = 0;
+$sub_classNon4Ps = 0;
+$sub_classUsapan = 0;
+$sub_classPMC = 0;
+$sub_classH2H = 0;
+$sub_classProfiled = 0;
+$sub_TotalClass = 0;
+$sub_targetCouples = 0;
 ?>
 
 <?php if($is_pdf) { ?>
@@ -38,7 +55,7 @@ $forma = FormAClass::getFormFromVariable($forma);
 			<p class="small">
 				<b>
 					RPFP CLASSES IMPLEMENTATION REPORT <br>
-					FOR THE PERIOD <?=$forma->Period->MonthsPeriod; ?> 2018 <br>
+					FOR THE PERIOD <?=$forma->Period->MonthsPeriod; ?> <?= $_GET['ReportYear']; ?> <br>
 					POPCOM Regional Office <?=$forma->Period->RegionalOffice; ?> <br>
 					DEMAND GENERATION ACTIVITIES
 				</b>
@@ -237,37 +254,113 @@ $forma = FormAClass::getFormFromVariable($forma);
 							</th>
 						</tr>
 					</thead>
-					<tbody>
-						<?php for ($i=1; $i <= 3; $i++): ?>
-							<tr>
-								<td class="text-center">
-									<p class="small">
-										<b>
-											<?= date('F',strtotime('01.'.$i.'.2001'))?>
-										</b>
-									</p>
-								</td>
-								<td><?=$forma->Period->MonthsPeriod;?></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-							</tr>
-						<?php endfor; ?>
+					<?php for ($iii=1; $iii <= 4; $iii++): ?>
+					<?php for ($ii=1; $ii <= 3; $ii++): ?>
+					<!-- <?php $i = 1 + $i; ?> -->
+						<tr>
+						<?php foreach ($form_A as $forma) : ?>
+							<td class="text-center">
+								<p class="small">
+									<b>
+										<?= date('F',strtotime('01.'.$i.'.2001'))?>
+									<b>
+								</p>
+							</td>
+							<td>
+									<?php 
+										if($forma->Class4Ps != 'N/A') {
+											echo $forma->Class4Ps;
+											$class4Ps= $forma->Class4Ps;
+											$sub_class4Ps+= $forma->Class4Ps;
+										} else {
+											echo 0;
+										}
+									?>
+							</td>
+							<td>
+									<?php 
+										if($forma->ClassNon4Ps != 'N/A') {
+											echo $forma->ClassNon4Ps;
+											$classNon4Ps= $forma->ClassNon4Ps;
+											$sub_classNon4Ps+= $forma->ClassNon4Ps;
+										} else {
+											echo 0;
+										}
+									?>
+							</td>
+							<td>
+									<?php 
+										if($forma->ClassUsapan != 'N/A') {
+											echo $forma->ClassUsapan;
+											$classUsapan= $forma->ClassUsapan;
+											$sub_classUsapan+= $forma->ClassUsapan;
+										} else {
+											echo 0;
+										}
+									?>
+							</td>
+							<td>
+									<?php 
+										if($forma->ClassPMC != 'N/A') {
+											echo $forma->ClassPMC;
+											$classPMC= $forma->ClassPMC;
+											$sub_classPMC+= $forma->ClassPMC;
+										} else {
+											echo 0;
+										}
+									?>
+							</td>
+							<td>
+									<?php 
+										if($forma->ClassH2H != 'N/A') {
+											echo $forma->ClassH2H;
+											$classH2H= $forma->ClassH2H;
+											$sub_classH2H+= $forma->ClassH2H;
+										} else {
+											echo 0;
+										}
+									?>
+							</td>
+							<td>
+									<?php 
+										if($forma->ClassProfiled != 'N/A') {
+											echo $forma->ClassProfiled;
+											$classProfiled= $forma->ClassProfiled;
+											$sub_classProfiled+= $forma->ClassProfiled;
+										} else {
+											echo 0;
+										}
+									?>
+							</td>
+							<td>
+								<?= $sub_TotalClass = $class4Ps + $classNon4Ps + $classUsapan + $classPMC + $classH2H + $classProfiled ?>
+							</td>
+							<td>
+									<?php 
+										if($forma->TargetCouples != 'N/A') {
+											echo $forma->TargetCouples;
+											$targetCouples= $forma->TargetCouples;
+											$sub_targetCouples+= $forma->TargetCouples;
+										} else {
+											echo 0;
+										}
+									?>
+							</td>
+							<td><?= $forma->WRA4Ps ?></td>
+							<td><?= $forma->WRANon4Ps ?></td>
+							<td><?= $forma->WRAUsapan ?></td>
+							<td><?= $forma->WRAPMC ?></td>
+							<td><?= $forma->WRAH2H ?></td>
+							<td><?= $forma->WRAProfiled ?></td>
+							<td></td>
+							<td><?= $forma->SoloMale ?></td>
+							<td><?= $forma->SoloFemale ?></td>
+							<td><?= $forma->CoupleAttendee ?></td>
+							<td><?= $forma->TotalReached ?></td>
+						<?php endforeach; ?>
+						</tr>
+					<?php endfor; ?>
+					<?php $ii=1; ?>
 						<tr>
 							<td class="text-center">
 								<p class="small text-danger">
@@ -276,14 +369,14 @@ $forma = FormAClass::getFormFromVariable($forma);
 									</b>
 								</p>
 							</td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
+							<td><?= $sub_class4Ps+= $sub_class4Ps ?></td>
+							<td><?= $sub_classNon4Ps+= $sub_classNon4Ps ?></td>
+							<td><?= $sub_classUsapan+= $sub_classUsapan ?></td>
+							<td><?= $sub_classPMC+= $sub_classPMC ?></td>
+							<td><?= $sub_classH2H+= $sub_classH2H ?></td>
+							<td><?= $sub_classProfiled+= $sub_classProfiled ?></td>
+							<td><?= $sub_TotalClass+= $sub_TotalClass ?></td>
+							<td><?= $sub_targetCouples+= $sub_targetCouples ?></td>
 							<td></td>
 							<td></td>
 							<td></td>
@@ -296,180 +389,7 @@ $forma = FormAClass::getFormFromVariable($forma);
 							<td></td>
 							<td></td>
 						</tr>
-						<?php for ($i=4; $i <= 6; $i++): ?>
-							<tr>
-								<td class="text-center">
-									<p class="small">
-										<b>
-											<?= date('F',strtotime('01.'.$i.'.2001'))?>
-										</b>
-									</p>
-								</td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-							</tr>
-						<?php endfor; ?>
-						<tr>
-							<td class="text-center">
-								<p class="small text-danger">
-									<b>
-										Sub-Total
-									</b>
-								</p>
-							</td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-						</tr>
-						<?php for ($i=7; $i <= 9; $i++): ?>
-							<tr>
-								<td class="text-center">
-									<p class="small">
-										<b>
-											<?= date('F',strtotime('01.'.$i.'.2001'))?>
-										</b>
-									</p>
-								</td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-							</tr>
-						<?php endfor; ?>
-						<tr>
-							<td class="text-center">
-								<p class="small text-danger">
-									<b>
-										Sub-Total
-									</b>
-								</p>
-							</td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-						</tr>
-						<?php for ($i=10; $i <= 12; $i++): ?>
-							<tr>
-								<td class="text-center">
-									<p class="small">
-										<b>
-											<?= date('F',strtotime('01.'.$i.'.2001'))?>
-										</b>
-									</p>
-								</td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-							</tr>
-						<?php endfor; ?>
-						<tr>
-							<td class="text-center">
-								<p class="small text-danger">
-									<b>
-										Sub-Total
-									</b>
-								</p>
-							</td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-						</tr>
+					<?php endfor; ?>
 						<tr>
 							<td class="text-center">
 								<p class="small text-primary">
@@ -559,6 +479,15 @@ $forma = FormAClass::getFormFromVariable($forma);
 					<td style="border: none"></td>
 				</tr>
 			</table>
+			
+			<?php
+			if (!empty($reload)) {
+				?>
+				<script>$("#datatable-responsive").DataTable();</script>
+				<?php
+			}
+			?>    
+
 		</div>
 	</div>
 </div>

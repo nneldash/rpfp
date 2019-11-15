@@ -9,6 +9,7 @@ class FormAModel extends BaseModel
         parent::__construct();
         $this->CI->load->library('formA/FormAClass');
         $this->CI->load->library('formA/lists/ListFormA');
+        $this->CI->load->library('formA/lists/ReportFormA');
     }
 
     public function getFormAList() : ListFormAInterface
@@ -33,6 +34,45 @@ class FormAModel extends BaseModel
         $retval = new ListFormA();
 
         foreach($forma_list as $form_A) {
+            $retval->append($form_A);
+        }
+
+        return $retval;
+    }
+
+    public function getFormAReport($report_month,$report_year) : ReportFormAInterface
+    {
+
+        $forma_report = $this->fromDbGetReportList(
+            'ReportFormA',
+            'FormAClass',
+            array(
+                'Class4Ps' => 'class_4ps',
+                'ClassNon4Ps' => 'class_non4ps',
+                'ClassUsapan' => 'class_usapan',
+                'ClassPMC' => 'class_pmc',
+                'ClassH2H' => 'class_h2h',
+                'ClassProfiled' => 'class_profiled',
+                'ClassTotal' => 'class_total',      
+                'TargetCouples' => 'target_couples',             
+                'WRA4Ps' => 'wra_4ps',
+                'WRANon4Ps' => 'wra_non4ps',
+                'WRAUsapan' => 'wra_usapan',
+                'WRAPMC' => 'wra_pmc',
+                'WRAH2H' => 'wra_h2h',
+                'WRAProfiled' => 'wra_total',
+                'SoloMale' => 'solo_male',
+                'SoloFemale' => 'solo_female',
+                'CoupleAttendee' => 'couple_attendee',
+                'TotalReached' => 'reached_total'
+            ),
+            'get_report_demandgen_details',
+            array($report_month,$report_year)
+        );
+
+        $retval = new ReportFormA();
+
+        foreach($forma_report as $form_A) {
             $retval->append($form_A);
         }
 
