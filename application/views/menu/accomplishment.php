@@ -4,8 +4,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
 if (empty($title)) {
     $title = 'Online RPFP Monitoring System | Accomplishment Report';
 }
-
-$count = count($accomplishment);
 ?>
 <script>document.querySelector("head title").innerHTML = '<?=$title?>';</script>
 
@@ -13,7 +11,7 @@ $count = count($accomplishment);
 <link href="<?= base_url('assets/css/form.css') ?>" rel="stylesheet">
 
 <br>
-<div style="text-transform: none; width: 15%;">                    
+<div style="text-transform: none; width: 15%;">
     <input type="submit" class="save" value="Generate Report" name="genAccomplishment" />
 </div>
 <br>
@@ -27,8 +25,8 @@ $count = count($accomplishment);
         </tr>
     </thead>
     <tbody>
-        <?php if ($count >= 1) { ?>
-            <?php foreach ($accomplishment as $accomplished) : ?>
+        <?php foreach ($accomplishment as $accomplished) : ?>
+            <?php if ($accomplished->ReportNo != 'N/A') { ?>
                 <tr>
                     <td><?= $accomplished->ReportNo ?></td>
                     <td><?= $accomplished->ReportYear ?> - <?php if ($accomplished->ReportMonth != 0) { echo strftime("%b" ,mktime(0,0,0, $accomplished->ReportMonth )); } else { echo $accomplished->ReportMonth; } ?></td>
@@ -40,16 +38,18 @@ $count = count($accomplishment);
                         </button>					
                     </td>
                 </tr>
-            <?php endforeach; ?>
-        <?php } else { ?>
-            <tr>
-                <td class="text-center" colspan="4">No result(s) found.</td>
-            </tr>
-        <?php } ?>
+            <?php } else { ?>
+                <tr>
+                    <td class="text-center" colspan="4">No result(s) found.</td>
+                </tr>
+            <?php } ?>
+        <?php endforeach; ?>
     </tbody>
 </table>
 
 <script>
+    loadJs(base_url + 'assets/js/accomplishment.js');
+
     $(document).ready( function () {
         var table = $('.accomplishmentList').DataTable();
     });

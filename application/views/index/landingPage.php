@@ -83,13 +83,7 @@
         </section>
 
         <footer>
-            <div class="container">
-                <div class="row">
-                    <div class="col-xs-12 text-center">
-                        <p class="footer">Copyright © 2019-Present. <br>Commission on Population and Development, Republic of the Philippines</p>
-                    </div>
-                </div>
-            </div>
+            <p class="footer">Copyright © 2019-Present. <br>Commission on Population and Development, Republic of the Philippines</p>
         </footer>
     </body>
 

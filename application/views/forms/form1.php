@@ -104,7 +104,7 @@ $form1 = FormClass::getFormFromVariable($form1);
 					</div>
 			    </div>
 			<?php endif; ?>
-			<input type="hidde" name="class_id" value="<?= (!empty($_GET['rpfpId']) ? $_GET['rpfpId'] : 0); ?>" />
+			<input type="hidden" name="class_id" value="<?= (!empty($_GET['rpfpId']) ? $_GET['rpfpId'] : 0); ?>" />
 			<div class="border-t1 table-responsive">
 				<div style="padding-top: 10px"></div>
 				<table style="float: left" class="table">
@@ -428,8 +428,22 @@ $form1 = FormClass::getFormFromVariable($form1);
 						</thead>
 						<tbody>
 							<?php for($i = 0; $i <= 9; $i++): ?>
-								<?php $dummy = new CoupleClass(); ?>
-								<?php $couple = (empty($form1->ListCouple[$i]) ? $dummy : $form1->ListCouple[$i]); ?>
+								<?php 
+									$dummy = new CoupleClass();
+									$couple = (empty($form1->ListCouple[$i]) ? $dummy : $form1->ListCouple[$i]);
+
+									$bday = 'N/A';
+									$bday2 = 'N/A';
+									if ($couple->FirstEntry->Birthdate != 'N/A') {
+										$bday = explode('-', $couple->FirstEntry->Birthdate);
+										$bday = $bday[1].'-'.$bday[2].'-'.$bday[0];
+									}
+
+									if ($couple->SecondEntry->Birthdate != 'N/A') {
+										$bday2 = explode('-', $couple->SecondEntry->Birthdate);
+										$bday2 = $bday2[1].'-'.$bday2[2].'-'.$bday2[0];
+									}
+								?>
 								<tr class="approveCheck tr1<?= $i?>">
 									<?php if (!$is_pdf): ?>
 										<?php if($isRegionalDataManager): ?>
@@ -452,6 +466,7 @@ $form1 = FormClass::getFormFromVariable($form1);
 										<?php
 				                            echo HtmlHelper::inputPdf(
 				                                $is_pdf,
+<<<<<<< HEAD
 				                                ($couple->Id != 'N/A' ? $couple->Id : ''),
 				                                "hidde",
 				                                "couple_id[".$i."]",
@@ -473,6 +488,9 @@ $form1 = FormClass::getFormFromVariable($form1);
 				                            echo HtmlHelper::inputPdf(
 				                                $is_pdf,
 				                                ($couple->FirstEntry->Name->Surname != 'N/A' ? $couple->FirstEntry->Name->Surname.',' : '').' '.($couple->FirstEntry->Name->Firstname != 'N/A' ? $couple->FirstEntry->Name->Firstname : '').' '.($couple->FirstEntry->Name->Middlename != 'N/A' ? $couple->FirstEntry->Name->Middlename : '').' '.($couple->FirstEntry->Name->Extname != 'N/A' ? $couple->FirstEntry->Name->Extname : ''),
+=======
+				                                ($couple->FirstEntry->Name->Firstname != 'N/A' ? $couple->FirstEntry->Name->Firstname : '').($couple->FirstEntry->Name->Surname != 'N/A' ? ', '.$couple->FirstEntry->Name->Surname : '').($couple->FirstEntry->Name->Middlename != 'N/A' ? ', '.$couple->FirstEntry->Name->Middlename : '').($couple->FirstEntry->Name->Extname != 'N/A' ? ', '.$couple->FirstEntry->Name->Extname : ''),
+>>>>>>> c6b7a9f3eb8188ed649f8c0608f4cbeb676a1407
 				                                "text",
 				                                "name_participant1[".$i."]",
 				                                "padding-l10 namePart1 dupHighlight",
@@ -509,11 +527,11 @@ $form1 = FormClass::getFormFromVariable($form1);
 					                        <?php
 					                            echo HtmlHelper::inputMaskPdf(
 					                            	$is_pdf,
-					                            	$couple->FirstEntry->Birthdate.'/'.$couple->FirstEntry->Age,
+					                            	$bday.'/'.$couple->FirstEntry->Age,
 					                                "text",
 					                                "age1[".$i."]",
 					                                "text-center birthAge bday1 dupHighlight",
-					                                "'mask': '9999-99-99'"
+					                                "'mask': '99-99-9999'"
 					                            );
 					                        ?> /
 					                        <input type="text" name="age1[<?=$i?>]" maxlength="2" class="text-center getAge1" readonly />
@@ -641,6 +659,7 @@ $form1 = FormClass::getFormFromVariable($form1);
 										<?php
 				                            echo HtmlHelper::inputPdf(
 				                            	$is_pdf,
+<<<<<<< HEAD
 				                                ($couple->SecondEntry->Id != 'N/A' ? $couple->SecondEntry->Id : ''),
 				                                "hidde",
 				                                "individual_id2[".$i."]",
@@ -652,6 +671,9 @@ $form1 = FormClass::getFormFromVariable($form1);
 				                            echo HtmlHelper::inputPdf(
 				                            	$is_pdf,
 				                                ($couple->SecondEntry->Name->Surname != 'N/A' ? $couple->SecondEntry->Name->Surname.',' : '').' '.($couple->SecondEntry->Name->Firstname != 'N/A' ? $couple->SecondEntry->Name->Firstname : '').' '.($couple->SecondEntry->Name->Middlename != 'N/A' ? $couple->SecondEntry->Name->Middlename : '').' '.($couple->SecondEntry->Name->Extname != 'N/A' ? $couple->SecondEntry->Name->Extname : ''),
+=======
+				                            	($couple->SecondEntry->Name->Firstname != 'N/A' ? $couple->SecondEntry->Name->Firstname : '').($couple->SecondEntry->Name->Surname != 'N/A' ? ', '.$couple->SecondEntry->Name->Surname : '').($couple->SecondEntry->Name->Middlename != 'N/A' ? ', '.$couple->SecondEntry->Name->Middlename : '').($couple->SecondEntry->Name->Extname != 'N/A' ? ', '.$couple->SecondEntry->Name->Extname : ''),
+>>>>>>> c6b7a9f3eb8188ed649f8c0608f4cbeb676a1407
 				                                "text",
 				                                "name_participant2[".$i."]",
 				                                "padding-l10 namePart2",
@@ -689,11 +711,11 @@ $form1 = FormClass::getFormFromVariable($form1);
 											<?php
 				                            	echo HtmlHelper::inputMaskPdf(
 					                            	$is_pdf,
-					                            	$couple->SecondEntry->Birthdate.'/'.$couple->SecondEntry->Age,
+					                            	$bday2.'/'.$couple->SecondEntry->Age,
 					                                "text",
 					                                "age2[".$i."]",
 					                                "text-center birthAge bday2",
-					                                "'mask': '9999-99-99'"
+					                                "'mask': '99-99-9999'"
 					                            );
 				                        	?> /
 				                        	<input type="text" name="age2[<?=$i?>]" maxlength="2" class="text-center getAge2" readonly />
