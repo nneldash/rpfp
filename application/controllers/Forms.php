@@ -147,9 +147,9 @@ class Forms extends CI_Controller
             return $individual;
         }
 
-        // if ($this->input->post('sex1')[$i] != 1) {
-        //     return $this->getSecondEntry($i);
-        // }
+        if ($this->input->post('sex1')[$i] == 'F') {
+            return $this->getSecondEntry($i);
+        }
 
 
         $individual->Id = $this->input->post('individual_id1')[$i];
@@ -177,10 +177,6 @@ class Forms extends CI_Controller
         if (!$this->input->post('name_participant2')[$i]) {
             return $individual;
         }
-
-        // if ($this->input->post('sex2')[$i] != 2) {
-        //     return $this->getFirstEntry($i);
-        // }
 
         $individual->Id = $this->input->post('individual_id2')[$i];
 
