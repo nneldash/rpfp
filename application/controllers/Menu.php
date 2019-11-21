@@ -103,7 +103,7 @@ class Menu extends CI_Controller
         $this->do_not_render_footer = true;
         $this->index();
         $this->load->view('menu/accomplishment', array('accomplishment' => $accomplishment));
-        $this->footer();        
+        $this->footer();
     }
 
 
@@ -131,7 +131,10 @@ class Menu extends CI_Controller
             $mpdf = new \Mpdf\Mpdf($mpdfConfig);
             $mpdf->debug = true;
 
-            $html = $this->load->view('menu/accomplishment', array('is_pdf' => true), true);
+            $reportNo = $_GET['ReportNo'];
+            $accomplishment = $this->AccomplishmentModel->getAccomplishmentReport($reportNo);
+
+            $html = $this->load->view('forms/accomplishment', array('is_pdf' => true, 'accomplishment' => $accomplishment), true);
 
             $mpdf->SetTitle('Online RPFP Monitoring System | Accomplishment Report');
             $mpdf->WriteHTML($html);

@@ -1,5 +1,6 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
+$accomp_no = $_GET['ReportNo'];
 ?>
 
 <?php if ($is_pdf): ?>
@@ -28,7 +29,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 		</div>		
 		<?php if(!$is_pdf) : ?>
 		    <div id="rightButton">
-	        	<a href="<?= base_url('menu/printAccomplishment') ?>" class="save" target="_blank">
+	        	<a href="<?= base_url('menu/printAccomplishment?ReportNo='. $accomp_no) ?>" class="save" target="_blank">
                     <span>PRINT</span>
                 </a>
 		    </div>

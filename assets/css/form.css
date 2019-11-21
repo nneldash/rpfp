@@ -453,3 +453,30 @@ a:hover {
 .has-duplicate {
 	background: lightblue;
 }
+.highlight {
+  	background: rgba(38, 185, 154, 0.16);
+}
+.highlight > td > input {
+	background: rgb(220, 244, 239);
+}
+
+/*------------------------------------------------------------------
+[ Previous and Next Button CSS ]*/
+.previous {
+	background-color: #f1f1f1;
+	color: black;
+}
+.next {
+	background-color: #4CAF50;
+	color: white;
+}
+
+/*------------------------------------------------------------------
+[ Button Loading ]*/
+.buttonload {
+	width: 100%;
+}
+.fa-loading {
+  margin-left: -12px;
+  margin-right: 8px;
+}

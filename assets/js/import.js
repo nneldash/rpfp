@@ -88,7 +88,17 @@ var process_wb = (function() {
 	    $('input[name=class_no]').val(array[112]);
 	    $('input[name=province]').val(array[128]);
 	    $('input[name=barangay]').val(array[145]);
-	    $('input[name=date_conducted]').val('2019-02-11');
+
+	    var date_conducted = array[161].split('-');
+	    var month = new Date(date_conducted[1]);
+
+	    var month = month.getMonth();
+
+	    date_conducted = date_conducted[2] + '-' + month + '-' + date_conducted[0];
+
+	    console.log(month);
+
+	    $('input[name=date_conducted]').val(date_conducted);
 
 
 	    var i;
@@ -99,6 +109,9 @@ var process_wb = (function() {
 		for (i = 0; i < 10; i++) {
 			var name1 = array[a] + ', ' + array[a+1] + ', ' + array[a+2] + ', ' + array[a+3];
 			var name2 = array[b] + ', ' + array[b+1] + ', ' + array[b+2] + ', ' + array[b+3];
+
+			var name1 = name1.split('"');
+			var name2 = name2.split('"');
 
 			var bdayAge1 = array[a+7].split(' ');
 			var age1 = bdayAge1[1];
@@ -112,7 +125,7 @@ var process_wb = (function() {
 			var bday2 = bdayAge2[0].split('/');
 			var bday2 = bday2[0]+bday2[1]+bday2[2];
 
-		    $('input[name="name_participant1['+ i +']"').val(name1);
+		    $('input[name="name_participant1['+ i +']"').val(name1[1]);
 		    $('input[name="sex1['+ i +']"').val(array[a+5]);
 		    $('input[name="civil_status1['+ i +']"').val(array[a+6]);
 		    $('input[name="bday1['+ i +']"').val(bday1);
@@ -134,12 +147,12 @@ var process_wb = (function() {
 	    		$('input[name="type['+ i +']"').prop('checked', false);
 	    	}
 
-	    	$('input[name="name_participant2['+ i +']"').val(name2);
+	    	$('input[name="name_participant2['+ i +']"').val(name2[1]);
 		    $('input[name="sex2['+ i +']"').val(array[b+5]);
 		    $('input[name="civil_status2['+ i +']"').val(array[b+6]);
 		    $('input[name="bday2['+ i +']"').val(bday2);
 		    $('input[name="age2['+ i +']"').val(age2);
-		    $('input[name="educ2['+ i +']"').val(array[b+8]);
+		    $('input[name="educ2['+ i +']"').val(array[b+9]);
 
 	    	if(array[b+16] !== '') {
 	    		$('input[name="type2['+ i +']"').prop('checked', true);
@@ -216,6 +229,8 @@ var do_file = (function() {
 	drop.addEventListener('dragenter', handleDragover, false);
 	drop.addEventListener('dragover', handleDragover, false);
 	drop.addEventListener('drop', handleDrop, false);
+
+	uploadFile();
 })();
 
 (function() {
@@ -238,17 +253,18 @@ _gaq.push(['_trackPageview']);
 // UPLOAD LOADER
 function _(el) {
 	return document.getElementById(el);
-	// alert(el);
 }
 
 function uploadFile() {
-	var file = _("xlf").files[0];
-	var formdata = new FormData();
-	formdata.append("xlf", file);
-	var ajax = new XMLHttpRequest();
-	ajax.upload.addEventListener("progress", progressHandler, false);
-	ajax.open("POST", "");
-	ajax.send(formdata);
+	$('#xlf').change(function(){
+		var file = _("xlf").files[0];
+		var formdata = new FormData();
+		formdata.append("xlf", file);
+		var ajax = new XMLHttpRequest();
+		ajax.upload.addEventListener("progress", progressHandler, false);
+		ajax.open("POST", "");
+		ajax.send(formdata);
+	});
 }
 
 function progressHandler(event) {

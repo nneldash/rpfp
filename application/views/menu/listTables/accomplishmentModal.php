@@ -31,8 +31,8 @@ $current_year = date('Y');
             <option id="repMonth" value="12">December</option>
 		</select>
 		<br>
-		<div style="text-transform: none; ">					
-            <input type="button" class="save genAccompSubmit" value="Submit" name="genAccompReport" />
+		<div style="text-transform: none; ">
+            <button class="save genAccompSubmit buttonload">Submit</button>
         </div>
 	</div>
 </div>

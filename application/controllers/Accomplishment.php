@@ -31,13 +31,11 @@ class Accomplishment extends CI_Controller
         $genData->ReportYear = $this->input->post('year');
         $genData->ReportMonth = $this->input->post('month');
 
-        $data = ['is_save' => true];
         if (!$this->AccomplishmentModel->saveAccomplishment($username, $pscgc_code, $genData)) {
             $data = ['is_save' => false];
+        } else {
+            $data = ['is_save' => true];
         }
-
-        print_r($data);
-        exit;
 
         $this->output
             ->set_content_type('application/json')

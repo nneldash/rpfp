@@ -68,6 +68,19 @@ table.datatable,
 .nav-sm ul.nav.child_menu {
     background: #45654b!important;
 }
+.nav-sm .navbar.nav_title a img {
+    width: 100%!important;
+}
+.nav-sm .navbar.nav_title {
+    width: 75px;
+}
+.nav-sm .container.body .col-md-3.left_col {
+    width: 85px!important;
+    position: fixed!important;
+}
+.site_title {
+    height: 70px!important;
+}
 
 /*------------------------------------------------------------------
 [ Btn Styles ]*/
