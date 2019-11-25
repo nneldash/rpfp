@@ -132,8 +132,30 @@ class HtmlHelper
 
     public static function firstEntry_BirthAge($firstBday, $secondBday, $firstAge, $secondAge)
     {
-        // $birthage = 
+        $birthage = $firstAge != 'N/A' ? ($firstAge != 'N/A' ? $firstBday.'/'.$firstAge : '') : ($secondAge != 'N/A' ? $secondBday.'/'.$secondAge : '');
 
-        // return $birthage;
+        return $birthage;
+    }
+
+    public static function secondEntry_BirthAge($firstBday, $secondBday, $firstAge, $secondAge)
+    {
+        $birthage = $firstAge == 'N/A' ? '' : ($secondBday != 'N/A' ? $secondBday.'/'.$secondAge : '');
+
+        return $birthage;
+    }
+
+    public static function firstEntry_Education($firstEduc, $secondEduc)
+    {
+        $education = $firstEduc != 'N/A' ? ($firstEduc != 'N/A' ? $firstEduc : '') : ($secondEduc != 'N/A' ? $secondEduc : '');
+
+        return $education;
+    }
+
+    public static function secondEntry_Education($firstEduc, $secondEduc)
+    {
+        $education = $firstEduc == 'N/A' ? '' : ($secondEduc != 'N/A' ? $secondEduc : '');
+
+        return $education;
     }
 }
+ 

@@ -549,7 +549,7 @@ $form1 = FormClass::getFormFromVariable($form1);
 										<?php
 				                            echo HtmlHelper::inputPdf(
 				                            	$is_pdf,
-				                            	($couple->FirstEntry->HighestEducation != 'N/A' ? $couple->FirstEntry->HighestEducation : ''),
+				                            	HtmlHelper::firstEntry_Education($couple->FirstEntry->HighestEducation, $couple->SecondEntry->HighestEducation),
 				                                "text",
 				                                "educ1[".$i."]",
 				                                "text-center",
@@ -703,7 +703,7 @@ $form1 = FormClass::getFormFromVariable($form1);
 											<?php
 				                            	echo HtmlHelper::inputMaskPdf(
 					                            	$is_pdf,
-					                            	$bday2.'/'.$couple->SecondEntry->Age,
+					                            	HtmlHelper::secondEntry_BirthAge($bday, $bday2, $couple->FirstEntry->Age, $couple->SecondEntry->Age),
 					                                "text",
 					                                "bday2[".$i."]",
 					                                "text-center birthAge bday2",
@@ -717,7 +717,7 @@ $form1 = FormClass::getFormFromVariable($form1);
 										<?php
 			                            echo HtmlHelper::inputPdf(
 			                            	$is_pdf,
-			                            	($couple->SecondEntry->HighestEducation != 'N/A' ? $couple->SecondEntry->HighestEducation : ''),
+			                            	HtmlHelper::secondEntry_Education($couple->FirstEntry->HighestEducation, $couple->SecondEntry->HighestEducation),
 			                                "text",
 			                                "educ2[".$i."]",
 			                                "text-center",
