@@ -476,7 +476,7 @@ $form1 = FormClass::getFormFromVariable($form1);
 										<?php
 				                            echo HtmlHelper::inputPdf(
 				                                $is_pdf,
-				                                ($couple->FirstEntry->Id != 'N/A' ? $couple->FirstEntry->Id : ''),
+				                                HtmlHelper::firstEntry_Id($couple->FirstEntry->Id, $couple->SecondEntry->Id),
 				                                "hidde",
 				                                "individual_id1[".$i."]",
 				                                "padding-l10 namePart1 dupHighlight",
@@ -486,7 +486,7 @@ $form1 = FormClass::getFormFromVariable($form1);
 										<?php
 				                            echo HtmlHelper::inputPdf(
 				                                $is_pdf,
-				                                ($couple->FirstEntry->Name->Firstname != 'N/A' ? $couple->FirstEntry->Name->Firstname : '').($couple->FirstEntry->Name->Surname != 'N/A' ? ', '.$couple->FirstEntry->Name->Surname : '').($couple->FirstEntry->Name->Middlename != 'N/A' ? ', '.$couple->FirstEntry->Name->Middlename : '').($couple->FirstEntry->Name->Extname != 'N/A' ? ', '.$couple->FirstEntry->Name->Extname : ''),
+				                                HtmlHelper::firstEntry_Name($couple->FirstEntry->Name, $couple->SecondEntry->Name),
 				                                "text",
 				                                "name_participant1[".$i."]",
 				                                "padding-l10 namePart1 dupHighlight",
@@ -498,7 +498,7 @@ $form1 = FormClass::getFormFromVariable($form1);
 										<?php
 				                            echo HtmlHelper::inputPdf(
 				                            	$is_pdf,
-				                                ($couple->FirstEntry->Sex == 2) ? 'F' : (($couple->FirstEntry->Sex == 'N/A') ? '' : 'M'),
+				                                HtmlHelper::firstEntry_Sex($couple->FirstEntry->Sex, $couple->SecondEntry->Sex),
 				                                "text",
 				                                "sex1[".$i."]",
 				                                "text-center sexValid gender1 dupHighlight",
@@ -510,7 +510,7 @@ $form1 = FormClass::getFormFromVariable($form1);
 										<?php
 				                            echo HtmlHelper::inputPdf(
 				                            	$is_pdf,
-				                            	($couple->FirstEntry->CivilStatus != 'N/A' ? $couple->FirstEntry->CivilStatus : ''),
+				                            	HtmlHelper::firstEntry_Civil($couple->FirstEntry->CivilStatus, $couple->SecondEntry->CivilStatus),
 				                                "text",
 				                                "civil_status1[".$i."]",
 				                                "text-center",
@@ -523,7 +523,7 @@ $form1 = FormClass::getFormFromVariable($form1);
 					                        <?php
 					                            echo HtmlHelper::inputMaskPdf(
 					                            	$is_pdf,
-					                            	$bday.'/'.$couple->FirstEntry->Age,
+					                            	HtmlHelper::firstEntry_BirthAge($bday, $bday2, $couple->FirstEntry->Age, $couple->SecondEntry->Age),
 					                                "text",
 					                                "bday1[".$i."]",
 					                                "text-center birthAge bday1 dupHighlight",
@@ -655,7 +655,7 @@ $form1 = FormClass::getFormFromVariable($form1);
 										<?php
 				                            echo HtmlHelper::inputPdf(
 				                            	$is_pdf,
-				                                ($couple->SecondEntry->Id != 'N/A' ? $couple->SecondEntry->Id : ''),
+				                                HtmlHelper::secondEntry_Id($couple->FirstEntry->Id, $couple->SecondEntry->Id),
 				                                "hidde",
 				                                "individual_id2[".$i."]",
 				                                "padding-l10 namePart2",
@@ -665,7 +665,7 @@ $form1 = FormClass::getFormFromVariable($form1);
 										<?php
 				                            echo HtmlHelper::inputPdf(
 				                            	$is_pdf,
-				                            	($couple->SecondEntry->Name->Firstname != 'N/A' ? $couple->SecondEntry->Name->Firstname : '').($couple->SecondEntry->Name->Surname != 'N/A' ? ', '.$couple->SecondEntry->Name->Surname : '').($couple->SecondEntry->Name->Middlename != 'N/A' ? ', '.$couple->SecondEntry->Name->Middlename : '').($couple->SecondEntry->Name->Extname != 'N/A' ? ', '.$couple->SecondEntry->Name->Extname : ''),
+				                            	HtmlHelper::secondEntry_Name($couple->FirstEntry->Name, $couple->SecondEntry->Name),
 				                                "text",
 				                                "name_participant2[".$i."]",
 				                                "padding-l10 namePart2",
@@ -678,7 +678,7 @@ $form1 = FormClass::getFormFromVariable($form1);
 										<?php
 				                            echo HtmlHelper::inputPdf(
 				                            	$is_pdf,
-				                                ($couple->SecondEntry->Sex == 1) ? 'M' : (($couple->SecondEntry->Sex == 'N/A') ? '' : 'F'),
+				                                HtmlHelper::secondEntry_Sex($couple->FirstEntry->Sex, $couple->SecondEntry->Sex),
 				                                "text",
 				                                "sex2[".$i."]",
 				                                "text-center gender2",
@@ -690,7 +690,7 @@ $form1 = FormClass::getFormFromVariable($form1);
 										<?php
 				                            echo HtmlHelper::inputPdf(
 				                            	$is_pdf,
-				                            	($couple->SecondEntry->CivilStatus != 'N/A'),
+				                            	HtmlHelper::secondEntry_Civil($couple->FirstEntry->CivilStatus, $couple->SecondEntry->CivilStatus),
 				                                "text",
 				                                "civil_status2[".$i."]",
 				                                "text-center",

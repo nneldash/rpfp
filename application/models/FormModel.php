@@ -99,8 +99,8 @@ class FormModel extends BaseModel
                 $couple_id = $couple_id[2];
             }
             
-            $husband = $couple->FirstEntry;
-            $wife = $couple->SecondEntry;
+            $husband = $couple->Husband();
+            $wife = $couple->Wife();
 
             $method2 = 'encoder_save_individual';
 

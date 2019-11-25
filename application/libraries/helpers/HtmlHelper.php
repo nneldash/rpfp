@@ -73,4 +73,67 @@ class HtmlHelper
             return "{$state}<span class='padding-l5'>{$value}</span>";
         }
     }
+
+    public static function firstEntry_Id($first, $second)
+    {
+        $individualId = $first != 'N/A' ? ($first != 'N/A' ? $first : '') : ($second != 'N/A' ? $second : '');
+
+        return $individualId;
+    }
+
+    public static function secondEntry_Id($first, $second)
+    {
+        $individualId = $first == 'N/A' ? '' : ($second != 'N/A' ? $second : '');
+
+        return $individualId;
+    }
+
+    public static function firstEntry_Name($firstEntry, $secondEntry)
+    {
+        $name = $firstEntry->Firstname != 'N/A' ? ($firstEntry->Firstname != 'N/A' ? $firstEntry->Firstname : '').($firstEntry->Surname != 'N/A' ? ', '.$firstEntry->Surname : '').($firstEntry->Middlename != 'N/A' ? ', '.$firstEntry->Middlename : '').($firstEntry->Extname != 'N/A' ? ', '.$firstEntry->Extname : '') : ($secondEntry->Firstname != 'N/A' ? $secondEntry->Firstname : '').($secondEntry->Surname != 'N/A' ? ', '.$secondEntry->Surname : '').($secondEntry->Middlename != 'N/A' ? ', '.$secondEntry->Middlename : '');
+
+        return $name;
+    }
+
+    public static function secondEntry_Name($firstEntry, $secondEntry)
+    {
+        $name = $firstEntry->Surname == 'N/A' ? '' : ($secondEntry->Firstname != 'N/A' ? $secondEntry->Firstname : '').($secondEntry->Surname != 'N/A' ? ', '.$secondEntry->Surname : '').($secondEntry->Middlename != 'N/A' ? ', '.$secondEntry->Middlename : '');
+
+        return $name;
+    }
+
+    public static function firstEntry_Sex($first, $second)
+    {
+        $sex = $first == 2 ? 'F' : ($second == 2 ? 'F' : $second != 'N/A' ? 'M' : '');
+
+        return $sex;
+    }
+
+    public static function secondEntry_Sex($first, $second)
+    {
+        $sex = $first == 'N/A' ? '' : ($second == 2 ? 'F' : $second != 'N/A' ? 'M' : '');
+
+        return $sex;
+    }
+
+    public static function firstEntry_Civil($first, $second)
+    {
+        $civil = $first != 'N/A' ? ($first != 'N/A' ? $first : '') : ($second != 'N/A' ? $second : '');
+
+        return $civil;
+    }
+
+    public static function secondEntry_Civil($first, $second)
+    {
+        $civil = $first == 'N/A' ? '' : ($second != 'N/A' ? $second : '');
+
+        return $civil;
+    }
+
+    public static function firstEntry_BirthAge($firstBday, $secondBday, $firstAge, $secondAge)
+    {
+        // $birthage = 
+
+        // return $birthage;
+    }
 }
