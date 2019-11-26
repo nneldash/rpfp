@@ -561,7 +561,7 @@ $form1 = FormClass::getFormFromVariable($form1);
 										<?php
 				                            echo HtmlHelper::inputPdf(
 				                            	$is_pdf,
-				                            	($couple->NumberOfChildren != 'N/A' ? $couple->NumberOfChildren : 0),
+				                            	($couple->NumberOfChildren != 'N/A' ? $couple->NumberOfChildren : ''),
 				                                "text",
 				                                "no_of_children[".$i."]",
 				                                "height-50 text-center",
@@ -641,7 +641,7 @@ $form1 = FormClass::getFormFromVariable($form1);
 									<?php if(!$is_pdf): ?>
 										<?php if($isEncoder): ?>
 											<td class="small text-center" rowspan="2">
-												<button class="btn-slip" data-toggle="tooltip" data-placement="left" title="View Service Slip">
+												<button class="btn-slip" data-couple="<?= $couple->Id; ?>" data-couple-name="<?= HtmlHelper::firstEntry_Name($couple->FirstEntry->Name, $couple->SecondEntry->Name); ?>" data-address="<?= $couple->Address_St; ?>" data-toggle="tooltip" data-placement="left" title="View Service Slip">
 													<i class="fa fa-file"></i>
 												</button>
 											</td>

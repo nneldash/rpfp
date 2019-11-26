@@ -151,27 +151,27 @@ class FormModel extends BaseModel
 
     public function saveServiceSlip(int $couple_id, ServiceSlipInterface $data)
     {
+        
         $method = "encoder_save_service_slip";
 
         $params = [
-            $couple_id == 0 ? BLANK : $couple_id,
             $data->Id == N_A ? BLANK : $data->Id,
+            $couple_id == 0 ? BLANK : $couple_id,
 
-            $data->DateOfVisit == N_A ? BLANK : $data->DateOfVisit->format('Y-m-d'),
-            $data->ClientName == N_A ? BLANK : $data->ClientName,
-            $data->ClientAddress == N_A ? BLANK : $data->ClientAddress,
+            $data->DateOfVisit == N_A ? BLANK : $data->DateOfVisit,
             $data->MethodUsed == N_A ? BLANK : $data->MethodUsed,
+            $data->ProviderType == N_A ? BLANK : $data->ProviderType,
+            $data->IsCounseling == N_A ? BLANK : $data->IsCounseling,
+            $data->OtherConcern == N_A ? BLANK : $data->OtherConcern,
             $data->CounseledToUse == N_A ? BLANK : $data->CounseledToUse,
-            $data->OtherReasons == N_A ? BLANK : $data->OtherReasons,
-            $data->DateOfMethod == N_A ? BLANK : $data->DateOfMethod->format('Y-m-d'),
+            $data->OtherSpecify == N_A ? BLANK : $data->OtherSpecify,
+            $data->IsProvided == N_A ? BLANK : $data->IsProvided,
+            $data->DateOfMethod == N_A ? BLANK : $data->DateOfMethod,
+            $data->ClientAdvised == N_A ? BLANK : $data->ClientAdvised,
             $data->ReferralFacility == N_A ? BLANK : $data->ReferralFacility,
-
-            $data->Name == N_A ? BLANK : $data->Name,
-            // $data->Name->Firstname == N_A ? BLANK : $data->Name->Firstname,
-            // $data->Name->Middlename == N_A ? BLANK : $data->Name->Middlename,
-            // $data->Name->Extname == N_A ? BLANK : $data->Name->Extname
+            $data->HealthServiceProvider == N_A ? BLANK : $data->HealthServiceProvider
         ];
-
+        
         return $this->saveToDb($method, $params);
     }
 
@@ -181,15 +181,13 @@ class FormModel extends BaseModel
 
         $slip->Id = '1';
         $slip->DateOfVisit = '10/21/2019';
-        $slip->ClientName = 'CHOU FAN';
-        $slip->ClientAddress = 'Mandaluyong City';
         $slip->MethodUsed = 'SDM';
         $slip->CounseledToUse = '1';
-        $slip->OtherReasons = '2';
+        $slip->OtherSpecify = '2';
         $slip->DateOfMethod = '10/21/2019';
         $slip->ClientAdvised = 'OK';
         $slip->ReferralFacility = 'CLAUDE GUSION';
-        $slip->Name = 'CHOU FAN';
+        $slip->HealthServiceProvider = 'CHOU FAN';
 
         return $slip;
     }

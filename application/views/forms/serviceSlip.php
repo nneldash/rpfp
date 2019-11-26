@@ -1,8 +1,6 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 $this->load->library('helpers/HtmlHelper');
-// echo '<pre>';
-// print_r($slip);
 ?>
 
 <div class="body-padding" style="padding-top: 0">
@@ -15,6 +13,7 @@ $this->load->library('helpers/HtmlHelper');
 		<div class="row border-2">
 			<div class="col-md-12">
 				<div class="col-md-6 padding-r3p text-left">
+					<input type="hidden" name="couple_id" value="<?= $couple_id; ?>">
 					<p class="small"><b>SERVICE SLIP</b></p>
 					<input type="hidden" name="slip_id" value="">
 				</div>
@@ -53,7 +52,7 @@ $this->load->library('helpers/HtmlHelper');
 					<?php
                         echo HtmlHelper::inputPdf(
                             $is_pdf,
-                            $slip->ClientName,
+                            $couple_name,
                             "text",
                             "client_name",
                             "padding-l10 underline",
@@ -72,7 +71,7 @@ $this->load->library('helpers/HtmlHelper');
 					<?php
                         echo HtmlHelper::inputPdf(
                             $is_pdf,
-                            $slip->ClientAddress,
+                            $address,
                             "text",
                             "client_address",
                             "padding-l10 underline",
@@ -316,7 +315,7 @@ $this->load->library('helpers/HtmlHelper');
 						<?php
                             echo HtmlHelper::inputPdf(
                                 $is_pdf,
-                                $slip->OtherReasons,
+                                $slip->OtherSpecify,
                                 "text",
                                 "other_reason",
                                 "padding-l10 underline width-45 no5-input",
@@ -394,9 +393,9 @@ $this->load->library('helpers/HtmlHelper');
 				<?php
                     echo HtmlHelper::inputPdf(
                         $is_pdf,
-                        $slip->Name,
+                        $slip->HealthServiceProvider,
                         "text",
-                        "referral_facility",
+                        "health_service_provider",
                         "padding-l10 underline width-70 text-center",
                         ""
                     );

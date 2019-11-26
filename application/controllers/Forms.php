@@ -69,8 +69,6 @@ class Forms extends CI_Controller
 
     public function saveForm1()
     {
-        // echo '<pre>';
-        // print_r($_POST);exit;
         if (!$this->LoginModel->isLoggedIn()) {
             $header['title'] =' Online RPFP Monitoring System';
 
@@ -225,16 +223,15 @@ class Forms extends CI_Controller
 
         $slip->Id = $this->input->post('slip_id');
         $slip->DateOfVisit = $this->input->post('date_of_visit');
-        $slip->ClientName = $this->input->post('client_name');
-        $slip->ClientAddress = $this->input->post('client_address');
         $slip->MethodUsed = $this->input->post('method');
         $slip->CounseledToUse = $this->input->post('counseled_to_used');
-        $slip->OtherReasons = $this->input->post('other_reason');
+        $slip->OtherSpecify = $this->input->post('other_reason');
         $slip->DateOfMethod = $this->input->post('date_of_method');
         $slip->ClientAdvised = $this->input->post('client_advised');
         $slip->ReferralFacility = $this->input->post('referral_facility');
-        $slip->Name = 'NA';
+        $slip->HealthServiceProvider = $this->input->post('health_service_provider');
 
+        print_r($this->FormModel->saveServiceSlip($couple_id, $slip));exit;
         $data = ['is_save' => true];
         if (!$this->FormModel->saveServiceSlip($couple_id, $slip)) {
             $data = ['is_save' => false];
@@ -338,13 +335,16 @@ class Forms extends CI_Controller
 
             return;
         }
+        $couple_id = $this->input->post('couple_id');
+        $couple_name = $this->input->post('couple_name');
+        $address = $this->input->post('address');
 
         $this->load->model('FormModel');
 
         $serviceSlip = $this->FormModel->getServiceSlip();
 
         $header['title'] = 'Online RPFP Monitoring System | Service Slip';
-        $this->load->view('forms/serviceSlip', array('slip' => $serviceSlip, 'is_pdf' => false));
+        $this->load->view('forms/serviceSlip', array('slip' => $serviceSlip, 'couple_id' => $couple_id, 'couple_name' => $couple_name, 'address' => $address, 'is_pdf' => false));
     }
 
     public function viewform1()

@@ -17,7 +17,11 @@ function serviceModal()
 		event.preventDefault();
 		$('#menuModal').modal();
 		
-		$.post(base_url + '/forms/serviceSlip')
+		var coupleId = $(this).attr('data-couple');
+		var coupleName = $(this).attr('data-couple-name');
+		var address = $(this).attr('data-address');
+
+		$.post(base_url + '/forms/serviceSlip', {'couple_id' : coupleId, 'couple_name' : coupleName, 'address' : address})
 		.done(function(html){
 			$('#menuModal .modal-body').html(html);
 		});
@@ -35,7 +39,7 @@ function importModal()
 		});
 	});
 }
-
+s
 function highlight()
 {
 	$('td:first-child input[value="aproveCouple"]').change(function() {

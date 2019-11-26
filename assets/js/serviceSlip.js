@@ -43,6 +43,7 @@ function saveServiceSlip()
 			data: formData,
 			url: base_url + '/forms/saveServiceSlip'
 		}).done(function(result){
+			$('#service_slip').html(result);return false;
 			if(result.is_save == true) {
 				Toast.fire({
 					type: 'success',

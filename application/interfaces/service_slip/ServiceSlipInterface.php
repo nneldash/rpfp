@@ -13,19 +13,25 @@ abstract class ServiceSlipInterface extends BaseInterface
     public $DateOfVisit;
     
     /** @var string */
-    public $ClientName;
-
-    /** @var string */
-    public $ClientAddress;
-
-    /** @var string */
     public $MethodUsed;
+
+    /** @var int */
+    public $ProviderType;
+
+    /** @var int */
+    public $IsCounseling;
+
+    /** @var string */
+    public $OtherConcern;
 
     /** @var string */
     public $CounseledToUse;
 
     /** @var string */
-    public $OtherReasons;
+    public $OtherSpecify;
+
+    /** @var int */
+    public $IsProvided;
 
     /** @var DateTime */
     public $DateOfMethod;
@@ -36,6 +42,6 @@ abstract class ServiceSlipInterface extends BaseInterface
     /** @var string */
     public $ReferralFacility;
 
-    /** @var NameInterface */
-    public $Name;
+    /** @var string */
+    public $HealthServiceProvider;
 }
