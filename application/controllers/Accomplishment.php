@@ -13,13 +13,7 @@ class Accomplishment extends CI_Controller
             return;
         }
 
-        $this->load->model('ProfileModel');
         $this->load->model('AccomplishmentModel');
-    }
-
-    public function viewAccompModal()
-    {
-        $this->load->view('menu/listTables/accomplishmentModal');
     }
 
     public function genAccompData()

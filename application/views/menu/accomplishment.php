@@ -50,7 +50,10 @@ if (empty($title)) {
 <script>
     loadJs(base_url + 'assets/js/accomplishment.js');
 
-    $(document).ready( function () {
-        var table = $('.accomplishmentList').DataTable();
+    $(".accomplishmentList").DataTable({
+        "lengthMenu": [
+            [12, 24, 36, 48, 60],
+            ['12', '24', '36', '48', '60']
+        ]
     });
 </script>

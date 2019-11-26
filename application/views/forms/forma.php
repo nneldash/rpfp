@@ -479,15 +479,6 @@ $sub_targetCouples = 0;
 					<td style="border: none"></td>
 				</tr>
 			</table>
-			
-			<?php
-			if (!empty($reload)) {
-				?>
-				<script>$("#datatable-responsive").DataTable();</script>
-				<?php
-			}
-			?>    
-
 		</div>
 	</div>
 </div>

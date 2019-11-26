@@ -12,7 +12,7 @@ if (empty($title)) {
 
 <br>
 <div style="text-transform: none; width: 15%;">                    
-    <input type="submit" class="save" value="Generate Report" name="genReportC" />
+    <input type="submit" class="save genReportC" value="Generate Report" name="genReportC" />
 </div>
 <br>
 <table id="datatable-responsive" class="table table-condensed table-striped table-hover table-bordered dt-responsive nowrap" cellspacing="0" width="100%">
@@ -47,10 +47,19 @@ if (empty($title)) {
     </tbody>
 </table>
 
+<script src="<?= base_url('assets/js/modals.js'); ?>"></script>
+
 <?php
 if (!empty($reload)) {
     ?>
-    <script>$("#datatable-responsive").DataTable();</script>
+    <script>
+        $("#datatable-responsive").DataTable({
+            "lengthMenu": [
+                [12, 24, 36, 42, 60],
+                ['12', '24', '36', '48', '60']
+            ]
+        });
+    </script>
     <?php
 }
 ?>    

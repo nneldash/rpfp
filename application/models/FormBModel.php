@@ -38,4 +38,18 @@ class FormBModel extends BaseModel
 
         return $retval;
     }
+
+    public function saveFormB($unmet_id, $psgc_code, GenerateFormAInterface $data) 
+    {
+        $method = 'process_unmet_need';
+
+        $params =[
+            $unmet_id == N_A ? BLANK : $unmet_id,
+            $data->ReportYear == N_A ? BLANK : $data->ReportYear,
+            $data->ReportMonth == N_A ? BLANK : $data->ReportMonth,
+            $psgc_code == N_A ? BLANK : $psgc_code
+        ];
+
+        return $this->saveToDb($method, $params);
+    }
 }
