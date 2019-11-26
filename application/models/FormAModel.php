@@ -42,7 +42,6 @@ class FormAModel extends BaseModel
 
     public function getFormAReport($report_month,$report_year) : ReportFormAInterface
     {
-
         $forma_report = $this->fromDbGetReportList(
             'ReportFormA',
             'FormAClass',

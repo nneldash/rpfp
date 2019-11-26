@@ -7,8 +7,8 @@ if (empty($title)) {
 ?>
 <script>document.querySelector("head title").innerHTML = '<?=$title?>';</script>
 
-<link href="NewAssets/fontAwesome" rel="stylesheet">
-<link href="<?= base_url('assets/css/form.css') ?>" rel="stylesheet">
+<link href="<?= base_url('NewAssets/fontAwesome'); ?>" rel="stylesheet">
+<link href="<?= base_url('assets/css/form.css'); ?>" rel="stylesheet">
 
 <br>
 <div style="text-transform: none; width: 15%;">                    

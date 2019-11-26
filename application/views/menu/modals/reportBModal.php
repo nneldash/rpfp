@@ -6,6 +6,7 @@ $current_year = date('Y');
 
 <div class="container-fluid">	
 	<div class="row">
+        <input style="text-transform: none;" class="formName" type="hidden" value="genFormB" />
 		<label>Report Year: </label>
 		<select class="form-control" id="repYearSelect" required>
 			<option id="repYear" value="">Year</option>
@@ -32,11 +33,11 @@ $current_year = date('Y');
 		</select>
 		<br>
 		<div style="text-transform: none; ">
-            <button class="save genRepBSubmit buttonload">Submit</button>
+            <button class="save genFormSubmit buttonload">Submit</button>
         </div>
 	</div>
 </div>
-<script type="text/javascript" src="<?= base_url('assets/js/saveAccomplishment.js')?>"></script>
+<script type="text/javascript" src="<?= base_url('assets/js/saveForms.js')?>"></script>
 <script>
 	loadJs(base_url + 'NewAssets/sweetalertJs');
 </script>

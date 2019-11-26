@@ -15,21 +15,18 @@ class FormGeneration extends CI_Controller
             return;
         }
 
-        $this->load->modal('FormAModel');
-        $this->load->modal('FormBModel');
-        $this->load->modal('FormCModel');
+        $this->load->model('FormAModel');
+        $this->load->model('FormBModel');
+        $this->load->model('FormCModel');
     }
 
-    public function genReportA()
+    public function genFormA()
     {
         $pscgc_code = 8;
         $genData = new GenerateFormAClass();
 
         $genData->ReportYear = $this->input->post('year');
         $genData->ReportMonth = $this->input->post('month');
-
-        print_r($genData);
-        exit;
 
         if (!$this->FormAModel->saveFormA($pscgc_code, $genData)) {
             $data = ['is_save' => false];
@@ -42,17 +39,14 @@ class FormGeneration extends CI_Controller
             ->set_output(json_encode($data));
     }
 
-    public function genReportB()
+    public function genFormB()
     {
         $unmet_id = '';
         $pscgc_code = 8;
-        $genData = new GenerateFormAClass();
+        $genData = new GenerateFormBClass();
 
         $genData->ReportYear = $this->input->post('year');
         $genData->ReportMonth = $this->input->post('month');
-
-        print_r($genData);
-        exit;
 
         if (!$this->FormBModel->saveFormB($unmet_id, $pscgc_code, $genData)) {
             $data = ['is_save' => false];
@@ -65,17 +59,14 @@ class FormGeneration extends CI_Controller
             ->set_output(json_encode($data));
     }
 
-    public function genReportC()
+    public function genFormC()
     {
         $served_id = '';
         $pscgc_code = 8;
-        $genData = new GenerateFormAClass();
+        $genData = new GenerateFormCClass();
 
         $genData->ReportYear = $this->input->post('year');
         $genData->ReportMonth = $this->input->post('month');
-
-        print_r($genData);
-        exit;
 
         if (!$this->FormBModel->saveFormC($served_id, $pscgc_code, $genData)) {
             $data = ['is_save' => false];
