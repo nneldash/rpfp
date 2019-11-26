@@ -78,4 +78,17 @@ class FormAModel extends BaseModel
 
         return $retval;
     }
+
+    public function saveFormA($psgc_code, GenerateFormAInterface $data) 
+    {
+        $method = 'process_demandgen';
+
+        $params =[
+            $data->ReportYear == N_A ? BLANK : $data->ReportYear,
+            $data->ReportMonth == N_A ? BLANK : $data->ReportMonth,
+            $psgc_code == N_A ? BLANK : $psgc_code
+        ];
+
+        return $this->saveToDb($method, $params);
+    }
 }

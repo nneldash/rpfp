@@ -39,4 +39,18 @@ class FormCModel extends BaseModel
 
         return $retval;
     }
+
+    public function saveFormC($served_id, $psgc_code, GenerateFormAInterface $data) 
+    {
+        $method = 'process_served_method_mix';
+
+        $params =[
+            $served_id == N_A ? BLANK : $served_id,
+            $data->ReportYear == N_A ? BLANK : $data->ReportYear,
+            $data->ReportMonth == N_A ? BLANK : $data->ReportMonth,
+            $psgc_code == N_A ? BLANK : $psgc_code
+        ];
+
+        return $this->saveToDb($method, $params);
+    }
 }
