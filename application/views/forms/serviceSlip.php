@@ -115,7 +115,7 @@ $this->load->library('helpers/HtmlHelper');
 							<td class="padding-0 back-eee">
 								<?php if (!$is_pdf) : ?>
 									<label class="cont">
-										<input type="radio" name="method" value="sdm" />
+										<input type="radio" name="method" value="<?= ModernMethods::SDM ?>" />
 										<span class="checkmark"></span>
 									</label>
 								<?php endif; ?>
@@ -124,7 +124,7 @@ $this->load->library('helpers/HtmlHelper');
 							<td class="padding-0 back-eee">
 								<?php if (!$is_pdf) : ?>
 									<label class="cont">
-										<input type="radio" name="method" value="pills" />
+										<input type="radio" name="method" value="<?= ModernMethods::PILLS ?>" />
 										<span class="checkmark"></span>
 									</label>
 								<?php endif; ?>
@@ -133,7 +133,7 @@ $this->load->library('helpers/HtmlHelper');
 							<td class="padding-0 back-eee">
 								<?php if (!$is_pdf) : ?>
 									<label class="cont">
-										<input type="radio" name="method" value="ligation" />
+										<input type="radio" name="method" value="<?= ModernMethods::TUBAL_LIGATION ?>" />
 										<span class="checkmark"></span>
 									</label>
 								<?php endif; ?>
@@ -144,7 +144,7 @@ $this->load->library('helpers/HtmlHelper');
 							<td class="padding-0 back-eee">
 								<?php if (!$is_pdf) : ?>
 									<label class="cont">
-										<input type="radio" name="method" value="lam" />
+										<input type="radio" name="method" value="<?= ModernMethods::LAM ?>" />
 										<span class="checkmark"></span>
 									</label>
 								<?php endif; ?>
@@ -153,7 +153,7 @@ $this->load->library('helpers/HtmlHelper');
 							<td class="padding-0 back-eee">
 								<?php if (!$is_pdf) : ?>
 									<label class="cont">
-										<input type="radio" name="method" value="iud" />
+										<input type="radio" name="method" value="<?= ModernMethods::IUD ?>" />
 										<span class="checkmark"></span>
 									</label>
 								<?php endif; ?>
@@ -162,7 +162,7 @@ $this->load->library('helpers/HtmlHelper');
 							<td class="padding-0 back-eee">
 								<?php if (!$is_pdf) : ?>
 									<label class="cont">
-										<input type="radio" name="method" value="vasectomy" />
+										<input type="radio" name="method" value="<?= ModernMethods::VASECTOMY ?>" />
 										<span class="checkmark"></span>
 									</label>
 								<?php endif; ?>
@@ -173,7 +173,7 @@ $this->load->library('helpers/HtmlHelper');
 							<td class="padding-0 back-eee">
 								<?php if (!$is_pdf) : ?>
 									<label class="cont">
-										<input type="radio" name="method" value="cmm" />
+										<input type="radio" name="method" value="<?= ModernMethods::CMM_BILLINGS ?>" />
 										<span class="checkmark"></span>
 									</label>
 								<?php endif; ?>
@@ -182,7 +182,7 @@ $this->load->library('helpers/HtmlHelper');
 							<td class="padding-0 back-eee">
 								<?php if (!$is_pdf) : ?>
 									<label class="cont">
-										<input type="radio" name="method" value="injectable" />
+										<input type="radio" name="method" value="<?= ModernMethods::INJECTABLE ?>" />
 										<span class="checkmark"></span>
 									</label>
 								<?php endif; ?>
@@ -195,7 +195,7 @@ $this->load->library('helpers/HtmlHelper');
 							<td class="padding-0 back-eee">
 								<?php if (!$is_pdf) : ?>
 									<label class="cont">
-										<input type="radio" name="method" value="stm" />
+										<input type="radio" name="method" value="<?= ModernMethods::SYMPTO_THERMAL ?>" />
 										<span class="checkmark"></span>
 									</label>
 								<?php endif; ?>
@@ -204,7 +204,7 @@ $this->load->library('helpers/HtmlHelper');
 							<td class="padding-0 back-eee">
 								<?php if (!$is_pdf) : ?>
 									<label class="cont">
-										<input type="radio" name="method" value="condom" />
+										<input type="radio" name="method" value="<?= ModernMethods::CONDOM ?>" />
 										<span class="checkmark"></span>
 									</label>
 								<?php endif; ?>
@@ -219,7 +219,7 @@ $this->load->library('helpers/HtmlHelper');
 							<td class="text-center padding-0 back-eee">
 								<?php if (!$is_pdf) : ?>
 									<label class="cont">
-										<input type="radio" name="method" value="implant" />
+										<input type="radio" name="method" value="<?= ModernMethods::IMPLANT ?>" />
 										<span class="checkmark"></span>
 									</label>
 								<?php endif; ?>
