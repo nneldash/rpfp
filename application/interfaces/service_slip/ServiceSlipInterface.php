@@ -21,14 +21,14 @@ abstract class ServiceSlipInterface extends BaseInterface
     /** @var int */
     public $IsCounseling;
 
-    /** @var string */
-    public $OtherConcern;
-
-    /** @var string */
+    /** @var int */
     public $CounseledToUse;
 
     /** @var string */
     public $OtherSpecify;
+
+    /** @var int */
+    public $IsNotQualified;
 
     /** @var int */
     public $IsProvided;

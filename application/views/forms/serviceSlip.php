@@ -54,7 +54,7 @@ $this->load->library('helpers/HtmlHelper');
                             $is_pdf,
                             $couple_name,
                             "text",
-                            "client_name",
+                            "",
                             "padding-l10 underline",
                             ""
                         );
@@ -73,7 +73,7 @@ $this->load->library('helpers/HtmlHelper');
                             $is_pdf,
                             $address,
                             "text",
-                            "client_address",
+                            "",
                             "padding-l10 underline",
                             ""
                         );
@@ -239,7 +239,7 @@ $this->load->library('helpers/HtmlHelper');
 				<p><b> &nbsp; (</b></p>
 				<?php if (!$is_pdf) : ?>
 					<label class="cont">
-						<input type="radio" name="method" value="counseling" />
+						<input type="radio" name="is_counseling" value="1" />
 						<span class="smolCheck back-eee"></span>
 					</label>
 				<?php endif; ?>
@@ -263,7 +263,7 @@ $this->load->library('helpers/HtmlHelper');
 						1. Needed FP method is not available in the facility
 						<p> &nbsp; (</p>
 						<label class="cont">
-							<input type="radio" name="method" value="need fp method" />
+							<input type="radio" name="counseled_fp" value="1" />
 							<span class="smolCheck back-eee"></span>
 						</label>
 						<p>)</p>
@@ -272,7 +272,7 @@ $this->load->library('helpers/HtmlHelper');
 						2. No sevice provider available during the visit
 						<p> &nbsp; (</p>
 						<label class="cont">
-							<input type="radio" name="method" value="no service provider" />
+							<input type="radio" name="counseled_fp" value="1" />
 							<span class="smolCheck back-eee"></span>
 						</label>
 						<p>)</p>
@@ -281,7 +281,7 @@ $this->load->library('helpers/HtmlHelper');
 						3. No trained personnel to do the needed FP service
 						<p> &nbsp; (</p>
 						<label class="cont">
-							<input type="radio" name="method" value="need fp method" />
+							<input type="radio" name="counseled_fp" value="1" />
 							<span class="smolCheck back-eee"></span>
 						</label>
 						<p>)</p>
@@ -296,7 +296,7 @@ $this->load->library('helpers/HtmlHelper');
                                 $is_pdf,
                                 $slip->CounseledToUse,
                                 "text",
-                                "counseled_to_use",
+                                "method_name",
                                 "padding-l10 underline width-20 no4-input",
                                 ""
                             );
@@ -304,7 +304,7 @@ $this->load->library('helpers/HtmlHelper');
                         &nbsp; &nbsp; but client is undecided
 						<p> &nbsp; (</p>
 						<label class="cont">
-							<input class="no4-check" type="radio" name="method" value="need fp method" />
+							<input class="no4-check" type="radio" name="is_not_qualified" value="1" />
 							<span class="smolCheck back-eee"></span>
 						</label>
 						<p>)</p>
@@ -317,7 +317,7 @@ $this->load->library('helpers/HtmlHelper');
                                 $is_pdf,
                                 $slip->OtherSpecify,
                                 "text",
-                                "other_reason",
+                                "method_name",
                                 "padding-l10 underline width-45 no5-input",
                                 ""
                             );
@@ -338,7 +338,7 @@ $this->load->library('helpers/HtmlHelper');
 						</p>
 						<p> &nbsp; (</p>
 						<label class="cont">
-							<input type="radio" name="action" value="client has method provided" />
+							<input type="radio" name="is_provided_service" value="1" />
 							<span class="smolCheck back-eee"></span>
 						</label>
 						<p>)</p>

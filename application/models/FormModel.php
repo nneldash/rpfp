@@ -161,17 +161,18 @@ class FormModel extends BaseModel
             $data->DateOfVisit == N_A ? BLANK : $data->DateOfVisit,
             $data->MethodUsed == N_A ? BLANK : $data->MethodUsed,
             $data->ProviderType == N_A ? BLANK : $data->ProviderType,
-            $data->MethodUsed != 'counseling' ? BLANK : 1,
-            $data->MethodUsed != 'need fp method' ? BLANK : $data->OtherConcern,
+            $data->IsCounseling == N_A ? BLANK : $data->IsCounseling,
             $data->CounseledToUse == N_A ? BLANK : $data->CounseledToUse,
             $data->OtherSpecify == N_A ? BLANK : $data->OtherSpecify,
+            $data->IsNotQualified == N_A ? BLANK : $data->IsNotQualified,
             $data->IsProvided == N_A ? BLANK : $data->IsProvided,
             $data->DateOfMethod == N_A ? BLANK : $data->DateOfMethod,
             $data->ClientAdvised == N_A ? BLANK : $data->ClientAdvised,
             $data->ReferralFacility == N_A ? BLANK : $data->ReferralFacility,
             $data->HealthServiceProvider == N_A ? BLANK : $data->HealthServiceProvider
         ];
-
+        // echo '<pre>';
+        // print_r($params);exit;
         return $this->saveToDb($method, $params);
     }
 
