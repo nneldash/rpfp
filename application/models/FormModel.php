@@ -39,7 +39,7 @@ class FormModel extends BaseModel
             $class_id = $class_id[2];
         }
 
-        if (!$class_id) { 
+        if (!$class_id) {
             /** return exception or error message */
             return;
         }
@@ -50,8 +50,8 @@ class FormModel extends BaseModel
            return false;
        }
 
-       return true; 
-  
+       return true;
+
     }
 
     public function saveSeminar(SeminarInterface $data)
@@ -66,7 +66,7 @@ class FormModel extends BaseModel
             $data->ClassNumber == N_A ? BLANK : $data->ClassNumber,
             $data->DateConducted == N_A ? BLANK : $data->DateConducted
         ];
-        
+
         return $this->saveToDb($method, $params);
     }
 
@@ -74,20 +74,20 @@ class FormModel extends BaseModel
     {
         foreach ($listCouple as $current_couple) {
             $couple = CoupleClass::getFromVariable($current_couple);
-            
+
             $method = "encoder_save_couple";
 
             $params1 = [
                 $couple->Id == N_A ? BLANK : $couple->Id,
                 $class_id == 0 ? BLANK : $class_id,
-                
+
                 $couple->Address_St == N_A ? BLANK : $couple->Address_St,
                 $couple->Address_Brgy == N_A ? BLANK : $couple->Address_Brgy,
                 $couple->Address_City == N_A ? BLANK : $couple->Address_City,
                 $couple->Address_HH_No == N_A ? BLANK : $couple->Address_HH_No,
                 $couple->NumberOfChildren == N_A ? BLANK : $couple->NumberOfChildren
             ];
-            
+
             $couple_id = $this->saveToDb($method, $params1);
 
             if ($couple_id == 'CANNOT SAVE RECORD WITH GIVEN PARAMETERS') {
@@ -98,7 +98,7 @@ class FormModel extends BaseModel
                 $couple_id = explode(" ", $couple_id);
                 $couple_id = $couple_id[2];
             }
-            
+
             $husband = $couple->Husband();
             $wife = $couple->Wife();
 
@@ -151,7 +151,7 @@ class FormModel extends BaseModel
 
     public function saveServiceSlip(int $couple_id, ServiceSlipInterface $data)
     {
-        
+
         $method = "encoder_save_service_slip";
 
         $params = [
@@ -161,8 +161,8 @@ class FormModel extends BaseModel
             $data->DateOfVisit == N_A ? BLANK : $data->DateOfVisit,
             $data->MethodUsed == N_A ? BLANK : $data->MethodUsed,
             $data->ProviderType == N_A ? BLANK : $data->ProviderType,
-            $data->IsCounseling == N_A ? BLANK : $data->IsCounseling,
-            $data->OtherConcern == N_A ? BLANK : $data->OtherConcern,
+            $data->MethodUsed != 'counseling' ? BLANK : 1,
+            $data->MethodUsed != 'need fp method' ? BLANK : $data->OtherConcern,
             $data->CounseledToUse == N_A ? BLANK : $data->CounseledToUse,
             $data->OtherSpecify == N_A ? BLANK : $data->OtherSpecify,
             $data->IsProvided == N_A ? BLANK : $data->IsProvided,
@@ -171,7 +171,7 @@ class FormModel extends BaseModel
             $data->ReferralFacility == N_A ? BLANK : $data->ReferralFacility,
             $data->HealthServiceProvider == N_A ? BLANK : $data->HealthServiceProvider
         ];
-        
+
         return $this->saveToDb($method, $params);
     }
 
@@ -242,7 +242,7 @@ class FormModel extends BaseModel
                     'Id' => 'indvid_female',
                     'Name' => array(
                         'Surname' => 'lastname_female',
-                        'Firstname' => 'firstname_female', 
+                        'Firstname' => 'firstname_female',
                         'Middlename' => 'middle_female',
                         'Extname' => 'ext_female'
                     ),
@@ -257,7 +257,7 @@ class FormModel extends BaseModel
                     'Id' => 'indvid_male',
                     'Name' => array(
                         'Surname' => 'lastname_male',
-                        'Firstname' => 'firstname_male', 
+                        'Firstname' => 'firstname_male',
                         'Middlename' => 'middle_male',
                         'Extname' => 'ext_male'
                     ),
@@ -293,7 +293,7 @@ class FormModel extends BaseModel
     public function getForm1ModernFpUser() : ModernFpUserInterface
     {
         $modernFp = new ModernFpUserClass();
-        
+
         $modernFp->MethodUsed = ModernMethods::CONDOM;
         $modernFp->IntentionToShift = ModernMethods::IUD;
 
@@ -303,7 +303,7 @@ class FormModel extends BaseModel
     public function getForm1TraditionalFpUser() : TraditionalFpUserInterface
     {
         $traditionalFp = new TraditionalFpUserClass();
-        
+
         $traditionalFp->Type  = TraditionalMethods::WITHDRAWAL;
         $traditionalFp->Status = TraditionalStatuses::UNDECIDED;
         $traditionalFp->ReasonForUse = ReasonsForUsing::LIMITING;
@@ -314,7 +314,7 @@ class FormModel extends BaseModel
     public function getAccomplishment(): AccomplishmentInterface
     {
         $accomplishment = new AccomplishmentClass();
-       
+
         // $accomplishment->Period = $this->getPeriodReport();
         // $accomplishment->ListMonth = $this->getMonthlyData();
         return $accomplishment;
@@ -323,7 +323,7 @@ class FormModel extends BaseModel
     public function getFormA(): FormAInterface
     {
         $formA = new FormAClass();
-       
+
         $formA->Period = $this->getPeriodReport();
         $formA->ListMonth = $this->getMonthlyData();
         return $formA;
@@ -346,7 +346,7 @@ class FormModel extends BaseModel
 
         $month = new MonthsClass();
         $month->Month = '1';
- 
+
         $month->SessionsHeld = $this->getFormASessionsHeld();
         $month->IndividualsReproductiveAge = $this->getFormAIndividualsReproductiveAge();
         $month->SoloCoupleDisaggregation = $this->getFormASoloCoupleDisaggregation();
@@ -381,7 +381,7 @@ class FormModel extends BaseModel
         $individuals->H2h = '2';
         $individuals->ProfitedOnly = '2';
         $individuals->Total = '2';
-        
+
         return $individuals;
     }
 
@@ -407,7 +407,7 @@ class FormModel extends BaseModel
         $extname    = $this->input->post('extname');
         $bday       = $this->input->post('bday');
         $sex        = $this->input->post('sex');
-        
+
         return $this->fromDbGetSpecific(
             'DuplicateCoupleClass',
             array(
