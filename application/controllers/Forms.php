@@ -112,7 +112,7 @@ class Forms extends CI_Controller
         $listCouple = new ListCoupleClass();
         
         for ($i = 0; $i <= 9; $i++) {
-            if (!$this->input->post('name_participant1')[$i] && !$this->input->post('name_participant2')[$i]) {
+            if (!$this->input->post('firstname1')[$i] && !$this->input->post('firstname2')[$i]) {
                 break;
             }
 
@@ -140,7 +140,7 @@ class Forms extends CI_Controller
     {
 
         $individual = new IndividualClass();
-        if (!$this->input->post('name_participant1')[$i]) {
+        if (!$this->input->post('firstname1')[$i] && !$this->input->post('lastname1')[$i]) {
             return $individual;
         }
 
@@ -151,11 +151,10 @@ class Forms extends CI_Controller
 
         $individual->Id = $this->input->post('individual_id1')[$i];
         
-        $name1 = explode(" ", $this->input->post('name_participant1')[$i]);
-        $individual->Name->Surname = (empty($name1[0]) ? "" : $name1[0]);
-        $individual->Name->Firstname = (empty($name1[1]) ? "" : $name1[1]);
-        $individual->Name->Middlename = (empty($name1[2]) ? "" : $name1[2]);
-        $individual->Name->Extname = (empty($name1[3]) ? "" : $name1[3]);
+        $individual->Name->Surname      = (empty($this->input->post('lastname1')[$i]) ? "" : $this->input->post('lastname1')[$i]);
+        $individual->Name->Firstname    = (empty($this->input->post('firstname1')[$i]) ? "" : $this->input->post('firstname1')[$i]);
+        $individual->Name->Middlename   = (empty($this->input->post('middlename1')[$i]) ? "" : $this->input->post('middlename1')[$i]);
+        $individual->Name->Extname      = (empty($this->input->post('extname1')[$i]) ? "" : $this->input->post('extname1')[$i]);
 
         $individual->Sex = $this->input->post('sex1')[$i];
         $individual->CivilStatus = $this->input->post('civil_status1')[$i];
@@ -171,16 +170,16 @@ class Forms extends CI_Controller
     {
         $individual = new IndividualClass();
 
-        if (!$this->input->post('name_participant2')[$i]) {
+        if (!$this->input->post('firstname2')[$i] && !$this->input->post('lastname2')[$i]) {
             return $individual;
         }
 
         $individual->Id = $this->input->post('individual_id2')[$i];
 
-        $name2 = explode(" ", $this->input->post('name_participant2')[$i]);
-        $individual->Name->Surname = (empty($name2[0]) ? "" : $name2[0]);
-        $individual->Name->Firstname = (empty($name2[1]) ? "" : $name2[1]);
-        $individual->Name->Middlename = (empty($name2[2]) ? "" : $name2[2]);
+        $individual->Name->Surname      = (empty($this->input->post('lastname2')[$i]) ? "" : $this->input->post('lastname2')[$i]);
+        $individual->Name->Firstname    = (empty($this->input->post('firstname2')[$i]) ? "" : $this->input->post('firstname2')[$i]);
+        $individual->Name->Middlename   = (empty($this->input->post('middlename2')[$i]) ? "" : $this->input->post('middlename2')[$i]);
+        $individual->Name->Extname      = (empty($this->input->post('extname2')[$i]) ? "" : $this->input->post('extname2')[$i]);
 
         $individual->Sex = $this->input->post('sex2')[$i];
         $individual->CivilStatus = $this->input->post('civil_status2')[$i];
@@ -259,7 +258,7 @@ class Forms extends CI_Controller
 
         $this->load->model('FormModel');
 
-        $reportNo = $_GET['ReportNo'];
+        $reportNo = $this->input->get('ReportNo');
         $accomplishment = $this->AccomplishmentModel->getAccomplishmentReport($reportNo);
 
         $this->load->view('includes/header', $header);
@@ -282,8 +281,8 @@ class Forms extends CI_Controller
 
         $this->load->model('FormAModel');
 
-        $reportMonth = $_GET['ReportMonth'];
-        $reportYear = $_GET['ReportYear'];
+        $reportMonth = $this->input->get('ReportMonth');
+        $reportYear = $this->input->get('ReportYear');
         $formA = $this->FormAModel->getFormAReport($reportMonth,$reportYear);
 
         $this->load->view('includes/header', $header);

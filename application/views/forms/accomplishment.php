@@ -1,6 +1,6 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
-$accomp_no = $_GET['ReportNo'];
+$accomp_no = $this->input->get('ReportNo');
 ?>
 
 <?php if ($is_pdf): ?>

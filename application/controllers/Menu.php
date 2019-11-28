@@ -131,7 +131,7 @@ class Menu extends CI_Controller
             $mpdf = new \Mpdf\Mpdf($mpdfConfig);
             $mpdf->debug = true;
 
-            $reportNo = $_GET['ReportNo'];
+            $reportNo = $this->input->get('ReportNo');
             $accomplishment = $this->AccomplishmentModel->getAccomplishmentReport($reportNo);
 
             $html = $this->load->view('forms/accomplishment', array('is_pdf' => true, 'accomplishment' => $accomplishment), true);

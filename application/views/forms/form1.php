@@ -87,7 +87,7 @@ $form1 = FormClass::getFormFromVariable($form1);
 					</div>
 			    </div>
 			<?php endif; ?>
-			<input type="hidden" name="class_id" value="<?= (!empty($_GET['rpfpId']) ? $_GET['rpfpId'] : 0); ?>" />
+			<input type="hidden" name="class_id" value="<?= (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0); ?>" />
 			<div class="border-t1 table-responsive">
 				<div style="padding-top: 10px"></div>
 				<table style="float: left" class="table">
@@ -442,7 +442,7 @@ $form1 = FormClass::getFormFromVariable($form1);
 										<p class="small"><?= $i + 1; ?></p>
 									</td>
 									
-									<td class="small" style="padding: 5px;">
+									<td class="small">
 										<div style="display: inline-flex; border: 1px solid transparent;">
 											<input type="hidden" id="isDuplicate1" value="" />
 											<input type="hidden" class="loopIndex1" value="<?= $i;?>" />
@@ -452,7 +452,7 @@ $form1 = FormClass::getFormFromVariable($form1);
 					                                ($couple->Id != 'N/A' ? $couple->Id : ''),
 					                                "hidden",
 					                                "couple_id[".$i."]",
-					                                "padding-l10 namePart1 dupHighlight",
+					                                "padding-l3 namePart1 dupHighlight",
 					                                ""
 					                            );
 					                        ?>
@@ -462,7 +462,7 @@ $form1 = FormClass::getFormFromVariable($form1);
 					                                HtmlHelper::firstEntry_Id($couple->FirstEntry->Id, $couple->SecondEntry->Id),
 					                                "hidden",
 					                                "individual_id1[".$i."]",
-					                                "padding-l10 namePart1 dupHighlight",
+					                                "padding-l3 namePart1 dupHighlight",
 					                                ""
 					                            );
 					                        ?>
@@ -471,8 +471,8 @@ $form1 = FormClass::getFormFromVariable($form1);
 					                            	$is_pdf,
 					                            	HtmlHelper::firstEntry_FirstName($couple->FirstEntry->Name, $couple->SecondEntry->Name),
 					                                "text",
-					                                "name_participant2[".$i."]",
-					                                "padding-l10 namePart2",
+					                                "firstname1[".$i."]",
+					                                "padding-l3 namePart1",
 					                                "First"
 					                            );
 					                        ?>,
@@ -481,8 +481,8 @@ $form1 = FormClass::getFormFromVariable($form1);
 					                            	$is_pdf,
 					                            	HtmlHelper::firstEntry_MiddleName($couple->FirstEntry->Name, $couple->SecondEntry->Name),
 					                                "text",
-					                                "name_participant2[".$i."]",
-					                                "padding-l10 namePart2",
+					                                "middlename1[".$i."]",
+					                                "padding-l3 namePart1",
 					                                "Middle"
 					                            );
 					                        ?>,
@@ -491,8 +491,8 @@ $form1 = FormClass::getFormFromVariable($form1);
 					                            	$is_pdf,
 					                            	HtmlHelper::firstEntry_LastName($couple->FirstEntry->Name, $couple->SecondEntry->Name),
 					                                "text",
-					                                "name_participant2[".$i."]",
-					                                "padding-l10 namePart2",
+					                                "lastname1[".$i."]",
+					                                "padding-l3 namePart1",
 					                                "Last"
 					                            );
 					                        ?>,
@@ -501,8 +501,8 @@ $form1 = FormClass::getFormFromVariable($form1);
 					                            	$is_pdf,
 					                            	HtmlHelper::firstEntry_ExtName($couple->FirstEntry->Name, $couple->SecondEntry->Name),
 					                                "text",
-					                                "name_participant2[".$i."]",
-					                                "padding-l10 namePart2",
+					                                "extname1[".$i."]",
+					                                "padding-l3 namePart1 width-35",
 					                                "Ext"
 					                            );
 					                        ?>
@@ -663,7 +663,7 @@ $form1 = FormClass::getFormFromVariable($form1);
 									<?php endif; ?>
 								</tr>
 								<tr class="tr2<?= $i; ?>">
-									<td class="small" style="padding: 5px;">
+									<td class="small">
 										<div style="display: inline-flex; border: 1px solid transparent;">
 											<input type="hidden" id="isDuplicate2" value="" />
 											<input type="hidden" class="loopIndex2" value="<?= $i;?>" />
@@ -673,7 +673,7 @@ $form1 = FormClass::getFormFromVariable($form1);
 					                                HtmlHelper::secondEntry_Id($couple->FirstEntry->Id, $couple->SecondEntry->Id),
 					                                "hidden",
 					                                "individual_id2[".$i."]",
-					                                "padding-l10 namePart2",
+					                                "padding-l3 namePart2",
 					                                ""
 					                            );
 					                        ?>
@@ -682,8 +682,8 @@ $form1 = FormClass::getFormFromVariable($form1);
 					                            	$is_pdf,
 					                            	HtmlHelper::secondEntry_FirstName($couple->FirstEntry->Name, $couple->SecondEntry->Name),
 					                                "text",
-					                                "name_participant2[".$i."]",
-					                                "padding-l10 namePart2",
+					                                "firstname2[".$i."]",
+					                                "padding-l3 namePart2",
 					                                "First"
 					                            );
 					                        ?>,
@@ -692,8 +692,8 @@ $form1 = FormClass::getFormFromVariable($form1);
 					                            	$is_pdf,
 					                            	HtmlHelper::secondEntry_MiddleName($couple->FirstEntry->Name, $couple->SecondEntry->Name),
 					                                "text",
-					                                "name_participant2[".$i."]",
-					                                "padding-l10 namePart2",
+					                                "middlename2[".$i."]",
+					                                "padding-l3 namePart2",
 					                                "Middle"
 					                            );
 					                        ?>,
@@ -702,8 +702,8 @@ $form1 = FormClass::getFormFromVariable($form1);
 					                            	$is_pdf,
 					                            	HtmlHelper::secondEntry_LastName($couple->FirstEntry->Name, $couple->SecondEntry->Name),
 					                                "text",
-					                                "name_participant2[".$i."]",
-					                                "padding-l10 namePart2",
+					                                "lastname2[".$i."]",
+					                                "padding-l3 namePart2",
 					                                "Last"
 					                            );
 					                        ?>,
@@ -712,8 +712,8 @@ $form1 = FormClass::getFormFromVariable($form1);
 					                            	$is_pdf,
 					                            	HtmlHelper::secondEntry_ExtName($couple->FirstEntry->Name, $couple->SecondEntry->Name),
 					                                "text",
-					                                "name_participant2[".$i."]",
-					                                "padding-l10 namePart2",
+					                                "extname2[".$i."]",
+					                                "padding-l3 namePart2 width-35",
 					                                "Ext"
 					                            );
 					                        ?>

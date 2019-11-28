@@ -45,15 +45,6 @@ if (empty($title)) {
 
     </head>
 
-    <style>
-        .nav-sm .navbar.nav_title a img {
-            width: 80%!important;
-        }
-        .nav-sm .container.body .col-md-3.left_col {
-            position: fixed!important;
-        }
-    </style>
-
     <body class="nav-sm" style="background: #fff;">
         <div class="container body">
             <div class="main_container">
