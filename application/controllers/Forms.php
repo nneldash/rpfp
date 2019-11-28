@@ -46,7 +46,6 @@ class Forms extends CI_Controller
         $this->load->model('FormModel');
 
         $classId = $this->input->get('rpfpId');
-        // print_r($class_no);exit;
         
         $form1 = $this->FormModel->getForm1($classId);
 
@@ -60,7 +59,7 @@ class Forms extends CI_Controller
                 'form1' => $form1, 
                 'is_pdf' => false,
                 'isEncoder' => $isEncoder,
-                'isRegionalDataManager' => $isRegionalDataManager,
+                'isRegionalDataManager' => $isRegionalDataManager
             )
         );
         $this->load->view('includes/footer');

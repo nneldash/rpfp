@@ -36,6 +36,30 @@ class HtmlHelper
         }
     }
 
+    public static function inputName($is_pdf, $field, $type, $name, $class, $placeholder, $returnIfEmpty = "")
+    {
+        if (!$is_pdf) {
+            $data = array(
+                "name" => $name,
+                "value" => (
+                    ($type == "date") ? $date : $field
+                ),
+                "class" => $class,
+                "type" => $type,
+                "placeholder" => $placeholder
+            );
+            return form_input($data);
+        } else {
+            if (empty($field) && !empty($returnIfEmpty)) {
+                return returnIfEmpty;
+            } else {
+                return (
+                    ($type == "date") ? $field : $field
+                );
+            }
+        }
+    }
+
     public static function inputMaskPdf($is_pdf, $field, $type, $name, $class, $mask, $returnIfEmpty = "")
     {
         $date = "";        
@@ -88,16 +112,72 @@ class HtmlHelper
         return $individualId;
     }
 
-    public static function firstEntry_Name($firstEntry, $secondEntry)
+    public static function firstEntry_Name($firstEntry, $secondEntry) // original
     {
         $name = $firstEntry->Firstname != 'N/A' ? ($firstEntry->Firstname != 'N/A' ? $firstEntry->Firstname : '').($firstEntry->Surname != 'N/A' ? ', '.$firstEntry->Surname : '').($firstEntry->Middlename != 'N/A' ? ', '.$firstEntry->Middlename : '').($firstEntry->Extname != 'N/A' ? ', '.$firstEntry->Extname : '') : ($secondEntry->Firstname != 'N/A' ? $secondEntry->Firstname : '').($secondEntry->Surname != 'N/A' ? ', '.$secondEntry->Surname : '').($secondEntry->Middlename != 'N/A' ? ', '.$secondEntry->Middlename : '');
 
         return $name;
     }
 
-    public static function secondEntry_Name($firstEntry, $secondEntry)
+    public static function firstEntry_FirstName($firstEntry, $secondEntry)
+    {
+        $name = $firstEntry->Firstname == 'N/A' ? '' : ($firstEntry->Firstname != 'N/A' ? $firstEntry->Firstname : '');
+
+        return $name;
+    }
+
+    public static function firstEntry_MiddleName($firstEntry, $secondEntry)
+    {
+        $name = $firstEntry->Middlename == 'N/A' ? '' : ($firstEntry->Middlename != 'N/A' ? $firstEntry->Middlename : '');
+
+        return $name;
+    }
+
+    public static function firstEntry_LastName($firstEntry, $secondEntry)
+    {
+        $name = $firstEntry->Surname == 'N/A' ? '' : ($firstEntry->Surname != 'N/A' ? $firstEntry->Surname : '');
+
+        return $name;
+    }
+
+    public static function firstEntry_ExtName($firstEntry, $secondEntry)
+    {
+        $name = $firstEntry->Extname == 'N/A' ? '' : ($firstEntry->Extname != 'N/A' ? $firstEntry->Extname : '');
+
+        return $name;
+    }
+
+    public static function secondEntry_Name($firstEntry, $secondEntry) // original
     {
         $name = $firstEntry->Surname == 'N/A' ? '' : ($secondEntry->Firstname != 'N/A' ? $secondEntry->Firstname : '').($secondEntry->Surname != 'N/A' ? ', '.$secondEntry->Surname : '').($secondEntry->Middlename != 'N/A' ? ', '.$secondEntry->Middlename : '');
+
+        return $name;
+    }
+
+    public static function secondEntry_FirstName($firstEntry, $secondEntry)
+    {
+        $name = $firstEntry->Firstname == 'N/A' ? '' : ($secondEntry->Firstname != 'N/A' ? $secondEntry->Firstname : '');
+
+        return $name;
+    }
+
+    public static function secondEntry_MiddleName($firstEntry, $secondEntry)
+    {
+        $name = $firstEntry->Middlename == 'N/A' ? '' : ($secondEntry->Middlename != 'N/A' ? $secondEntry->Middlename : '');
+
+        return $name;
+    }
+
+    public static function secondEntry_LastName($firstEntry, $secondEntry)
+    {
+        $name = $firstEntry->Surname == 'N/A' ? '' : ($secondEntry->Surname != 'N/A' ? $secondEntry->Surname : '');
+
+        return $name;
+    }
+
+    public static function secondEntry_ExtName($firstEntry, $secondEntry)
+    {
+        $name = $firstEntry->Extname == 'N/A' ? '' : ($secondEntry->Extname != 'N/A' ? $secondEntry->Extname : '');
 
         return $name;
     }

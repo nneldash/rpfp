@@ -9,6 +9,14 @@ $(function() {
 	checkBox();
 	checkDuplicate();
 	Inputmask().mask(".birthAge");
+
+	var isRDM = $('#rdm').val();
+
+	if(isRDM == 1){
+		$('td input').attr('disabled', true);
+		$('td input').css('cursor', 'not-allowed');
+		$('td input[class="check"]').attr('disabled', false);
+	}
 });
 
 function serviceModal()
@@ -39,7 +47,7 @@ function importModal()
 		});
 	});
 }
-s
+
 function highlight()
 {
 	$('td:first-child input[value="aproveCouple"]').change(function() {

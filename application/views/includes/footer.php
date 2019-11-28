@@ -33,5 +33,5 @@
 				loadJs(base_url + 'assets/js/systemTimeout.js');
 			}
 		);
-	</script>	
+	</script>
 </html>

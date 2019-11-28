@@ -17,7 +17,7 @@
 	font-style: italic;
 }
 .underline {
-	border-bottom: solid 1px;
+	border-bottom: solid 1px!important;
 }
 .back-eee {
 	background-color: #eee;
@@ -188,6 +188,23 @@ input[disabled]:hover {
     background: #bebfbe;
     color: #fff;
     cursor: not-allowed;
+}
+input::placeholder {
+	font-style: italic;
+}
+td.small input[disabled] {
+	background: none!important;
+    border: none!important;
+    color: black!important;
+}
+input.underline {
+	background: none!important;
+    color: black!important;
+	border-bottom: solid 1px!important;
+	border: none;
+}
+input.underline:hover {
+	border: none;
 }
 
 /*------------------------------------------------------------------
