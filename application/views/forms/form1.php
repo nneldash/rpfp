@@ -16,18 +16,12 @@ $form1 = FormClass::getFormFromVariable($form1);
 		}
 	</style>
 <?php } else { ?>
-	<link href="<?= base_url('NewAssets/FontAwesome'); ?>" rel="stylesheet">
+	<link href="<?= base_url('NewAssets/FontAwesome'); ?>" rel="stylesheet">	
 	<style>
 		.table-bordered > tbody > tr > td,
 		.table-bordered > thead > tr > th,
 		.table-bordered {
 			border: 1px solid #000;
-		}
-		.highlight {
-		  	background: rgba(38, 185, 154, 0.16);
-		}
-		.highlight > td > input {
-			background: rgb(220, 244, 239);
 		}
 		a {
 			text-decoration: none;
@@ -38,22 +32,11 @@ $form1 = FormClass::getFormFromVariable($form1);
 			background-color: #ddd;
 			color: black;
 		}
-		.previous {
-			background-color: #f1f1f1;
-			color: black;
-		}
-		.next {
-			background-color: #4CAF50;
-			color: white;
-		}
-		.round {
-			border-radius: 50%;
-		}
 	</style>
 <?php } ?>
 
 <link href="<?= base_url('assets/css/form.css') ?>" rel="stylesheet">
-
+<input type="hidden" id="rdm" value="<?= $isRegionalDataManager; ?>" />
 <div class="container-fluid text-center">
 	<a href="#" class="previous">&laquo; Previous</a>
 	<a href="#" class="next">Next &raquo;</a>
@@ -455,44 +438,75 @@ $form1 = FormClass::getFormFromVariable($form1);
 											</td>
 										<?php endif; ?>
 									<?php endif; ?>
-									<td class="text-center" style="border-left: none" rowspan="2">
-									
+									<td class="text-center" style="border-left: none" rowspan="2">									
 										<p class="small"><?= $i + 1; ?></p>
 									</td>
 									
 									<td class="small" style="padding: 5px;">
-										<input type="hidden" id="isDuplicate1" value="" />
-										<input type="hidden" class="loopIndex1" value="<?= $i;?>" />
-										<?php
-				                            echo HtmlHelper::inputPdf(
-				                                $is_pdf,
-				                                ($couple->Id != 'N/A' ? $couple->Id : ''),
-				                                "hidde",
-				                                "couple_id[".$i."]",
-				                                "padding-l10 namePart1 dupHighlight",
-				                                ""
-				                            );
-				                        ?>
-										<?php
-				                            echo HtmlHelper::inputPdf(
-				                                $is_pdf,
-				                                HtmlHelper::firstEntry_Id($couple->FirstEntry->Id, $couple->SecondEntry->Id),
-				                                "hidde",
-				                                "individual_id1[".$i."]",
-				                                "padding-l10 namePart1 dupHighlight",
-				                                ""
-				                            );
-				                        ?>
-										<?php
-				                            echo HtmlHelper::inputPdf(
-				                                $is_pdf,
-				                                HtmlHelper::firstEntry_Name($couple->FirstEntry->Name, $couple->SecondEntry->Name),
-				                                "text",
-				                                "name_participant1[".$i."]",
-				                                "padding-l10 namePart1 dupHighlight",
-				                                ""
-				                            );
-				                        ?>
+										<div style="display: inline-flex; border: 1px solid transparent;">
+											<input type="hidden" id="isDuplicate1" value="" />
+											<input type="hidden" class="loopIndex1" value="<?= $i;?>" />
+											<?php
+					                            echo HtmlHelper::inputPdf(
+					                                $is_pdf,
+					                                ($couple->Id != 'N/A' ? $couple->Id : ''),
+					                                "hidden",
+					                                "couple_id[".$i."]",
+					                                "padding-l10 namePart1 dupHighlight",
+					                                ""
+					                            );
+					                        ?>
+											<?php
+					                            echo HtmlHelper::inputPdf(
+					                                $is_pdf,
+					                                HtmlHelper::firstEntry_Id($couple->FirstEntry->Id, $couple->SecondEntry->Id),
+					                                "hidden",
+					                                "individual_id1[".$i."]",
+					                                "padding-l10 namePart1 dupHighlight",
+					                                ""
+					                            );
+					                        ?>
+					                        <?php
+					                        	echo HtmlHelper::inputName(
+					                            	$is_pdf,
+					                            	HtmlHelper::firstEntry_FirstName($couple->FirstEntry->Name, $couple->SecondEntry->Name),
+					                                "text",
+					                                "name_participant2[".$i."]",
+					                                "padding-l10 namePart2",
+					                                "First"
+					                            );
+					                        ?>,
+					                        <?php
+					                        	echo HtmlHelper::inputName(
+					                            	$is_pdf,
+					                            	HtmlHelper::firstEntry_MiddleName($couple->FirstEntry->Name, $couple->SecondEntry->Name),
+					                                "text",
+					                                "name_participant2[".$i."]",
+					                                "padding-l10 namePart2",
+					                                "Middle"
+					                            );
+					                        ?>,
+					                        <?php
+					                        	echo HtmlHelper::inputName(
+					                            	$is_pdf,
+					                            	HtmlHelper::firstEntry_LastName($couple->FirstEntry->Name, $couple->SecondEntry->Name),
+					                                "text",
+					                                "name_participant2[".$i."]",
+					                                "padding-l10 namePart2",
+					                                "Last"
+					                            );
+					                        ?>,
+					                        <?php
+					                        	echo HtmlHelper::inputName(
+					                            	$is_pdf,
+					                            	HtmlHelper::firstEntry_ExtName($couple->FirstEntry->Name, $couple->SecondEntry->Name),
+					                                "text",
+					                                "name_participant2[".$i."]",
+					                                "padding-l10 namePart2",
+					                                "Ext"
+					                            );
+					                        ?>
+					                    </div>
 									</td>
 									<td class="small text-center">
 										<?php
@@ -530,7 +544,7 @@ $form1 = FormClass::getFormFromVariable($form1);
 					                                "'mask': '99-99-9999'"
 					                            );
 					                        ?> /
-					                        <input type="text" name="age1[<?=$i?>]" maxlength="2" class="text-center getAge1" readonly />
+					                        <input type="text" name="age1[<?=$i?>]" maxlength="2" class="text-center getAge1" readonly value="<?= $couple->FirstEntry->Age ?>" />
 										</div>								
 									</td>
 									<td class="small text-center" rowspan="2">
@@ -633,7 +647,7 @@ $form1 = FormClass::getFormFromVariable($form1);
 									<td class="small <?php if (!$is_pdf): ?> back-eee <?php endif;?>" style="border-right: none; padding: 0">
 										<?php if (!$is_pdf) : ?>
 											<label class="cont">
-												<input type="checkbox" name="type[<?= $i ?>]" value="attended" />
+												<input type="checkbox" name="type[<?= $i ?>]" value="attended" <?= ($couple->FirstEntry->Attendee == 1) ? 'checked' : '' ?> />
 												<span class="checkmark height-34"></span>
 											</label>
 										<?php endif; ?>
@@ -650,28 +664,60 @@ $form1 = FormClass::getFormFromVariable($form1);
 								</tr>
 								<tr class="tr2<?= $i; ?>">
 									<td class="small" style="padding: 5px;">
-										<input type="hidden" id="isDuplicate2" value="" />
-										<input type="hidden" class="loopIndex2" value="<?= $i;?>" />
-										<?php
-				                            echo HtmlHelper::inputPdf(
-				                            	$is_pdf,
-				                                HtmlHelper::secondEntry_Id($couple->FirstEntry->Id, $couple->SecondEntry->Id),
-				                                "hidde",
-				                                "individual_id2[".$i."]",
-				                                "padding-l10 namePart2",
-				                                ""
-				                            );
-				                        ?>
-										<?php
-				                            echo HtmlHelper::inputPdf(
-				                            	$is_pdf,
-				                            	HtmlHelper::secondEntry_Name($couple->FirstEntry->Name, $couple->SecondEntry->Name),
-				                                "text",
-				                                "name_participant2[".$i."]",
-				                                "padding-l10 namePart2",
-				                                ""
-				                            );
-				                        ?>
+										<div style="display: inline-flex; border: 1px solid transparent;">
+											<input type="hidden" id="isDuplicate2" value="" />
+											<input type="hidden" class="loopIndex2" value="<?= $i;?>" />
+											<?php
+					                            echo HtmlHelper::inputPdf(
+					                            	$is_pdf,
+					                                HtmlHelper::secondEntry_Id($couple->FirstEntry->Id, $couple->SecondEntry->Id),
+					                                "hidden",
+					                                "individual_id2[".$i."]",
+					                                "padding-l10 namePart2",
+					                                ""
+					                            );
+					                        ?>
+					                        <?php
+					                        	echo HtmlHelper::inputName(
+					                            	$is_pdf,
+					                            	HtmlHelper::secondEntry_FirstName($couple->FirstEntry->Name, $couple->SecondEntry->Name),
+					                                "text",
+					                                "name_participant2[".$i."]",
+					                                "padding-l10 namePart2",
+					                                "First"
+					                            );
+					                        ?>,
+					                        <?php
+					                        	echo HtmlHelper::inputName(
+					                            	$is_pdf,
+					                            	HtmlHelper::secondEntry_MiddleName($couple->FirstEntry->Name, $couple->SecondEntry->Name),
+					                                "text",
+					                                "name_participant2[".$i."]",
+					                                "padding-l10 namePart2",
+					                                "Middle"
+					                            );
+					                        ?>,
+					                        <?php
+					                        	echo HtmlHelper::inputName(
+					                            	$is_pdf,
+					                            	HtmlHelper::secondEntry_LastName($couple->FirstEntry->Name, $couple->SecondEntry->Name),
+					                                "text",
+					                                "name_participant2[".$i."]",
+					                                "padding-l10 namePart2",
+					                                "Last"
+					                            );
+					                        ?>,
+					                        <?php
+					                        	echo HtmlHelper::inputName(
+					                            	$is_pdf,
+					                            	HtmlHelper::secondEntry_ExtName($couple->FirstEntry->Name, $couple->SecondEntry->Name),
+					                                "text",
+					                                "name_participant2[".$i."]",
+					                                "padding-l10 namePart2",
+					                                "Ext"
+					                            );
+					                        ?>
+					                    </div>
 									</td>
 									<td class="small text-center">
 										<input type="hidden" value="" class="getSex1" />
@@ -710,7 +756,7 @@ $form1 = FormClass::getFormFromVariable($form1);
 					                                "'mask': '99-99-9999'"
 					                            );
 				                        	?> /
-				                        	<input type="text" name="age2[<?=$i?>]" maxlength="2" class="text-center getAge2" readonly />
+				                        	<input type="text" name="age2[<?=$i?>]" maxlength="2" class="text-center getAge2" readonly value="<?= $couple->SecondEntry->Age ?>" />
 										</div>
 									</td>
 									<td class="small text-center">
@@ -728,7 +774,7 @@ $form1 = FormClass::getFormFromVariable($form1);
 									<td class="small back-eee" style="border-right: none; padding: 0">
 										<?php if (!$is_pdf) : ?>
 											<label class="cont">
-												<input type="checkbox" name="type2[<?= $i ?>]" value="attended" />
+												<input type="checkbox" name="type2[<?= $i ?>]" value="attended" <?= ($couple->SecondEntry->Attendee == 1) ? 'checked' : '' ?> />
 												<span class="checkmark height-35"></span>
 											</label>
 										<?php endif; ?>
