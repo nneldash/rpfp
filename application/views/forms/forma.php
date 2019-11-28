@@ -55,7 +55,7 @@ $sub_targetCouples = 0;
 			<p class="small">
 				<b>
 					RPFP CLASSES IMPLEMENTATION REPORT <br>
-					FOR THE PERIOD <?=$forma->Period->MonthsPeriod; ?> <?= $_GET['ReportYear']; ?> <br>
+					FOR THE PERIOD <?=$forma->Period->MonthsPeriod; ?> <?= $this->input->get('ReportYear'); ?> <br>
 					POPCOM Regional Office <?=$forma->Period->RegionalOffice; ?> <br>
 					DEMAND GENERATION ACTIVITIES
 				</b>

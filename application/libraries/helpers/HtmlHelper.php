@@ -121,28 +121,28 @@ class HtmlHelper
 
     public static function firstEntry_FirstName($firstEntry, $secondEntry)
     {
-        $name = $firstEntry->Firstname == 'N/A' ? '' : ($firstEntry->Firstname != 'N/A' ? $firstEntry->Firstname : '');
+        $name = $firstEntry->Firstname == 'N/A' ? ($secondEntry->Firstname != 'N/A' ? $secondEntry->Firstname : '') : ($firstEntry->Firstname != 'N/A' ? $firstEntry->Firstname : '');
 
         return $name;
     }
 
     public static function firstEntry_MiddleName($firstEntry, $secondEntry)
     {
-        $name = $firstEntry->Middlename == 'N/A' ? '' : ($firstEntry->Middlename != 'N/A' ? $firstEntry->Middlename : '');
+        $name = $firstEntry->Middlename == 'N/A' ? ($secondEntry->Middlename != 'N/A' ? $secondEntry->Middlename : '') : ($firstEntry->Middlename != 'N/A' ? $firstEntry->Middlename : '');
 
         return $name;
     }
 
     public static function firstEntry_LastName($firstEntry, $secondEntry)
     {
-        $name = $firstEntry->Surname == 'N/A' ? '' : ($firstEntry->Surname != 'N/A' ? $firstEntry->Surname : '');
+        $name = $firstEntry->Surname == 'N/A' ? ($secondEntry->Surname != 'N/A' ? $secondEntry->Surname : '') : ($firstEntry->Surname != 'N/A' ? $firstEntry->Surname : '');
 
         return $name;
     }
 
     public static function firstEntry_ExtName($firstEntry, $secondEntry)
     {
-        $name = $firstEntry->Extname == 'N/A' ? '' : ($firstEntry->Extname != 'N/A' ? $firstEntry->Extname : '');
+        $name = $firstEntry->Extname == 'N/A' ? ($secondEntry->Extname != 'N/A' ? $secondEntry->Extname : '') : ($firstEntry->Extname != 'N/A' ? $firstEntry->Extname : '');
 
         return $name;
     }
