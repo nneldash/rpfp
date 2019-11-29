@@ -16,11 +16,11 @@
 <div id="htmlout" hidden></div>
 
 <script>
-    loadJs(base_url + 'NewAssets/cpExcel', function() {
-        loadJs(base_url + 'NewAssets/shimJs', function() {
-            loadJs(base_url + 'NewAssets/jsZip', function() {
-                loadJs(base_url + 'NewAssets/xlsxJs', function() {
-                    loadJs(base_url + 'assets/js/import.js');
+    loadJs(base_url + '/NewAssets/cpExcel', function() {
+        loadJs(base_url + '/NewAssets/shimJs', function() {
+            loadJs(base_url + '/NewAssets/jsZip', function() {
+                loadJs(base_url + '/NewAssets/xlsxJs', function() {
+                    loadJs(base_url + '/assets/js/import.js');
                 });
             });
         });

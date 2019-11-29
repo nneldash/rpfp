@@ -12,7 +12,7 @@ if (empty($title)) {
 
 <br>
 <div style="text-transform: none; width: 15%;">
-    <input type="submit" class="save" value="Generate Report" name="genAccomplishment" />
+    <input type="submit" class="save genAccomp" value="Generate Report" name="genAccomplishment" />
 </div>
 <br>
 <table id="datatable-responsive" class="table table-condensed table-striped table-hover table-bordered dt-responsive nowrap accomplishmentList" cellspacing="0" width="100%">
@@ -48,7 +48,9 @@ if (empty($title)) {
 </table>
 
 <script>
-    loadJs(base_url + 'assets/js/accomplishment.js');
+    loadJs(base_url + 'NewAssets/templateJs', function() {
+        loadJs(base_url + 'assets/js/modals.js');
+    });
 
     $(".accomplishmentList").DataTable({
         "lengthMenu": [

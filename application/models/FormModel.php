@@ -92,7 +92,7 @@ class FormModel extends BaseModel
 
             if ($couple_id == 'CANNOT SAVE RECORD WITH GIVEN PARAMETERS') {
                 return false;
-            } elseif ($couple_id == 'UPDATED!') {
+            } elseif ($couple_id == "UPDATE SUCCESS!") {
                 $couple_id = $couple->Id;
             } else {
                 $couple_id = explode(" ", $couple_id);

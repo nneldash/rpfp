@@ -537,14 +537,14 @@ $form1 = FormClass::getFormFromVariable($form1);
 					                        <?php
 					                            echo HtmlHelper::inputMaskPdf(
 					                            	$is_pdf,
-					                            	HtmlHelper::firstEntry_BirthAge($bday, $bday2, $couple->FirstEntry->Age, $couple->SecondEntry->Age),
+					                            	HtmlHelper::firstEntry_Birthday($bday, $bday2),
 					                                "text",
 					                                "bday1[".$i."]",
 					                                "text-center birthAge bday1 dupHighlight",
 					                                "'mask': '99-99-9999'"
 					                            );
 					                        ?> /
-					                        <input type="text" name="age1[<?=$i?>]" maxlength="2" class="text-center getAge1" readonly value="<?= $couple->FirstEntry->Age ?>" />
+					                        <input type="text" name="age1[<?=$i?>]" maxlength="2" class="text-center getAge1" readonly value="<?= HtmlHelper::firstEntry_BirthAge($couple->FirstEntry->Age, $couple->SecondEntry->Age) ?>" />
 										</div>								
 									</td>
 									<td class="small text-center" rowspan="2">
@@ -749,14 +749,14 @@ $form1 = FormClass::getFormFromVariable($form1);
 											<?php
 				                            	echo HtmlHelper::inputMaskPdf(
 					                            	$is_pdf,
-					                            	HtmlHelper::secondEntry_BirthAge($bday, $bday2, $couple->FirstEntry->Age, $couple->SecondEntry->Age),
+					                            	HtmlHelper::secondEntry_Birthday($bday, $bday2),
 					                                "text",
 					                                "bday2[".$i."]",
 					                                "text-center birthAge bday2",
 					                                "'mask': '99-99-9999'"
 					                            );
 				                        	?> /
-				                        	<input type="text" name="age2[<?=$i?>]" maxlength="2" class="text-center getAge2" readonly value="<?= $couple->SecondEntry->Age ?>" />
+				                        	<input type="text" name="age2[<?=$i?>]" maxlength="2" class="text-center getAge2" readonly value="<?= HtmlHelper::secondEntry_BirthAge($couple->FirstEntry->Age, $couple->SecondEntry->Age) ?>" />
 										</div>
 									</td>
 									<td class="small text-center">
