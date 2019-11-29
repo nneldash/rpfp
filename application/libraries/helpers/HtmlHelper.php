@@ -251,5 +251,17 @@ class HtmlHelper
 
         return $education;
     }
+
+    public static function dashInputPdf($field) : string
+    {
+        if ($field != N_A) {
+            if ($field instanceof BasicInt) {
+                return strval($field->value());
+            }
+            return strval($field);
+            
+        }
+        return " - ";
+    }
 }
  

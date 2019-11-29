@@ -8,7 +8,7 @@ abstract class Roles extends BasicEnum
     const ENCODER = 50;
     const PARTNER = 60;
     const FOCAL_PERSON = 70;
-    const DATA_MANATER = 80;
+    const DATA_MANAGER = 80;
     const PMED_STAFF = 90;
     const ITDMU_STAFF = 100;
 
@@ -18,7 +18,7 @@ abstract class Roles extends BasicEnum
             Roles::ENCODER => 'Encoder',
             Roles::PARTNER => 'Partner',
             Roles::FOCAL_PERSON => 'Regional/Provincial Focal Person',
-            Roles::DATA_MANATER => 'Regional Data Manager',
+            Roles::DATA_MANAGER => 'Regional Data Manager',
             Roles::PMED_STAFF => 'PMED/Central Office Staff',
             Roles::ITDMU_STAFF => 'Administrator'
         );
@@ -32,5 +32,5 @@ abstract class Roles extends BasicEnum
     public static function count() : int
     {
         return 6;
-    }    
+    }
 }

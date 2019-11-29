@@ -25,9 +25,28 @@ class UserProfile extends UserProfileInterface
         return $this->Role == Roles::ENCODER;
     }
 
-    public function isFocal()
+    public function isPartner()
     {
-        return $this->Role == Roles::FOCAL_PERSON;
+        return $this->Role == Roles::PARTNER;
     }
 
+    public function isFocal()
+    {
+        return $this->Role == roles::FOCAL_PERSON;
+    }
+
+    public function isRDM()
+    {
+        return $this->Role == roles::DATA_MANAGER;
+    }
+
+    public function isPMED()
+    {
+        return $this->Role == roles::PMED_STAFF;
+    }
+
+    public function isITDMU()
+    {
+        return $this->Role == roles::ITDMU_STAFF;
+    }
 }

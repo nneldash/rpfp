@@ -3,7 +3,27 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 abstract class ReportBase extends ArrayObject
 {
+    /** @var BaseInterface */
     protected $baseInterface;
+
+    /** @var DateTime */
+    public $From;
+
+    /** @var DateTime */
+    public $To;
+
+    /** @var string */
+    public $RegionalOffice;
+
+    /** @var string */
+    public $PreparedBy;
+
+    /** @var string */
+    public $NotedBy;
+
+    /** @var string */
+    public $ApprovedBy;
+
     
     public function offsetSet($key, $val)
     {

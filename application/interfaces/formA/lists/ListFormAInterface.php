@@ -11,4 +11,6 @@ abstract class ListFormAInterface extends ListBase
         parent::__construct();
         $this->baseInterface = 'FormAInterface';
     }
+
+    abstract public static function getFromVariable($var);
 }

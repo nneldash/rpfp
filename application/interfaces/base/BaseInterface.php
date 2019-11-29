@@ -18,8 +18,9 @@ abstract class BaseInterface
     const _PROP = 'xXx';
     const _SET = 'set';
     const _GET = 'get';
-    const _INTERFACE = 'Interface';
-    const _CLASS = 'Class';
+    const _AN_OBJECT = 'object';
+    const _DA_VALUE = 'value';
+    const _A_NUMBER = 'integer';
     
     public function __construct($params = null)
     {
@@ -27,10 +28,12 @@ abstract class BaseInterface
         foreach ($fields as $name => $value) {
             $res = strpos($name, self::_PROP);
             if ($res === false || $res != 0) {
+                $field_type = gettype($this->$name);
                 $assignedValue = new BaseProperty(
                     [
-                        _TYPE => (gettype($this->$name) === 'object' ? get_class($this->$name) : null),
-                        _VALUE => null
+                        _TYPE => ($field_type === self::_AN_OBJECT ? get_class($this->$name) : null),
+                        _VALUE => ($field_type === self::_A_NUMBER ? 0 : null)
+
                     ]
                 );
                 $newProp = self::_PROP . $name;
@@ -40,7 +43,6 @@ abstract class BaseInterface
         }
     }
 
-
     public function __get($name)
     {
         $property =  $name;
@@ -49,16 +51,16 @@ abstract class BaseInterface
             $property = self::_PROP . $name;
         }
 
-        $action = self::_SET . str_replace(self::_PROP, BLANK, $property);
+        $action = self::_GET . str_replace(self::_PROP, BLANK, $property);
         if (method_exists($this, $action)) {
             return $this->$action();
         }
 
         if (property_exists($this, $property)) {
-            if (!empty($this->$property->datype)) {
-                $value =& $this->newIfEmpty($this->$property, $this->$property->datype);
+            if (!empty($this->{$property}->datype)) {
+                $value =& $this->newIfEmpty($this->{$property}, $this->{$property}->datype);
             } else {
-                $value = $this->$property->davalue;
+                $value = $this->{$property}->davalue;
             }
             return $value ?: N_A;
         }
@@ -81,7 +83,7 @@ abstract class BaseInterface
         }
 
         if ($value instanceof BaseProperty) {
-            $this->$property = $value;
+            $this->{$property} = $value;
             return true;
         }
 
@@ -89,7 +91,7 @@ abstract class BaseInterface
             return false;
         }
 
-        $this->$property->davalue = $value;
+        $this->{$property}->davalue = $value;
         return true;
     }
 }

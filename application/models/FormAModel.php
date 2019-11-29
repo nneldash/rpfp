@@ -40,7 +40,7 @@ class FormAModel extends BaseModel
         return $retval;
     }
 
-    public function getFormAReport($report_month,$report_year) : ReportFormAInterface
+    public function getFormAReport(int $report_month, int $report_year) : ReportFormAInterface
     {
         $forma_report = $this->fromDbGetReportList(
             'ReportFormA',
@@ -66,7 +66,7 @@ class FormAModel extends BaseModel
                 'TotalReached' => 'reached_total'
             ),
             'get_report_demandgen_details',
-            array($report_month,$report_year)
+            array($report_month, $report_year)
         );
 
         $retval = new ReportFormA();
@@ -75,6 +75,7 @@ class FormAModel extends BaseModel
             $retval->append($form_A);
         }
 
+        $retval->From = strtotime($report_year . '-' . $report_month . '-1');
         return $retval;
     }
 

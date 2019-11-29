@@ -16,11 +16,34 @@ class FormAClass extends FormAInterface
         parent::__construct($params);
     }
 
-    public static function getFormFromVariable($forma) : FormAInterface
+    public static function getFormFromVariable($variable) : FormAInterface
     {
-        if ($forma instanceof FormAInterface) {
-            return $forma;
+        if ($variable instanceof FormAInterface) {
+            return $variable;
         }
-        return new FormAClass($forma);
+        return new FormAClass($variable);
     }
+
+    public function getTotalSessions()
+    {
+        return (int)$this->Class4Ps +
+                (int)$this->ClassNon4Ps +
+                (int)$this->ClassUsapan +
+                (int)$this->ClassPMC +
+                (int)$this->ClassH2H +
+                (int)$this->ClassProfiled
+        ;
+    }
+
+    public function getTotalWRA()
+    {
+        return (int)$this->WRA4Ps +
+                (int)$this->WRANon4Ps +
+                (int)$this->WRAUsapan +
+                (int)$this->WRAPMC +
+                (int)$this->WRAH2H +
+                (int)$this->WRAProfiled
+        ;
+    }
+
 }
