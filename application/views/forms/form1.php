@@ -3,6 +3,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 $this->load->library('helpers/HtmlHelper');
 
 $form1 = FormClass::getFormFromVariable($form1);
+$rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0);
 ?>
 
 <?php if($is_pdf){ ?>
@@ -87,7 +88,7 @@ $form1 = FormClass::getFormFromVariable($form1);
 					</div>
 			    </div>
 			<?php endif; ?>
-			<input type="hidden" name="class_id" value="<?= (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0); ?>" />
+			<input type="hidden" name="class_id" value="<?= $rpfpId; ?>" />
 			<div class="border-t1 table-responsive">
 				<div style="padding-top: 10px"></div>
 				<table style="float: left" class="table">

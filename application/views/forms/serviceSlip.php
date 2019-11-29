@@ -1,6 +1,9 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 $this->load->library('helpers/HtmlHelper');
+
+$slip = ServiceSlipClass::getServiceSlipFromVariable($slip);
+
 ?>
 
 <div class="body-padding" style="padding-top: 0">
@@ -21,16 +24,7 @@ $this->load->library('helpers/HtmlHelper');
 					<p class="small">
 						<b>
 							Date of visit: 
-							<?php
-	                            echo HtmlHelper::inputPdf(
-	                                $is_pdf,
-	                                $slip->DateOfVisit,
-	                                "date",
-	                                "date_of_visit",
-	                                "padding-l10 underline width-45",
-	                                ""
-	                            );
-	                        ?>
+							<input type="date" name="date_of_visit" value="<?= $slip->DateOfVisit; ?>" class="padding-l10 underline width-70" />
 						</b>
 					</p>
 				</div>
@@ -115,7 +109,7 @@ $this->load->library('helpers/HtmlHelper');
 							<td class="padding-0 back-eee">
 								<?php if (!$is_pdf) : ?>
 									<label class="cont">
-										<input type="radio" name="method" value="<?= ModernMethods::SDM ?>" />
+										<input type="radio" name="method" value="<?= ModernMethods::SDM ?>" <?= $slip->MethodUsed == '11' ? 'checked' : '' ?> />
 										<span class="checkmark"></span>
 									</label>
 								<?php endif; ?>
@@ -124,7 +118,7 @@ $this->load->library('helpers/HtmlHelper');
 							<td class="padding-0 back-eee">
 								<?php if (!$is_pdf) : ?>
 									<label class="cont">
-										<input type="radio" name="method" value="<?= ModernMethods::PILLS ?>" />
+										<input type="radio" name="method" value="<?= ModernMethods::PILLS ?> <?= $slip->MethodUsed == '3' ? 'checked' : '' ?> " />
 										<span class="checkmark"></span>
 									</label>
 								<?php endif; ?>
@@ -133,7 +127,7 @@ $this->load->library('helpers/HtmlHelper');
 							<td class="padding-0 back-eee">
 								<?php if (!$is_pdf) : ?>
 									<label class="cont">
-										<input type="radio" name="method" value="<?= ModernMethods::TUBAL_LIGATION ?>" />
+										<input type="radio" name="method" value="<?= ModernMethods::TUBAL_LIGATION ?>" <?= $slip->MethodUsed == '6' ? 'checked' : '' ?> />
 										<span class="checkmark"></span>
 									</label>
 								<?php endif; ?>
@@ -144,7 +138,7 @@ $this->load->library('helpers/HtmlHelper');
 							<td class="padding-0 back-eee">
 								<?php if (!$is_pdf) : ?>
 									<label class="cont">
-										<input type="radio" name="method" value="<?= ModernMethods::LAM ?>" />
+										<input type="radio" name="method" value="<?= ModernMethods::LAM ?>" <?= $slip->MethodUsed == '12' ? 'checked' : '' ?> />
 										<span class="checkmark"></span>
 									</label>
 								<?php endif; ?>
@@ -153,7 +147,7 @@ $this->load->library('helpers/HtmlHelper');
 							<td class="padding-0 back-eee">
 								<?php if (!$is_pdf) : ?>
 									<label class="cont">
-										<input type="radio" name="method" value="<?= ModernMethods::IUD ?>" />
+										<input type="radio" name="method" value="<?= ModernMethods::IUD ?>" <?= $slip->MethodUsed == '2' ? 'checked' : '' ?> />
 										<span class="checkmark"></span>
 									</label>
 								<?php endif; ?>
@@ -162,7 +156,7 @@ $this->load->library('helpers/HtmlHelper');
 							<td class="padding-0 back-eee">
 								<?php if (!$is_pdf) : ?>
 									<label class="cont">
-										<input type="radio" name="method" value="<?= ModernMethods::VASECTOMY ?>" />
+										<input type="radio" name="method" value="<?= ModernMethods::VASECTOMY ?>" <?= $slip->MethodUsed == '5' ? 'checked' : '' ?> />
 										<span class="checkmark"></span>
 									</label>
 								<?php endif; ?>
@@ -172,8 +166,8 @@ $this->load->library('helpers/HtmlHelper');
 							<td>CMM</td>
 							<td class="padding-0 back-eee">
 								<?php if (!$is_pdf) : ?>
-									<label class="cont">
-										<input type="radio" name="method" value="<?= ModernMethods::CMM_BILLINGS ?>" />
+									<label class="cont"> 
+										<input type="radio" name="method" value="<?= ModernMethods::CMM_BILLINGS ?>" <?= $slip->MethodUsed == '8' ? 'checked' : '' ?> />
 										<span class="checkmark"></span>
 									</label>
 								<?php endif; ?>
@@ -182,7 +176,7 @@ $this->load->library('helpers/HtmlHelper');
 							<td class="padding-0 back-eee">
 								<?php if (!$is_pdf) : ?>
 									<label class="cont">
-										<input type="radio" name="method" value="<?= ModernMethods::INJECTABLE ?>" />
+										<input type="radio" name="method" value="<?= ModernMethods::INJECTABLE ?>" <?= $slip->MethodUsed == '4' ? 'checked' : '' ?> />
 										<span class="checkmark"></span>
 									</label>
 								<?php endif; ?>
@@ -195,7 +189,7 @@ $this->load->library('helpers/HtmlHelper');
 							<td class="padding-0 back-eee">
 								<?php if (!$is_pdf) : ?>
 									<label class="cont">
-										<input type="radio" name="method" value="<?= ModernMethods::SYMPTO_THERMAL ?>" />
+										<input type="radio" name="method" value="<?= ModernMethods::SYMPTO_THERMAL ?>" <?= $slip->MethodUsed == '10' ? 'checked' : '' ?> />
 										<span class="checkmark"></span>
 									</label>
 								<?php endif; ?>
@@ -204,7 +198,7 @@ $this->load->library('helpers/HtmlHelper');
 							<td class="padding-0 back-eee">
 								<?php if (!$is_pdf) : ?>
 									<label class="cont">
-										<input type="radio" name="method" value="<?= ModernMethods::CONDOM ?>" />
+										<input type="radio" name="method" value="<?= ModernMethods::CONDOM ?>" <?= $slip->MethodUsed == '1' ? 'checked' : '' ?> />
 										<span class="checkmark"></span>
 									</label>
 								<?php endif; ?>
@@ -219,7 +213,7 @@ $this->load->library('helpers/HtmlHelper');
 							<td class="text-center padding-0 back-eee">
 								<?php if (!$is_pdf) : ?>
 									<label class="cont">
-										<input type="radio" name="method" value="<?= ModernMethods::IMPLANT ?>" />
+										<input type="radio" name="method" value="<?= ModernMethods::IMPLANT ?>" <?= $slip->MethodUsed == '7' ? 'checked' : '' ?> />
 										<span class="checkmark"></span>
 									</label>
 								<?php endif; ?>
@@ -239,7 +233,7 @@ $this->load->library('helpers/HtmlHelper');
 				<p><b> &nbsp; (</b></p>
 				<?php if (!$is_pdf) : ?>
 					<label class="cont">
-						<input type="radio" name="is_counseling" value="1" />
+						<input type="radio" name="is_counseling" value="1" <?= $slip->IsCounseling == '1' ? 'checked' : '' ?> />
 						<span class="smolCheck back-eee"></span>
 					</label>
 				<?php endif; ?>
@@ -263,7 +257,7 @@ $this->load->library('helpers/HtmlHelper');
 						1. Needed FP method is not available in the facility
 						<p> &nbsp; (</p>
 						<label class="cont">
-							<input type="radio" name="counseled_fp" value="1" />
+							<input type="radio" name="counseled_fp" value="1a" <?= $slip->CounseledToUse == '1a' ? 'checked' : '' ?> />
 							<span class="smolCheck back-eee"></span>
 						</label>
 						<p>)</p>
@@ -272,7 +266,7 @@ $this->load->library('helpers/HtmlHelper');
 						2. No sevice provider available during the visit
 						<p> &nbsp; (</p>
 						<label class="cont">
-							<input type="radio" name="counseled_fp" value="1" />
+							<input type="radio" name="counseled_fp" value="1b" <?= $slip->CounseledToUse == '1b' ? 'checked' : '' ?> />
 							<span class="smolCheck back-eee"></span>
 						</label>
 						<p>)</p>
@@ -281,7 +275,7 @@ $this->load->library('helpers/HtmlHelper');
 						3. No trained personnel to do the needed FP service
 						<p> &nbsp; (</p>
 						<label class="cont">
-							<input type="radio" name="counseled_fp" value="1" />
+							<input type="radio" name="counseled_fp" value="1c" <?= $slip->CounseledToUse == '1c' ? 'checked' : '' ?> />
 							<span class="smolCheck back-eee"></span>
 						</label>
 						<p>)</p>
@@ -291,20 +285,24 @@ $this->load->library('helpers/HtmlHelper');
                     </li>
                     <li class="flex padding-l2p">
 						counseled to use &nbsp;
-						<?php
-                            echo HtmlHelper::inputPdf(
-                                $is_pdf,
-                                $slip->CounseledToUse,
-                                "text",
-                                "method_name",
-                                "padding-l10 underline width-20 no4-input",
-                                ""
-                            );
-                        ?> 
+						<select name="method_name" class="no4-select">
+							<option></option>
+							<option value="<?= ModernMethods::SDM ?>" <?= $slip->OtherSpecify == '11' ? 'selected' : '' ?> >SDM</option>
+							<option value="<?= ModernMethods::LAM ?>" <?= $slip->OtherSpecify == '12' ? 'selected' : '' ?> >LAM</option>
+							<option value="<?= ModernMethods::CMM_BILLINGS ?>" <?= $slip->OtherSpecify == '8' ? 'selected' : '' ?> >CMM</option>
+							<option value="<?= ModernMethods::SYMPTO_THERMAL ?>" <?= $slip->OtherSpecify == '10' ? 'selected' : '' ?> >STM</option>
+							<option value="<?= ModernMethods::PILLS ?>" <?= $slip->OtherSpecify == '3' ? 'selected' : '' ?> >Pills</option>
+							<option value="<?= ModernMethods::IUD ?>" <?= $slip->OtherSpecify == '2' ? 'selected' : '' ?> >IUD</option>
+							<option value="<?= ModernMethods::INJECTABLE ?>" <?= $slip->OtherSpecify == '4' ? 'selected' : '' ?> >Injectable</option>
+							<option value="<?= ModernMethods::CONDOM ?>" <?= $slip->OtherSpecify == '1' ? 'selected' : '' ?> >Condom</option>
+							<option value="<?= ModernMethods::IMPLANT ?>" <?= $slip->OtherSpecify == '7' ? 'selected' : '' ?> >Implant</option>
+							<option value="<?= ModernMethods::TUBAL_LIGATION ?>" <?= $slip->OtherSpecify == '6' ? 'selected' : '' ?> >Ligation</option>
+							<option value="<?= ModernMethods::VASECTOMY ?>" <?= $slip->OtherSpecify == '5' ? 'selected' : '' ?> >Vasectomy</option>
+						</select>
                         &nbsp; &nbsp; but client is undecided
 						<p> &nbsp; (</p>
 						<label class="cont">
-							<input class="no4-check" type="radio" name="is_not_qualified" value="1" />
+							<input class="no4-check" type="radio" name="is_not_qualified" value="1" <?= $slip->IsNotQualified == '1' ? 'checked' : '' ?> />
 							<span class="smolCheck back-eee"></span>
 						</label>
 						<p>)</p>
@@ -315,7 +313,7 @@ $this->load->library('helpers/HtmlHelper');
 						<?php
                             echo HtmlHelper::inputPdf(
                                 $is_pdf,
-                                $slip->OtherSpecify,
+                                "",
                                 "text",
                                 "method_name",
                                 "padding-l10 underline width-45 no5-input",
@@ -338,7 +336,7 @@ $this->load->library('helpers/HtmlHelper');
 						</p>
 						<p> &nbsp; (</p>
 						<label class="cont">
-							<input type="radio" name="is_provided_service" value="1" />
+							<input type="radio" name="is_provided_service" value="1" <?= $slip->IsProvided == '1' ? 'checked' : '' ?> />
 							<span class="smolCheck back-eee"></span>
 						</label>
 						<p>)</p>
@@ -347,16 +345,7 @@ $this->load->library('helpers/HtmlHelper');
 						<p class="small">
 							Date of accepting the method: &nbsp;
 						</p>
-						<?php
-	                        echo HtmlHelper::inputPdf(
-	                            $is_pdf,
-	                            $slip->DateOfMethod,
-	                            "date",
-	                            "date_of_method",
-	                            "padding-l10 underline width-20",
-	                            ""
-	                        );
-	                    ?>
+						<input type="date" name="date_of_method" value="<?= $slip->DateOfMethod; ?>" class="padding-l10 underline width-70" />
 					</div>
 					<div class="flex">
 						<p class="small">

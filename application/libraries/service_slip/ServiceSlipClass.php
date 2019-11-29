@@ -9,4 +9,12 @@ class ServiceSlipClass extends ServiceSlipInterface
     {
         parent::__construct($params);
     }
+
+    public static function getServiceSlipFromVariable($slip) : ServiceSlipInterface
+    {
+        if ($slip instanceof ServiceSlipInterface) {
+            return $slip;
+        }
+        return new ServiceSlipClass($slip);
+    }
 }

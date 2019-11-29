@@ -214,7 +214,7 @@ class Forms extends CI_Controller
     }
 
     public function saveServiceSlip()
-    {
+    {  
         $couple_id = (!$this->input->post('couple_id') ? 0 : $this->input->post('couple_id'));
         
         $slip = new ServiceSlipClass();
@@ -232,10 +232,11 @@ class Forms extends CI_Controller
         $slip->ReferralFacility = $this->input->post('referral_facility');
         $slip->HealthServiceProvider = $this->input->post('health_service_provider');
 
-        print_r($this->FormModel->saveServiceSlip($couple_id, $slip));exit;
-        $data = ['is_save' => true];
+        
         if (!$this->FormModel->saveServiceSlip($couple_id, $slip)) {
             $data = ['is_save' => false];
+        } else {
+            $data = ['is_save' => true];
         }
 
         $this->output
@@ -342,7 +343,7 @@ class Forms extends CI_Controller
 
         $this->load->model('FormModel');
 
-        $serviceSlip = $this->FormModel->getServiceSlip();
+        $serviceSlip = $this->FormModel->getServiceSlip($couple_id);
 
         $header['title'] = 'Online RPFP Monitoring System | Service Slip';
         $this->load->view('forms/serviceSlip', array('slip' => $serviceSlip, 'couple_id' => $couple_id, 'couple_name' => $couple_name, 'address' => $address, 'is_pdf' => false));

@@ -145,14 +145,13 @@ class FormModel extends BaseModel
                 $traditional->ReasonForUse == N_A ? BLANK : $traditional->ReasonForUse
             ];
 
-        //    $this->saveToDb($method3, $params3);
+           $this->saveToDb($method3, $params3);
         }
     }
 
     public function saveServiceSlip(int $couple_id, ServiceSlipInterface $data)
     {
-
-        $method = "encoder_save_service_slip";
+        $method = "encoder_save_fp_service";
 
         $params = [
             $data->Id == N_A ? BLANK : $data->Id,
@@ -171,26 +170,40 @@ class FormModel extends BaseModel
             $data->ReferralFacility == N_A ? BLANK : $data->ReferralFacility,
             $data->HealthServiceProvider == N_A ? BLANK : $data->HealthServiceProvider
         ];
-        // echo '<pre>';
-        // print_r($params);exit;
-        return $this->saveToDb($method, $params);
+
+        $fp_service =  $this->saveToDb($method, $params);
+        
+        if ($fp_service == 'FP SERVICE ADDED') {
+            return true;
+        } else {
+            return false;
+        }
     }
 
-    public function getServiceSlip() : ServiceSlipInterface
+    public function getServiceSlip(int $couple_id) : ServiceSlipInterface
     {
-        $slip = new ServiceSlipClass();
-
-        $slip->Id = '1';
-        $slip->DateOfVisit = '10/21/2019';
-        $slip->MethodUsed = 'SDM';
-        $slip->CounseledToUse = '1';
-        $slip->OtherSpecify = '2';
-        $slip->DateOfMethod = '10/21/2019';
-        $slip->ClientAdvised = 'OK';
-        $slip->ReferralFacility = 'CLAUDE GUSION';
-        $slip->HealthServiceProvider = 'CHOU FAN';
-
-        return $slip;
+        return $this->fromDbGetSpecific(
+            'ServiceSlipClass',
+            array(
+                'Id' => 'fpserviceid',
+                'DateOfVisit' => 'datevisit',
+                'MethodUsed' => 'fp_served',
+                'ProviderType' => 'provider_type',
+                'IsCounseling' => 'is_counselling',
+                'CounseledToUse' => 'counseled_fp',
+                'OtherSpecify' => 'other_specify',
+                'IsNotQualified' => 'is_not_qualified',
+                'IsProvided' => 'is_provided_service',
+                'DateOfMethod' => 'dateserved',
+                'ClientAdvised' => 'client_advise',
+                'ReferralFacility' => 'referralname',
+                'HealthServiceProvider' => 'providername'
+            ),
+            'encoder_get_fp_service',
+            array(
+                $couple_id
+            )
+        );
     }
 
     public function getForm1($classId): FormInterface
