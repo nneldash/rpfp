@@ -8,21 +8,18 @@ function checkbox()
 {
 	if ($('.no4-check').is(':checked')) {
 		$('.no4-select').removeAttr('disabled');
-		$('.no5-input').attr('disabled', 'disabled');
 	} else {
 		$('.no4-select').attr('disabled', 'disabled');
 	}
 
-	$('input[type=radio]').click(function(){
+	$('input[name="other_concern"]').click(function(){
 		if ($('.no4-check').is(':checked')) {
 			$('.no4-select').removeAttr('disabled');
 		} else {
 			$('.no4-select').attr('disabled', 'disabled');
 			$(".no4-select").val("");
+			
 		}
-		
-		$('.no5-input').attr('disabled', 'disabled');
-		$(".no5-input").val("");
 	});
 }
 

@@ -257,7 +257,7 @@ $slip = ServiceSlipClass::getServiceSlipFromVariable($slip);
 						1. Needed FP method is not available in the facility
 						<p> &nbsp; (</p>
 						<label class="cont">
-							<input type="radio" name="counseled_fp" value="1a" <?= $slip->CounseledToUse == '1a' ? 'checked' : '' ?> />
+							<input type="radio" name="other_concern" value="1" <?= $slip->OtherConcern == '1' ? 'checked' : '' ?> />
 							<span class="smolCheck back-eee"></span>
 						</label>
 						<p>)</p>
@@ -266,7 +266,7 @@ $slip = ServiceSlipClass::getServiceSlipFromVariable($slip);
 						2. No sevice provider available during the visit
 						<p> &nbsp; (</p>
 						<label class="cont">
-							<input type="radio" name="counseled_fp" value="1b" <?= $slip->CounseledToUse == '1b' ? 'checked' : '' ?> />
+							<input type="radio" name="other_concern" value="2" <?= $slip->OtherConcern == '2' ? 'checked' : '' ?> />
 							<span class="smolCheck back-eee"></span>
 						</label>
 						<p>)</p>
@@ -275,7 +275,7 @@ $slip = ServiceSlipClass::getServiceSlipFromVariable($slip);
 						3. No trained personnel to do the needed FP service
 						<p> &nbsp; (</p>
 						<label class="cont">
-							<input type="radio" name="counseled_fp" value="1c" <?= $slip->CounseledToUse == '1c' ? 'checked' : '' ?> />
+							<input type="radio" name="other_concern" value="3" <?= $slip->OtherConcern == '3' ? 'checked' : '' ?> />
 							<span class="smolCheck back-eee"></span>
 						</label>
 						<p>)</p>
@@ -285,24 +285,24 @@ $slip = ServiceSlipClass::getServiceSlipFromVariable($slip);
                     </li>
                     <li class="flex padding-l2p">
 						counseled to use &nbsp;
-						<select name="method_name" class="no4-select">
+						<select name="counseled_to_use" class="no4-select">
 							<option></option>
-							<option value="<?= ModernMethods::SDM ?>" <?= $slip->OtherSpecify == '11' ? 'selected' : '' ?> >SDM</option>
-							<option value="<?= ModernMethods::LAM ?>" <?= $slip->OtherSpecify == '12' ? 'selected' : '' ?> >LAM</option>
-							<option value="<?= ModernMethods::CMM_BILLINGS ?>" <?= $slip->OtherSpecify == '8' ? 'selected' : '' ?> >CMM</option>
-							<option value="<?= ModernMethods::SYMPTO_THERMAL ?>" <?= $slip->OtherSpecify == '10' ? 'selected' : '' ?> >STM</option>
-							<option value="<?= ModernMethods::PILLS ?>" <?= $slip->OtherSpecify == '3' ? 'selected' : '' ?> >Pills</option>
-							<option value="<?= ModernMethods::IUD ?>" <?= $slip->OtherSpecify == '2' ? 'selected' : '' ?> >IUD</option>
-							<option value="<?= ModernMethods::INJECTABLE ?>" <?= $slip->OtherSpecify == '4' ? 'selected' : '' ?> >Injectable</option>
-							<option value="<?= ModernMethods::CONDOM ?>" <?= $slip->OtherSpecify == '1' ? 'selected' : '' ?> >Condom</option>
-							<option value="<?= ModernMethods::IMPLANT ?>" <?= $slip->OtherSpecify == '7' ? 'selected' : '' ?> >Implant</option>
-							<option value="<?= ModernMethods::TUBAL_LIGATION ?>" <?= $slip->OtherSpecify == '6' ? 'selected' : '' ?> >Ligation</option>
-							<option value="<?= ModernMethods::VASECTOMY ?>" <?= $slip->OtherSpecify == '5' ? 'selected' : '' ?> >Vasectomy</option>
+							<option value="<?= ModernMethods::SDM ?>" <?= $slip->CounseledToUse == '11' ? 'selected' : '' ?> >SDM</option>
+							<option value="<?= ModernMethods::LAM ?>" <?= $slip->CounseledToUse == '12' ? 'selected' : '' ?> >LAM</option>
+							<option value="<?= ModernMethods::CMM_BILLINGS ?>" <?= $slip->CounseledToUse == '8' ? 'selected' : '' ?> >CMM</option>
+							<option value="<?= ModernMethods::SYMPTO_THERMAL ?>" <?= $slip->CounseledToUse == '10' ? 'selected' : '' ?> >STM</option>
+							<option value="<?= ModernMethods::PILLS ?>" <?= $slip->CounseledToUse == '3' ? 'selected' : '' ?> >Pills</option>
+							<option value="<?= ModernMethods::IUD ?>" <?= $slip->CounseledToUse == '2' ? 'selected' : '' ?> >IUD</option>
+							<option value="<?= ModernMethods::INJECTABLE ?>" <?= $slip->CounseledToUse == '4' ? 'selected' : '' ?> >Injectable</option>
+							<option value="<?= ModernMethods::CONDOM ?>" <?= $slip->CounseledToUse == '1' ? 'selected' : '' ?> >Condom</option>
+							<option value="<?= ModernMethods::IMPLANT ?>" <?= $slip->CounseledToUse == '7' ? 'selected' : '' ?> >Implant</option>
+							<option value="<?= ModernMethods::TUBAL_LIGATION ?>" <?= $slip->CounseledToUse == '6' ? 'selected' : '' ?> >Ligation</option>
+							<option value="<?= ModernMethods::VASECTOMY ?>" <?= $slip->CounseledToUse == '5' ? 'selected' : '' ?> >Vasectomy</option>
 						</select>
                         &nbsp; &nbsp; but client is undecided
 						<p> &nbsp; (</p>
 						<label class="cont">
-							<input class="no4-check" type="radio" name="is_not_qualified" value="1" <?= $slip->IsNotQualified == '1' ? 'checked' : '' ?> />
+							<input class="no4-check" type="radio" name="other_concern" value="4" <?= $slip->OtherConcern == '4' ? 'checked' : '' ?> />
 							<span class="smolCheck back-eee"></span>
 						</label>
 						<p>)</p>
@@ -313,9 +313,9 @@ $slip = ServiceSlipClass::getServiceSlipFromVariable($slip);
 						<?php
                             echo HtmlHelper::inputPdf(
                                 $is_pdf,
-                                "",
+                                ($slip->OtherSpecify != 'N/A' ? $slip->OtherSpecify : ''),
                                 "text",
-                                "method_name",
+                                "other_specify",
                                 "padding-l10 underline width-45 no5-input",
                                 ""
                             );
@@ -354,7 +354,7 @@ $slip = ServiceSlipClass::getServiceSlipFromVariable($slip);
 						<?php
 	                        echo HtmlHelper::inputPdf(
 	                            $is_pdf,
-	                        	$slip->ClientAdvised,
+	                        	($slip->ClientAdvised != 'N/A' ? $slip->ClientAdvised : ''),
 	                            "text",
 	                            "client_advised",
 	                            "padding-l10 underline width-20",
@@ -369,7 +369,7 @@ $slip = ServiceSlipClass::getServiceSlipFromVariable($slip);
 				<?php
                     echo HtmlHelper::inputPdf(
                         $is_pdf,
-                        $slip->ReferralFacility,
+                        ($slip->ReferralFacility != 'N/A' ? $slip->ReferralFacility : ''),
                         "text",
                         "referral_facility",
                         "padding-l10 underline width-35",
@@ -382,7 +382,7 @@ $slip = ServiceSlipClass::getServiceSlipFromVariable($slip);
 				<?php
                     echo HtmlHelper::inputPdf(
                         $is_pdf,
-                        $slip->HealthServiceProvider,
+                        ($slip->HealthServiceProvider != 'N/A' ? $slip->HealthServiceProvider : ''),
                         "text",
                         "health_service_provider",
                         "padding-l10 underline width-70 text-center",

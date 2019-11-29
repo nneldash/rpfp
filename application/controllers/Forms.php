@@ -223,9 +223,9 @@ class Forms extends CI_Controller
         $slip->DateOfVisit = $this->input->post('date_of_visit');
         $slip->MethodUsed = $this->input->post('method');
         $slip->IsCounseling = $this->input->post('is_counseling');
-        $slip->CounseledToUse = $this->input->post('counseled_fp');
-        $slip->OtherSpecify = $this->input->post('method_name');
-        $slip->IsNotQualified = $this->input->post('is_not_qualified');
+        $slip->OtherConcern = $this->input->post('other_concern');
+        $slip->CounseledToUse = $this->input->post('counseled_to_use');
+        $slip->OtherSpecify = $this->input->post('other_specify');
         $slip->IsProvided = $this->input->post('is_provided_service');
         $slip->DateOfMethod = $this->input->post('date_of_method');
         $slip->ClientAdvised = $this->input->post('client_advised');
