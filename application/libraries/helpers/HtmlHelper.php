@@ -210,16 +210,30 @@ class HtmlHelper
         return $civil;
     }
 
-    public static function firstEntry_BirthAge($firstBday, $secondBday, $firstAge, $secondAge)
+    public static function firstEntry_Birthday($firstBday, $secondBday)
     {
-        $birthage = $firstAge != 'N/A' ? ($firstAge != 'N/A' ? $firstBday.'/'.$firstAge : '') : ($secondAge != 'N/A' ? $secondBday.'/'.$secondAge : '');
+        $birthday = $firstBday != 'N/A' ? ($firstBday != 'N/A' ? $firstBday : '') : ($secondBday != 'N/A' ? $secondBday : '');
+
+        return $birthday;
+    }
+
+    public static function firstEntry_BirthAge($firstAge, $secondAge)
+    {
+        $birthage = $firstAge != 'N/A' ? ($firstAge != 'N/A' ? $firstAge : '') : ($secondAge != 'N/A' ? $secondAge : '');
 
         return $birthage;
     }
 
-    public static function secondEntry_BirthAge($firstBday, $secondBday, $firstAge, $secondAge)
+    public static function secondEntry_Birthday($firstBday, $secondBday)
     {
-        $birthage = $firstAge == 'N/A' ? '' : ($secondBday != 'N/A' ? $secondBday.'/'.$secondAge : '');
+        $birthday = $firstBday == 'N/A' ? '' : ($secondBday != 'N/A' ? $secondBday : '');
+
+        return $birthday;
+    }
+
+    public static function secondEntry_BirthAge($firstAge, $secondAge)
+    {
+        $birthage = $firstAge == 'N/A' ? '' : ($secondAge != 'N/A' ? $secondAge : '');
 
         return $birthage;
     }
