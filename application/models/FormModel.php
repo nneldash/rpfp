@@ -145,14 +145,13 @@ class FormModel extends BaseModel
                 $traditional->ReasonForUse == N_A ? BLANK : $traditional->ReasonForUse
             ];
 
-        //    $this->saveToDb($method3, $params3);
+           $this->saveToDb($method3, $params3);
         }
     }
 
     public function saveServiceSlip(int $couple_id, ServiceSlipInterface $data)
     {
-
-        $method = "encoder_save_service_slip";
+        $method = "encoder_save_fp_service";
 
         $params = [
             $data->Id == N_A ? BLANK : $data->Id,
@@ -161,10 +160,10 @@ class FormModel extends BaseModel
             $data->DateOfVisit == N_A ? BLANK : $data->DateOfVisit,
             $data->MethodUsed == N_A ? BLANK : $data->MethodUsed,
             $data->ProviderType == N_A ? BLANK : $data->ProviderType,
-            $data->MethodUsed != 'counseling' ? BLANK : 1,
-            $data->MethodUsed != 'need fp method' ? BLANK : $data->OtherConcern,
+            $data->IsCounseling == N_A ? BLANK : $data->IsCounseling,
             $data->CounseledToUse == N_A ? BLANK : $data->CounseledToUse,
             $data->OtherSpecify == N_A ? BLANK : $data->OtherSpecify,
+            $data->IsNotQualified == N_A ? BLANK : $data->IsNotQualified,
             $data->IsProvided == N_A ? BLANK : $data->IsProvided,
             $data->DateOfMethod == N_A ? BLANK : $data->DateOfMethod,
             $data->ClientAdvised == N_A ? BLANK : $data->ClientAdvised,
@@ -172,24 +171,39 @@ class FormModel extends BaseModel
             $data->HealthServiceProvider == N_A ? BLANK : $data->HealthServiceProvider
         ];
 
-        return $this->saveToDb($method, $params);
+        $fp_service =  $this->saveToDb($method, $params);
+        
+        if ($fp_service == 'FP SERVICE ADDED') {
+            return true;
+        } else {
+            return false;
+        }
     }
 
-    public function getServiceSlip() : ServiceSlipInterface
+    public function getServiceSlip(int $couple_id) : ServiceSlipInterface
     {
-        $slip = new ServiceSlipClass();
-
-        $slip->Id = '1';
-        $slip->DateOfVisit = '10/21/2019';
-        $slip->MethodUsed = 'SDM';
-        $slip->CounseledToUse = '1';
-        $slip->OtherSpecify = '2';
-        $slip->DateOfMethod = '10/21/2019';
-        $slip->ClientAdvised = 'OK';
-        $slip->ReferralFacility = 'CLAUDE GUSION';
-        $slip->HealthServiceProvider = 'CHOU FAN';
-
-        return $slip;
+        return $this->fromDbGetSpecific(
+            'ServiceSlipClass',
+            array(
+                'Id' => 'fpserviceid',
+                'DateOfVisit' => 'datevisit',
+                'MethodUsed' => 'fp_served',
+                'ProviderType' => 'provider_type',
+                'IsCounseling' => 'is_counselling',
+                'CounseledToUse' => 'counseled_fp',
+                'OtherSpecify' => 'other_specify',
+                'IsNotQualified' => 'is_not_qualified',
+                'IsProvided' => 'is_provided_service',
+                'DateOfMethod' => 'dateserved',
+                'ClientAdvised' => 'client_advise',
+                'ReferralFacility' => 'referralname',
+                'HealthServiceProvider' => 'providername'
+            ),
+            'encoder_get_fp_service',
+            array(
+                $couple_id
+            )
+        );
     }
 
     public function getForm1($classId): FormInterface

@@ -7,18 +7,18 @@ $(function() {
 function checkbox()
 {
 	if ($('.no4-check').is(':checked')) {
-		$('.no4-input').removeAttr('disabled');
+		$('.no4-select').removeAttr('disabled');
 		$('.no5-input').attr('disabled', 'disabled');
 	} else {
-		$('.no4-input').attr('disabled', 'disabled');
+		$('.no4-select').attr('disabled', 'disabled');
 	}
 
 	$('input[type=radio]').click(function(){
 		if ($('.no4-check').is(':checked')) {
-			$('.no4-input').removeAttr('disabled');
+			$('.no4-select').removeAttr('disabled');
 		} else {
-			$('.no4-input').attr('disabled', 'disabled');
-			$(".no4-input").val("");
+			$('.no4-select').attr('disabled', 'disabled');
+			$(".no4-select").val("");
 		}
 		
 		$('.no5-input').attr('disabled', 'disabled');
@@ -43,19 +43,16 @@ function saveServiceSlip()
 			data: formData,
 			url: base_url + '/forms/saveServiceSlip'
 		}).done(function(result){
-			$('#service_slip').html(result);return false;
 			if(result.is_save == true) {
 				Toast.fire({
 					type: 'success',
 					title: 'Service Slip successfully saved!'
 				});
-				// alert('Nixie, ayaw gumana nung Toast.fire');
 			} else {
 				Toast.fire({
 					type: 'error',
-					title: 'An error occurred.'
+					title: 'Data Already Exist.'
 				});
-				// alert('Nixie, ayaw gumana nung Toast.fire');
 			}
 		});
 		return false;
