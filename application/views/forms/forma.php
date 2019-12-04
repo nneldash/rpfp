@@ -37,7 +37,7 @@ $forma_list = ReportFormA::getFromVariable($form_A);
             <p class="small">
                 <b>
                     RPFP CLASSES IMPLEMENTATION REPORT <br>
-                    FOR THE PERIOD <?=$forma_list->From; ?> <?= $_GET['ReportYear']; ?> <br>
+                    FOR THE PERIOD <?= strtoupper( date('F, Y', $forma_list->From)) ?> <br>
                     POPCOM Regional Office <?=$forma_list->RegionalOffice; ?> <br>
                     DEMAND GENERATION ACTIVITIES
                 </b>
@@ -270,7 +270,6 @@ $forma_list = ReportFormA::getFromVariable($form_A);
                             $grand_total->ClassPMC = (int)$grand_total->ClassPMC + (int)$sub_total->ClassPMC;
                             $grand_total->ClassH2H = (int)$grand_total->ClassH2H + (int)$sub_total->ClassH2H;
                             $grand_total->ClassProfiled = (int)$grand_total->ClassProfiled + (int)$sub_total->ClassProfiled;
-                            $grand_total->TotalSessions = (int)$grand_total->TotalSessions + (int)$sub_total->TotalSessions;
                             $grand_total->TargetCouples = (int)$grand_total->TargetCouples + (int)$sub_total->TargetCouples;
                             $grand_total->WRA4Ps = (int)$grand_total->WRA4Ps + (int)$sub_total->WRA4Ps;
                             $grand_total->WRANon4Ps = (int)$grand_total->WRANon4Ps + (int)$sub_total->WRANon4Ps;
@@ -278,12 +277,10 @@ $forma_list = ReportFormA::getFromVariable($form_A);
                             $grand_total->WRAPMC = (int)$grand_total->WRAPMC + (int)$sub_total->WRAPMC;
                             $grand_total->WRAH2H = (int)$grand_total->WRAH2H + (int)$sub_total->WRAH2H;
                             $grand_total->WRAProfiled = (int)$grand_total->WRAProfiled + (int)$sub_total->WRAProfiled;
-                            $grand_total->TotalWRA = (int)$grand_total->TotalWRA + (int)$sub_total->TotalWRA;
                             $grand_total->SoloMale = (int)$grand_total->SoloMale + (int)$sub_total->SoloMale;
                             $grand_total->SoloFemale = (int)$grand_total->SoloFemale + (int)$sub_total->SoloFemale;
                             $grand_total->CoupleAttendee = (int)$grand_total->CoupleAttendee + (int)$sub_total->CoupleAttendee;
-                            $grand_total->TotalReached = (int)$grand_total->TotalReached + (int)$sub_total->TotalReached
-;
+                            $grand_total->TotalReached = (int)$grand_total->TotalReached + (int)$sub_total->TotalReached;
                             $forma = $sub_total;
                             $sub_total = new FormAClass();
                             $sub_total->DateText = "Subtotal";
@@ -297,7 +294,6 @@ $forma_list = ReportFormA::getFromVariable($form_A);
                             $sub_total->ClassPMC = (int)$sub_total->ClassPMC + (int)$forma->ClassPMC;
                             $sub_total->ClassH2H = (int)$sub_total->ClassH2H + (int)$forma->ClassH2H;
                             $sub_total->ClassProfiled = (int)$sub_total->ClassProfiled + (int)$forma->ClassProfiled;
-                            $sub_total->TotalSessions = (int)$sub_total->TotalSessions + (int)$forma->TotalSessions;
                             $sub_total->TargetCouples = (int)$sub_total->TargetCouples + (int)$forma->TargetCouples;
                             $sub_total->WRA4Ps = (int)$sub_total->WRA4Ps + (int)$forma->WRA4Ps;
                             $sub_total->WRANon4Ps = (int)$sub_total->WRANon4Ps + (int)$forma->WRANon4Ps;
@@ -305,7 +301,6 @@ $forma_list = ReportFormA::getFromVariable($form_A);
                             $sub_total->WRAPMC = (int)$sub_total->WRAPMC + (int)$forma->WRAPMC;
                             $sub_total->WRAH2H = (int)$sub_total->WRAH2H + (int) $forma->WRAH2H;
                             $sub_total->WRAProfiled = (int)$sub_total->WRAProfiled +  (int)$forma->WRAProfiled;
-                            $sub_total->TotalWRA = (int)$sub_total->TotalWRA + (int)$forma->TotalWRA;
                             $sub_total->SoloMale = (int)$sub_total->SoloMale + (int)$forma->SoloMale;
                             $sub_total->SoloFemale = (int)$sub_total->SoloFemale + (int)$forma->SoloFemale;
                             $sub_total->CoupleAttendee = (int)$sub_total->CoupleAttendee + (int)$forma->CoupleAttendee;
