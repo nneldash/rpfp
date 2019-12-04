@@ -50,8 +50,9 @@ class Forms extends CI_Controller
         $form1 = $this->FormModel->getForm1($classId);
 
         $this->load->model('ProfileModel');
-        $isEncoder = $this->ProfileModel->isEncoder();
-        $isRegionalDataManager = $this->ProfileModel->isRegionalDataManager();
+        $profile = $this->ProfileModel->getOwnProfile();
+        $isEncoder = $profile->isEncoder();
+        $isRegionalDataManager = $profile->isRegionalDataManager();
 
         $this->load->view('includes/header', $header);
         $this->load->view('forms/form1', 
@@ -287,7 +288,7 @@ class Forms extends CI_Controller
         $formA = $this->FormAModel->getFormAReport($reportMonth,$reportYear);
 
         $this->load->view('includes/header', $header);
-        $this->load->view('forms/forma', array('form_A' => $formA, 'is_pdf' => false));
+        $this->load->view('forms/forma', array('form_A' => $formA, 'is_pdf' => false, RELOAD => true));
         $this->load->view('includes/footer');
     }
 

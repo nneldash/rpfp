@@ -558,17 +558,17 @@ BEGIN
 
     CALL rpfp.lib_extract_user_name( db_user, name_user, db_user_name );
 
-     SELECT prof.PROFILE_ID AS ID,
-            prof.DB_USER_ID AS USERNAME,
-            prof.E_MAIL AS EMAIL,
-            prof.LAST_NAME AS SURNAME,
-            prof.FIRST_NAME AS FIRSTNAME,
-            reg.REGION_CODE AS REGION_ID,
-            reg.LOCATION_DESCRIPTION AS REGION_NAME,
-            prof.PSGC_CODE AS LOCATION_CODE,
-            loc.LOCATION_DESCRIPTION AS LOCATION_NAME,
-            rpfp.profile_get_role( db_user_name ) AS MY_ROLE,
-            rpfp.profile_get_scope( db_user_name ) AS MY_SCOPE
+     SELECT prof.PROFILE_ID AS id,
+            prof.DB_USER_ID AS username,
+            prof.E_MAIL AS email,
+            prof.LAST_NAME AS surname,
+            prof.FIRST_NAME AS firstname,
+            reg.REGION_CODE AS region_id,
+            reg.LOCATION_DESCRIPTION AS region_name,
+            prof.PSGC_CODE AS location_code,
+            loc.LOCATION_DESCRIPTION AS location_name,
+            rpfp.profile_get_role( db_user_name ) AS my_role,
+            rpfp.profile_get_scope( db_user_name ) AS my_scope
        FROM rpfp.user_profile prof
   LEFT JOIN rpfp.lib_psgc_locations loc
          ON prof.PSGC_CODE = loc.PSGC_CODE
@@ -706,10 +706,7 @@ BEGIN
     RETURN ret_val;
 END$$
 
-CREATE DEFINER=root@localhost PROCEDURE profile_get_own_pic(
-    db_user VARCHAR(50) CHARSET utf8 COLLATE utf8_unicode_ci,
-    scope_num INT
-    )   READS SQL DATA
+CREATE DEFINER=root@localhost PROCEDURE profile_get_own_pic()   READS SQL DATA
 BEGIN
     CALL rpfp.profile_get_pic(USER());
 END$$
@@ -723,12 +720,11 @@ BEGIN
 
     CALL rpfp.lib_extract_user_name( db_user, name_user, db_user_name );
 
-     SELECT prof.PROFILE_PIC
+     SELECT prof.PROFILE_PIC pic_file
        FROM rpfp.user_profile prof
       WHERE prof.DB_USER_ID = name_user
     ;
 
-    -- return ret_val;
 END$$
 
 CREATE DEFINER=root@localhost PROCEDURE profile_save_own_pic_filename(
@@ -5520,6 +5516,9 @@ GRANT EXECUTE ON PROCEDURE rpfp.login_update_first_login TO 'rpfp_login';
  GRANT EXECUTE ON FUNCTION rpfp.profile_check_if_itdmu TO 'rpfp_login';
 GRANT EXECUTE ON PROCEDURE rpfp.profile_get_own_profile TO 'rpfp_login';
 GRANT EXECUTE ON PROCEDURE rpfp.profile_save_own_profile TO 'rpfp_login';
+GRANT EXECUTE ON PROCEDURE rpfp.profile_get_own_pic TO 'rpfp_login';
+GRANT EXECUTE ON PROCEDURE rpfp.profile_save_own_pic_filename TO 'rpfp_login';
+
 
 GRANT EXECUTE ON PROCEDURE rpfp.lib_list_regions TO 'rpfp_login';
 GRANT EXECUTE ON PROCEDURE rpfp.lib_list_provinces TO 'rpfp_login';
@@ -5533,6 +5532,8 @@ GRANT EXECUTE ON PROCEDURE rpfp.profile_get_profile TO 'itdmu';
 GRANT EXECUTE ON PROCEDURE rpfp.profile_set_role TO 'itdmu';
 GRANT EXECUTE ON PROCEDURE rpfp.profile_set_scope TO 'itdmu';
 GRANT EXECUTE ON PROCEDURE rpfp.profile_save_profile TO 'itdmu';
+GRANT EXECUTE ON PROCEDURE rpfp.profile_get_pic TO 'itdmu';
+GRANT EXECUTE ON PROCEDURE rpfp.profile_save_pic_filename TO 'itdmu';
 
 GRANT EXECUTE ON PROCEDURE rpfp.encoder_get_couple_fp_details TO 'encoder';
 GRANT EXECUTE ON PROCEDURE rpfp.encoder_get_class_list_pending TO 'encoder';

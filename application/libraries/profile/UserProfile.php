@@ -12,7 +12,7 @@ class UserProfile extends UserProfileInterface
         $this->DesignatedLocation = new SpecificLocation();
     }
 
-    public static function getProfileFromVariable($profile) : UserProfile
+    public static function getFromVariable($profile) : UserProfile
     {
         if ($profile instanceof UserProfile) {
             return $profile;
@@ -35,7 +35,7 @@ class UserProfile extends UserProfileInterface
         return $this->Role == roles::FOCAL_PERSON;
     }
 
-    public function isRDM()
+    public function isRegionalDataManager()
     {
         return $this->Role == roles::DATA_MANAGER;
     }

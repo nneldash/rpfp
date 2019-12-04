@@ -11,37 +11,16 @@ class Menu extends CI_Controller
             return;
         }
 
-        $this->load->model('ProfileModel');
-        $this->load->model('CoupleModel');
-        $this->load->library('couple_list/ApproveClass');
-        $this->load->library('couple_list/PendingClass');
-        $this->load->model('AccomplishmentModel');
-        $this->load->library('accomplishment/AccomplishmentClass');
-        $this->load->model('FormAModel');
-        $this->load->library('formA/FormAClass');
-        $this->load->model('FormBModel');
-        $this->load->library('formB/FormBClass');
-        $this->load->model('FormCModel');
-        $this->load->library('formC/FormCClass');
     }
 
     public function index()
     {
-        $isPMED = $this->ProfileModel->isPMED();
-        $isEncoder = $this->ProfileModel->isEncoder();
-        $isFocalPerson = $this->ProfileModel->isFocalPerson();
-        $isRegionalDataManager = $this->ProfileModel->isRegionalDataManager();
-        $isITDMU = $this->ProfileModel->isITDMU();
+        $this->load->model('ProfileModel');
+        $profile = $this->ProfileModel->getOwnProfile();
 
         $this->load->view(
             'includes/admin_header',
-            array(
-                'isEncoder' => $isEncoder,
-                'isPMED' => $isPMED,
-                'isFocalPerson' => $isFocalPerson,
-                'isRegionalDataManager' => $isRegionalDataManager,
-                'isITDMU' => $isITDMU
-            )
+            array('profile' => $profile)
         );
 
         if (empty($this->do_not_render_footer)) {
@@ -56,11 +35,9 @@ class Menu extends CI_Controller
 
     public function pending()
     {
-        if (!$this->LoginModel->isLoggedIn()) {
-            redirect('Welcome');
-            return;
-        }
+        $this->load->library('couple_list/PendingClass');
 
+        $this->load->model('CoupleModel');
         $pending = $this->CoupleModel->getPendingList();
         if ($this->input->server(REQUEST_METHOD) == POST) {
             $this->load->view('menu/pending', array('pending' => $pending, RELOAD => true));
@@ -75,6 +52,9 @@ class Menu extends CI_Controller
 
     public function approve()
     {
+        $this->load->library('couple_list/ApproveClass');
+
+        $this->load->model('CoupleModel');
         $approve = $this->CoupleModel->getApproveList();
         if ($this->input->server(REQUEST_METHOD) == POST) {
             $this->load->view('menu/approve', array('approve' => $approve, RELOAD => true));
@@ -94,6 +74,9 @@ class Menu extends CI_Controller
 
     public function accomplishment()
     {
+        $this->load->model('AccomplishmentModel');
+        $this->load->library('accomplishment/AccomplishmentClass');
+
         $accomplishment = $this->AccomplishmentModel->getAccomplishmentList();
         if ($this->input->server(REQUEST_METHOD) == POST) {
             $this->load->view('menu/accomplishment', array('accomplishment' => $accomplishment, RELOAD => true));
@@ -132,6 +115,8 @@ class Menu extends CI_Controller
             $mpdf->debug = true;
 
             $reportNo = $this->input->get('ReportNo');
+
+            $this->load->model('AccomplishmentModel');
             $accomplishment = $this->AccomplishmentModel->getAccomplishmentReport($reportNo);
 
             $html = $this->load->view('forms/accomplishment', array('is_pdf' => true, 'accomplishment' => $accomplishment), true);
@@ -159,6 +144,9 @@ class Menu extends CI_Controller
 
     public function formA()
     {
+        $this->load->library('formA/FormAClass');
+
+        $this->load->model('FormAModel');
         $forma = $this->FormAModel->getFormAList();
         if ($this->input->server(REQUEST_METHOD) == POST) {
             $this->load->view('menu/formAMenu', array('form_A' => $forma, RELOAD => true));
@@ -173,6 +161,9 @@ class Menu extends CI_Controller
 
     public function formB()
     {
+        $this->load->library('formB/FormBClass');
+
+        $this->load->model('FormBModel');
         $formb = $this->FormBModel->getFormBList();
         if ($this->input->server(REQUEST_METHOD) == POST) {
             $this->load->view('menu/formBMenu', array('form_B' => $formb, RELOAD => true));
@@ -187,6 +178,9 @@ class Menu extends CI_Controller
 
     public function formC()
     {
+        $this->load->library('formC/FormCClass');
+
+        $this->load->model('FormCModel');
         $formc = $this->FormCModel->getFormCList();
         if ($this->input->server(REQUEST_METHOD) == POST) {
             $this->load->view('menu/formCMenu', array('form_C' => $formc, RELOAD => true));
@@ -203,6 +197,7 @@ class Menu extends CI_Controller
     {
         $classId = $this->input->post('classId');
         
+        $this->load->model('CoupleModel');
         $formList = $this->CoupleModel->getFormList($classId);
         $this->load->view('menu/listTables/pendingTable', array('forms' => $formList));
     }
@@ -211,6 +206,7 @@ class Menu extends CI_Controller
     {
         $classId = $this->input->post('classId');
         
+        $this->load->model('CoupleModel');
         $formList = $this->CoupleModel->getFormList($classId);
         $this->load->view('menu/listTables/approveTable', array('forms' => $formList));
     }

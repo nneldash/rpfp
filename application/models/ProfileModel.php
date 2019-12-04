@@ -12,6 +12,7 @@ class ProfileModel extends BaseModel
         $this->CI =& get_instance();
         $this->CI->load->library('login/DbInstance');
         $this->CI->load->library('profile/UserProfile');
+        $this->CI->load->library('common/StringHolder');
     }
 
     public function saveProfile(UserProfile $profile)
@@ -46,11 +47,9 @@ class ProfileModel extends BaseModel
         );
     }
 
-    public function getProfile(string $user_id, bool $is_own = false) : UserProfile
+    public function getProfile(string $user_id, bool $is_own = false) : UserProfileInterface
     {
-        $a = new UserProfile();
-
-        return $this->fromDbGetSpecific(
+        $prof = $this->fromDbGetSpecific(
             'UserProfile',
             array(
                 'Profile_id' => 'id',
@@ -75,6 +74,8 @@ class ProfileModel extends BaseModel
             $is_own ? array() : array($user_id),
             'profile'
         );
+        return UserProfile::getFromVariable($prof);
+        
     }
 
     public function getOwnProfile() : UserProfile
@@ -86,58 +87,26 @@ class ProfileModel extends BaseModel
         return $prof;
     }
 
-    public function isEncoder()
+    private function getPicProfile(string $user_id, bool $is_own) : string
     {
-        if (!$this->LoginModel->isLoggedIn()) {
-            return false;
-        }
-        return $this->getFunctionResult('profile_check_if_encoder');
-    }
-
-    public function isFocalPerson()
-    {
-        if (!$this->LoginModel->isLoggedIn()) {
-            return false;
-        }
-        return $this->getFunctionResult('profile_check_if_focal');
-    }
-
-    public function isRegionalDataManager()
-    {
-        if (!$this->LoginModel->isLoggedIn()) {
-            return false;
-        }
-        return $this->getFunctionResult('profile_check_if_data_manager');
-    }
-
-    public function isPMED()
-    {
-        if (!$this->LoginModel->isLoggedIn()) {
-            return false;
-        }
-        return $this->getFunctionResult('profile_check_if_pmed');
-    }
-
-    public function isITDMU()
-    {
-        if (!$this->LoginModel->isLoggedIn()) {
-            return false;
-        }
-        return $this->getFunctionResult('profile_check_if_itdmu');
-    }
-
-    private function getPicProfile(string $user_id, bool $is_own) {
         $temp = $this->fromDbGetSpecific(
-            'UserProfile',
+            'StringHolder',
             array(
-                'ProfilePic' => 'pic_file',
+                'value' => 'pic_file',
             ),
             $is_own ? 'profile_get_own_pic' : 'profile_get_pic',
             $is_own ? array() : array($user_id),
-            'profile'
+            'common'
         );
 
-        $profile = UserProfile::getProfileFromVariable($temp);
+        $da_string = StringHolder::getFromVariable($temp);
+        if (empty($da_string->value)) {
+            $da_string->value = BLANK;
+        }
+
+        return $da_string->value;
+        /** should be in controller */
+        /*
         if (($profile->PicProfile == N_A) || ($profile->PicProfile == BLANK)) {
             $this->load->view(
                 'errors/html/error_404',
@@ -163,7 +132,7 @@ class ProfileModel extends BaseModel
             return;
         }
 
-        /** read the file and return its contents as picture */
+        // read the file and return its contents as picture
         $local_file = IMAGES_FOLDER . DIRECTORY_SEPARATOR . $filename->Filename.'.'.$filename->Extension;
         if (!file_exists($local_file) && !is_file($local_file)) {
             $this->load->view(
@@ -180,6 +149,7 @@ class ProfileModel extends BaseModel
         header('Content-Length: ' . filesize($local_file));
         header('Content-Disposition: filename=profile_' . $profile->Profile_id);
         readfile($local_file);
+        */
     }
 
     public function savePicProfileToDb($image_name, int $user_id, bool $is_own)
