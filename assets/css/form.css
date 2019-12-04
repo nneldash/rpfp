@@ -499,3 +499,14 @@ a:hover {
   margin-left: -12px;
   margin-right: 8px;
 }
+
+textarea {
+	resize: none;
+	text-transform: uppercase;
+}
+textarea::placeholder {
+	font-style: italic;
+}
+.max-width10 {
+	max-width: 10%;
+}

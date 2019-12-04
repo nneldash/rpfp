@@ -120,10 +120,10 @@ class Forms extends CI_Controller
             $couple = new CoupleClass();
 
             $couple->Id = $this->input->post('couple_id')[$i];
-            $couple->Address_St = $this->input->post('address')[$i];
-            $couple->Address_Brgy = $this->input->post('address')[$i];
-            $couple->Address_City = $this->input->post('address')[$i];
-            $couple->Address_HH_No = $this->input->post('address')[$i];
+            $couple->Address_St = $this->input->post('house_no_st')[$i];
+            $couple->Address_Brgy = $this->input->post('brgy')[$i];
+            $couple->Address_City = $this->input->post('city')[$i];
+            $couple->Address_HH_No = $this->input->post('household_id')[$i];
             $couple->NumberOfChildren = $this->input->post('no_of_children')[$i];
 
             $couple->FirstEntry = $this->getFirstEntry($i);

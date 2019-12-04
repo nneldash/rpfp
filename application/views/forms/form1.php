@@ -291,7 +291,7 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 									<?php endif; ?>
 								<?php endif; ?>
 								<th rowspan="2" style="border-left: none; width: 2%;"></th>
-								<th rowspan="2" class="text-center padding-0" style="width: 18%">
+								<th rowspan="2" class="text-center padding-0" style="width: 30%">
 									<p class="small">
 										<b>
 											Name of Participants/Couple (Husband & <br>
@@ -315,10 +315,11 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 										<b>Traditional FP User</b>
 									</p>
 								</th>
-								<th rowspan="2" class="text-center" style="border-right: none">
+								<th rowspan="2" class="text-center" style="border-right: none; width: 4%; padding: 2px;">
 									<p class="small">
-										<b>PARTICIPANT'S SIGNATURE <br>(13)</b>
+										<b>Participant's <br>Signature</b>
 									</p>
+									<p class="small"><b>(13)</b></p>
 								</th>
 								<?php if(!$is_pdf): ?>
 									<?php if($isEncoder): ?>
@@ -331,27 +332,27 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 								<?php endif; ?>
 							</tr>
 							<tr>
-								<th class="text-center" style="width: 5%">
+								<th class="text-center" style="width: 2%">
 									<p class="small">
 										<b>Sex <br> (M/F) <br> (2)</b>
 									</p>
 								</th>
-								<th class="text-center" style="width: 5%">
+								<th class="text-center" style="width: 2%">
 									<p class="small">
 										<b>Civil <br>Status <br> (3)</b>
 									</p>
 								</th>
-								<th class="text-center">
+								<th class="text-center" style="width: 15%">
 									<p class="small">
 										<b>Birthdate / Age <br>(4)</b>
 									</p>
 								</th>
-								<th class="text-center" style="width: 13%">
+								<th class="text-center" style="width: 28%">
 									<p class="small">
 										<b>Address / Household ID Number<br>(5)</b>
 									</p>
 								</th>
-								<th class="text-center">
+								<th class="text-center" style="width: 2%">
 									<p class="small">
 										<b>
 											Highest <br> 
@@ -361,7 +362,7 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 										</b>
 									</p>
 								</th>
-								<th class="text-center" style="width: 5%">
+								<th class="text-center" style="width: 2%">
 									<p class="small">
 										<b>
 											No. of <br> 
@@ -370,7 +371,7 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 										</b>
 									</p>
 								</th>
-								<th class="text-center" style="width: 5%">
+								<th class="text-center" style="width: 2%">
 									<p class="small">
 										<b>
 											Method <br> 
@@ -389,17 +390,17 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 										</b>
 									</p>
 								</th>
-								<th class="text-center" style="width: 5%">
+								<th class="text-center" style="width: 2%">
 									<p class="small">
 										<b>Type <br> (10)</b>
 									</p>
 								</th>
-								<th class="text-center" style="width: 5%">
+								<th class="text-center" style="width: 2%">
 									<p class="small">
 										<b>Status <br> (11)</b>
 									</p>
 								</th>
-								<th class="text-center">
+								<th class="text-center" style="width: 2%">
 									<p class="small">
 										<b>
 											Reason for<br> 
@@ -471,40 +472,40 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 					                        	echo HtmlHelper::inputName(
 					                            	$is_pdf,
 					                            	HtmlHelper::firstEntry_FirstName($couple->FirstEntry->Name, $couple->SecondEntry->Name),
-					                                "text",
+					                                "textarea",
 					                                "firstname1[".$i."]",
 					                                "padding-l3 namePart1",
-					                                "First"
+					                                "FIRST"
 					                            );
-					                        ?>,
+					                        ?> ,
 					                        <?php
 					                        	echo HtmlHelper::inputName(
 					                            	$is_pdf,
 					                            	HtmlHelper::firstEntry_MiddleName($couple->FirstEntry->Name, $couple->SecondEntry->Name),
-					                                "text",
+					                                "textarea",
 					                                "middlename1[".$i."]",
 					                                "padding-l3 namePart1",
-					                                "Middle"
+					                                "MIDDLE"
 					                            );
-					                        ?>,
+					                        ?> ,
 					                        <?php
 					                        	echo HtmlHelper::inputName(
 					                            	$is_pdf,
 					                            	HtmlHelper::firstEntry_LastName($couple->FirstEntry->Name, $couple->SecondEntry->Name),
-					                                "text",
+					                                "textarea",
 					                                "lastname1[".$i."]",
 					                                "padding-l3 namePart1",
-					                                "Last"
+					                                "LAST"
 					                            );
-					                        ?>,
+					                        ?> ,
 					                        <?php
 					                        	echo HtmlHelper::inputName(
 					                            	$is_pdf,
 					                            	HtmlHelper::firstEntry_ExtName($couple->FirstEntry->Name, $couple->SecondEntry->Name),
 					                                "text",
 					                                "extname1[".$i."]",
-					                                "padding-l3 namePart1 width-35",
-					                                "Ext"
+					                                "padding-l3 text-center max-width10 namePart1 width-35",
+					                                "EXT"
 					                            );
 					                        ?>
 					                    </div>
@@ -548,15 +549,45 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 					                        <input type="text" name="age1[<?=$i?>]" maxlength="2" class="text-center getAge1" readonly value="<?= HtmlHelper::firstEntry_BirthAge($couple->FirstEntry->Age, $couple->SecondEntry->Age) ?>" />
 										</div>								
 									</td>
-									<td class="small text-center" rowspan="2">
-										<?php
-				                            echo HtmlHelper::inputPdf(
+									<td class="small text-center" rowspan="2">										
+				                        <?php
+				                        	echo HtmlHelper::inputName(
 				                            	$is_pdf,
 				                            	($couple->Address_St != 'N/A' ? $couple->Address_St : ''),
 				                                "text",
-				                                "address[".$i."]",
-				                                "height-50 padding-l10",
-				                                ""
+				                                "house_no[".$i."]",
+				                                "padding-l10",
+				                                "House No. & Street"
+				                            );
+				                        ?>
+				                        <?php
+				                        	echo HtmlHelper::inputName(
+				                            	$is_pdf,
+				                            	($couple->Address_Brgy != 'N/A' ? $couple->Address_Brgy : ''),
+				                                "text",
+				                                "brgy[".$i."]",
+				                                "padding-l10",
+				                                "Brgy"
+				                            );
+				                        ?>
+				                        <?php
+				                        	echo HtmlHelper::inputName(
+				                            	$is_pdf,
+				                            	($couple->Address_City != 'N/A' ? $couple->Address_City : ''),
+				                                "text",
+				                                "city[".$i."]",
+				                                "padding-l10",
+				                                "City / Municipality"
+				                            );
+				                        ?>
+				                        <?php
+				                        	echo HtmlHelper::inputName(
+				                            	$is_pdf,
+				                            	($couple->Address_HH_No != 'N/A' ? $couple->Address_HH_No : ''),
+				                                "text",
+				                                "household_id[".$i."]",
+				                                "padding-l10",
+				                                "Household ID No."
 				                            );
 				                        ?>
 									</td>
@@ -682,30 +713,30 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 					                        	echo HtmlHelper::inputName(
 					                            	$is_pdf,
 					                            	HtmlHelper::secondEntry_FirstName($couple->FirstEntry->Name, $couple->SecondEntry->Name),
-					                                "text",
+					                                "textarea",
 					                                "firstname2[".$i."]",
 					                                "padding-l3 namePart2",
-					                                "First"
+					                                "FIRST"
 					                            );
 					                        ?>,
 					                        <?php
 					                        	echo HtmlHelper::inputName(
 					                            	$is_pdf,
 					                            	HtmlHelper::secondEntry_MiddleName($couple->FirstEntry->Name, $couple->SecondEntry->Name),
-					                                "text",
+					                                "textarea",
 					                                "middlename2[".$i."]",
 					                                "padding-l3 namePart2",
-					                                "Middle"
+					                                "MIDDLE"
 					                            );
 					                        ?>,
 					                        <?php
 					                        	echo HtmlHelper::inputName(
 					                            	$is_pdf,
 					                            	HtmlHelper::secondEntry_LastName($couple->FirstEntry->Name, $couple->SecondEntry->Name),
-					                                "text",
+					                                "textarea",
 					                                "lastname2[".$i."]",
 					                                "padding-l3 namePart2",
-					                                "Last"
+					                                "LAST"
 					                            );
 					                        ?>,
 					                        <?php
@@ -714,8 +745,8 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 					                            	HtmlHelper::secondEntry_ExtName($couple->FirstEntry->Name, $couple->SecondEntry->Name),
 					                                "text",
 					                                "extname2[".$i."]",
-					                                "padding-l3 namePart2 width-35",
-					                                "Ext"
+					                                "padding-l3 text-center max-width10 namePart1 width-35",
+					                                "EXT"
 					                            );
 					                        ?>
 					                    </div>
