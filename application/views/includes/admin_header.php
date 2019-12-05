@@ -2,6 +2,25 @@
 <html lang="en">
 <?php
 
+CONST MY_PROFILE = 'profile';
+CONST MY_PENDING = 'pending';
+CONST MY_APPROVE = 'approve';
+CONST MY_ACCOMPLISHMENT = 'accomplishment';
+
+$links = array(
+    MY_PROFILE => '#/Menu/profile',
+    MY_PENDING => '#/Menu/pending',
+    MY_APPROVE => '#/Menu/approve',
+    MY_ACCOMPLISHMENT => '#/Menu/accomplishment'
+);
+
+$profile = UserProfile::getFromVariable(empty($profile) ? BLANK : $profile);
+
+$default_tab = $links[MY_PENDING];
+if ($profile->isRegionalDataManager()) {
+    $default_tab = $links[MY_APPROVE];
+}
+
 if (empty($title)) {
     $title = 'Online RPFP Monitoring System';
 }
@@ -29,6 +48,7 @@ if (empty($title)) {
 
         <script>
             loadJs(base_url + 'NewAssets/templateJs', function() {
+                window.default_tab = '<?= $default_tab ?>';
                 loadJs(base_url + 'assets/js/menu.js', function() {
                     loadJs(base_url + 'NewAssets/nProgressJs', function() {
                         loadJs(base_url + 'NewAssets/bootstrapJs', function() {
@@ -62,18 +82,18 @@ if (empty($title)) {
                             <div class="menu_section">
                                 <ul class="nav side-menu">
                                     <li>
-                                        <a href="#/Menu/profile">
+                                        <a href="<?= $links[MY_PROFILE] ?>">
                                             <i class="fa fa-user"></i> Profile
                                         </a>
                                     </li>
-                                    <?php if ($isRegionalDataManager) : ?>
+                                    <?php if ($profile->isRegionalDataManager()) : ?>
                                         <li>
-                                        <a href="#/Menu/pending">
+                                        <a href="<?= $links[MY_PENDING] ?>">
                                                 <i class="fa fa-clock-o"></i> Pending
                                             </a>
                                         </li>
                                         <li>
-                                            <a href="#/Menu/approve">
+                                            <a href="<?= $links[MY_APPROVE] ?>">
                                                 <i class="fa fa-thumbs-o-up"></i> Approved
                                             </a>
                                         </li>
@@ -93,7 +113,7 @@ if (empty($title)) {
                                             </a>
                                         </li>
                                     <?php endif; ?>
-                                    <?php if ($isPMED) : ?>
+                                    <?php if ($profile->isPMED()) : ?>
                                         <li>
                                             <a href="<?= base_url('menu/formA')?>">
                                                 <i class="fa fa-clipboard"></i> Form A
@@ -110,24 +130,24 @@ if (empty($title)) {
                                             </a>
                                         </li>
                                     <?php endif; ?>
-                                    <?php if ($isEncoder) :?>
+                                    <?php if ($profile->isEncoder()) :?>
                                         <li>
                                             <a href="<?= base_url('forms')?>">
                                                 <i class="fa fa-venus-mars"></i> Add Couple
                                             </a>
                                         </li>
                                         <li>
-                                            <a href="#/Menu/pending">
+                                        <a href="<?= $links[MY_PENDING] ?>">
                                                 <i class="fa fa-clock-o"></i> Pending
                                             </a>
                                         </li>
                                         <li>
-                                            <a href="#/Menu/approve">
+                                        <a href="<?= $links[MY_APPROVE] ?>">
                                                 <i class="fa fa-thumbs-o-up"></i> Approved
                                             </a>
                                         </li>
                                         <li>
-                                        <a href="#/Menu/accomplishment">
+                                        <a href="<?= $links[MY_ACCOMPLISHMENT] ?>">
                                                 <i class="fa fa-clipboard"></i> Accomplishment Report
                                             </a>
                                         </li>

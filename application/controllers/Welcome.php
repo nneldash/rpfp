@@ -24,17 +24,18 @@ class Welcome extends CI_Controller
         }
 
         $this->load->Model('ProfileModel');
-        if ($this->ProfileModel->isEncoder()) {
+        $profile = $this->ProfileModel->getOwnProfile();
+        if ($profile->isEncoder()) {
             redirect(site_url('Forms'));
             return;
         }
 
-        if ($this->ProfileModel->isPMED()) {
+        if ($profile->isPMED()) {
             redirect(site_url('Menu/formA'));
             return;
         }
 
-        if ($this->ProfileModel->isRegionalDataManager()) {
+        if ($profile->isRegionalDataManager()) {
             redirect(site_url('Menu'));
             return;
         }

@@ -38,24 +38,31 @@ class HtmlHelper
 
     public static function inputName($is_pdf, $field, $type, $name, $class, $placeholder, $returnIfEmpty = "")
     {
-        if (!$is_pdf) {
-            $data = array(
+        if (!$is_pdf) {            
+            if($type == 'text') {  
+                $data = array(
+                    "name" => $name,
+                    "value" => (
+                        ($type == "date") ? $date : $field
+                    ),
+                    "class" => $class,
+                    "type" => $type,
+                    "placeholder" => $placeholder
+                );              
+                return form_input($data);
+            } else {
+                $data = array(
                 "name" => $name,
                 "value" => (
                     ($type == "date") ? $date : $field
                 ),
                 "class" => $class,
                 "type" => $type,
-                "placeholder" => $placeholder
+                "placeholder" => $placeholder,
+                "cols" => 15,
+                "rows" => 2
             );
-            return form_input($data);
-        } else {
-            if (empty($field) && !empty($returnIfEmpty)) {
-                return returnIfEmpty;
-            } else {
-                return (
-                    ($type == "date") ? $field : $field
-                );
+                return form_textarea($data);
             }
         }
     }

@@ -1,5 +1,5 @@
 <?php
-    $profile = UserProfile::getProfileFromVariable($profile);
+    $profile = UserProfile::getFromVariable($profile);
 ?>
 <section class="content">
     <div class="container-fluid">

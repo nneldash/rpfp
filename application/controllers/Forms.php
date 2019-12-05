@@ -50,8 +50,9 @@ class Forms extends CI_Controller
         $form1 = $this->FormModel->getForm1($classId);
 
         $this->load->model('ProfileModel');
-        $isEncoder = $this->ProfileModel->isEncoder();
-        $isRegionalDataManager = $this->ProfileModel->isRegionalDataManager();
+        $profile = $this->ProfileModel->getOwnProfile();
+        $isEncoder = $profile->isEncoder();
+        $isRegionalDataManager = $profile->isRegionalDataManager();
 
         $this->load->view('includes/header', $header);
         $this->load->view('forms/form1', 
@@ -119,10 +120,10 @@ class Forms extends CI_Controller
             $couple = new CoupleClass();
 
             $couple->Id = $this->input->post('couple_id')[$i];
-            $couple->Address_St = $this->input->post('address')[$i];
-            $couple->Address_Brgy = $this->input->post('address')[$i];
-            $couple->Address_City = $this->input->post('address')[$i];
-            $couple->Address_HH_No = $this->input->post('address')[$i];
+            $couple->Address_St = $this->input->post('house_no_st')[$i];
+            $couple->Address_Brgy = $this->input->post('brgy')[$i];
+            $couple->Address_City = $this->input->post('city')[$i];
+            $couple->Address_HH_No = $this->input->post('household_id')[$i];
             $couple->NumberOfChildren = $this->input->post('no_of_children')[$i];
 
             $couple->FirstEntry = $this->getFirstEntry($i);
@@ -287,7 +288,7 @@ class Forms extends CI_Controller
         $formA = $this->FormAModel->getFormAReport($reportMonth,$reportYear);
 
         $this->load->view('includes/header', $header);
-        $this->load->view('forms/forma', array('form_A' => $formA, 'is_pdf' => false));
+        $this->load->view('forms/forma', array('form_A' => $formA, 'is_pdf' => false, RELOAD => true));
         $this->load->view('includes/footer');
     }
 
