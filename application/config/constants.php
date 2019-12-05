@@ -155,3 +155,10 @@ defined('XLSX_JS') or define('XLSX_JS', '/../node_modules/xlsx/dist/xlsx.js');
 defined('INPUTMASK_JS') or define('INPUTMASK_JS', '/../node_modules/inputmask/dist/inputmask/inputmask.js');
 defined('JQUERYINPUT_JS') or define('JQUERYINPUT_JS', '/../node_modules/inputmask/dist/inputmask/jquery.inputmask.js');
 defined('INPUTEXT_JS') or define('INPUTEXT_JS', '/../node_modules/inputmask/dist/inputmask/inputmask.extensions.js');
+
+defined('LOC_REGION') or define('LOC_REGION', 'REGION');
+defined('LOC_PROVINCE') or define('LOC_PROVINCE', 'PROVINCE');
+defined('LOC_MUNICIPALITY') or define('LOC_MUNICIPALITY', 'MUNICIPALITY');
+defined('LOC_BARANGAY') or define('LOC_BARANGAY', 'BARANGAY');
+defined('LOC_LIST') or define('LOC_LIST', 'LOCATION_LIST');
+defined('TIME_STAMP') or define('TIME_STAMP', 'DATETIME');

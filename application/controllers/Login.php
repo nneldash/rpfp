@@ -57,7 +57,7 @@ class Login extends CI_Controller
     public function loginUser()
     {
         $header['title'] = 'RPFP - Login';
-        if ($this->input->server('REQUEST_METHOD') != 'POST') {
+        if ($this->input->server(REQUEST_METHOD) != POST) {
             $this->loadLoginPage($header);
             return;
         }

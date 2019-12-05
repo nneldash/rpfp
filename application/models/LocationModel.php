@@ -7,7 +7,7 @@ class LocationModel extends BaseModel
     public function __construct()
     {
         parent::__construct();
-        $this->CI->load->iface('common/ListSpecificLocation');
+        $this->CI->load->library('common/lists/ListSpecificLocation');
     }
     
     public function listRegions() : ListLocationInterface
@@ -20,8 +20,10 @@ class LocationModel extends BaseModel
                     'Code' => 'region_id',
                     'Description' => 'location_name',
                 )
-            ),
-            'lib_list_regions'
+                ),
+            'lib_list_regions',
+            array(),
+            'common'
         );
 
         $retval = new ListSpecificLocation();

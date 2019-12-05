@@ -8,5 +8,6 @@ abstract class UserCredentialsInterface extends BaseInterface
     public $UserName;
     public $Password;
     
-    abstract public function validate();
+    abstract public function validate() : bool;
+    abstract public static function getFromVariable($variable) : UserCredentialsInterface;
 }

@@ -30,8 +30,8 @@ class BaseModel extends CI_Model
         $classDbArray,
         $proc,
         $params = array(),
-        DbInstance &$db = null,
-        $libFolder = null
+        $libFolder = null,
+        DbInstance &$db = null
     ) : ArrayObject
     {
         $list = new ArrayObject();
@@ -69,7 +69,7 @@ class BaseModel extends CI_Model
         $libFolder = null,
         DbInstance &$db = null
     ) {
-        $rows = $this->fromDbGetList(null, $itemClass, $classDbArray, $proc, $params, $db, $libFolder);
+        $rows = $this->fromDbGetList(null, $itemClass, $classDbArray, $proc, $params, $libFolder, $db);
 
         if (count($rows) > 0) {
             return $rows[0];

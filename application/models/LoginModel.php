@@ -219,4 +219,10 @@ class LoginModel extends CI_Model
     {
         $this->CI->session->get_userdata(USERNAME);
     }
+
+    public function getUserName() : string
+    {
+        $cred = $this->getCredentials();
+        return $cred->UserName;
+    }
 }

@@ -19,12 +19,20 @@ class BasicUserCredentials extends UserCredentialsInterface
     }
 
     
-    public function validate()
+    public function validate() : bool
     {
         if (!$this->UserName || !$this->Password || trim($this->UserName) == '' || trim($this->Password) == '') {
             return false;
         }
 
         return true;
+    }
+
+    public static function getFromVariable($variable) : UserCredentialsInterface
+    {
+        if ($variable instanceof UserCredentialsInterface) {
+            return $variable;
+        }
+        return new BasicUserCredentials();
     }
 }

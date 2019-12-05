@@ -19,12 +19,12 @@ class Welcome extends CI_Controller
         if (!$this->LoginModel->isLoggedIn()) {
             $this->load->view("includes/header", $header);
             $this->load->view('index/landingPage');
-
             return;
         }
 
         $this->load->Model('ProfileModel');
         $profile = $this->ProfileModel->getOwnProfile();
+        $profile = UserProfile::getFromVariable($profile);
         if ($profile->isEncoder()) {
             redirect(site_url('Forms'));
             return;
