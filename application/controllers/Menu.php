@@ -231,4 +231,14 @@ class Menu extends CI_Controller
         $profile = $this->ProfileModel->getOwnProfile();
         $this->load->view('profile/profile.php', array('profile' => $profile));
     }
+
+    public function barGraph()
+    {
+        $percentage_year = $this->input->post('percentage_year');
+
+        $data = $this->CoupleModel->getPercentageYear($percentage_year);
+
+        echo '<pre>';
+        print_r($data);
+    }
 }
