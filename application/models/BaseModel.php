@@ -30,13 +30,18 @@ class BaseModel extends CI_Model
         $classDbArray,
         $proc,
         $params = array(),
-        $libFolder = null,
+        $libFolder = '',
+        $field_index = array(),
         DbInstance &$db = null
     ) : ArrayObject
     {
         $list = new ArrayObject();
         if (!empty($listClass)) {
             $list = new $listClass();
+        }
+        
+        if (empty($field_index)) {
+            $field_index = array();
         }
 
         $rows = $this->runStoredProcAndGetResults($proc, $params, $db);
@@ -54,7 +59,16 @@ class BaseModel extends CI_Model
                 $item = new $itemClass();
 
                 $this->fillItem($item, $classDbArray, $data);
-                $list->append($item);
+                $level = count($field_index);
+                if ( $level > 0 ) {
+                    $index = $item;
+                    for ($i=0; $i < $level; $i++) {
+                        $index = $index->{$field_index[$i]};
+                    }
+                    $list->offsetSet($index, $item);
+                } else {
+                    $list->append($item);
+                }
             }
         }
 

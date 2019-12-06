@@ -23,15 +23,11 @@ class LocationModel extends BaseModel
                 ),
             'lib_list_regions',
             array(),
-            'common'
+            'common',
+            array('Region', 'Code')
         );
 
-        $retval = new ListSpecificLocation();
-        foreach ($list as $region) {
-            $retval->append($region);
-        }
-
-        return $retval;
+        return ListSpecificLocation::getFromVariable($list);
     }
 
     public function listProvinces(int $region_code) : ListLocationInterface
@@ -50,12 +46,15 @@ class LocationModel extends BaseModel
                 )
             ),
             'lib_list_provinces',
-            array($region_code)
+            array($region_code),
+            'common',
+            array('Province', 'Code')
         );
 
         $retval = new ListSpecificLocation();
-        foreach ($list as $province) {
-            $retval->append($province);
+        foreach ($list as $location) {
+            $location = SpecificLocation::getFromVariable($location);
+            $retval->offsetSet($location->Province->Code, $location);
         }
 
         return $retval;

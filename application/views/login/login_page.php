@@ -66,9 +66,15 @@
             </div>
         </div>       
     </body>
-    <script type="text/javascript" src="<?= base_url('NewAssets/bootstrapJs')?>"></script>
-    <script type="text/javascript" src="<?= base_url('NewAssets/sweetalertJs')?>"></script>
-
-    <script type="text/javascript" src="<?= base_url('NewAssets/popper')?>"></script>
-    <script type="text/javascript" src="<?= base_url('assets/js/login.js')?>"></script>
+    <script>
+        loadJs(base_url + 'NewAssets/templateJs', function() {
+            loadJs(base_url + 'NewAssets/popper', function() {
+                loadJs(base_url + 'NewAssets/bootstrapJs', function() {
+                    loadJs(base_url + 'NewAssets/sweetalertJs', function() {
+                        loadJs(base_url + 'assets/js/login.js');
+                    });
+                });
+            });
+        });
+    </script>
 </html>

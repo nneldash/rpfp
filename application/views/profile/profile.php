@@ -16,7 +16,7 @@
                             <div class="form-group form-float col-sm-offset-1">
                                 <label class="col-sm-2 control-label">Name: </label>
                                 <div class="col-sm-8">
-                                    <input type="text" class="form-control" name="employee_name" value="<?= $profile->Firstname == N_A ? 'NOT LOGGED IN' : ucwords(strtolower($profile->Firstname)) ?>" readonly />
+                                    <input type="text" class="form-control" name="employee_name" value="<?= $profile->Firstname == N_A ? 'NOT LOGGED IN' : ucwords(strtolower($profile->Firstname)) ?>"/>
                                 </div>
                             </div>
                             <div class="form-group form-float col-sm-offset-1">

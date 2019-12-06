@@ -12,12 +12,12 @@ class UserProfile extends UserProfileInterface
         $this->DesignatedLocation = new SpecificLocation();
     }
 
-    public static function getFromVariable($profile) : UserProfile
+    public static function getFromVariable($variable) : UserProfile
     {
-        if ($profile instanceof UserProfile) {
-            return $profile;
+        if ($variable instanceof UserProfile) {
+            return $variable;
         }
-        return new UserProfile($profile);
+        return new UserProfile($variable);
     }
 
     public function isEncoder()

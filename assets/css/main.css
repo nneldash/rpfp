@@ -524,7 +524,6 @@ iframe {
 /*------------------------------------------------------------------
 [ Custom CSS ]*/
 .bg-img {
-    background-image: url(../images/family.png); 
     background-repeat: no-repeat; 
     background-position: bottom; 
     background-size: cover;

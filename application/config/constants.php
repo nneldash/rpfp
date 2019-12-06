@@ -88,8 +88,8 @@ defined('EXIT_DATABASE') or define('EXIT_DATABASE', 8); // database error
 defined('EXIT__AUTO_MIN') or define('EXIT__AUTO_MIN', 9); // lowest automatically-assigned error code
 defined('EXIT__AUTO_MAX') or define('EXIT__AUTO_MAX', 125); // highest automatically-assigned error code
 
-defined('THEUSERPASSWORD') or define('THEUSERPASSWORD', 'theuserpassword');
-defined('THEUSERNAME') or define('THEUSERNAME', 'theusername');
+defined('THEUSERPASSWORD') or define('THEUSERPASSWORD', 'USERPASSWORD');
+defined('THEUSERNAME') or define('THEUSERNAME', 'USER');
 defined('USERNAME') or define('USERNAME', 'username');
 defined('USERPASSWORD') or define('USERPASSWORD', 'password');
 defined('POST_USERNAME') or define('POST_USERNAME', 'username');
@@ -161,4 +161,6 @@ defined('LOC_PROVINCE') or define('LOC_PROVINCE', 'PROVINCE');
 defined('LOC_MUNICIPALITY') or define('LOC_MUNICIPALITY', 'MUNICIPALITY');
 defined('LOC_BARANGAY') or define('LOC_BARANGAY', 'BARANGAY');
 defined('LOC_LIST') or define('LOC_LIST', 'LOCATION_LIST');
+defined('LOC_SPECIFIC') or define('LOC_SPECIFIC', 'LOCATION_DESCRIPTION');
+defined('LOC_ERRORS') or define('LOC_ERRORS', 'ERRORS');
 defined('TIME_STAMP') or define('TIME_STAMP', 'DATETIME');

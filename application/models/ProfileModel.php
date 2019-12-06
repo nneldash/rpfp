@@ -105,60 +105,13 @@ class ProfileModel extends BaseModel
         }
 
         return $da_string->value;
-        /** should be in controller */
-        /*
-        if (($profile->PicProfile == N_A) || ($profile->PicProfile == BLANK)) {
-            $this->load->view(
-                'errors/html/error_404',
-                array(
-                    'heading' => 'Not Found',
-                    'message' => 'The selected resource is not found on the server',
-                )
-            );
-            return;
-        }
-
-        $this->load->library('helpers/FilenameHelper');
-        $filename = new FilenameHelper($profile->PicProfile);
-
-        if (!$filename->isValidFile()) {
-            $this->load->view(
-                'errors/html/error_general',
-                array(
-                    'heading' => '400 Bad Request',
-                    'message' => 'Invalid Filename',
-                )
-            );
-            return;
-        }
-
-        // read the file and return its contents as picture
-        $local_file = IMAGES_FOLDER . DIRECTORY_SEPARATOR . $filename->Filename.'.'.$filename->Extension;
-        if (!file_exists($local_file) && !is_file($local_file)) {
-            $this->load->view(
-                'errors/html/error_404',
-                array(
-                    'heading' => 'Not Found',
-                    'message' => 'The resource is not found on the server',
-                )
-            );
-            return;
-        }
-
-        header('Content-Type: image');
-        header('Content-Length: ' . filesize($local_file));
-        header('Content-Disposition: filename=profile_' . $profile->Profile_id);
-        readfile($local_file);
-        */
     }
 
-    public function savePicProfileToDb($image_name, int $user_id, bool $is_own)
+    public function savePicProfileToDb($image_name, string $user_id, bool $is_own = false)
     {
         return $this->saveToDb(
             $is_own ? 'profile_save_own_pic' : 'profile_save_pic',
-            array(
-                $image_name == N_A ? BLANK : $image_name
-            )
+            $is_own ? array($image_name) : array($user_id, $image_name),
         );
     }
 }
