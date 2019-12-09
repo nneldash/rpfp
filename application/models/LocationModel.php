@@ -109,7 +109,7 @@ class LocationModel extends BaseModel
                     'Code' => 'municipality_id',
                     'Description' => 'municipality_name',
                 ),
-                'SpecificLocation' => array(
+                'Barangay' => array(
                     'Code' => 'location_code',
                     'Description' => 'location_name',
                 )

@@ -96,8 +96,6 @@ var process_wb = (function() {
 
 	    date_conducted = date_conducted[2] + '-' + month + '-' + date_conducted[0];
 
-	    console.log(month);
-
 	    $('input[name=date_conducted]').val(date_conducted);
 
 
@@ -109,6 +107,7 @@ var process_wb = (function() {
 		for (i = 0; i < 10; i++) {
 			var fname1 = array[a].split('"');
 			var ename1 = array[a+3].split('"');
+
 			var fname2 = array[b].split('"');
 			var ename2 = array[b+3].split('"');
 
@@ -124,16 +123,29 @@ var process_wb = (function() {
 			var bday2 = bdayAge2[0].split('/');
 			var bday2 = bday2[0]+bday2[1]+bday2[2];
 
-			$('input[name="firstname1['+ i +']"').val(fname1[1]);
-			$('input[name="middlename1['+ i +']"').val(array[a+1]);
-			$('input[name="lastname1['+ i +']"').val(array[a+2]);
+			var addHHN = array[a+8].split('/');
+			var address = addHHN[0].split('_');
+
+			var addHHN = addHHN[1].split(' ');
+
+			// console.log(fname1);
+			// console.log(address);
+
+			$('textarea[name="firstname1['+ i +']"').val(fname1[1]);
+			$('textarea[name="middlename1['+ i +']"').val(array[a+1]);
+			$('textarea[name="lastname1['+ i +']"').val(array[a+2]);
 			$('input[name="extname1['+ i +']"').val(ename1[0]);
 			
 		    $('input[name="sex1['+ i +']"').val(array[a+5]);
 		    $('input[name="civil_status1['+ i +']"').val(array[a+6]);
 		    $('input[name="bday1['+ i +']"').val(bday1);
 		    $('input[name="age1['+ i +']"').val(age1);
-		    $('input[name="address['+ i +']"').val(array[a+8]);
+
+		    $('input[name="house_no['+ i +']"').val(address[0]);
+		    $('input[name="brgy['+ i +']"').val(address[1]);
+		    $('input[name="city['+ i +']"').val(address[2]);
+		    $('input[name="household_id['+ i +']"').val(addHHN[1]);
+
 		    $('input[name="educ1['+ i +']"').val(array[a+9]);
 
 		    $('input[name="no_of_children['+ i +']"').val(array[a+10]);
@@ -149,9 +161,9 @@ var process_wb = (function() {
 	    		$('input[name="type['+ i +']"').prop('checked', false);
 	    	}
 
-	    	$('input[name="firstname2['+ i +']"').val(fname2[1]);
-			$('input[name="middlename2['+ i +']"').val(array[b+1]);
-			$('input[name="lastname2['+ i +']"').val(array[b+2]);
+	    	$('textarea[name="firstname2['+ i +']"').val(fname2[1]);
+			$('textarea[name="middlename2['+ i +']"').val(array[b+1]);
+			$('textarea[name="lastname2['+ i +']"').val(array[b+2]);
 			$('input[name="extname2['+ i +']"').val(ename2[0]);
 
 		    $('input[name="sex2['+ i +']"').val(array[b+5]);
