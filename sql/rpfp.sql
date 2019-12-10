@@ -4629,10 +4629,16 @@ END$$
 /** END GET REPORT DETAILS */
 
 /** GET DASHBOARD DATA */
-CREATE DEFINER=root@localhost PROCEDURE get_snapshot_details(
-    IN served_id INT
+CREATE DEFINER=root@localhost PROCEDURE process_dashboard_snapshot(
+    -- IN psgc_code INT
     )   READS SQL DATA
+proc_exit_point :
 BEGIN
+    DECLARE report_year INT;
+    DECLARE report_month INT;
+    DECLARE count_id INT;
+    DECLARE random_no VARCHAR(400);
+
     DECLARE couples_encoded_total INT;
     DECLARE couples_encoded_current INT;
     DECLARE couples_encoded_4ps INT;
@@ -4651,6 +4657,19 @@ BEGIN
     DECLARE couples_undecided INT;
     DECLARE couples_pregnant INT;
     DECLARE couples_no_intention INT;
+
+    SET report_year = YEAR(NOW());
+    SET report_month = MONTH(NOW());
+
+    SET random_no = CONCAT("RPFP-",report_year,report_month,"-",CEILING(RAND()*10000000000));
+
+    SELECT COUNT(*) INTO count_id FROM report_random_id WHERE RANDOM_ID = random_no;
+
+    IF count_id > 0 THEN
+        SELECT "CANNOT PROCESS RECORD WITH GIVEN PARAMETERS" AS MESSAGE;
+        LEAVE proc_exit_point;
+    END IF
+    ;
 
     SELECT COUNT( apc.COUPLES_ID )
       INTO couples_encoded_total
@@ -4672,6 +4691,7 @@ BEGIN
       FROM rpfp.couples apc 
  LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
      WHERE YEAR(rc.DATE_CONDUCTED) = YEAR(NOW())
+       AND MONTH(rc.DATE_CONDUCTED) <= MONTH(NOW())
        AND apc.IS_ACTIVE = 0
        AND rc.TYPE_CLASS_ID = 1
     ;
@@ -4681,6 +4701,7 @@ BEGIN
       FROM rpfp.couples apc 
  LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
      WHERE YEAR(rc.DATE_CONDUCTED) = YEAR(NOW())
+       AND MONTH(rc.DATE_CONDUCTED) <= MONTH(NOW())
        AND apc.IS_ACTIVE = 0
        AND rc.TYPE_CLASS_ID = 2
     ;
@@ -4690,6 +4711,7 @@ BEGIN
       FROM rpfp.couples apc 
  LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
      WHERE YEAR(rc.DATE_CONDUCTED) = YEAR(NOW())
+       AND MONTH(rc.DATE_CONDUCTED) <= MONTH(NOW())
        AND apc.IS_ACTIVE = 0
        AND rc.TYPE_CLASS_ID = 3
     ;
@@ -4699,6 +4721,7 @@ BEGIN
       FROM rpfp.couples apc 
  LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
      WHERE YEAR(rc.DATE_CONDUCTED) = YEAR(NOW())
+       AND MONTH(rc.DATE_CONDUCTED) <= MONTH(NOW())
        AND apc.IS_ACTIVE = 0
        AND rc.TYPE_CLASS_ID = 4
     ;
@@ -4708,6 +4731,7 @@ BEGIN
       FROM rpfp.couples apc 
  LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
      WHERE YEAR(rc.DATE_CONDUCTED) = YEAR(NOW())
+       AND MONTH(rc.DATE_CONDUCTED) <= MONTH(NOW())
        AND apc.IS_ACTIVE = 0
        AND rc.TYPE_CLASS_ID = 5
     ;
@@ -4717,6 +4741,7 @@ BEGIN
       FROM rpfp.couples apc 
  LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
      WHERE YEAR(rc.DATE_CONDUCTED) = YEAR(NOW())
+       AND MONTH(rc.DATE_CONDUCTED) <= MONTH(NOW())
        AND apc.IS_ACTIVE = 0
        AND rc.TYPE_CLASS_ID >= 6
     ;
@@ -4727,6 +4752,7 @@ BEGIN
  LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
  LEFT JOIN rpfp.fp_details fd ON fd.COUPLES_ID = apc.COUPLES_ID
      WHERE YEAR(rc.DATE_CONDUCTED) = YEAR(NOW())
+       AND MONTH(rc.DATE_CONDUCTED) <= MONTH(NOW())
        AND apc.IS_ACTIVE = 0
        AND fd.TFP_TYPE_ID = 1
     ;
@@ -4737,6 +4763,7 @@ BEGIN
  LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
  LEFT JOIN rpfp.fp_details fd ON fd.COUPLES_ID = apc.COUPLES_ID
      WHERE YEAR(rc.DATE_CONDUCTED) = YEAR(NOW())
+       AND MONTH(rc.DATE_CONDUCTED) <= MONTH(NOW())
        AND apc.IS_ACTIVE = 0
        AND fd.TFP_TYPE_ID = 2
     ;
@@ -4747,6 +4774,7 @@ BEGIN
  LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
  LEFT JOIN rpfp.fp_details fd ON fd.COUPLES_ID = apc.COUPLES_ID
      WHERE YEAR(rc.DATE_CONDUCTED) = YEAR(NOW())
+       AND MONTH(rc.DATE_CONDUCTED) <= MONTH(NOW())
        AND apc.IS_ACTIVE = 0
        AND fd.TFP_TYPE_ID = 3
     ;
@@ -4757,6 +4785,7 @@ BEGIN
  LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
  LEFT JOIN rpfp.fp_details fd ON fd.COUPLES_ID = apc.COUPLES_ID
      WHERE YEAR(rc.DATE_CONDUCTED) = YEAR(NOW())
+       AND MONTH(rc.DATE_CONDUCTED) <= MONTH(NOW())
        AND apc.IS_ACTIVE = 0
        AND fd.TFP_TYPE_ID = 4
     ;
@@ -4767,6 +4796,7 @@ BEGIN
  LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
  LEFT JOIN rpfp.fp_details fd ON fd.COUPLES_ID = apc.COUPLES_ID
      WHERE YEAR(rc.DATE_CONDUCTED) = YEAR(NOW())
+       AND MONTH(rc.DATE_CONDUCTED) <= MONTH(NOW())
        AND apc.IS_ACTIVE = 0
        AND fd.TFP_TYPE_ID = 5
     ;
@@ -4777,6 +4807,7 @@ BEGIN
  LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
  LEFT JOIN rpfp.fp_details fd ON fd.COUPLES_ID = apc.COUPLES_ID
      WHERE YEAR(rc.DATE_CONDUCTED) = YEAR(NOW())
+       AND MONTH(rc.DATE_CONDUCTED) <= MONTH(NOW())
        AND apc.IS_ACTIVE = 0
        AND fd.TFP_TYPE_ID = 6
     ;
@@ -4787,6 +4818,7 @@ BEGIN
  LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
  LEFT JOIN rpfp.fp_details fd ON fd.COUPLES_ID = apc.COUPLES_ID
      WHERE YEAR(rc.DATE_CONDUCTED) = YEAR(NOW())
+       AND MONTH(rc.DATE_CONDUCTED) <= MONTH(NOW())
        AND apc.IS_ACTIVE = 0
        AND fd.TFP_STATUS_ID = 1
     ;
@@ -4797,6 +4829,7 @@ BEGIN
  LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
  LEFT JOIN rpfp.fp_details fd ON fd.COUPLES_ID = apc.COUPLES_ID
      WHERE YEAR(rc.DATE_CONDUCTED) = YEAR(NOW())
+       AND MONTH(rc.DATE_CONDUCTED) <= MONTH(NOW())
        AND apc.IS_ACTIVE = 0
        AND fd.TFP_STATUS_ID = 2
     ;
@@ -4807,6 +4840,7 @@ BEGIN
  LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
  LEFT JOIN rpfp.fp_details fd ON fd.COUPLES_ID = apc.COUPLES_ID
      WHERE YEAR(rc.DATE_CONDUCTED) = YEAR(NOW())
+       AND MONTH(rc.DATE_CONDUCTED) <= MONTH(NOW())
        AND apc.IS_ACTIVE = 0
        AND fd.TFP_STATUS_ID = 3
     ;
@@ -4817,6 +4851,7 @@ BEGIN
  LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
  LEFT JOIN rpfp.fp_details fd ON fd.COUPLES_ID = apc.COUPLES_ID
      WHERE YEAR(rc.DATE_CONDUCTED) = YEAR(NOW())
+       AND MONTH(rc.DATE_CONDUCTED) <= MONTH(NOW())
        AND apc.IS_ACTIVE = 0
        AND fd.TFP_STATUS_ID = 4
     ;
@@ -4841,13 +4876,74 @@ BEGIN
     SELECT couples_pregnant;
     SELECT couples_no_intention;
 
+        INSERT INTO rpfp.dashboard_snapshot (
+                    SNAPSHOT_ID,
+                    REPORT_YEAR,
+                    REPORT_MONTH,
+                    PSGC_CODE,
+                    COUPLES_ENCODED_TOTAL,
+                    COUPLES_ENCODED_CURRENT,
+                    COUPLES_ENCODED_4PS,
+                    COUPLES_ENCODED_NON4PS,
+                    COUPLES_ENCODED_FBOS,
+                    COUPLES_ENCODED_PMC,
+                    COUPLES_ENCODED_USAPAN,
+                    COUPLES_ENCODED_OTHERS,
+                    TRADITIONAL_WITHDRAWAL,
+                    TRADITIONAL_RHYTHM,
+                    TRADITIONAL_CALENDAR,
+                    TRADITIONAL_ABSTINENCE,
+                    TRADITIONAL_HERBAL,
+                    TRADITIONAL_NO_METHOD,
+                    COUPLES_WITH_INTENTION,
+                    COUPLES_UNDECIDED,
+                    COUPLES_PREGNANT,
+                    COUPLES_NO_INTENTION,
+                    DATE_PROCESSED
+            )
+        VALUES (
+                random_no,
+                report_year,
+                report_month,
+                psgc_code,
+                couples_encoded_total,
+                couples_encoded_current,
+                couples_encoded_4ps,
+                couples_encoded_non4ps,
+                couples_encoded_fbos,
+                couples_encoded_pmc,
+                couples_encoded_usapan,
+                couples_encoded_others,
+                traditional_withdrawal,
+                traditional_rhythm,
+                traditional_calendar,
+                traditional_abstinence,
+                traditional_herbal,
+                traditional_no_method,
+                couples_with_intention,
+                couples_undecided,
+                couples_pregnant,
+                couples_no_intention,
+                CURRENT_DATE()
+            )
+            ;
+    
+        SELECT CONCAT( "NEW ENTRY: ", LAST_INSERT_ID() ) AS MESSAGE;
+        LEAVE proc_exit_point;
+
+    SELECT "SUCCESS!" AS MESSAGE;
 END$$
 
-CREATE DEFINER=root@localhost PROCEDURE get_percentage_encoded(
-    IN report_year INT
+CREATE DEFINER=root@localhost PROCEDURE process_percentage_encoded(
+    -- IN psgc_code INT
     )   READS SQL DATA
+proc_exit_point :
 BEGIN
+    DECLARE count_id INT;
+    DECLARE random_no VARCHAR(400);
+    DECLARE report_year INT;
     DECLARE report_month INT;
+    
     DECLARE couples_encoded_r01 INT;
     DECLARE couples_encoded_r02 INT;
     DECLARE couples_encoded_r03 INT;
@@ -4865,6 +4961,19 @@ BEGIN
     DECLARE couples_encoded_barmm INT;
     DECLARE couples_encoded_car INT;
     DECLARE couples_encoded_ncr INT;
+
+    SET report_year = YEAR(NOW());
+    SET report_month = MONTH(NOW());
+
+    SET random_no = CONCAT("RPFP-",report_year,report_month,"-",CEILING(RAND()*10000000000));
+
+    SELECT COUNT(*) INTO count_id FROM report_random_id WHERE RANDOM_ID = random_no;
+
+    IF count_id > 0 THEN
+        SELECT "CANNOT PROCESS RECORD WITH GIVEN PARAMETERS" AS MESSAGE;
+        LEAVE proc_exit_point;
+    END IF
+    ;
 
     IF ( IFNULL( report_year, 0 ) = 0 ) THEN
         SET report_year = YEAR(NOW());
@@ -5078,6 +5187,187 @@ BEGIN
     SELECT couples_encoded_barmm;
     SELECT couples_encoded_car;
     SELECT couples_encoded_ncr;
+    
+        INSERT INTO rpfp.percentage_encoded (
+                    PERCENT_ENCODED_ID,
+                    REPORT_YEAR,
+                    REPORT_MONTH,
+                    PSGC_CODE,
+                    COUPLES_ENCODED_R01,
+                    COUPLES_ENCODED_R02,
+                    COUPLES_ENCODED_R03,
+                    COUPLES_ENCODED_R4A,
+                    COUPLES_ENCODED_R4B,
+                    COUPLES_ENCODED_R05,
+                    COUPLES_ENCODED_R06,
+                    COUPLES_ENCODED_R07,
+                    COUPLES_ENCODED_R08,
+                    COUPLES_ENCODED_R09,
+                    COUPLES_ENCODED_R10,
+                    COUPLES_ENCODED_R11,
+                    COUPLES_ENCODED_R12,
+                    COUPLES_ENCODED_R13,
+                    COUPLES_ENCODED_BARMM,
+                    COUPLES_ENCODED_CAR,
+                    COUPLES_ENCODED_NCR,
+                    DATE_PROCESSED
+            )
+        VALUES (
+                random_no,
+                report_year,
+                report_month,
+                psgc_code,
+                couples_encoded_r01,
+                couples_encoded_r02,
+                couples_encoded_r03,
+                couples_encoded_r4a,
+                couples_encoded_r4b,
+                couples_encoded_r05,
+                couples_encoded_r06,
+                couples_encoded_r07,
+                couples_encoded_r08,
+                couples_encoded_r09,
+                couples_encoded_r10,
+                couples_encoded_r11,
+                couples_encoded_r12,
+                couples_encoded_r13,
+                couples_encoded_barmm,
+                couples_encoded_car,
+                couples_encoded_ncr,
+                CURRENT_DATE()
+            )
+            ;
+    
+        SELECT CONCAT( "NEW ENTRY: ", LAST_INSERT_ID() ) AS MESSAGE;
+        LEAVE proc_exit_point;
+
+    SELECT "SUCCESS!" AS MESSAGE;
+END$$
+
+CREATE DEFINER=root@localhost PROCEDURE get_snapshot_details(
+    )   READS SQL DATA
+BEGIN
+    IF NOT EXISTS (
+         SELECT ds.REPORT_ID
+           FROM rpfp.dashboard_snapshot ds
+    ) THEN
+        BEGIN
+             SELECT NULL AS report_year,
+                    NULL AS report_month,
+                    NULL AS psgc_code,
+                    NULL AS couples_encoded_total,
+                    NULL AS couples_encoded_current,
+                    NULL AS couples_encoded_4ps,
+                    NULL AS couples_encoded_non4ps,
+                    NULL AS couples_encoded_fbos,
+                    NULL AS couples_encoded_pmc,
+                    NULL AS couples_encoded_usapan,
+                    NULL AS couples_encoded_others,
+                    NULL AS traditional_withdrawal,
+                    NULL AS traditional_rhythm,
+                    NULL AS traditional_calendar,
+                    NULL AS traditional_abstinence,
+                    NULL AS traditional_herbal,
+                    NULL AS traditional_no_method,
+                    NULL AS couples_with_intention,
+                    NULL AS couples_undecided,
+                    NULL AS couples_pregnant,
+                    NULL AS couples_no_intention,
+                    NULL AS date_processed
+            ;
+        END;
+    ELSE
+        BEGIN
+             SELECT ds.REPORT_YEAR AS report_year,
+                    ds.PSGC_CODE AS psgc_code,
+                    ds.REPORT_MONTH AS report_month,
+                    ds.COUPLES_ENCODED_TOTAL AS couples_encoded_total,
+                    ds.COUPLES_ENCODED_CURRENT AS couples_encoded_current,
+                    ds.COUPLES_ENCODED_4PS AS couples_encoded_4ps,
+                    ds.COUPLES_ENCODED_NON4PS AS couples_encoded_non4ps,
+                    ds.COUPLES_ENCODED_FBOS AS couples_encoded_fbos,
+                    ds.COUPLES_ENCODED_PMC AS couples_encoded_pmc,
+                    ds.COUPLES_ENCODED_USAPAN AS couples_encoded_usapan,
+                    ds.COUPLES_ENCODED_OTHERS AS couples_encoded_others,
+                    ds.TRADITIONAL_WITHDRAWAL AS traditional_withdrawal,
+                    ds.TRADITIONAL_RHYTHM AS traditional_rhythm,
+                    ds.TRADITIONAL_CALENDAR AS traditional_calendar,
+                    ds.TRADITIONAL_ABSTINENCE AS traditional_abstinence,
+                    ds.TRADITIONAL_HERBAL AS traditional_herbal,
+                    ds.TRADITIONAL_NO_METHOD AS traditional_no_method,
+                    ds.COUPLES_WITH_INTENTION AS couples_with_intention,
+                    ds.COUPLES_UNDECIDED AS couples_undecided,
+                    ds.COUPLES_PREGNANT AS couples_pregnant,
+                    ds.COUPLES_NO_INTENTION AS couples_no_intention,
+                    ds.DATE_PROCESSED AS date_processed
+               FROM rpfp.dashboard_snapshot ds
+           ORDER BY ds.report_id DESC
+           LIMIT 1
+            ;
+        END;
+    END IF;
+END$$
+
+CREATE DEFINER=root@localhost PROCEDURE get_percent_encoded_details(
+    )   READS SQL DATA
+BEGIN
+    IF NOT EXISTS (
+         SELECT pe.REPORT_ID
+           FROM rpfp.percentage_encoded pe
+    ) THEN
+        BEGIN
+             SELECT NULL AS report_year,
+                    NULL AS report_month,
+                    NULL AS psgc_code,
+                    NULL AS couples_encoded_r01,
+                    NULL AS couples_encoded_r02,
+                    NULL AS couples_encoded_r03,
+                    NULL AS couples_encoded_r4a,
+                    NULL AS couples_encoded_r4b,
+                    NULL AS couples_encoded_r05,
+                    NULL AS couples_encoded_r06,
+                    NULL AS couples_encoded_r07,
+                    NULL AS couples_encoded_r08,
+                    NULL AS couples_encoded_r09,
+                    NULL AS couples_encoded_r10,
+                    NULL AS couples_encoded_r11,
+                    NULL AS couples_encoded_r12,
+                    NULL AS couples_encoded_r13,
+                    NULL AS couples_encoded_barmm,
+                    NULL AS couples_encoded_car,
+                    NULL AS couples_encoded_ncr,
+                    NULL AS date_processed
+            ;
+        END;
+    ELSE
+        BEGIN
+             SELECT pe.REPORT_YEAR AS report_year,
+                    pe.PSGC_CODE AS psgc_code,
+                    pe.REPORT_MONTH AS report_month,
+                    pe.COUPLES_ENCODED_R01 AS couples_encoded_r01,
+                    pe.COUPLES_ENCODED_R02 AS couples_encoded_r02,
+                    pe.COUPLES_ENCODED_R03 AS couples_encoded_r03,
+                    pe.COUPLES_ENCODED_R4A AS couples_encoded_r4a,
+                    pe.COUPLES_ENCODED_R4B AS couples_encoded_r4b,
+                    pe.COUPLES_ENCODED_R05 AS couples_encoded_r05,
+                    pe.COUPLES_ENCODED_R06 AS couples_encoded_r06,
+                    pe.COUPLES_ENCODED_R07 AS couples_encoded_r07,
+                    pe.COUPLES_ENCODED_R08 AS couples_encoded_r08,
+                    pe.COUPLES_ENCODED_R09 AS couples_encoded_r09,
+                    pe.COUPLES_ENCODED_R10 AS couples_encoded_r10,
+                    pe.COUPLES_ENCODED_R11 AS couples_encoded_r11,
+                    pe.COUPLES_ENCODED_R12 AS couples_encoded_r12,
+                    pe.COUPLES_ENCODED_R13 AS couples_encoded_r13,
+                    pe.COUPLES_ENCODED_BARMM AS couples_encoded_barmm,
+                    pe.COUPLES_ENCODED_CAR AS couples_encoded_car,
+                    pe.COUPLES_ENCODED_NCR AS couples_encoded_ncr,
+                    pe.DATE_PROCESSED AS date_processed
+               FROM rpfp.percentage_encoded pe
+           ORDER BY pe.report_id DESC
+           LIMIT 1
+            ;
+        END;
+    END IF;
 END$$
 /** END GET DASHBOARD DATA */
 
@@ -5440,6 +5730,73 @@ CREATE TABLE report_duplicate_encoded (
                EXT_NAME VARCHAR(50),
                   BDATE DATE,
              DB_USER_ID VARCHAR(50),
+         DATE_PROCESSED DATE,
+            PRIMARY KEY (REPORT_ID)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table dashboard_snapshot
+--
+
+CREATE TABLE dashboard_snapshot (
+              REPORT_ID INT UNSIGNED NOT NULL AUTO_INCREMENT,
+            SNAPSHOT_ID VARCHAR(400),
+            REPORT_YEAR INT NOT NULL,
+           REPORT_MONTH INT NOT NULL,
+              PSGC_CODE INT NOT NULL,
+  COUPLES_ENCODED_TOTAL INT,
+COUPLES_ENCODED_CURRENT INT,
+    COUPLES_ENCODED_4PS INT,
+ COUPLES_ENCODED_NON4PS INT,
+   COUPLES_ENCODED_FBOS INT,
+    COUPLES_ENCODED_PMC INT,
+ COUPLES_ENCODED_USAPAN INT,
+ COUPLES_ENCODED_OTHERS INT,
+ TRADITIONAL_WITHDRAWAL INT,
+     TRADITIONAL_RHYTHM INT,
+   TRADITIONAL_CALENDAR INT,
+ TRADITIONAL_ABSTINENCE INT,
+     TRADITIONAL_HERBAL INT,
+  TRADITIONAL_NO_METHOD INT,
+ COUPLES_WITH_INTENTION INT,
+      COUPLES_UNDECIDED INT,
+       COUPLES_PREGNANT INT,
+   COUPLES_NO_INTENTION INT,
+         DATE_PROCESSED DATE,
+            PRIMARY KEY (REPORT_ID)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table percentage_encoded
+--
+
+CREATE TABLE percentage_encoded (
+              REPORT_ID INT UNSIGNED NOT NULL AUTO_INCREMENT,
+     PERCENT_ENCODED_ID VARCHAR(400),
+            REPORT_YEAR INT NOT NULL,
+           REPORT_MONTH INT NOT NULL,
+              PSGC_CODE INT NOT NULL,
+    COUPLES_ENCODED_R01 INT,
+    COUPLES_ENCODED_R02 INT,
+    COUPLES_ENCODED_R03 INT,
+    COUPLES_ENCODED_R4A INT,
+    COUPLES_ENCODED_R4B INT,
+    COUPLES_ENCODED_R05 INT,
+    COUPLES_ENCODED_R06 INT,
+    COUPLES_ENCODED_R07 INT,
+    COUPLES_ENCODED_R08 INT,
+    COUPLES_ENCODED_R09 INT,
+    COUPLES_ENCODED_R10 INT,
+    COUPLES_ENCODED_R11 INT,
+    COUPLES_ENCODED_R12 INT,
+    COUPLES_ENCODED_R13 INT,
+  COUPLES_ENCODED_BARMM INT,
+    COUPLES_ENCODED_CAR INT,
+    COUPLES_ENCODED_NCR INT,
          DATE_PROCESSED DATE,
             PRIMARY KEY (REPORT_ID)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;

@@ -86,10 +86,15 @@
                 <h3 class="sans">Welcome to the Online RPFP Monitoring System Release Version 3.0</h3>
                 <br>
                 <p class="sans subheader">A Project of the Responsible Parenthood and Family Planning Program of the Commission on Population and Development</p>
+                <br>
+                <br>
+
+                <p class="container"> >> EXECUTIVE DASHBOARD </p> <br>
+                <p class="container"> >> PUBLIC DASHBOARD </p>
             </div>
         </div>
     </section>
-
+<!-- 
     <section class="bg-img">
         <div class="container margin-t7 statisticsReport" >
             <div class="row">    
@@ -170,7 +175,7 @@
                             <br>
                         </div>
                     </div>
-                    <div class="col-md-6 col-sm-12 col-xs-9"> 
+                    <div class="col-md-6 col-sm-12 col-xs-9">  -->
                         <!-- <div class="row">
                             <div class="col-xs-9 col-sm-9">
                                 <h5><b>Summary of FP Users</b></h5>
@@ -179,7 +184,7 @@
                                 
                             </div>
                         </div> -->
-
+<!-- 
                         <div class="row">
                             <div class="col-sm-12">
                                 <h5><b>Modern FP Users for Yr <?= $current_year; ?></b></h5>
@@ -252,7 +257,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> -->
             <!-- <div class="col-xs-12 col-sm-12 col-md-12">
                 <div class="row">
                     <form class="form-horizontal form-label-left">
