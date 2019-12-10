@@ -2,6 +2,8 @@
 defined('BASEPATH') or exit('No direct script access allowed');
 $this->load->library('helpers/HtmlHelper');
 
+// print_r($_SESSION);exit;
+
 $form1 = FormClass::getFormFromVariable($form1);
 $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0);
 ?>
@@ -555,7 +557,7 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 				                            	$is_pdf,
 				                            	($couple->Address_St != 'N/A' ? $couple->Address_St : ''),
 				                                "text",
-				                                "house_no[".$i."]",
+				                                "house_no_st[".$i."]",
 				                                "padding-l10",
 				                                "House No. & Street"
 				                            );

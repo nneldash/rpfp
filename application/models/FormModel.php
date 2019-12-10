@@ -90,7 +90,7 @@ class FormModel extends BaseModel
 
             $couple_id = $this->saveToDb($method, $params1);
 
-            if ($couple_id == 'CANNOT SAVE RECORD WITH GIVEN PARAMETERS') {
+            if ($couple_id == "CANNOT SAVE RECORD WITH GIVEN PARAMETERS") {
                 return false;
             } elseif ($couple_id == "UPDATE SUCCESS!") {
                 $couple_id = $couple->Id;

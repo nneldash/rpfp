@@ -82,7 +82,8 @@ class Forms extends CI_Controller
 
         $form1->Seminar = $this->getInputFromSeminar();
         $form1->ListCouple = $this->getInputFromListCouples();
-        print_r($this->FormModel->saveForm1($form1));exit;
+        // echo '<pre>';
+        // print_r($form1);exit;
         if (!$this->FormModel->saveForm1($form1)) {
             $data = ['is_save' => false];
         } else {
@@ -159,7 +160,7 @@ class Forms extends CI_Controller
 
         $individual->Sex = $this->input->post('sex1')[$i];
         $individual->CivilStatus = $this->input->post('civil_status1')[$i];
-        $individual->Birthdate = $this->input->post('birthdate')[$i];
+        $individual->Birthdate = $this->input->post('bday1')[$i];
         $individual->Age = $this->input->post('age1')[$i];
         $individual->HighestEducation = $this->input->post('educ1')[$i];
         $individual->Attendee = 'Yes';
@@ -184,7 +185,7 @@ class Forms extends CI_Controller
 
         $individual->Sex = $this->input->post('sex2')[$i];
         $individual->CivilStatus = $this->input->post('civil_status2')[$i];
-        $individual->Birthdate = $this->input->post('birthdate')[$i];
+        $individual->Birthdate = $this->input->post('bday2')[$i];
         $individual->Age = $this->input->post('age2')[$i];
         $individual->HighestEducation = $this->input->post('educ2')[$i];
         $individual->Attendee = 'Yes';
