@@ -111,7 +111,7 @@ class ProfileModel extends BaseModel
     {
         return $this->saveToDb(
             $is_own ? 'profile_save_own_pic' : 'profile_save_pic',
-            $is_own ? array($image_name) : array($user_id, $image_name),
+            $is_own ? array($image_name) : array($user_id, $image_name)
         );
     }
 }

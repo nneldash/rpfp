@@ -176,10 +176,11 @@
 [ Inputs ]*/
 input {
 	width: 100%;
-	font-size: 12px;	
+	font-size: 14px;	
 	text-transform: uppercase;
 }
-input:focus {
+input:focus,
+textarea:focus {
 	border-color: #777!important;
 	border-bottom: 1px solid #2196F3!important;
 	color: #000!important;
@@ -509,4 +510,8 @@ textarea::placeholder {
 }
 .max-width10 {
 	max-width: 10%;
+}
+
+.small-20 {
+	font-size: 20px;
 }

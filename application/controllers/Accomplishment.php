@@ -18,7 +18,8 @@ class Accomplishment extends CI_Controller
 
     public function genAccompData()
     {
-        $username = $_SESSION['username'];
+        // $username = $_SESSION['username'];
+        $username = $this->session->userdata('username');
         $pscgc_code = 8;
         $genData = new GenerateAccomplishmentClass();
 

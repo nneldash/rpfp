@@ -54,13 +54,18 @@ class Forms extends CI_Controller
         $isEncoder = $profile->isEncoder();
         $isRegionalDataManager = $profile->isRegionalDataManager();
 
+        $municipality_id = 82601;
+        $this->load->model('LocationModel');
+        $brgys = $this->LocationModel->listBaranggays($municipality_id);
+
         $this->load->view('includes/header', $header);
         $this->load->view('forms/form1', 
             array(
                 'form1' => $form1, 
                 'is_pdf' => false,
                 'isEncoder' => $isEncoder,
-                'isRegionalDataManager' => $isRegionalDataManager
+                'isRegionalDataManager' => $isRegionalDataManager,
+                'barangay' => $brgys
             )
         );
         $this->load->view('includes/footer');

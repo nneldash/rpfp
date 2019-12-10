@@ -50,7 +50,7 @@ class Login extends CI_Controller
     private function loadLoginPage($header)
     {
         $this->load->view("includes/header", $header);
-        $this->load->view("login/login_page");
+        $this->load->view("index/landingPage");
         return;
     }
 

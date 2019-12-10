@@ -12,11 +12,21 @@ $(function() {
 
 	var isRDM = $('#rdm').val();
 
+    $('.selectpicker').selectpicker({
+    	container: 'body'
+    });
+
 	if(isRDM == 1){
 		$('td input').attr('disabled', true);
 		$('td input').css('cursor', 'not-allowed');
 		$('td input[class="check"]').attr('disabled', false);
 	}
+
+	$('input[class="status"]').change(function(){
+		var loopIndex = $(this).closest('tr').find('input[class="loopIndex1"]').val();
+		var that = $(this).val();
+		console.log(loopIndex);
+	});
 });
 
 function serviceModal()

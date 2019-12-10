@@ -116,6 +116,12 @@ class NewAssets extends CI_Controller
         readfile(BASEPATH . CUSTOM);
     }
 
+    public function bootstrapSelectCss()
+    {
+        header('Content-Type: text/css');
+        readfile(BASEPATH . BOOTSTRAP_SELECT_CSS);
+    }
+
     public function sweetalertJs()
     {
         header('Content-Type: application/javascript');
@@ -209,5 +215,11 @@ class NewAssets extends CI_Controller
     {
         header('Content-Type: application/javascript');
         readfile(BASEPATH . INPUTEXT_JS);
+    }
+
+    public function bootstrapSelectJs()
+    {
+        header('Content-Type: application/javascript');
+        readfile(BASEPATH . BOOTSTRAP_SELECT_JS);
     }
 }

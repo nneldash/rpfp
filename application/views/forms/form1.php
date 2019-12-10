@@ -19,7 +19,8 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 		}
 	</style>
 <?php } else { ?>
-	<link href="<?= base_url('NewAssets/FontAwesome'); ?>" rel="stylesheet">	
+	<link href="<?= base_url('NewAssets/FontAwesome'); ?>" rel="stylesheet">
+	<link href="<?= base_url('NewAssets/bootstrapSelectCss'); ?>" rel="stylesheet">	
 	<style>
 		.table-bordered > tbody > tr > td,
 		.table-bordered > thead > tr > th,
@@ -37,6 +38,7 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 		}
 	</style>
 <?php } ?>
+
 
 <link href="<?= base_url('assets/css/form.css') ?>" rel="stylesheet">
 <input type="hidden" id="rdm" value="<?= $isRegionalDataManager; ?>" />
@@ -234,15 +236,20 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 						</td>
 						<td class="border-0">
 							<span class="small">
+								<select class="selectpicker" data-live-search="true">
+									<?php foreach($barangay as $brgys) : ?>
+										<option value="<?= $brgys->Barangay->Code; ?>"><?= $brgys->Barangay->Description; ?></option>
+									<?php endforeach; ?>
+								</select>
 								<?php
-		                            echo HtmlHelper::inputPdf(
-		                                $is_pdf,
-		                                $form1->Seminar->Location->Barangay->Description,
-		                                "text",
-		                                "",
-		                                "padding-l10 underline width-70",
-		                                ""
-		                            );
+		                            // echo HtmlHelper::inputPdf(
+		                            //     $is_pdf,
+		                            //     $form1->Seminar->Location->Barangay->Description,
+		                            //     "text",
+		                            //     "",
+		                            //     "padding-l10 underline width-70",
+		                            //     ""
+		                            // );
 								?>
 								<input type="hidden" name="barangay" value="<?=$form1->Seminar->Location->Barangay->Code?>">
 		                    </span>
@@ -442,7 +449,7 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 											</td>
 										<?php endif; ?>
 									<?php endif; ?>
-									<td class="text-center" style="border-left: none" rowspan="2">									
+									<td class="text-center" style="border-left: none" rowspan="2">
 										<p class="small"><?= $i + 1; ?></p>
 									</td>
 									
@@ -512,7 +519,7 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 					                        ?>
 					                    </div>
 									</td>
-									<td class="small text-center">
+									<td class="small-20 text-center">
 										<?php
 				                            echo HtmlHelper::inputPdf(
 				                            	$is_pdf,
@@ -524,7 +531,7 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 				                            );
 				                        ?>
 									</td>
-									<td class="small text-center">
+									<td class="small-20 text-center">
 										<?php
 				                            echo HtmlHelper::inputPdf(
 				                            	$is_pdf,
@@ -536,7 +543,7 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 				                            );
 				                        ?>
 									</td>
-									<td class="small">
+									<td class="small-20">
 										<div style="display: inline-flex; border: 1px solid transparent;">
 					                        <?php
 					                            echo HtmlHelper::inputMaskPdf(
@@ -593,7 +600,7 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 				                            );
 				                        ?>
 									</td>
-									<td class="small text-center">
+									<td class="small-20 text-center">
 										<?php
 				                            echo HtmlHelper::inputPdf(
 				                            	$is_pdf,
@@ -605,7 +612,7 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 				                            );
 				                        ?>
 									</td>
-									<td class="small text-center" rowspan="2">
+									<td class="small-20 text-center" rowspan="2">
 										<?php
 				                            echo HtmlHelper::inputPdf(
 				                            	$is_pdf,
@@ -617,7 +624,7 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 				                            );
 				                        ?>
 									</td>
-									<td class="small text-center" rowspan="2">
+									<td class="small-20 text-center" rowspan="2">
 										<input type="hidden" name="fp_id[<?=$i?>]" value="<?= ($couple->ModernFp->Id != 'N/A' ? $couple->ModernFp->Id : 0) ?>">
 										<?php
 				                            echo HtmlHelper::inputPdf(
@@ -630,7 +637,7 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 				                            );
 				                        ?>
 									</td>
-									<td class="small text-center" rowspan="2">
+									<td class="small-20 text-center" rowspan="2">
 										<?php
 				                            echo HtmlHelper::inputPdf(
 				                            	$is_pdf,
@@ -642,7 +649,7 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 				                            );
 				                        ?>
 									</td>
-									<td class="small text-center" rowspan="2">
+									<td class="small-20 text-center" rowspan="2">
 										<?php
 				                            echo HtmlHelper::inputPdf(
 				                            	$is_pdf,
@@ -654,19 +661,20 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 				                            );
 				                        ?>
 									</td>
-									<td class="small text-center" rowspan="2">
+									<td class="small-20 text-center" rowspan="2">
 										<?php
 				                            echo HtmlHelper::inputPdf(
 				                            	$is_pdf,
 				                            	($couple->TraditionalFp->Status != 'N/A' ? $couple->TraditionalFp->Status : ''),
 				                                "text",
 				                                "status[".$i."]",
-				                                "height-50 text-center",
+				                                "height-50 text-center status",
 				                                "1"
 				                            );
 				                        ?>
+				                        <input type="text" hidden class="text-center" name="" />
 									</td>
-									<td class="small text-center" rowspan="2">
+									<td class="small-20 text-center" rowspan="2">
 										<?php
 				                            echo HtmlHelper::inputPdf(
 				                            	$is_pdf,
@@ -753,7 +761,7 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 					                        ?>
 					                    </div>
 									</td>
-									<td class="small text-center">
+									<td class="small-20 text-center">
 										<input type="hidden" value="" class="getSex1" />
 										<?php
 				                            echo HtmlHelper::inputPdf(
@@ -766,7 +774,7 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 				                            );
 				                        ?>
 									</td>
-									<td class="small text-center">
+									<td class="small-20 text-center">
 										<?php
 				                            echo HtmlHelper::inputPdf(
 				                            	$is_pdf,
@@ -778,7 +786,7 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 				                            );
 				                        ?>
 									</td>
-									<td class="small">
+									<td class="small-20">
 										<div style="display: inline-flex; border: 1px solid transparent;">
 											<?php
 				                            	echo HtmlHelper::inputMaskPdf(
@@ -793,7 +801,7 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 				                        	<input type="text" name="age2[<?=$i?>]" maxlength="2" class="text-center getAge2" readonly value="<?= HtmlHelper::secondEntry_BirthAge($couple->FirstEntry->Age, $couple->SecondEntry->Age) ?>" />
 										</div>
 									</td>
-									<td class="small text-center">
+									<td class="small-20 text-center">
 										<?php
 			                            echo HtmlHelper::inputPdf(
 			                            	$is_pdf,
@@ -1032,6 +1040,7 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 				});
 				loadJs(base_url + 'NewAssets/jqueryMaskJs');
 				loadJs(base_url + 'NewAssets/inputExtJs');
+				loadJs(base_url + 'NewAssets/bootstrapSelectJs');
 			}
 		);
 	</script>
