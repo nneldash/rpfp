@@ -6,12 +6,18 @@ CONST MY_PROFILE = 'profile';
 CONST MY_PENDING = 'pending';
 CONST MY_APPROVE = 'approve';
 CONST MY_ACCOMPLISHMENT = 'accomplishment';
+CONST MY_FORM_A = 'forma';
+CONST MY_FORM_B = 'formb';
+CONST MY_FORM_C = 'formc';
 
 $links = array(
     MY_PROFILE => '#/Menu/profile',
     MY_PENDING => '#/Menu/pending',
     MY_APPROVE => '#/Menu/approve',
-    MY_ACCOMPLISHMENT => '#/Menu/accomplishment'
+    MY_ACCOMPLISHMENT => '#/Menu/accomplishment',
+    MY_FORM_A => '#/Menu/forma',
+    MY_FORM_B => '#/Menu/formb',
+    MY_FORM_C => '#/Menu/formc'
 );
 
 $profile = UserProfile::getFromVariable(empty($profile) ? BLANK : $profile);
@@ -98,34 +104,34 @@ if (empty($title)) {
                                             </a>
                                         </li>
                                         <li>
-                                            <a href="<?= base_url('menu/formA')?>">
+                                            <a href="<?= $links[MY_FORM_A] ?>">
                                                 <i class="fa fa-clipboard"></i> Form A
                                             </a>
                                         </li>
                                         <li>
-                                            <a href="<?= base_url('menu/formB')?>">
+                                            <a href="<?= $links[MY_FORM_B] ?>">
                                                 <i class="fa fa-clipboard"></i> Form B
                                             </a>
                                         </li>
                                         <li>
-                                            <a href="<?= base_url('menu/formC')?>">
+                                            <a href="<?= $links[MY_FORM_C] ?>">
                                                 <i class="fa fa-clipboard"></i> Form C
                                             </a>
                                         </li>
                                     <?php endif; ?>
                                     <?php if ($profile->isPMED()) : ?>
                                         <li>
-                                            <a href="<?= base_url('menu/formA')?>">
+                                            <a href="<?= $links[MY_FORM_A] ?>">
                                                 <i class="fa fa-clipboard"></i> Form A
                                             </a>
                                         </li>
                                         <li>
-                                            <a href="<?= base_url('menu/formB')?>">
+                                            <a href="<?= $links[MY_FORM_B] ?>">
                                                 <i class="fa fa-clipboard"></i> Form B
                                             </a>
                                         </li>
                                         <li>
-                                            <a href="<?= base_url('menu/formC')?>">
+                                            <a href="<?= $links[MY_FORM_C] ?>">
                                                 <i class="fa fa-clipboard"></i> Form C
                                             </a>
                                         </li>
@@ -151,21 +157,6 @@ if (empty($title)) {
                                                 <i class="fa fa-clipboard"></i> Accomplishment Report
                                             </a>
                                         </li>
-                                        <!-- <li>
-                                            <a href="</?= base_url('menu/serviceSlip')?>">
-                                                <i class="fa fa-file-text-o"></i> Service Slip
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="</?= base_url('menu/search')?>">
-                                                <i class="fa fa-search"></i> Search Form
-                                            </a>
-                                        </li> -->
-                                        <!-- <li>
-                                            <a href="<?= base_url('menu/accomplishment')?>">
-                                                <i class="fa fa-clipboard"></i> Report
-                                            </a>
-                                        </li> -->
                                     <?php endif; ?>
                                     <li>
                                         <a href="<?= base_url('login/logoffUser')?>">

@@ -4,27 +4,7 @@ $(function(){
 
 function genAccomp()
 {
-	$('select[id=repYearSelect]').change(function(){
-		var ReportYear = $(this).val();
-		getYear(ReportYear);
-	});
-
-}
-
-function getYear(ReportYear)
-{
-	$('select[id=repMonthSelect]').change(function(){
-		var ReportMonth = $(this).val();
-		getSubmit(ReportMonth, ReportYear);
-	});
-}
-
-function getSubmit(month, year)
-{
 	$('.genAccompSubmit').click(function() {
-		var that = $(this);
-		openLoader(that);
-
 		const Toast = Swal.mixin({
 			toast: true,
 			position: 'top-end',
@@ -32,15 +12,19 @@ function getSubmit(month, year)
 			timer: 3000
 		});
 
-		$.post(base_url + 'accomplishment/genAccompData', {'year' : year, 'month' : month})
-		.done(function(result){
-			$('#accompModal').modal('hide');
+		var accompData = $('form').serialize();
+
+		$.ajax({
+			type: 'POST',
+			data: accompData,
+			url: base_url + '/accomplishment/genAccompData'
+		}).done(function(result){
 			if(result.is_save == true) {
-				window.location.reload();
 				Toast.fire({
 					type: 'success',
-					title: 'Accomplishment Report successfully generated!'
+					title: 'Accomplishment Report successfully saved!'
 				});
+				$('#generateReportModal').modal('hide');
 			} else {
 				Toast.fire({
 					type: 'error',
@@ -48,13 +32,7 @@ function getSubmit(month, year)
 				});
 			}
 		});
+		// ajax.reload();
+		return false;
 	});
-}
-
-function openLoader(that)
-{
-	that.attr('disabled',true);
-	that.find('i').addClass('hidden');
-	var loader = '<i class="fa fa-loading fa-spinner fa-spin"></i>';
-	that.find('.buttonload').html(loader);
 }

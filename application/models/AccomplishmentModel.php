@@ -15,7 +15,7 @@ class AccomplishmentModel extends BaseModel
 
     public function getAccomplishmentList() : ListAccomplishmentInterface
     {
-        $username = $_SESSION['username'];
+        $username = $this->session->userdata('username');
         $page_no = 1;
         $items_per_page = 10;
 
