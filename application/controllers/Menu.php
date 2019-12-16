@@ -11,11 +11,11 @@ class Menu extends CI_Controller
             return;
         }
 
+        $this->load->model('ProfileModel');
     }
 
     public function index()
     {
-        $this->load->model('ProfileModel');
         $profile = $this->ProfileModel->getOwnProfile();
 
         $this->load->view(

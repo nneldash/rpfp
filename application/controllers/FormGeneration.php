@@ -15,18 +15,18 @@ class FormGeneration extends CI_Controller
             return;
         }
 
-        $this->load->model('FormAModel');
-        $this->load->model('FormBModel');
-        $this->load->model('FormCModel');
+        $this->load->model('ProfileModel');
     }
 
     public function genFormA()
     {
-        $pscgc_code = 8;
         $genData = new GenerateFormAClass();
 
-        $genData->ReportYear = $this->input->post('year');
-        $genData->ReportMonth = $this->input->post('month');
+        $profile = $this->ProfileModel->getOwnProfile();
+        $pscgc_code = $profile->DesignatedLocation->Region->Code;
+
+        $genData->ReportYear = $this->input->post('repYearSelect');
+        $genData->ReportMonth = $this->input->post('repMonthSelect');
 
         if (!$this->FormAModel->saveFormA($pscgc_code, $genData)) {
             $data = ['is_save' => false];
@@ -42,11 +42,13 @@ class FormGeneration extends CI_Controller
     public function genFormB()
     {
         $unmet_id = '';
-        $pscgc_code = 8;
         $genData = new GenerateFormBClass();
 
-        $genData->ReportYear = $this->input->post('year');
-        $genData->ReportMonth = $this->input->post('month');
+        $profile = $this->ProfileModel->getOwnProfile();
+        $pscgc_code = $profile->DesignatedLocation->Region->Code;
+
+        $genData->ReportYear = $this->input->post('repYearSelect');
+        $genData->ReportMonth = $this->input->post('repMonthSelect');
 
         if (!$this->FormBModel->saveFormB($unmet_id, $pscgc_code, $genData)) {
             $data = ['is_save' => false];
@@ -62,11 +64,13 @@ class FormGeneration extends CI_Controller
     public function genFormC()
     {
         $served_id = '';
-        $pscgc_code = 8;
         $genData = new GenerateFormCClass();
 
-        $genData->ReportYear = $this->input->post('year');
-        $genData->ReportMonth = $this->input->post('month');
+        $profile = $this->ProfileModel->getOwnProfile();
+        $pscgc_code = $profile->DesignatedLocation->Region->Code;
+        
+        $genData->ReportYear = $this->input->post('repYearSelect');
+        $genData->ReportMonth = $this->input->post('repMonthSelect');
 
         if (!$this->FormBModel->saveFormC($served_id, $pscgc_code, $genData)) {
             $data = ['is_save' => false];

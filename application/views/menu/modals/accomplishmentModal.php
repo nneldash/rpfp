@@ -8,7 +8,7 @@ $current_year = date('Y');
 	<div class="row">
         <form id="accompGen" class="form-horizontal">
     		<label>Report Year: </label>
-    		<select class="form-control" id="repYearSelect" name="accompYearSelect" required>
+    		<select class="form-control" name="accompYearSelect" required>
     			<option id="repYear" value="">Year</option>
     			<?php for ($i = $current_year; $i > 2017; $i--): ?>
                     <option id="repYear" value="<?=$i?>"><?= $i?></option>
@@ -16,7 +16,7 @@ $current_year = date('Y');
     		</select>
     		<br>
     		<label>Report Month: </label>
-    		<select class="form-control" id="repMonthSelect" name="accompMonthSelect" required>
+    		<select class="form-control" name="accompMonthSelect" required>
     			<option id="repMonth" value="">Month</option>
                 <option id="repMonth" value="01">January</option>
                 <option id="repMonth" value="02">February</option>
