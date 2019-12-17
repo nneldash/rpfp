@@ -14,17 +14,19 @@ class Accomplishment extends CI_Controller
         }
 
         $this->load->model('AccomplishmentModel');
+        $this->load->model('ProfileModel');
     }
 
     public function genAccompData()
     {
-        // $username = $_SESSION['username'];
         $username = $this->session->userdata('username');
-        $pscgc_code = 8;
         $genData = new GenerateAccomplishmentClass();
 
-        $genData->ReportYear = $this->input->post('year');
-        $genData->ReportMonth = $this->input->post('month');
+        $profile = $this->ProfileModel->getOwnProfile();
+        $pscgc_code = $profile->DesignatedLocation->Region->Code;
+
+        $genData->ReportYear = $this->input->post('accompYearSelect');
+        $genData->ReportMonth = $this->input->post('accompMonthSelect');
 
         if (!$this->AccomplishmentModel->saveAccomplishment($username, $pscgc_code, $genData)) {
             $data = ['is_save' => false];

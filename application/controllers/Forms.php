@@ -55,6 +55,7 @@ class Forms extends CI_Controller
         $isRegionalDataManager = $profile->isRegionalDataManager();
 
         $municipality_id = 82601;
+        
         $this->load->model('LocationModel');
         $brgys = $this->LocationModel->listBaranggays($municipality_id);
 

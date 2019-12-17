@@ -1456,6 +1456,7 @@ BEGIN
                 NULL AS mfp_intention_shift,
                 NULL AS tfp_type,
                 NULL AS tfp_status,
+                NULL AS mfp_intention_use,
                 NULL AS tfp_reason
         ;
     ELSE
@@ -1492,6 +1493,7 @@ BEGIN
                 fp.MFP_INTENTION_SHIFT_ID AS mfp_intention_shift,
                 fp.TFP_TYPE_ID AS tfp_type,
                 fp.TFP_STATUS_ID AS tfp_status,
+                fp.MFP_INTENTION_USE_ID AS mfp_intention_use,
                 fp.REASON_INTENDING_USE_ID AS tfp_reason
            FROM rpfp.rpfp_class rc
       LEFT JOIN rpfp.couples apc
@@ -1623,6 +1625,7 @@ BEGIN
                     NULL AS mfp_shift,
                     NULL AS tfp_type,
                     NULL AS tfp_status,
+                    NULL AS mfp_intention_use,
                     NULL AS reason_use
             ;
         END;
@@ -1633,7 +1636,8 @@ BEGIN
                     fd.MFP_METHOD_USED_ID AS mfp_used,
                     fd.MFP_INTENTION_SHIFT_ID AS mfp_shift,
                     fd.TFP_TYPE_ID AS tfp_type,
-                    fd.TFP_STATUS_ID as tfp_status,
+                    fd.TFP_STATUS_ID AS tfp_status,
+                    fd.MFP_INTENTION_USE_ID AS mfp_intention_use, 
                     fd.REASON_INTENDING_USE_ID AS reason_use
                FROM rpfp.rpfp_class rc
           LEFT JOIN rpfp.couples apc
@@ -1971,6 +1975,7 @@ CREATE DEFINER=root@localhost PROCEDURE encoder_save_fp_details (
     IN mfp_shift INT,
     IN tfp_type INT,
     IN tfp_status INT,
+    IN mfp_intention_use INT,
     IN reason_use INT
     )  MODIFIES SQL DATA
 proc_exit_point :
@@ -1987,6 +1992,7 @@ BEGIN
                 MFP_INTENTION_SHIFT_ID,
                 TFP_TYPE_ID,
                 TFP_STATUS_ID,
+                MFP_INTENTION_USE_ID,
                 REASON_INTENDING_USE_ID
             )
         VALUES (
@@ -1995,6 +2001,7 @@ BEGIN
                 mfp_shift,
                 tfp_type,
                 tfp_status,
+                mfp_intention_use,
                 reason_use
             )
         ;
@@ -2007,7 +2014,8 @@ BEGIN
         SET fd.MFP_METHOD_USED_ID = IF( IFNULL( mfp_used, '') = '', fd.MFP_METHOD_USED_ID, mfp_used ),
             fd.MFP_INTENTION_SHIFT_ID = IF( IFNULL( mfp_shift, '') = '', fd.MFP_INTENTION_SHIFT_ID, mfp_shift ),
             fd.TFP_TYPE_ID = IF( IFNULL( tfp_type, '') = '', fd.TFP_TYPE_ID, tfp_type ),                            
-            fd.TFP_STATUS_ID = IF( IFNULL( tfp_status, '') = '', fd.TFP_STATUS_ID, tfp_status ),
+            fd.TFP_STATUS_ID = IF( IFNULL( tfp_status, '') = '', fd.TFP_STATUS_ID, tfp_status ),                       
+            fd.MFP_INTENTION_USE_ID = IF( IFNULL( mfp_intention_use, '') = '', fd.MFP_INTENTION_USE_ID, mfp_intention_use ),
             fd.REASON_INTENDING_USE_ID = IF( IFNULL( reason_use, '') = '', fd.REASON_INTENDING_USE_ID, reason_use)
       WHERE fd.COUPLES_ID = couplesid
     ;
@@ -5574,6 +5582,7 @@ CREATE TABLE fp_details (
  MFP_INTENTION_SHIFT_ID INT,
             TFP_TYPE_ID INT,
           TFP_STATUS_ID INT,
+   MFP_INTENTION_USE_ID INT,
 REASON_INTENDING_USE_ID INT,
             PRIMARY KEY (FP_DETAILS_ID)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;

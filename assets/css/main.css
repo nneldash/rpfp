@@ -11,6 +11,10 @@ html {
     color: #333;
 }
 
+body {
+    overflow-x: hidden;
+}
+
 footer {
     /*position: fixed;
     left: 0;
