@@ -344,10 +344,10 @@ class Forms extends CI_Controller
 
             return;
         }
-        $couple_id = $this->input->post('couple_id');
-        $couple_name = $this->input->post('couple_name');
-        $address = $this->input->post('address');
-
+        $couple_id = $this->input->post('couple_id') != 'N/A' ? $this->input->post('couple_id') : 0;
+        $couple_name = $this->input->post('couple_name') != 'N/A' ? $this->input->post('couple_name') : '';
+        $address = $this->input->post('address') != 'N/A' ? $this->input->post('address') : '';
+        
         $this->load->model('FormModel');
 
         $serviceSlip = $this->FormModel->getServiceSlip($couple_id);

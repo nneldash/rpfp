@@ -3,7 +3,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
 $this->load->library('helpers/HtmlHelper');
 
 $slip = ServiceSlipClass::getServiceSlipFromVariable($slip);
-
 ?>
 
 <div class="body-padding" style="padding-top: 0">
@@ -43,16 +42,16 @@ $slip = ServiceSlipClass::getServiceSlipFromVariable($slip);
 					</p>
 				</div>
 				<div class="col-md-8">
-					<?php
-                        echo HtmlHelper::inputPdf(
-                            $is_pdf,
-                            $couple_name,
-                            "text",
-                            "",
-                            "padding-l10 underline",
-                            ""
-                        );
-                    ?>
+				<?php
+					echo HtmlHelper::inputPdf(
+						$is_pdf,
+						$couple_name,
+						"text",
+						"",
+						"padding-l10 underline",
+						""
+					);
+				?>
 				</div>
 			</div>
 			<div class="col-md-12 padding-b15">
@@ -62,16 +61,16 @@ $slip = ServiceSlipClass::getServiceSlipFromVariable($slip);
 					</p>
 				</div>
 				<div class="col-md-8">
-					<?php
-                        echo HtmlHelper::inputPdf(
-                            $is_pdf,
-                            $address,
-                            "text",
-                            "",
-                            "padding-l10 underline",
-                            ""
-                        );
-                    ?>
+				<?php
+					echo HtmlHelper::inputPdf(
+						$is_pdf,
+						$address,
+						"text",
+						"",
+						"padding-l10 underline",
+						""
+					);
+				?>
 				</div>
 			</div>
 			<div class="col-md-12 padding-r3p text-center border-t1">

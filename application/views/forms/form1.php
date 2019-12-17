@@ -697,6 +697,7 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 									<?php if(!$is_pdf): ?>
 										<?php if($isEncoder): ?>
 											<td class="small text-center" rowspan="2">
+												<input type="text" name="slipIndex" value="<?= $i; ?>">
 												<button class="btn-slip" data-couple="<?= $couple->Id; ?>" data-couple-name="<?= HtmlHelper::firstEntry_Name($couple->FirstEntry->Name, $couple->SecondEntry->Name); ?>" data-address="<?= $couple->Address_St; ?>" data-toggle="tooltip" data-placement="left" title="View Service Slip">
 													<i class="fa fa-file"></i>
 												</button>
