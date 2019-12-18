@@ -158,6 +158,13 @@ if (empty($title)) {
                                             </a>
                                         </li>
                                     <?php endif; ?>
+                                    <?php if ($profile->isITDMU()) :?>
+                                        <li>
+                                            <a href="<?= base_url('forms')?>">
+                                                <i class="fa fa-venus-mars"></i> RPFP Users
+                                            </a>
+                                        </li>
+                                    <?php endif; ?>
                                     <li>
                                         <a href="<?= base_url('login/logoffUser')?>">
                                             <i class="fa fa-sign-out"></i> Logout

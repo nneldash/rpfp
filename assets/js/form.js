@@ -12,9 +12,9 @@ $(function() {
 
 	var isRDM = $('#rdm').val();
 
-    $('.selectpicker').selectpicker({
-    	container: 'body'
-    });
+    // $('.selectpicker').selectpicker({
+    // 	container: 'body'
+    // });
 
 	if(isRDM == 1){
 		$('td input').attr('disabled', true);
@@ -36,8 +36,16 @@ function serviceModal()
 		$('#menuModal').modal();
 		
 		var coupleId = $(this).attr('data-couple');
-		var coupleName = $(this).attr('data-couple-name');
-		var address = $(this).attr('data-address');
+		var index =  $(this).closest('tr').find('input[name="slipIndex"]').val();
+		var lastName = $(this).closest('tr').find('textarea[name="lastname1['+index+']"]').val();
+		var firstName = $(this).closest('tr').find('textarea[name="firstname1['+index+']"]').val();
+		var middleName = $(this).closest('tr').find('textarea[name="middlename1['+index+']"]').val();
+		var coupleName = lastName + ' ' + firstName + ' ' + middleName;
+
+		var house_no_st = $(this).closest('tr').find('input[name="house_no_st['+index+']"]').val();
+		var brgy = $(this).closest('tr').find('input[name="brgy['+index+']"]').val();
+		var city = $(this).closest('tr').find('input[name="city['+index+']"]').val();
+		var address =  house_no_st + ' ' + brgy + ' ' + city;
 
 		$.post(base_url + '/forms/serviceSlip', {'couple_id' : coupleId, 'couple_name' : coupleName, 'address' : address})
 		.done(function(html){
