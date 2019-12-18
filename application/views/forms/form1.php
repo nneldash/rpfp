@@ -278,7 +278,7 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 						</td>
 						<td class="border-0">
 							<span class="small">
-								<input type="date" name="date_conducted" value="<?= $form1->Seminar->DateConducted; ?>" class="padding-l10 underline width-70" />
+								<input type="date" name="date_conducted" value="<?= ($form1->Seminar->DateConducted != 'N/A' ? $form1->Seminar->DateConducted : ''); ?>" class="padding-l10 underline width-70" />
 		                    </span>
 						</td>
 					</tr>
@@ -455,7 +455,7 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 									
 									<td class="small">
 										<div style="display: inline-flex; border: 1px solid transparent;">
-											<input type="hidden" id="isDuplicate1" value="" />
+											<input type="hidden" id="isDuplicate1[<?= $i; ?>]" value="" />
 											<input type="hidden" class="loopIndex1" value="<?= $i;?>" />
 											<?php
 					                            echo HtmlHelper::inputPdf(
@@ -555,7 +555,7 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 					                                "'mask': '99-99-9999'"
 					                            );
 					                        ?> /
-					                        <input type="text" name="age1[<?=$i?>]" maxlength="2" class="text-center getAge1" readonly value="<?= HtmlHelper::firstEntry_BirthAge($couple->FirstEntry->Age, $couple->SecondEntry->Age) ?>" />
+					                        <input type="text" name="age1[<?=$i?>]" maxlength="2" class="text-center getAge1" style="width: 50%;" readonly value="<?= HtmlHelper::firstEntry_BirthAge($couple->FirstEntry->Age, $couple->SecondEntry->Age) ?>" />
 										</div>								
 									</td>
 									<td class="small text-center" rowspan="2">										
@@ -668,11 +668,11 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 				                            	($couple->TraditionalFp->Status != 'N/A' ? $couple->TraditionalFp->Status : ''),
 				                                "text",
 				                                "status[".$i."]",
-				                                "height-50 text-center status",
+				                                "height-50 text-center status-trad",
 				                                "1"
 				                            );
 				                        ?>
-				                        <input type="text" hidden class="text-center" name="" />
+				                        <input type="text" disabled value="<?= ($couple->TraditionalFp->Status != 'N/A' ? $couple->TraditionalFp->Status : ''); ?>" class="height-50 text-center status-intention" maxlength="1" name="status_intention[<?= $i; ?>]" />
 									</td>
 									<td class="small-20 text-center" rowspan="2">
 										<?php
@@ -708,7 +708,7 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 								<tr class="tr2<?= $i; ?>">
 									<td class="small">
 										<div style="display: inline-flex; border: 1px solid transparent;">
-											<input type="hidden" id="isDuplicate2" value="" />
+											<input type="hidden" id="isDuplicate2[<?= $i; ?>]" value="" />
 											<input type="hidden" class="loopIndex2" value="<?= $i;?>" />
 											<?php
 					                            echo HtmlHelper::inputPdf(
@@ -799,7 +799,7 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 					                                "'mask': '99-99-9999'"
 					                            );
 				                        	?> /
-				                        	<input type="text" name="age2[<?=$i?>]" maxlength="2" class="text-center getAge2" readonly value="<?= HtmlHelper::secondEntry_BirthAge($couple->FirstEntry->Age, $couple->SecondEntry->Age) ?>" />
+				                        	<input type="text" name="age2[<?=$i?>]" maxlength="2" style="width: 50%;" class="text-center getAge2" readonly value="<?= HtmlHelper::secondEntry_BirthAge($couple->FirstEntry->Age, $couple->SecondEntry->Age) ?>" />
 										</div>
 									</td>
 									<td class="small-20 text-center">

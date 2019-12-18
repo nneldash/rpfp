@@ -9,25 +9,35 @@ $(function() {
 	checkBox();
 	checkDuplicate();
 	Inputmask().mask(".birthAge");
+	traditionalStatus();
 
 	var isRDM = $('#rdm').val();
 
-    // $('.selectpicker').selectpicker({
-    // 	container: 'body'
-    // });
+    $('.selectpicker').selectpicker({
+    	container: 'body'
+    });
 
 	if(isRDM == 1){
 		$('td input').attr('disabled', true);
 		$('td input').css('cursor', 'not-allowed');
 		$('td input[class="check"]').attr('disabled', false);
 	}
-
-	$('input[class="status"]').change(function(){
-		var loopIndex = $(this).closest('tr').find('input[class="loopIndex1"]').val();
-		var that = $(this).val();
-		console.log(loopIndex);
-	});
 });
+
+function traditionalStatus()
+{
+	$('.status-trad').change(function(){
+		var stat = $(this).val();
+		var stat = stat.toUpperCase();
+		var index = $(this).closest('tr').find('input[name="slipIndex"]').val();
+
+		if (stat === 'A') {
+			$(this).closest('tr').find('input[name="status_intention['+ index +']"]').removeAttr('disabled', 'disabled');
+		} else {
+			$(this).closest('tr').find('input[name="status_intention['+ index +']"]').attr('disabled', 'disabled');
+		}
+	});
+}
 
 function serviceModal()
 {
@@ -38,6 +48,11 @@ function serviceModal()
 		var coupleId = $(this).attr('data-couple');
 		var index =  $(this).closest('tr').find('input[name="slipIndex"]').val();
 		var lastName = $(this).closest('tr').find('textarea[name="lastname1['+index+']"]').val();
+
+		if(lastName != '') {
+			lastName = $(this).closest('tr').find('textarea[name="lastname1['+index+']"]').val() + ',';
+		}
+
 		var firstName = $(this).closest('tr').find('textarea[name="firstname1['+index+']"]').val();
 		var middleName = $(this).closest('tr').find('textarea[name="middlename1['+index+']"]').val();
 		var coupleName = lastName + ' ' + firstName + ' ' + middleName;
@@ -137,6 +152,8 @@ function checkBox()
     	$('td:first-child input[value="aproveCouple"]').closest('tr').next('tr').toggleClass("highlight", this.checked);
     });
 }
+
+// change the codes
 
 function checkDuplicate()
 {
