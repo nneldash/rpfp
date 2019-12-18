@@ -841,6 +841,27 @@ BEGIN
     ;
 END$$
 
+CREATE DEFINER=root@localhost PROCEDURE lib_list_regional_cities(
+    IN region INT UNSIGNED
+    )    READS SQL DATA
+BEGIN
+     SELECT reg.REGION_CODE AS region_id,
+            reg.LOCATION_DESCRIPTION AS region_name,
+            prov.PROVINCE_CODE AS province_id,
+            prov.LOCATION_DESCRIPTION AS province_name,
+            city.MUNICIPALITY_CODE AS location_code,
+            city.LOCATION_DESCRIPTION AS location_name
+       FROM rpfp.lib_psgc_locations city
+  LEFT JOIN rpfp.lib_psgc_locations reg
+         ON reg.PSGC_CODE = (city.REGION_CODE * POWER( 10, 7 ))
+  LEFT JOIN rpfp.lib_psgc_locations prov
+         ON prov.PSGC_CODE = (city.PROVINCE_CODE * POWER( 10, 5 ))
+      WHERE city.INTER_LEVEL IN ('CITY', 'MUN', 'SUBMUN')
+        AND city.REGION_CODE = region
+   ORDER BY prov.PROVINCE_CODE, city.LOCATION_DESCRIPTION
+    ;
+END$$
+
 CREATE DEFINER=root@localhost PROCEDURE lib_list_brgy(
     IN municipality_id INT UNSIGNED
     )    READS SQL DATA
@@ -5887,11 +5908,11 @@ GRANT EXECUTE ON PROCEDURE rpfp.profile_save_own_profile TO 'rpfp_login';
 GRANT EXECUTE ON PROCEDURE rpfp.profile_get_own_pic TO 'rpfp_login';
 GRANT EXECUTE ON PROCEDURE rpfp.profile_save_own_pic_filename TO 'rpfp_login';
 
-
 GRANT EXECUTE ON PROCEDURE rpfp.lib_list_regions TO 'rpfp_login';
 GRANT EXECUTE ON PROCEDURE rpfp.lib_list_provinces TO 'rpfp_login';
 GRANT EXECUTE ON PROCEDURE rpfp.lib_list_cities TO 'rpfp_login';
 GRANT EXECUTE ON PROCEDURE rpfp.lib_list_brgy TO 'rpfp_login';
+GRANT EXECUTE ON PROCEDURE rpfp.lib_list_regional_cities TO 'rpfp_login';
 
 GRANT EXECUTE ON PROCEDURE rpfp.itdmu_create_rpfp_user TO 'itdmu';
 GRANT EXECUTE ON PROCEDURE rpfp.itdmu_update_first_login TO 'itdmu';

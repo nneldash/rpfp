@@ -4,6 +4,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
 class Location extends CI_Controller
 {
     private $user;
+    const REGIONAL = 0;
+    const PROVINCIAL = 1;
+    const MUNICIPAL = 2;
+    const BARANGAY_LEVEL = 3;
 
     public function __construct()
     {
@@ -18,7 +22,7 @@ class Location extends CI_Controller
         $this->user = empty($this->user) ? BLANK : $this->user;
     }
 
-    private function loadPage($data, $errors = "NO ERRORS")
+    private function loadPage(ListSpecificLocation $data, $errors = "NO ERRORS")
     {
         $this->load->view('includes/header', array('title' => 'RPFP Online - Regions List'));
         $this->load->view(
@@ -35,7 +39,7 @@ class Location extends CI_Controller
         $this->load->view('includes/footer');
     }
 
-    private function loadJSON($data, $errors = "NO ERRORS")
+    private function loadJSON(ListSpecificLocation $data, $errors = "NO ERRORS")
     {
         $retval = array();
         foreach ($data as $location) {
@@ -121,14 +125,14 @@ class Location extends CI_Controller
         return;
     }
 
-    public function getProvinces()
+    public function getProvinces(bool $with_ret_val = false)
     {
         /**
          * FOR SPECIFIC PROVINCE WITHIN THE ASSIGNED REGION
-         * $.ajax('Location/getRegion', {'method': 'POST', 'data': {'PROVINCE': 1702}});
+         * $.ajax('Location/getProvinces', {'method': 'POST', 'data': {'PROVINCE': 1702}});
          * 
          * FOR LIST OF PROVINCES
-         * $.ajax('Location/getRegion', {'method': 'POST'});
+         * $.ajax('Location/getProvinces', {'method': 'POST'});
          * 
         */
         $this->load->model('ProfileModel');
@@ -139,14 +143,90 @@ class Location extends CI_Controller
         $locs = ListSpecificLocation::getFromVariable($this->LocationModel->listProvinces($region));
         $ret_val = $this->getLocation($locs, intval($this->input->post(LOC_PROVINCE)));
         
+        if ($with_ret_val) {
+            return $ret_val;
+        } else {
+            if ($this->input->server(REQUEST_METHOD) != POST) {
+                $this->loadPage($ret_val);
+                return;
+            }
+    
+            $this->loadJSON($ret_val);
+            return;
+        }
+    }
+
+    private static function verifyRegion(int $level, int $specific_code, UserProfile $profile) : int
+    {
+        $user_region = $profile->DesignatedLocation->Region->Code;
+
+        $specific_region = 0;
+        switch ($level) {
+            case self::PROVINCIAL :
+                $specific_region = intdiv($specific_code, 100);
+            break;
+            case self::MUNICIPAL :
+                $specific_region = intdiv($specific_code, 10000);
+            break;
+            case self::BARANGAY_LEVEL :
+                $specific_region = intdiv($specific_code, 10000000);
+            break;
+        }
+
+        return $specific_region == $user_region;
+    }
+
+
+    public function getMunicipalities()
+    {
+        /**
+         * FOR SPECIFIC MUNICIPALITY WITHIN THE ASSIGNED REGION
+         * $.ajax('Location/getMunicipalities', {'method': 'POST', 'data': {'MUNICIPALITY': 170203}});
+         * 
+         * FOR LIST OF PROVINCES WITHIN THE ASSIGNED REGION
+         * $.ajax('Location/getMunicipalities', {'method': 'POST'});
+         * 
+        */
+
+        $errors = BLANK;
+        $locs = array();
+
+        $this->load->model('ProfileModel');
+        $profile = $this->ProfileModel->getOwnProfile();
+        $profile = UserProfile::getFromVariable($profile);
+
+        $province_code = intval($this->input->post(LOC_PROVINCE));
+        if (!empty($province_code) && !self::verifyRegion(self::PROVINCIAL, $province_code, $profile)) {
+            $errors = "REGION NOT ALLOWED FOR USER";
+        }
+
+        $municipality_code = intval($this->input->post(LOC_MUNICIPALITY));
+
+        if ($errors == BLANK && empty($province_code) && empty($municipality_code)) {
+            $errors = "PROVINCE/MUNICIPALITY NOT SPECIFIED";
+        }
+
+        if ($errors == BLANK && !self::verifyRegion(self::MUNICIPAL, $municipality_code, $profile)) {            
+            $errors = "INVALID REGION FOR MUNICIPALITY";
+        }
+
+        if ($errors == BLANK && empty($province_code)) {
+            $province_code = intdiv($municipality_code, 100);
+        }
+        
+        $ret_val = new ListSpecificLocation();
+        if ($errors == BLANK) {
+            $locs = ListSpecificLocation::getFromVariable($this->LocationModel->listMunicipalities(($province_code)));
+
+            $ret_val = $this->getLocation($locs, $municipality_code);
+        }
+
         if ($this->input->server(REQUEST_METHOD) != POST) {
-            $this->loadPage($ret_val);
+            $this->loadPage($ret_val, $errors);
             return;
         }
 
-        $this->loadJSON($ret_val);
-        return;
+        $this->loadJSON($ret_val, $errors);
+        return;    
     }
-
-    
 }

@@ -27,7 +27,13 @@ class LocationModel extends BaseModel
             array('Region', 'Code')
         );
 
-        return ListSpecificLocation::getFromVariable($list);
+        $retval = new ListSpecificLocation();
+        foreach ($list as $location) {
+            $location = SpecificLocation::getFromVariable($location);
+            $retval->offsetSet($location->Region->Code, $location);
+        }
+
+        return $retval;
     }
 
     public function listProvinces(int $region_code) : ListLocationInterface
@@ -84,8 +90,9 @@ class LocationModel extends BaseModel
         );
 
         $retval = new ListSpecificLocation();
-        foreach ($list as $municipality) {
-            $retval->append($municipality);
+        foreach ($list as $location) {
+            $location = SpecificLocation::getFromVariable($location);
+            $retval->offsetSet($location->City->Code, $location);
         }
 
         return $retval;
@@ -119,8 +126,9 @@ class LocationModel extends BaseModel
         );
 
         $retval = new ListSpecificLocation();
-        foreach ($list as $barangay) {
-            $retval->append($barangay);
+        foreach ($list as $location) {
+            $location = SpecificLocation::getFromVariable($location);
+            $retval->offsetSet($location->Barangay->Code, $location);
         }
 
         return $retval;
