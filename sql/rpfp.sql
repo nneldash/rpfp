@@ -572,10 +572,12 @@ BEGIN
        FROM rpfp.user_profile prof
   LEFT JOIN rpfp.lib_psgc_locations loc
          ON prof.PSGC_CODE = loc.PSGC_CODE
+         OR loc.PSGC_CODE IS NULL
   LEFT JOIN rpfp.lib_psgc_locations reg
          ON reg.PSGC_CODE = (prof.PSGC_CODE DIV POWER(10, 7) * POWER(10, 7))
       WHERE prof.DB_USER_ID = name_user
         AND prof.REGION_CODE = loc.REGION_CODE
+         OR reg.REGION_CODE IS NULL
       LIMIT 1
     ;
 END$$
