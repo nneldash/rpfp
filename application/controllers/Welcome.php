@@ -40,6 +40,11 @@ class Welcome extends CI_Controller
             return;
         }
 
+        if ($profile->isITDMU()) {
+            redirect(site_url('Menu'));
+            return;
+        }
+
         $this->load->view("includes/header", $header);
         $this->load->view("menu/dashboard.php");
         $this->load->view('includes/footer');
