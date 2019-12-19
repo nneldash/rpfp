@@ -43,9 +43,9 @@ class FormModel extends BaseModel
             /** return exception or error message */
             return;
         }
-
+        // print_r($class_id);exit;
        $couple = $this->saveCouple($class_id, $form->ListCouple);
-        print_r($couple);exit;
+        
        if (!$couple) {
            return false;
        }
@@ -66,7 +66,7 @@ class FormModel extends BaseModel
             $data->ClassNumber == N_A ? BLANK : $data->ClassNumber,
             $data->DateConducted == N_A ? BLANK : $data->DateConducted
         ];
-
+        
         return $this->saveToDb($method, $params);
     }
 

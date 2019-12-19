@@ -90,6 +90,7 @@ class Forms extends CI_Controller
         $form1->ListCouple = $this->getInputFromListCouples();
         // echo '<pre>';
         // print_r($form1);exit;
+        // print_r($this->FormModel->saveForm1($form1));exit;
         if (!$this->FormModel->saveForm1($form1)) {
             $data = ['is_save' => false];
         } else {
