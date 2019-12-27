@@ -1765,7 +1765,7 @@ BEGIN
 DECLARE check_details INT;
 
     IF ( IFNULL( sex, 0 ) = 0 )  THEN
-        SELECT "CANNOT SEARCH RECORD WITH GIVEN PARAMETERS" AS MESSAGE;
+        SELECT "CANNOT SEARCH RECORD WITH GIVEN PARAMETERS" AS check_details;
         LEAVE proc_exit_point;
     END IF;
 
@@ -5941,6 +5941,7 @@ GRANT EXECUTE ON PROCEDURE rpfp.get_class_details TO 'encoder';
 GRANT EXECUTE ON PROCEDURE rpfp.get_forms_list TO 'encoder';
 GRANT EXECUTE ON PROCEDURE rpfp.get_report_accomplishment_details TO 'encoder';
 GRANT EXECUTE ON PROCEDURE rpfp.encoder_get_couples_with_fp_details TO 'encoder';
+GRANT EXECUTE ON PROCEDURE rpfp.process_accomplishment TO 'encoder';
 
 GRANT EXECUTE ON PROCEDURE rpfp.rdm_approve_couples TO 'regional_data_manager';
 GRANT EXECUTE ON PROCEDURE rpfp.rdm_save_target TO 'regional_data_manager';

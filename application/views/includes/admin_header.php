@@ -160,8 +160,8 @@ if (empty($title)) {
                                     <?php endif; ?>
                                     <?php if ($profile->isITDMU()) :?>
                                         <li>
-                                            <a href="<?= base_url('forms')?>">
-                                                <i class="fa fa-venus-mars"></i> RPFP Users
+                                            <a href="<?= base_url('userprofile')?>">
+                                                <i class="fa fa-users"></i> User Profile
                                             </a>
                                         </li>
                                     <?php endif; ?>

@@ -41,7 +41,7 @@ class Welcome extends CI_Controller
         }
 
         if ($profile->isITDMU()) {
-            redirect(site_url('Menu'));
+            redirect(site_url('UserProfile'));
             return;
         }
 

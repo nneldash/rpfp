@@ -463,7 +463,7 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 					                                ($couple->Id != 'N/A' ? $couple->Id : ''),
 					                                "hidden",
 					                                "couple_id[".$i."]",
-					                                "padding-l3 namePart1 dupHighlight",
+					                                "padding-l3 dupHighlight",
 					                                ""
 					                            );
 					                        ?>
@@ -473,7 +473,7 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 					                                HtmlHelper::firstEntry_Id($couple->FirstEntry->Id, $couple->SecondEntry->Id),
 					                                "hidden",
 					                                "individual_id1[".$i."]",
-					                                "padding-l3 namePart1 dupHighlight",
+					                                "padding-l3 dupHighlight",
 					                                ""
 					                            );
 					                        ?>
@@ -483,7 +483,7 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 					                            	HtmlHelper::firstEntry_FirstName($couple->FirstEntry->Name, $couple->SecondEntry->Name),
 					                                "textarea",
 					                                "firstname1[".$i."]",
-					                                "padding-l3 namePart1",
+					                                "padding-l3 fname1",
 					                                "FIRST"
 					                            );
 					                        ?> ,
@@ -493,7 +493,7 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 					                            	HtmlHelper::firstEntry_MiddleName($couple->FirstEntry->Name, $couple->SecondEntry->Name),
 					                                "textarea",
 					                                "middlename1[".$i."]",
-					                                "padding-l3 namePart1",
+					                                "padding-l3",
 					                                "MIDDLE"
 					                            );
 					                        ?> ,
@@ -503,7 +503,7 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 					                            	HtmlHelper::firstEntry_LastName($couple->FirstEntry->Name, $couple->SecondEntry->Name),
 					                                "textarea",
 					                                "lastname1[".$i."]",
-					                                "padding-l3 namePart1",
+					                                "padding-l3 lname1",
 					                                "LAST"
 					                            );
 					                        ?> ,
@@ -513,7 +513,7 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 					                            	HtmlHelper::firstEntry_ExtName($couple->FirstEntry->Name, $couple->SecondEntry->Name),
 					                                "text",
 					                                "extname1[".$i."]",
-					                                "padding-l3 text-center max-width10 namePart1 width-35",
+					                                "padding-l3 text-center max-width10 width-35",
 					                                "EXT"
 					                            );
 					                        ?>
@@ -716,7 +716,7 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 					                                HtmlHelper::secondEntry_Id($couple->FirstEntry->Id, $couple->SecondEntry->Id),
 					                                "hidden",
 					                                "individual_id2[".$i."]",
-					                                "padding-l3 namePart2",
+					                                "padding-l3",
 					                                ""
 					                            );
 					                        ?>
@@ -726,7 +726,7 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 					                            	HtmlHelper::secondEntry_FirstName($couple->FirstEntry->Name, $couple->SecondEntry->Name),
 					                                "textarea",
 					                                "firstname2[".$i."]",
-					                                "padding-l3 namePart2",
+					                                "padding-l3 fname2",
 					                                "FIRST"
 					                            );
 					                        ?>,
@@ -736,7 +736,7 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 					                            	HtmlHelper::secondEntry_MiddleName($couple->FirstEntry->Name, $couple->SecondEntry->Name),
 					                                "textarea",
 					                                "middlename2[".$i."]",
-					                                "padding-l3 namePart2",
+					                                "padding-l3",
 					                                "MIDDLE"
 					                            );
 					                        ?>,
@@ -746,7 +746,7 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 					                            	HtmlHelper::secondEntry_LastName($couple->FirstEntry->Name, $couple->SecondEntry->Name),
 					                                "textarea",
 					                                "lastname2[".$i."]",
-					                                "padding-l3 namePart2",
+					                                "padding-l3 lname2",
 					                                "LAST"
 					                            );
 					                        ?>,
@@ -756,7 +756,7 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 					                            	HtmlHelper::secondEntry_ExtName($couple->FirstEntry->Name, $couple->SecondEntry->Name),
 					                                "text",
 					                                "extname2[".$i."]",
-					                                "padding-l3 text-center max-width10 namePart1 width-35",
+					                                "padding-l3 text-center max-width10 width-35",
 					                                "EXT"
 					                            );
 					                        ?>
