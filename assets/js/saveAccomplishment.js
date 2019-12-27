@@ -5,6 +5,9 @@ $(function(){
 function genAccomp()
 {
 	$('.genAccompSubmit').click(function() {
+		$('.genAccompSubmit').attr('hidden', true);
+		$('.loading').removeAttr('hidden', false);
+		
 		const Toast = Swal.mixin({
 			toast: true,
 			position: 'top-end',

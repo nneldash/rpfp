@@ -7,6 +7,9 @@ function genForm()
 	var formName = $('.formName').val();
 
 	$('.genFormSubmit').click(function() {
+		$('.genFormSubmit').attr('hidden', true);
+		$('.loading').removeAttr('hidden', false);
+
 		const Toast = Swal.mixin({
 			toast: true,
 			position: 'top-end',

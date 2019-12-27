@@ -35,6 +35,7 @@ $current_year = date('Y');
     		<br>
     		<div style="text-transform: none; ">
                 <input type="submit" class="save genFormSubmit buttonload" name="saveReport" value="SUBMIT" />
+                <button class="save buttonload loading" hidden><span><i class="fa fa-spinner fa-spin"></i></span></button>
             </div>
         </form>
 	</div>
