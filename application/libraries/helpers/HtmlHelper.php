@@ -6,6 +6,9 @@ class HtmlHelper
     public static function inputPdf($is_pdf, $field, $type, $name, $class, $attr, $returnIfEmpty = "")
     {
         $date = "";
+        if ($field == N_A) {
+            $field = $returnIfEmpty;
+        }
         if ($type == "date" && !empty($field) && ($field instanceof DateTime)) {
             $today = new DateTime();
             if ($today->format("Ymd") != $field->format("Ymd")) {
@@ -27,10 +30,10 @@ class HtmlHelper
             return form_input($data);
         } else {
             if (empty($field) && !empty($returnIfEmpty)) {
-                return returnIfEmpty;
+                return $returnIfEmpty;
             } else {
                 return (
-                    ($type == "date") ? $field : $field
+                    ($type == "date") ? $date : $field
                 );
             }
         }
@@ -83,7 +86,7 @@ class HtmlHelper
             return form_input($data);
         } else {
             if (empty($field) && !empty($returnIfEmpty)) {
-                return returnIfEmpty;
+                return $returnIfEmpty;
             } else {
                 return (
                     ($type == "date") ? $field : $field
@@ -262,9 +265,6 @@ class HtmlHelper
     public static function dashInputPdf($field) : string
     {
         if ($field != N_A) {
-            if ($field instanceof BasicInt) {
-                return strval($field->value());
-            }
             return strval($field);
             
         }
