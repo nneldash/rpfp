@@ -7,10 +7,10 @@ $(function() {
 	inputValid();
 	saveForm1();
 	checkBox();
-	// checkDuplicate();
-	Inputmask().mask(".birthAge");
 	traditionalStatus();
-	getage();
+	getDataDuplicate();
+
+	Inputmask().mask(".birthAge");
 
 	var isRDM = $('#rdm').val();
 
@@ -40,8 +40,87 @@ function traditionalStatus()
 	});
 }
 
-function getage()
+function getDataDuplicate()
 {
+	var row1 = 1;
+	var row2 = 2;
+
+	$('.fname1').keyup(function(){
+		var fname = $(this).val();
+		var lname = $(this).closest('tr').find('.lname1').val();
+		var extname = $(this).closest('tr').find('.extname1').val();
+		var sex = $(this).closest('tr').find('.gender1').val();
+		var sex = sex.toUpperCase();
+		
+		var bday = $(this).closest('tr').find('.bday1').val();
+		var dateArr = bday.split('-');
+		var month = $.trim(dateArr[0]);
+		var day = $.trim(dateArr[1]);
+		var year = $.trim(dateArr[2]);
+		var bday = year + '-' + month + '-' + day;
+
+		var index = $(this).closest('tr').find('.loopIndex1').val();
+
+		autoGetData(fname, lname, extname, sex, bday, index, row1);
+	});
+
+	$('.lname1').keyup(function(){
+		var lname = $(this).val();
+		var fname = $(this).closest('tr').find('.fname1').val();
+		var extname = $(this).closest('tr').find('.extname1').val();
+		var sex = $(this).closest('tr').find('.gender1').val();
+		var sex = sex.toUpperCase();
+		
+		var bday = $(this).closest('tr').find('.bday1').val();
+		var dateArr = bday.split('-');
+		var month = $.trim(dateArr[0]);
+		var day = $.trim(dateArr[1]);
+		var year = $.trim(dateArr[2]);
+		var bday = year + '-' + month + '-' + day;
+
+		var index = $(this).closest('tr').find('.loopIndex1').val();
+
+		autoGetData(fname, lname, extname, sex, bday, index, row1);
+	});
+
+	$('.extname1').keyup(function(){
+		var extname = $(this).val();
+		var fname = $(this).closest('tr').find('.fname1').val();
+		var lname = $(this).closest('tr').find('.lname1').val();
+		var sex = $(this).closest('tr').find('.gender1').val();
+		var sex = sex.toUpperCase();
+		
+		var bday = $(this).closest('tr').find('.bday1').val();
+		var dateArr = bday.split('-');
+		var month = $.trim(dateArr[0]);
+		var day = $.trim(dateArr[1]);
+		var year = $.trim(dateArr[2]);
+		var bday = year + '-' + month + '-' + day;
+
+		var index = $(this).closest('tr').find('.loopIndex1').val();
+
+		autoGetData(fname, lname, extname, sex, bday, index, row1);
+	});
+
+	$('.gender1').keyup(function(){
+		var sex = $(this).val();
+		var sex = sex.toUpperCase();
+		var fname = $(this).closest('tr').find('.fname1').val();
+		var lname = $(this).closest('tr').find('.lname1').val();
+		var extname = $(this).closest('tr').find('.extname1').val();
+		
+		var bday = $(this).closest('tr').find('.bday1').val();
+		var dateArr = bday.split('-');
+		var month = $.trim(dateArr[0]);
+		var day = $.trim(dateArr[1]);
+		var year = $.trim(dateArr[2]);
+		var bday = year + '-' + month + '-' + day;
+
+		var index = $(this).closest('tr').find('.loopIndex1').val();
+
+		autoGetData(fname, lname, extname, sex, bday, index, row1);
+	});
+
 	$('.bday1').keyup(function(){
 		var bday1 = $(this).val();
 
@@ -64,32 +143,84 @@ function getage()
 		var extname = $(this).closest('tr').find('.extname1').val();
 		var sex = $(this).closest('tr').find('.gender1').val();
 		var sex = sex.toUpperCase();
+		
+		autoGetData(fname, lname, extname, sex, bday, index, row1);
+	});
 
-		if (sex === 'F') {
-			sex = 2;
-		} else if(sex === 'M') {
-			sex = 1;
-		} else {
-			sex = 0;
-		}
+	$('.fname2').keyup(function(){
+		var fname = $(this).val();
+		var lname = $(this).closest('tr').find('.lname2').val();
+		var extname = $(this).closest('tr').find('.extname2').val();
+		var sex = $(this).closest('tr').find('.gender2').val();
+		var sex = sex.toUpperCase();
+		
+		var bday = $(this).closest('tr').find('.bday2').val();
+		var dateArr = bday.split('-');
+		var month = $.trim(dateArr[0]);
+		var day = $.trim(dateArr[1]);
+		var year = $.trim(dateArr[2]);
+		var bday = year + '-' + month + '-' + day;
+		
+		var index = $(this).closest('tr').find('.loopIndex2').val();
 
-		$.post(base_url + 'forms/checkCoupleDuplicate', {
-			'firstname' : fname, 
-			'surname' 	: lname, 
-			'extname' 	: extname, 
-			'sex' 		: sex, 
-			'bday' 		: bday
-		}).done(function(result){			
-			if (result === '1') {
-				$('.tr1' + index + ' td').addClass('has-duplicate');
-				$('.tr1' + index + ' td input').addClass('has-duplicate');
-				$('.tr1' + index + ' td textarea').addClass('has-duplicate');
-			} else {
-				$('.tr1' + index + ' td').removeClass('has-duplicate');
-				$('.tr1' + index + ' td input').removeClass('has-duplicate');
-				$('.tr1' + index + ' td textarea').removeClass('has-duplicate');
-			}
-		});
+		autoGetData(fname, lname, extname, sex, bday, index, row2);
+	});
+
+	$('.lname2').keyup(function(){
+		var lname = $(this).val();
+		var fname = $(this).closest('tr').find('.fname2').val();
+		var extname = $(this).closest('tr').find('.extname2').val();
+		var sex = $(this).closest('tr').find('.gender2').val();
+		var sex = sex.toUpperCase();
+		
+		var bday = $(this).closest('tr').find('.bday2').val();
+		var dateArr = bday.split('-');
+		var month = $.trim(dateArr[0]);
+		var day = $.trim(dateArr[1]);
+		var year = $.trim(dateArr[2]);
+		var bday = year + '-' + month + '-' + day;
+
+		var index = $(this).closest('tr').find('.loopIndex2').val();
+
+		autoGetData(fname, lname, extname, sex, bday, index, row2);
+	});
+
+	$('.extname2').keyup(function(){
+		var extname = $(this).val();
+		var fname = $(this).closest('tr').find('.fname2').val();
+		var lname = $(this).closest('tr').find('.lname2').val();
+		var sex = $(this).closest('tr').find('.gender2').val();
+		var sex = sex.toUpperCase();
+		
+		var bday = $(this).closest('tr').find('.bday2').val();
+		var dateArr = bday.split('-');
+		var month = $.trim(dateArr[0]);
+		var day = $.trim(dateArr[1]);
+		var year = $.trim(dateArr[2]);
+		var bday = year + '-' + month + '-' + day;
+
+		var index = $(this).closest('tr').find('.loopIndex2').val();
+
+		autoGetData(fname, lname, extname, sex, bday, index, row2);
+	});
+
+	$('.gender2').keyup(function(){
+		var sex = $(this).val();
+		var sex = sex.toUpperCase();
+		var fname = $(this).closest('tr').find('.fname2').val();
+		var lname = $(this).closest('tr').find('.lname2').val();
+		var extname = $(this).closest('tr').find('.extname2').val();
+		
+		var bday = $(this).closest('tr').find('.bday2').val();
+		var dateArr = bday.split('-');
+		var month = $.trim(dateArr[0]);
+		var day = $.trim(dateArr[1]);
+		var year = $.trim(dateArr[2]);
+		var bday = year + '-' + month + '-' + day;
+
+		var index = $(this).closest('tr').find('.loopIndex2').val();
+
+		autoGetData(fname, lname, extname, sex, bday, index, row2);
 	});
 
 	$('.bday2').keyup(function(){
@@ -114,32 +245,38 @@ function getage()
 		var extname = $(this).closest('tr').find('.extname2').val();
 		var sex = $(this).closest('tr').find('.gender2').val();
 		var sex = sex.toUpperCase();
+		
+		autoGetData(fname, lname, extname, sex, bday, index, row2);
+	});
+}
 
-		if (sex === 'F') {
-			sex = 2;
-		} else if(sex === 'M') {
-			sex = 1;
+function autoGetData(fname, lname, extname, sex, bday, index, row)
+{
+	if (sex === 'F') {
+		sex = 2;
+	} else if(sex === 'M') {
+		sex = 1;
+	} else {
+		sex = 0;
+	}
+
+	$.post(base_url + 'forms/checkCoupleDuplicate', {
+		'firstname' : fname, 
+		'surname' 	: lname, 
+		'extname' 	: extname, 
+		'sex' 		: sex, 
+		'bday' 		: bday
+	}).done(function(result){
+		console.log(result);		
+		if (result === '1') {
+			$('.tr'+ row + + index + ' td').addClass('has-duplicate');
+			$('.tr'+ row + + index + ' td input').addClass('has-duplicate');
+			$('.tr'+ row + + index + ' td textarea').addClass('has-duplicate');
 		} else {
-			sex = 0;
+			$('.tr'+ row + + index + ' td').removeClass('has-duplicate');
+			$('.tr'+ row + + index + ' td input').removeClass('has-duplicate');
+			$('.tr'+ row + + index + ' td textarea').removeClass('has-duplicate');
 		}
-
-		$.post(base_url + 'forms/checkCoupleDuplicate', {
-			'firstname' : fname, 
-			'surname' 	: lname, 
-			'extname' 	: extname, 
-			'sex' 		: sex, 
-			'bday' 		: bday
-		}).done(function(result){			
-			if (result === '1') {
-				$('.tr2' + index + ' td').addClass('has-duplicate');
-				$('.tr2' + index + ' td input').addClass('has-duplicate');
-				$('.tr2' + index + ' td textarea').addClass('has-duplicate');
-			} else {
-				$('.tr2' + index + ' td').removeClass('has-duplicate');
-				$('.tr2' + index + ' td input').removeClass('has-duplicate');
-				$('.tr2' + index + ' td textarea').removeClass('has-duplicate');
-			}
-		});
 	});
 }
 
@@ -258,49 +395,6 @@ function checkBox()
 }
 
 // change the codes
-
-// function checkDuplicate()
-// {
-// 	$('.fname1').keyup(function(){
-// 		var fname = $(this).val();
-
-// 		getMname(fname);
-// 	});
-
-// 	$('.namePart2').keyup(function(){
-// 		var name = $(this).val();
-// 		var loopIndex = $(this).closest('tr').find('input[class="loopIndex2"]').val();
-
-// 		getSex(name, loopIndex);
-// 	});
-// }
-
-// function getMname(fname)
-// {
-// 	$('.mname1').keyup(function(){
-// 		var mname = $(this).val();
-
-// 		getLname(fname, mname);
-// 	});
-// }
-
-// function getLname(fname, mname)
-// {
-// 	$('.lname1').keyup(function(){
-// 		var lname = $(this).val();
-
-// 		getExtname(fname, mname, lname);
-// 	});
-// }
-
-// function getExtname()
-// {
-// 	$('.extname1').keyup(function(){
-// 		var extname = $(this).val();
-
-// 		get(fname, mname, lname, extname);
-// 	});
-// }
 
 function changeSex(name, index)
 {
