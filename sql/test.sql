@@ -3,6 +3,12 @@ SELECT "Loading Test values" AS MESSAGE;
 CALL rpfp.itdmu_create_rpfp_user('test', 'test', 'rojo', 'rowell', 'x@com.com', 08, 80000000, 50, 40);
 SELECT "User Created: Test" AS MESSAGE;
 
+CALL rpfp.itdmu_create_rpfp_user('encoder4b', 'encoder4b', 'mimaropa', 'encoder', 'mimaropa@yahoo.com', 17, 170000000, 50, 40);
+SELECT "User Created: Test" AS MESSAGE;
+
+CALL rpfp.itdmu_create_rpfp_user('encoderncr', 'encoderncr', 'ncr', 'encoder', 'ncrpopcom@yahoo.com', 13, 130000000, 50, 40);
+SELECT "User Created: Test" AS MESSAGE;
+
 CALL rpfp.itdmu_create_rpfp_user('root', '', 'root', 'root', 'y@com.com', 08, 080000000, 50, 40);
 SELECT "User Created: root" AS MESSAGE;
 
@@ -16,6 +22,12 @@ CALL rpfp.itdmu_create_rpfp_user('partner8', 'partner8', 'root', 'root', 'v@com.
 SELECT "User Created: partner8" AS MESSAGE;
 
 CALL rpfp.itdmu_create_rpfp_user('rdm8', 'rdm8', 'root', 'root', 'w@com.com', 08, 080000000, 80, 40);
+SELECT "User Created: rdm8" AS MESSAGE;
+
+CALL rpfp.itdmu_create_rpfp_user('rdm4b', 'rdm4b', 'mimaropa', 'rdm', 'mimaropa@yahoo.com', 17, 170000000, 80, 40);
+SELECT "User Created: rdm8" AS MESSAGE;
+
+CALL rpfp.itdmu_create_rpfp_user('rdmncr', 'rdmncr', 'ncr', 'rdm', 'ncrpopcom@yahoo.com', 13, 130000000, 80, 40);
 SELECT "User Created: rdm8" AS MESSAGE;
 
 CALL rpfp.itdmu_create_rpfp_user('pmed', 'pmed', 'root', 'root', 'p@com.com', '', '', 90, 50);

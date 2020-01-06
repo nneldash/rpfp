@@ -5,7 +5,6 @@ if (empty($title)) {
     $title = 'Online RPFP Monitoring System | Pending';
 }
 
-$count = count($pending);
 ?>
 <script>document.querySelector("head title").innerHTML = '<?=$title?>';</script>
 
@@ -23,26 +22,26 @@ $count = count($pending);
             <th style="width: 10%;">Action</th>
         </tr>
     </thead>
-    <tbody>
-        <?php if ($count >= 1) { ?>
-            <?php foreach($pending as $pendings) : ?>
+    <tbody>      
+        <?php foreach ($pending as $pendings) : ?>
+            <?php if ($pendings->ClassNo != 'N/A') { ?>
                 <tr>
-                    <td id="classNo"><?= $pendings->ClassNo ?></td>
-                    <td><?= $pendings->TypeClass ?></td>
-                    <td><?= $pendings->Barangay; ?></td>
-                    <td><?= date('F d, Y', strtotime($pendings->DateConduct)); ?></td>
-                    <td class="text-center">					
-                        <button class="btn btn-primary btn-pending-listing" data-toggle="tooltip" data-placement="left" title="View List">
+					<td><?= $pendings->ClassNo; ?></td>
+					<td><?= $pendings->TypeClass; ?></td>
+					<td><?= $pendings->Barangay; ?></td>
+					<td><?= date('F d, Y', strtotime($pendings->DateConduct)); ?></td>
+                    <td class="text-center">
+                        <button class="btn btn-primary btn-approve-listing" data-toggle="tooltip" data-placement="left" title="View List">
                             <i class="fa fa-list"></i>
-                        </button>
+                        </button>					
                     </td>
                 </tr>
-            <?php endforeach; ?>
-        <?php } else { ?>
-            <tr>
-                <td class="text-center" colspan="5">No result(s) found.</td>
-            </tr>
-        <?php } ?>
+            <?php } else { ?>
+                <tr>
+                    <td class="text-center" colspan="5">No result(s) found.</td>
+                </tr>
+            <?php } ?>
+        <?php endforeach; ?>
     </tbody>
 </table>
 

@@ -26,7 +26,7 @@
                                 </div>
                             </div>
                             <div class="form-group form-float col-sm-offset-1">
-                                <label class="col-sm-2 control-label">Position</label>
+                                <label class="col-sm-2 control-label">Email:</label>
                                 <div class="col-sm-8">
                                     <input type="text" class="form-control" name="position" value="" readonly />
                                 </div>
@@ -38,7 +38,13 @@
                                 </div>
                             </div>
                             <div class="form-group form-float col-sm-offset-1">
-                                <label class="col-sm-2 control-label">Role </label>
+                                <label class="col-sm-2 control-label">Role: </label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control" name="office" value="" readonly />
+                                </div>
+                            </div>
+                            <div class="form-group form-float col-sm-offset-1">
+                                <label class="col-sm-2 control-label">Scope: </label>
                                 <div class="col-sm-8">
                                     <input type="text" class="form-control" name="office" value="" readonly />
                                 </div>
