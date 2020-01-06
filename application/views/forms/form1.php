@@ -513,7 +513,7 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 					                            	HtmlHelper::firstEntry_ExtName($couple->FirstEntry->Name, $couple->SecondEntry->Name),
 					                                "text",
 					                                "extname1[".$i."]",
-					                                "padding-l3 text-center max-width10 width-35",
+					                                "padding-l3 text-center max-width10 width-35 extname1",
 					                                "EXT"
 					                            );
 					                        ?>
@@ -756,7 +756,7 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 					                            	HtmlHelper::secondEntry_ExtName($couple->FirstEntry->Name, $couple->SecondEntry->Name),
 					                                "text",
 					                                "extname2[".$i."]",
-					                                "padding-l3 text-center max-width10 width-35",
+					                                "padding-l3 text-center max-width10 width-35 extname2",
 					                                "EXT"
 					                            );
 					                        ?>

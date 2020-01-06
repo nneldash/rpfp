@@ -25,4 +25,10 @@
             });
         });
     });
+
+    $('#xlf').attr('disabled', true);	
+	var xlf = $('#xlf').attr('disabled', true);
+	setTimeout(function(){
+	    xlf.attr('disabled', false);
+	}, 3000);
 </script>
