@@ -1125,6 +1125,7 @@ CREATE DEFINER=root@localhost PROCEDURE get_class_details(
     IN record_id INT
     )   READS SQL DATA
 BEGIN
+    DECLARE barangay_id INT;
     IF ( NOT EXISTS (
          SELECT rc.CLASS_NUMBER
            FROM rpfp.rpfp_class rc
@@ -1134,22 +1135,56 @@ BEGIN
          SELECT NULL AS rpfpclass,
                 NULL AS typeclass,
                 NULL AS others_specify,
+                NULL AS region_id,
+                NULL AS region_name,
+                NULL AS province_id,
+                NULL AS province_name,
+                NULL AS municipality_id,
+                NULL AS municipality_name,
                 NULL AS psgc_code,
                 NULL AS barangay,
                 NULL AS class_no,
                 NULL AS date_conduct
         ;
     ELSE BEGIN
+             SELECT rc.BARANGAY_ID INTO barangay_id_no FROM rpfp.rpfp_class rc WHERE rc.RPFP_CLASS_ID = record_id;
+
              SELECT rc.RPFP_CLASS_ID AS rpfpclass,
                     tc.TYPE_CLASS_DESC AS typeclass,
                     rc.OTHERS_SPECIFY AS others_specify,
-                    lp.PSGC_CODE AS psgc_code,
-                    lp.LOCATION_DESCRIPTION AS barangay,
+                    full_location.region_id AS region_id,
+                    full_location.region_name AS region_name,
+                    full_location.province_id AS province_id,
+                    full_location.province_name AS province_name,
+                    full_location.municipality_id AS municipality_id,
+                    full_location.municipality_name AS municipality_name,
+                    full_location.location_code AS psgc_code,
+                    full_location.location_name AS barangay,
                     rc.CLASS_NUMBER AS class_no,
                     rc.DATE_CONDUCTED AS date_conduct
                FROM rpfp.rpfp_class rc
-          LEFT JOIN rpfp.lib_type_class tc ON tc.TYPE_CLASS_ID = rc.TYPE_CLASS_ID
-          LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
+          LEFT JOIN rpfp.lib_type_class tc
+                 ON tc.TYPE_CLASS_ID = rc.TYPE_CLASS_ID
+          LEFT JOIN (
+                         SELECT reg.REGION_CODE AS region_id,
+                                reg.LOCATION_DESCRIPTION AS region_name,
+                                prov.PROVINCE_CODE AS province_id,
+                                prov.LOCATION_DESCRIPTION AS province_name,
+                                city.MUNICIPALITY_CODE AS municipality_id,
+                                city.LOCATION_DESCRIPTION AS municipality_name,
+                                brgy.PSGC_CODE AS location_code,
+                                brgy.LOCATION_DESCRIPTION AS location_name
+                           FROM rpfp.lib_psgc_locations reg
+                      LEFT JOIN rpfp.lib_psgc_locations brgy
+                             ON reg.PSGC_CODE = (brgy.REGION_CODE * POWER( 10, 7 ))
+                      LEFT JOIN rpfp.lib_psgc_locations prov
+                             ON prov.PSGC_CODE = (brgy.PROVINCE_CODE * POWER( 10, 5 ))
+                      LEFT JOIN rpfp.lib_psgc_locations city
+                             ON city.PSGC_CODE = (brgy.MUNICIPALITY_CODE * POWER( 10, 3 ))
+                          WHERE brgy.PSGC_CODE = barangay_id_no
+                          LIMIT 1
+                    ) full_location
+                 ON full_location.location_code = rc.BARANGAY_ID
               WHERE rc.RPFP_CLASS_ID = record_id
            GROUP BY rc.CLASS_NUMBER
             ;
