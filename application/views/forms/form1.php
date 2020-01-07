@@ -173,21 +173,19 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 						</td>
 
 						<td class="border-0">
-							<span class="small">Prov/City/Mun.:</span>
+							<span class="small">Province/City/Municipality:</span>
 						</td>
 						<td class="border-0">
 							<span class="small">
-								<?php
-		                            echo HtmlHelper::inputPdf(
-		                                $is_pdf,
-		                                $form1->Seminar->Location->Region->Description,
-		                                "text",
-		                                "",
-		                                "padding-l10 underline width-70",
-										""
-		                            );
-								?>
+								<select class="selectpicker" id="provinceList" data-live-search="true">
+									
+								</select>
 								<input type="hidden" name="province" value="<?=$form1->Seminar->Location->Region->Code != 'N/A' ? $form1->Seminar->Location->Region->Code : ''; ?>">
+		                    </span>
+		                    <span>
+		                    	<select class="selectpicker" id="muniList" data-live-search="true">
+									
+								</select>
 		                    </span>
 						</td> 
 					</tr>
@@ -236,22 +234,9 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 						</td>
 						<td class="border-0">
 							<span class="small">
-								<select class="selectpicker" data-live-search="true">
-									<?php foreach($barangay as $brgys) : ?>
-										<option value="<?= $brgys->Barangay->Code; ?>"><?= $brgys->Barangay->Description; ?></option>
-									<?php endforeach; ?>
+								<select class="selectpicker" id="brgyList" data-live-search="true">
+									
 								</select>
-								<?php
-		                            // echo HtmlHelper::inputPdf(
-		                            //     $is_pdf,
-		                            //     $form1->Seminar->Location->Barangay->Description,
-		                            //     "text",
-		                            //     "",
-		                            //     "padding-l10 underline width-70",
-		                            //     ""
-		                            // );
-								?>
-								<input type="hidden" name="barangay" value="<?=$form1->Seminar->Location->Barangay->Code != 'N/A' ? $form1->Seminar->Location->Barangay->Code : '082607028'; ?>">
 		                    </span>
 						</td>
 					</tr>
@@ -281,9 +266,11 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 								<input type="date" name="date_conducted" value="<?= ($form1->Seminar->DateConducted != 'N/A' ? $form1->Seminar->DateConducted : ''); ?>" class="padding-l10 underline width-70" />
 		                    </span>
 						</td>
+						
 					</tr>
 				</table>
 			</div>
+
 			<div class="padding-t20" style="page-break-inside: avoid">
 				<div class="table-responsive" style="overflow: hidden;">	
 					<table class="table table-bordered margin-b0">

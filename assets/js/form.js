@@ -9,6 +9,7 @@ $(function() {
 	checkBox();
 	traditionalStatus();
 	getDataDuplicate();
+	getProvinces();
 
 	Inputmask().mask(".birthAge");
 
@@ -24,6 +25,68 @@ $(function() {
 		$('td input[class="check"]').attr('disabled', false);
 	}
 });
+
+function getProvinces()
+{
+	$.ajax({
+			type: 'POST',
+			url: base_url + 'location/getProvinces'
+	}).done(function(result){
+		var data = result.LOCATION_LIST;
+
+		$.each(data, function(i, text){
+			$('#provinceList').append(new Option(data[i].LOCATION_DESCRIPTION, data[i].PROVINCE));
+		});
+
+		$('#provinceList').selectpicker('render').selectpicker('refresh');
+	});
+
+	$('#provinceList').change(function(){
+		var provinceId = $(this).find('option:selected').val();
+		getMunicipalities(provinceId);
+		console.log('province ' + provinceId);
+	});
+}
+
+function getMunicipalities(provinceId)
+{
+	$.ajax({
+			type: 'POST',
+			url: base_url + 'location/getMunicipalities',
+			data: { 'PROVINCE' : provinceId }
+	}).done(function(result){
+		var data = result.LOCATION_LIST;
+
+		$.each(data, function(i, text){
+			$('#muniList').append(new Option(data[i].LOCATION_DESCRIPTION, data[i].MUNICIPALITY));
+		});
+
+		$('#muniList').selectpicker('render').selectpicker('refresh');
+	});
+
+	$('#muniList').change(function(){
+		var muniId = $(this).find('option:selected').val();
+		getBrgys(muniId);
+		console.log('municipality ' + muniId);
+	});
+}
+
+function getBrgys(muniId)
+{
+	$.ajax({
+			type: 'POST',
+			url: base_url + 'location/getBarangays',
+			data: { 'MUNICIPALITY' : muniId }
+	}).done(function(result){
+		var data = result.LOCATION_LIST;
+
+		$.each(data, function(i, text){
+			$('#brgyList').append(new Option(data[i].LOCATION_DESCRIPTION, data[i].MUNICIPALITY));
+		});
+
+		$('#brgyList').selectpicker('render').selectpicker('refresh');
+	});
+}
 
 function traditionalStatus()
 {
@@ -396,79 +459,79 @@ function checkBox()
 
 // change the codes
 
-function changeSex(name, index)
-{
-	$('.gender1').change(function(){
-		var sex = $(this).val();
-		var sex = sex.toUpperCase();
+// function changeSex(name, index)
+// {
+// 	$('.gender1').change(function(){
+// 		var sex = $(this).val();
+// 		var sex = sex.toUpperCase();
 
-		if (sex === 'F' || sex === 'M') {
-			$('.tr2' + index + ' td .getSex1').val(sex);
+// 		if (sex === 'F' || sex === 'M') {
+// 			$('.tr2' + index + ' td .getSex1').val(sex);
 
-			$(this).closest('td').removeAttr('data-tip', 'Invalid Input!');
-			$(this).closest('td').removeClass('has-duplicate');
-			$(this).removeClass('has-duplicate');
+// 			$(this).closest('td').removeAttr('data-tip', 'Invalid Input!');
+// 			$(this).closest('td').removeClass('has-duplicate');
+// 			$(this).removeClass('has-duplicate');
 			
-			if (sex === 'M') {
-				gender = 1;
-			} else if (sex === 'F') {
-				gender = 2;
-			}
+// 			if (sex === 'M') {
+// 				gender = 1;
+// 			} else if (sex === 'F') {
+// 				gender = 2;
+// 			}
 
-			getDate1(name, gender, index);
-		} else {
-			alert('Invalid Input!');
+// 			getDate1(name, gender, index);
+// 		} else {
+// 			alert('Invalid Input!');
 
-			$(this).closest('td').attr('data-tip', 'Invalid Input!');
-			$(this).closest('td').addClass('has-duplicate');
-			$(this).addClass('has-duplicate');
-		}
-	});
-}
+// 			$(this).closest('td').attr('data-tip', 'Invalid Input!');
+// 			$(this).closest('td').addClass('has-duplicate');
+// 			$(this).addClass('has-duplicate');
+// 		}
+// 	});
+// }
 
-function getSex(name, index)
-{
-	var sex1 = $('.tr2' + index + ' td .getSex1').val();
+// function getSex(name, index)
+// {
+// 	var sex1 = $('.tr2' + index + ' td .getSex1').val();
 
-	$('.gender2').keyup(function() {
-		var sex2 = $(this).val();
-		var sex2 = sex2.toUpperCase();
-		if (sex1 === 'F') {
-			if (sex2 === 'M') {
-				gender = 1;
-				$(this).closest('td').removeAttr('data-tip', 'Invalid Data!');
-				$(this).closest('td').removeClass('has-duplicate');
-				$(this).removeClass('has-duplicate');
+// 	$('.gender2').keyup(function() {
+// 		var sex2 = $(this).val();
+// 		var sex2 = sex2.toUpperCase();
+// 		if (sex1 === 'F') {
+// 			if (sex2 === 'M') {
+// 				gender = 1;
+// 				$(this).closest('td').removeAttr('data-tip', 'Invalid Data!');
+// 				$(this).closest('td').removeClass('has-duplicate');
+// 				$(this).removeClass('has-duplicate');
 
-				getDate2(name, gender, index);
-			} else {
-				alert('Data value must be "M"');
+// 				getDate2(name, gender, index);
+// 			} else {
+// 				alert('Data value must be "M"');
 
-				$(this).closest('td').attr('data-tip', 'Invalid Data!');
-				$(this).closest('td').addClass('has-duplicate');
-				$(this).addClass('has-duplicate');
-			}
-		} else if (sex1 === 'M') {
-			if (sex2 === 'F') {
-				gender = 2;
-				$(this).closest('td').removeAttr('data-tip', 'Invalid Data!');
-				$(this).closest('td').removeClass('has-duplicate');
-				$(this).removeClass('has-duplicate');
+// 				$(this).closest('td').attr('data-tip', 'Invalid Data!');
+// 				$(this).closest('td').addClass('has-duplicate');
+// 				$(this).addClass('has-duplicate');
+// 			}
+// 		} else if (sex1 === 'M') {
+// 			if (sex2 === 'F') {
+// 				gender = 2;
+// 				$(this).closest('td').removeAttr('data-tip', 'Invalid Data!');
+// 				$(this).closest('td').removeClass('has-duplicate');
+// 				$(this).removeClass('has-duplicate');
 
-				getDate2(name, gender, index);
-			} else {
-				alert('Data value must be "F"');
+// 				getDate2(name, gender, index);
+// 			} else {
+// 				alert('Data value must be "F"');
 
-				$(this).closest('td').attr('data-tip', 'Invalid Data!');
-				$(this).closest('td').addClass('has-duplicate');
-				$(this).addClass('has-duplicate');
-			}
-		} else {
-			alert('Invalid Data!');
+// 				$(this).closest('td').attr('data-tip', 'Invalid Data!');
+// 				$(this).closest('td').addClass('has-duplicate');
+// 				$(this).addClass('has-duplicate');
+// 			}
+// 		} else {
+// 			alert('Invalid Data!');
 
-			$(this).closest('td').attr('data-tip', 'Invalid Data!');
-			$(this).closest('td').addClass('has-duplicate');
-			$(this).addClass('has-duplicate');
-		}
-	});
-}
+// 			$(this).closest('td').attr('data-tip', 'Invalid Data!');
+// 			$(this).closest('td').addClass('has-duplicate');
+// 			$(this).addClass('has-duplicate');
+// 		}
+// 	});
+// }
