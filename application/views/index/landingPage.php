@@ -75,6 +75,10 @@
                                          <div class="errors">
                                             <?php echo validation_errors(); ?>
                                         </div>
+                                        <div>
+                                            <br>
+                                            <p class="small text-center" >Copyright © 2019-Present. <br>Commission on Population and Development<br>Republic of the Philippines</p>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -88,9 +92,9 @@
                 <p class="sans subheader">A Project of the Responsible Parenthood and Family Planning Program of the Commission on Population and Development</p>
                 <br>
                 <br>
-
-                <p class="container"> >> EXECUTIVE DASHBOARD </p> <br>
-                <p class="container"> >> PUBLIC DASHBOARD </p>
+                    <img class="login-logo" src="<?=base_url('assets/images/executive_dashboard.jpg')?>" alt="Link to Executive Dashboard" width="5%">
+                <br><br>
+                    <img class="login-logo" src="<?=base_url('assets/images/public_dashboard.jpg')?>" alt="Link to Public Dashboard" width="5%">
             </div>
         </div>
     </section>
@@ -302,9 +306,9 @@
         </script> -->
     </section>
 
-    <footer>
+    <!-- <footer>
         <p class="footer">Copyright © 2019-Present. <br>Commission on Population and Development, Republic of the Philippines</p>
-    </footer>
+    </footer> -->
 </body>
 
 <script>
