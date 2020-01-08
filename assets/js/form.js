@@ -1,4 +1,23 @@
 /** PREVENT SAVE FORM UPON CLICK OF SERVICE SLIP */
+$(document).ready(function(){
+	$('#provinceList').on('changed.bs.select', function (e, clickedIndex, isSelected, previousValue) {
+		var provinceId = $(this).find('option:selected').val();
+		$('#muniList').find('option').remove();
+		$('#muniList').selectpicker('refresh');
+		$('#brgyList').find('option').remove();
+		$('#brgyList').selectpicker('refresh');
+		getMunicipalities(provinceId);
+	});
+
+
+	$('#muniList').on('changed.bs.select', function (e, clickedIndex, isSelected, previousValue) {
+		var muniId = $(this).find('option:selected').val();
+		$('#brgyList').find('option').remove();
+		$('#brgyList').selectpicker('refresh');
+		getBrgys(muniId);
+	});
+});
+
 
 $(function() {
   	serviceModal();
@@ -46,6 +65,7 @@ function getProvinces()
 {
 	$.ajax({
 			type: 'POST',
+			cache: true,
 			url: base_url + 'location/getProvinces'
 	}).done(function(result){
 		var data = result.LOCATION_LIST;
@@ -56,21 +76,13 @@ function getProvinces()
 
 		$('#provinceList').selectpicker('render').selectpicker('refresh');
 	});
-
-	$('#provinceList').change(function(){
-		var provinceId = $(this).find('option:selected').val();
-		$('#muniList').find('option').remove();
-		$('#muniList').selectpicker('refresh');
-		$('#brgyList').find('option').remove();
-		$('#brgyList').selectpicker('refresh');
-		getMunicipalities(provinceId);
-	});
 }
 
 function getMunicipalities(provinceId)
 {
 	$.ajax({
 			type: 'POST',
+			cache: true,
 			url: base_url + 'location/getMunicipalities',
 			data: { 'PROVINCE' : provinceId }
 	}).done(function(result){
@@ -82,19 +94,13 @@ function getMunicipalities(provinceId)
 
 		$('#muniList').selectpicker('render').selectpicker('refresh');
 	});
-
-	$('#muniList').change(function(){
-		var muniId = $(this).find('option:selected').val();
-		$('#brgyList').find('option').remove();
-		$('#brgyList').selectpicker('refresh');
-		getBrgys(muniId);
-	});
 }
 
 function getBrgys(muniId)
 {
 	$.ajax({
 			type: 'POST',
+			cache: true,
 			url: base_url + 'location/getBarangays',
 			data: { 'MUNICIPALITY' : muniId }
 	}).done(function(result){

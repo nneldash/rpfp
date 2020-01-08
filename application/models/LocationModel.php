@@ -8,6 +8,7 @@ class LocationModel extends BaseModel
     {
         parent::__construct();
         $this->CI->load->library('common/lists/ListSpecificLocation');
+        $this->initialize_cache();
     }
     
     public function listRegions() : ListLocationInterface

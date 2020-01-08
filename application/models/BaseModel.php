@@ -10,6 +10,17 @@ class BaseModel extends CI_Model
         $this->CI = &get_instance();
     }
 
+    protected function initialize_cache() : bool
+    {
+        $db = $this->LoginModel->reconnect();
+        $db = DbInstance::getFromVariable($db);
+        if (!$db->connected) {
+            return false;
+        }
+        $db->database->cache_on();
+        return true;
+    }
+
     protected function fillItem(BaseInterface &$item, &$classDbArray, &$data)
     {
         foreach ($classDbArray as $field => $column) {

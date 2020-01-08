@@ -174,7 +174,7 @@ class Location extends CI_Controller
     {
         /**
          * FOR SPECIFIC REGION
-         * $.ajax('Location/getRegion', {'method': 'POST', 'data': {'REGION': 17}});
+         * $.ajax('Location/getRegions', {'method': 'POST', 'data': {'REGION': 17}});
          * 
          * FOR LIST OF REGIONS
          * $.ajax('Location/getRegion', {'method': 'POST'});
