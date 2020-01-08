@@ -51,13 +51,15 @@ class Forms extends CI_Controller
 
         $this->load->model('ProfileModel');
         $profile = $this->ProfileModel->getOwnProfile();
+        $profile = UserProfile::getFromVariable($profile);
+
+        if ($form1->Seminar->Location->Region->Code == N_A) {
+            $form1->Seminar->Location->Region->Code = $profile->DesignatedLocation->Region->Code;
+            $form1->Seminar->Location->Region->Description = $profile->DesignatedLocation->Region->Description;
+        }
+
         $isEncoder = $profile->isEncoder();
         $isRegionalDataManager = $profile->isRegionalDataManager();
-
-        $municipality_id = 82601;
-        
-        $this->load->model('LocationModel');
-        $brgys = $this->LocationModel->listBaranggays($municipality_id);
 
         $this->load->view('includes/header', $header);
         $this->load->view('forms/form1', 
@@ -65,8 +67,7 @@ class Forms extends CI_Controller
                 'form1' => $form1, 
                 'is_pdf' => false,
                 'isEncoder' => $isEncoder,
-                'isRegionalDataManager' => $isRegionalDataManager,
-                'barangay' => $brgys
+                'isRegionalDataManager' => $isRegionalDataManager
             )
         );
         $this->load->view('includes/footer');
@@ -371,6 +372,16 @@ class Forms extends CI_Controller
 
         $this->load->model('FormModel');
         $form1 = $this->FormModel->getForm1();
+        $form1 = FormClass::getFromVariable($form1);
+
+        $this->load->model('ProfileModel');
+        $profile = $this->ProfileModel->getOwnProfile();
+        $profile = UserProfile::getFromVariable($profile);
+
+        if ($form1->Seminar->Location->Region->Code == N_A) {
+            $form1->Seminar->Location->Region->Code = $profile->DesignatedLocation->Region->Code;
+            $form1->Seminar->Location->Region->Description = $profile->DesignatedLocation->Region->Description;
+        }
         
         $mpdfConfig = array(
             'format' => 'A4',
