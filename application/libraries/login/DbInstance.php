@@ -7,4 +7,12 @@ class DbInstance extends BaseInterface
 {
     public $database;
     public $connected;
+
+    public static function getFromVariable($variable)
+    {
+        if ($variable instanceof DbInstance) {
+            return $variable;
+        }
+        return new DbInstance($variable);
+    }
 }
