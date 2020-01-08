@@ -60,6 +60,7 @@ class Forms extends CI_Controller
 
         $isEncoder = $profile->isEncoder();
         $isRegionalDataManager = $profile->isRegionalDataManager();
+        $isFocalPerson = $profile->isFocal();
 
         $this->load->view('includes/header', $header);
         $this->load->view('forms/form1', 
@@ -67,7 +68,8 @@ class Forms extends CI_Controller
                 'form1' => $form1, 
                 'is_pdf' => false,
                 'isEncoder' => $isEncoder,
-                'isRegionalDataManager' => $isRegionalDataManager
+                'isRegionalDataManager' => $isRegionalDataManager,
+                'isFocalPerson' => $isFocalPerson
             )
         );
         $this->load->view('includes/footer');

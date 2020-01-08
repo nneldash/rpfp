@@ -11,7 +11,7 @@ if (empty($title)) {
 <link href="<?= base_url('assets/css/form.css'); ?>" rel="stylesheet">
 
 <br>
-<div style="text-transform: none; width: 15%;">                    
+<div style="text-transform: none; width: 15%;">
     <input type="submit" class="save genReportA" value="Generate Report" />
 </div>
 <br>

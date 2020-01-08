@@ -186,10 +186,15 @@ textarea:focus {
 	color: #000!important;
 }
 input[disabled],
-input[disabled]:hover {
-    border: 2px solid #bebfbe;
-    background: #bebfbe;
-    color: #fff;
+input[disabled]:hover,
+textarea[disabled],
+textarea[disabled]:hover
+select[disabled],
+select[disabled]:hover {
+    /*border: 2px solid #bebfbe;*/
+    /*background: #bebfbe;*/
+    background: transparent;
+    color: #333;
     cursor: not-allowed;
 }
 input::placeholder {

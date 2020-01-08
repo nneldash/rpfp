@@ -5994,6 +5994,17 @@ GRANT EXECUTE ON PROCEDURE rpfp.get_report_demandgen_details TO 'regional_data_m
 GRANT EXECUTE ON PROCEDURE rpfp.get_report_unmet_need_details TO 'regional_data_manager';
 GRANT EXECUTE ON PROCEDURE rpfp.get_report_served_method_mix_details TO 'regional_data_manager';
 
+GRANT EXECUTE ON PROCEDURE rpfp.get_forms_list to 'regional_data_manager';
+GRANT EXECUTE ON PROCEDURE rpfp.get_class_details to 'regional_data_manager';
+GRANT EXECUTE ON PROCEDURE rpfp.encoder_get_couples_with_fp_details to 'regional_data_manager';
+
+GRANT EXECUTE ON PROCEDURE rpfp.encoder_get_class_list_pending TO 'focal_person';
+GRANT EXECUTE ON PROCEDURE rpfp.encoder_get_class_list_approved to 'focal_person';
+GRANT EXECUTE ON PROCEDURE rpfp.get_report_demandgen_list to 'focal_person';
+GRANT EXECUTE ON PROCEDURE rpfp.get_forms_list to 'focal_person';
+GRANT EXECUTE ON PROCEDURE rpfp.get_class_details to 'focal_person';
+GRANT EXECUTE ON PROCEDURE rpfp.encoder_get_couples_with_fp_details to 'focal_person';
+
 GRANT EXECUTE ON PROCEDURE rpfp.process_demandgen TO 'pmed';
 GRANT EXECUTE ON PROCEDURE rpfp.process_unmet_need TO 'pmed';
 GRANT EXECUTE ON PROCEDURE rpfp.process_served_method_mix TO 'pmed';

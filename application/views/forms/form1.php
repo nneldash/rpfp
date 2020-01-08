@@ -2,8 +2,6 @@
 defined('BASEPATH') or exit('No direct script access allowed');
 $this->load->library('helpers/HtmlHelper');
 
-// print_r($_SESSION);exit;
-
 $form1 = FormClass::getFromVariable($form1);
 $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0);
 ?>
@@ -42,6 +40,7 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 
 <link href="<?= base_url('assets/css/form.css') ?>" rel="stylesheet">
 <input type="hidden" id="rdm" value="<?= $isRegionalDataManager; ?>" />
+<input type="hidden" id="focal" value="<?= $isFocalPerson; ?>" />
 <div class="container-fluid text-center">
 	<a href="#" class="previous">&laquo; Previous</a>
 	<a href="#" class="next">Next &raquo;</a>

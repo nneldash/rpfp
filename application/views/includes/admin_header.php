@@ -92,9 +92,9 @@ if (empty($title)) {
                                             <i class="fa fa-user"></i> Profile
                                         </a>
                                     </li>
-                                    <?php if ($profile->isRegionalDataManager()) : ?>
+                                    <?php if ($profile->isRegionalDataManager() || $profile->isFocal()) : ?>
                                         <li>
-                                        <a href="<?= $links[MY_PENDING] ?>">
+                                            <a href="<?= $links[MY_PENDING] ?>">
                                                 <i class="fa fa-clock-o"></i> Pending
                                             </a>
                                         </li>

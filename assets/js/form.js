@@ -14,14 +14,30 @@ $(function() {
 	Inputmask().mask(".birthAge");
 
 	var isRDM = $('#rdm').val();
+	var isFocal = $('#focal').val();
 
     $('.selectpicker').selectpicker({
     	container: 'body'
     });
 
+    if(isFocal == 1){
+    	$('td input').attr('disabled', true);
+		$('td input').css('cursor', 'not-allowed');
+		$('td textarea').attr('disabled', true);
+		$('td textarea').css('cursor', 'not-allowed');
+		$('td select').attr('disabled', true);
+		$('td select').css('cursor', 'not-allowed');
+		$('td input[class="check"]').attr('disabled', false);
+		$('.saveForm1').attr('hidden', true);
+    }
+
 	if(isRDM == 1){
 		$('td input').attr('disabled', true);
 		$('td input').css('cursor', 'not-allowed');
+		$('td textarea').attr('disabled', true);
+		$('td textarea').css('cursor', 'not-allowed');
+		$('td select').attr('disabled', true);
+		$('td select').css('cursor', 'not-allowed');
 		$('td input[class="check"]').attr('disabled', false);
 	}
 });
