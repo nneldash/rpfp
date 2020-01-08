@@ -59,7 +59,6 @@ function getMunicipalities(provinceId)
 			data: { 'PROVINCE' : provinceId }
 	}).done(function(result){
 		var data = result.LOCATION_LIST;
-		console.log(data);
 
 		$.each(data, function(i, text){
 			$('#muniList').append(new Option(data[i].LOCATION_DESCRIPTION, data[i].MUNICIPALITY));
