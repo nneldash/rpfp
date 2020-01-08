@@ -9,4 +9,13 @@ class ProfileClass extends ProfileInterface
     {
         parent::__construct($params);
     }
+
+    public static function getFromVariable($variable) : ProfileInterface
+    {
+        if ($variable instanceof ProfileInterface) {
+            return $variable;
+        }
+        return new Profile($variable);
+    }
+
 }
