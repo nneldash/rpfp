@@ -1125,7 +1125,7 @@ CREATE DEFINER=root@localhost PROCEDURE get_class_details(
     IN record_id INT
     )   READS SQL DATA
 BEGIN
-    DECLARE barangay_id INT;
+    DECLARE barangay_id_no INT;
     IF ( NOT EXISTS (
          SELECT rc.CLASS_NUMBER
            FROM rpfp.rpfp_class rc
