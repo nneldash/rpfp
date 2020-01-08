@@ -13,7 +13,7 @@ class FormClass extends FormInterface
         $this->ListCouple = new ListCoupleClass();
     }
 
-    public static function getFormFromVariable($form) : FormInterface
+    public static function getFromVariable($form) : FormInterface
     {
         if ($form instanceof FormInterface) {
             return $form;

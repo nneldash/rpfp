@@ -4,7 +4,7 @@ $this->load->library('helpers/HtmlHelper');
 
 // print_r($_SESSION);exit;
 
-$form1 = FormClass::getFormFromVariable($form1);
+$form1 = FormClass::getFromVariable($form1);
 $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0);
 ?>
 

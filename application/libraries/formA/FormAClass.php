@@ -16,7 +16,7 @@ class FormAClass extends FormAInterface
         parent::__construct($params);
     }
 
-    public static function getFormFromVariable($variable) : FormAInterface
+    public static function getFromVariable($variable) : FormAInterface
     {
         if ($variable instanceof FormAInterface) {
             return $variable;
