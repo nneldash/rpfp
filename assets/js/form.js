@@ -43,8 +43,11 @@ function getProvinces()
 
 	$('#provinceList').change(function(){
 		var provinceId = $(this).find('option:selected').val();
+		$('#muniList').find('option').remove();
+		$('#muniList').selectpicker('refresh');
+		$('#brgyList').find('option').remove();
+		$('#brgyList').selectpicker('refresh');
 		getMunicipalities(provinceId);
-		console.log('province ' + provinceId);
 	});
 }
 
@@ -56,6 +59,7 @@ function getMunicipalities(provinceId)
 			data: { 'PROVINCE' : provinceId }
 	}).done(function(result){
 		var data = result.LOCATION_LIST;
+		console.log(data);
 
 		$.each(data, function(i, text){
 			$('#muniList').append(new Option(data[i].LOCATION_DESCRIPTION, data[i].MUNICIPALITY));
@@ -66,8 +70,9 @@ function getMunicipalities(provinceId)
 
 	$('#muniList').change(function(){
 		var muniId = $(this).find('option:selected').val();
+		$('#brgyList').find('option').remove();
+		$('#brgyList').selectpicker('refresh');
 		getBrgys(muniId);
-		console.log('municipality ' + muniId);
 	});
 }
 

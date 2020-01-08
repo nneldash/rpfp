@@ -173,11 +173,11 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 						</td>
 
 						<td class="border-0">
-							<span class="small">Province/City/Municipality:</span>
+							<span class="small">Prov/City/Mun.:</span>
 						</td>
 						<td class="border-0">
 							<span class="small">
-								<select class="selectpicker" id="provinceList" data-live-search="true">
+								<select class="selectpicker" id="provinceList" data-live-search="true" title="Province">
 									
 								</select>
 								<input type="hidden" name="province" value="<?=$form1->Seminar->Location->Region->Code != 'N/A' ? $form1->Seminar->Location->Region->Code : ''; ?>">
