@@ -3115,101 +3115,102 @@ CREATE DEFINER=root@localhost PROCEDURE process_check_duplication (
     IN report_year INT,
     IN report_month INT,
     IN psgc_code INT,
-    IN random_id VARCHAR(400)
+    IN random_id VARCHAR(400),
+   OUT output_message VARCHAR(400)
     )  MODIFIES SQL DATA
 proc_exit_point :
 BEGIN
-DECLARE finished INTEGER DEFAULT 0;
-DECLARE class_no VARCHAR(100);
-DECLARE duplicates INT;
-DECLARE firstname VARCHAR(50);
-DECLARE lastname VARCHAR(50);
-DECLARE extname VARCHAR(50);
-DECLARE birthdate DATE;
-DECLARE count_record INT;
-    
-DECLARE cur_duplicate_list CURSOR FOR 
+    DECLARE finished INTEGER DEFAULT 0;
+    DECLARE class_no VARCHAR(100);
+    DECLARE duplicates INT;
+    DECLARE firstname VARCHAR(50);
+    DECLARE lastname VARCHAR(50);
+    DECLARE extname VARCHAR(50);
+    DECLARE birthdate DATE;
+    DECLARE count_record INT;
+    DECLARE last_id INT;
 
-      SELECT ic.FNAME, ic.LNAME, ic.EXT_NAME, ic.BDATE, rc.CLASS_NUMBER, COUNT(apc.COUPLES_ID)
-        FROM rpfp.individual ic
-   LEFT JOIN rpfp.couples apc ON apc.COUPLES_ID = ic.COUPLES_ID
-   LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
-   LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
-       WHERE apc.IS_ACTIVE = 0
-         AND (
-                QUOTE(lp.REGION_CODE) = QUOTE(psgc_code)
-             OR (IFNULL( psgc_code, 0 ) = 0)
-            )
-    GROUP BY ic.FNAME, ic.LNAME, ic.EXT_NAME, ic.BDATE
+    DECLARE cur_duplicate_list CURSOR FOR
+         SELECT ic.FNAME, ic.LNAME, ic.EXT_NAME, ic.BDATE, rc.CLASS_NUMBER, COUNT(apc.COUPLES_ID)
+           FROM rpfp.individual ic
+      LEFT JOIN rpfp.couples apc ON apc.COUPLES_ID = ic.COUPLES_ID
+      LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
+      LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
+          WHERE apc.IS_ACTIVE = 0
+            AND (
+                    ( QUOTE(lp.REGION_CODE) = QUOTE(psgc_code)
+                      AND lp.INTER_LEVEL = 'REG'
+                    )
+                 OR (IFNULL( psgc_code, 0 ) = 0)
+                )
+       GROUP BY ic.FNAME, ic.LNAME, ic.EXT_NAME, ic.BDATE
     ;
 
-DECLARE CONTINUE HANDLER 
-        FOR NOT FOUND SET finished = 1;
+    DECLARE CONTINUE HANDLER FOR NOT FOUND
+        BEGIN
+            SET finished = 1;
+        END;
 
-OPEN cur_duplicate_list;
+    OPEN cur_duplicate_list;
 
-get_cur_duplicate_list: LOOP
-    FETCH cur_duplicate_list INTO firstname, lastname, extname, birthdate, class_no, duplicates;
-    IF finished = 1 THEN
-        LEAVE get_cur_duplicate_list;
-    END IF;
+    get_cur_duplicate_list: LOOP
+        FETCH cur_duplicate_list INTO firstname, lastname, extname, birthdate, class_no, duplicates;
+        IF finished = 1 THEN
+            SET last_id := 0;
+            LEAVE get_cur_duplicate_list;
+        END IF;
 
-    IF duplicates > 1 THEN   
-          SELECT COUNT(*)
-            INTO count_record
-            FROM rpfp.report_duplicate_encoded rde
-           WHERE rde.FNAME = firstname
-             AND rde.LNAME = lastname
-             AND rde.EXT_NAME = extname
-             AND rde.BDATE = birthdate
-             AND rde.RPFP_CLASS_NO = class_no
-             AND rde.DB_USER_ID = username
-        ;
-
-        IF count_record = 0 THEN
-            INSERT INTO rpfp.report_duplicate_encoded (
-                    ACCOM_ID,
-                    REPORT_YEAR,
-                    REPORT_MONTH,
-                    PSGC_CODE,
-                    RPFP_CLASS_NO,
-                    DUPLICATES,
-                    FNAME,
-                    LNAME,
-                    EXT_NAME,
-                    BDATE,
-                    DB_USER_ID,
-                    DATE_PROCESSED
-                )
-            VALUES (
-                    random_id,
-                    report_year,
-                    report_month,
-                    psgc_code,
-                    class_no,
-                    duplicates,
-                    firstname,
-                    lastname,
-                    extname,
-                    birthdate,
-                    username,
-                    CURRENT_DATE()
-                )
+        IF duplicates > 1 THEN
+             SELECT COUNT(*)
+               INTO count_record
+               FROM rpfp.report_duplicate_encoded rde
+              WHERE rde.FNAME = firstname
+                AND rde.LNAME = lastname
+                AND rde.EXT_NAME = extname
+                AND rde.BDATE = birthdate
+                AND rde.RPFP_CLASS_NO = class_no
+                AND rde.DB_USER_ID = username
             ;
-        END IF
-        ;
-    END IF
-    ;
 
-END LOOP get_cur_duplicate_list;
-CLOSE cur_duplicate_list;
+            IF count_record = 0 THEN
+                INSERT INTO rpfp.report_duplicate_encoded (
+                            ACCOM_ID,
+                            REPORT_YEAR,
+                            REPORT_MONTH,
+                            PSGC_CODE,
+                            RPFP_CLASS_NO,
+                            DUPLICATES,
+                            FNAME,
+                            LNAME,
+                            EXT_NAME,
+                            BDATE,
+                            DB_USER_ID,
+                            DATE_PROCESSED
+                ) VALUES (
+                            random_id,
+                            report_year,
+                            report_month,
+                            psgc_code,
+                            class_no,
+                            duplicates,
+                            firstname,
+                            lastname,
+                            extname,
+                            birthdate,
+                            username,
+                            CURRENT_DATE()
+                );
+                SELECT LAST_INSERT_ID() INTO last_id;
+            END IF;
+        END IF;
+    END LOOP;
+    CLOSE cur_duplicate_list;
 
-        SELECT CONCAT( "NEW ENTRY: ", LAST_INSERT_ID() ) AS MESSAGE;
-        LEAVE proc_exit_point;
-
-    SELECT "SUCCESS!" AS MESSAGE;
+    SELECT CONCAT( "NEW ENTRY: ", last_id ) INTO output_message;
+    LEAVE proc_exit_point;
     
 END$$
+
 
 CREATE DEFINER=root@localhost PROCEDURE process_demandgen (
     IN report_year INT,
