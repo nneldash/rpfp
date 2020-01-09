@@ -179,12 +179,13 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 								<select class="selectpicker" id="provinceList" data-live-search="true" title="Province">
 									
 								</select>
-								<input type="hidden" name="province" value="<?=$form1->Seminar->Location->Region->Code != 'N/A' ? $form1->Seminar->Location->Region->Code : ''; ?>">
+								<input type="hidden" readonly name="province" value="<?=$form1->Seminar->Location->Province->Code != 'N/A' ? $form1->Seminar->Location->Province->Code : ''; ?>">
 		                    </span>
 		                    <span>
-		                    	<select class="selectpicker" id="muniList" data-live-search="true">
+		                    	<select class="selectpicker" id="muniList" data-live-search="true" title="City/Municipality">
 									
 								</select>
+								<input type="hidden" readonly name="city" value="<?=$form1->Seminar->Location->City->Code != 'N/A' ? $form1->Seminar->Location->City->Code : ''; ?>">
 		                    </span>
 						</td> 
 					</tr>
@@ -233,9 +234,10 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 						</td>
 						<td class="border-0">
 							<span class="small">
-								<select class="selectpicker" id="brgyList" data-live-search="true">
+								<select class="selectpicker" id="brgyList" data-live-search="true" title="Barangay">
 									
 								</select>
+								<input type="hidden" readonly name="barangay" value="<?=$form1->Seminar->Location->Barangay->Code != 'N/A' ? $form1->Seminar->Location->Barangay->Code : ''; ?>">
 		                    </span>
 						</td>
 					</tr>

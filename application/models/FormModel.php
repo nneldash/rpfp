@@ -231,6 +231,14 @@ class FormModel extends BaseModel
                 'ClassNumber' => 'class_no',
                 'DateConducted' => 'date_conduct',
                 'Location' => array(
+                    'Province' => array(
+                        'Code' => 'province_id',
+                        'Description' => 'province_name'
+                    ),
+                    'City' => array(
+                        'Code' => 'municipality_id',
+                        'Description' => 'municipality_name'
+                    ),
                     'Barangay' => array(
                         'Code' => 'psgc_code',
                         'Description' => 'barangay'

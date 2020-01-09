@@ -18,6 +18,9 @@ $(document).ready(function(){
 	});
 });
 
+var getProv = $('input[name="province"]').val();
+var getCity = $('input[name="city"]').val();
+var getBrgy = $('input[name="barangay"]').val();
 
 $(function() {
   	serviceModal();
@@ -39,18 +42,7 @@ $(function() {
     	container: 'body'
     });
 
-    if(isFocal == 1){
-    	$('td input').attr('disabled', true);
-		$('td input').css('cursor', 'not-allowed');
-		$('td textarea').attr('disabled', true);
-		$('td textarea').css('cursor', 'not-allowed');
-		$('td select').attr('disabled', true);
-		$('td select').css('cursor', 'not-allowed');
-		$('td input[class="check"]').attr('disabled', false);
-		$('.saveForm1').attr('hidden', true);
-    }
-
-	if(isRDM == 1){
+	if(isRDM == 1 || isFocal == 1){
 		$('td input').attr('disabled', true);
 		$('td input').css('cursor', 'not-allowed');
 		$('td textarea').attr('disabled', true);
@@ -59,6 +51,8 @@ $(function() {
 		$('td select').css('cursor', 'not-allowed');
 		$('td input[class="check"]').attr('disabled', false);
 	}
+
+
 });
 
 function getProvinces()
@@ -70,9 +64,15 @@ function getProvinces()
 	}).done(function(result){
 		var data = result.LOCATION_LIST;
 
+
 		$.each(data, function(i, text){
 			$('#provinceList').append(new Option(data[i].LOCATION_DESCRIPTION, data[i].PROVINCE));
 		});
+
+		if (getProv != '') {
+			$('#provinceList').val(getProv);
+			getMunicipalities(getProv);
+		}
 
 		$('#provinceList').selectpicker('render').selectpicker('refresh');
 	});
@@ -92,6 +92,11 @@ function getMunicipalities(provinceId)
 			$('#muniList').append(new Option(data[i].LOCATION_DESCRIPTION, data[i].MUNICIPALITY));
 		});
 
+		if (getCity != '') {
+			$('#muniList').val(getCity);
+			getBrgys(getCity);
+		}
+
 		$('#muniList').selectpicker('render').selectpicker('refresh');
 	});
 }
@@ -107,8 +112,12 @@ function getBrgys(muniId)
 		var data = result.LOCATION_LIST;
 
 		$.each(data, function(i, text){
-			$('#brgyList').append(new Option(data[i].LOCATION_DESCRIPTION, data[i].MUNICIPALITY));
+			$('#brgyList').append(new Option(data[i].LOCATION_DESCRIPTION, data[i].BARANGAY));
 		});
+
+		if (getBrgy != '') {
+			$('#brgyList').val(getBrgy);
+		}
 
 		$('#brgyList').selectpicker('render').selectpicker('refresh');
 	});
