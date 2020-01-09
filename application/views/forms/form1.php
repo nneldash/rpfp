@@ -34,6 +34,21 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 			background-color: #ddd;
 			color: black;
 		}
+
+		.dropdownLoc {
+		    padding-bottom: 0!important;
+			padding-top: 7px!important;
+		}
+
+		.bootstrap-select .dropdown-toggle .filter-option-inner-inner {
+			height: 14px;
+			font-size: 12px;
+		}
+		.bootstrap-select>.dropdown-toggle {
+			border: none;
+			border-bottom: 1px solid !important;
+    		border-radius: 0px;
+		}
 	</style>
 <?php } ?>
 
@@ -174,14 +189,14 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 						<td class="border-0">
 							<span class="small">Prov/City/Mun.:</span>
 						</td>
-						<td class="border-0">
+						<td class="border-0 dropdownLoc">
 							<span class="small">
 								<select class="selectpicker" id="provinceList" data-live-search="true" title="Province">
 									
 								</select>
 								<input type="hidden" readonly name="province" value="<?=$form1->Seminar->Location->Province->Code != 'N/A' ? $form1->Seminar->Location->Province->Code : ''; ?>">
-		                    </span>
-		                    <span>
+		                   <!--  </span>
+		                    <span> -->
 		                    	<select class="selectpicker" id="muniList" data-live-search="true" title="City/Municipality">
 									
 								</select>
@@ -232,9 +247,9 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 						<td class="border-0">
 							<span class="small">Barangay:</span>
 						</td>
-						<td class="border-0">
+						<td class="border-0 dropdownLoc">
 							<span class="small">
-								<select class="selectpicker" id="brgyList" data-live-search="true" title="Barangay">
+								<select class="selectpicker" id="brgyList" data-size="3" data-live-search="true" title="Barangay">
 									
 								</select>
 								<input type="hidden" readonly name="barangay" value="<?=$form1->Seminar->Location->Barangay->Code != 'N/A' ? $form1->Seminar->Location->Barangay->Code : ''; ?>">
