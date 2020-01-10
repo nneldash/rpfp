@@ -2974,22 +2974,24 @@ CREATE DEFINER=root@localhost PROCEDURE process_accomplishment (
     )  READS SQL DATA
 proc_exit_point :
 BEGIN
-DECLARE count_id INT;
-DECLARE random_no VARCHAR(400);
+    DECLARE count_id INT;
+    DECLARE random_no VARCHAR(400);
+    DECLARE out_message_1 VARCHAR(100);
+    DECLARE out_message_2 VARCHAR(100);
 
-SET random_no = CONCAT("RPFP-",report_year,report_month,"-",CEILING(RAND()*10000000000));
+    SET random_no = CONCAT("RPFP-",report_year,report_month,"-",CEILING(RAND()*10000000000));
 
-SELECT COUNT(*) INTO count_id FROM report_random_id WHERE RANDOM_ID = random_no;
+    SELECT COUNT(*) INTO count_id FROM report_random_id WHERE RANDOM_ID = random_no;
 
-IF count_id > 0 THEN
-    SELECT "CANNOT PROCESS RECORD WITH GIVEN PARAMETERS" AS MESSAGE;
-    LEAVE proc_exit_point;
-END IF
-;
+    IF count_id > 0 THEN
+        SELECT "CANNOT PROCESS RECORD WITH GIVEN PARAMETERS" AS MESSAGE;
+        LEAVE proc_exit_point;
+    END IF
+    ;
 
-    CALL process_check_duplication( username, report_year, report_month, psgc_code, random_no );
-    CALL process_couples_encoded( username, report_year, report_month, psgc_code, random_no );
-
+    CALL process_check_duplication( username, report_year, report_month, psgc_code, random_no, out_message_1 );
+    CALL process_couples_encoded( username, report_year, report_month, psgc_code, random_no, out_message_2 );
+    SELECT out_message_2 AS MESSAGE;
 END$$
 
 CREATE DEFINER=root@localhost PROCEDURE process_couples_encoded (
@@ -2997,116 +2999,120 @@ CREATE DEFINER=root@localhost PROCEDURE process_couples_encoded (
     IN report_year INT,
     IN report_month INT,
     IN psgc_code INT,
-    IN random_id VARCHAR(400)
+    IN random_id VARCHAR(400),
+   OUT output_message VARCHAR(100)
     )  MODIFIES SQL DATA
 proc_exit_point :
 BEGIN
-DECLARE encoded_fin INTEGER DEFAULT 0;
-DECLARE class_no VARCHAR(100) DEFAULT "";
-DECLARE encoded_couples INT;
-DECLARE approved_couples INT;
-DECLARE duplicates INT;
-DECLARE invalids INT;
-DECLARE firstname VARCHAR(50);
-DECLARE lastname VARCHAR(50);
-DECLARE extname VARCHAR(50);
-DECLARE birthdate DATE;
+    DECLARE encoded_fin INTEGER DEFAULT 0;
+    DECLARE class_no VARCHAR(100) DEFAULT "";
+    DECLARE encoded_couples INT;
+    DECLARE approved_couples INT;
+    DECLARE duplicates INT;
+    DECLARE invalids INT;
+    DECLARE firstname VARCHAR(50);
+    DECLARE lastname VARCHAR(50);
+    DECLARE extname VARCHAR(50);
+    DECLARE birthdate DATE;
 
-DECLARE cur_class_list CURSOR FOR 
+    DECLARE cur_class_list CURSOR FOR 
+        SELECT DISTINCT rc.CLASS_NUMBER
+                   FROM rpfp.rpfp_class rc 
+              LEFT JOIN rpfp.lib_psgc_locations lp
+                     ON lp.PSGC_CODE = rc.BARANGAY_ID
+                  WHERE YEAR(rc.DATE_CONDUCTED) = report_year 
+                    AND MONTH(rc.DATE_CONDUCTED) = report_month
+                    AND (
+                            (QUOTE(lp.REGION_CODE) = QUOTE(psgc_code)
+                                AND lp.INTER_LEVEL = 'REG'
+                            )
+                            OR (IFNULL( psgc_code, 0 ) = 0)
+                        )
+    ;
+
+    DECLARE CONTINUE HANDLER FOR NOT FOUND
+        BEGIN
+            SET encoded_fin = 1;
+        END;
+
+    OPEN cur_class_list;
+
+    get_cur_class_list: LOOP
+        FETCH cur_class_list INTO class_no;
+        IF encoded_fin = 1 THEN
+            LEAVE get_cur_class_list;
+        END IF;
     
-      SELECT DISTINCT rc.CLASS_NUMBER
-        FROM rpfp.rpfp_class rc 
-   LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
-       WHERE YEAR(rc.DATE_CONDUCTED) = report_year 
-         AND MONTH(rc.DATE_CONDUCTED) = report_month
-         AND (
-                QUOTE(lp.REGION_CODE) = QUOTE(psgc_code)
-             OR (IFNULL( psgc_code, 0 ) = 0)
-            )
-;
+         SELECT COUNT(apc.COUPLES_ID)
+           INTO encoded_couples
+           FROM rpfp.couples apc 
+      LEFT JOIN rpfp.rpfp_class rc
+             ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
+      LEFT JOIN rpfp.lib_psgc_locations lp
+             ON lp.PSGC_CODE = rc.BARANGAY_ID
+          WHERE YEAR(rc.DATE_CONDUCTED) = report_year 
+            AND MONTH(rc.DATE_CONDUCTED) = report_month
+            AND rc.CLASS_NUMBER = class_no
+            AND (
+                    QUOTE(lp.REGION_CODE) = QUOTE(psgc_code)
+                 OR (IFNULL( psgc_code, 0 ) = 0)
+                )
+        ;
 
-DECLARE CONTINUE HANDLER 
-        FOR NOT FOUND SET encoded_fin = 1;
+         SELECT COUNT(apc.COUPLES_ID)
+           INTO approved_couples
+           FROM rpfp.couples apc 
+      LEFT JOIN rpfp.rpfp_class rc
+             ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
+      LEFT JOIN rpfp.lib_psgc_locations lp
+             ON lp.PSGC_CODE = rc.BARANGAY_ID
+          WHERE apc.IS_ACTIVE = 0
+            AND YEAR(rc.DATE_CONDUCTED) = report_year 
+            AND MONTH(rc.DATE_CONDUCTED) = report_month
+            AND rc.CLASS_NUMBER = class_no
+            AND (
+                    QUOTE(lp.REGION_CODE) = QUOTE(psgc_code)
+                 OR (IFNULL( psgc_code, 0 ) = 0)
+                )
+        ;
 
-OPEN cur_class_list;
-
-get_cur_class_list: LOOP
-    FETCH cur_class_list INTO class_no;
-    IF encoded_fin = 1 THEN
-        LEAVE get_cur_class_list;
-    END IF;
-   
-      SELECT COUNT(apc.COUPLES_ID)
-        INTO encoded_couples
-        FROM rpfp.couples apc 
-   LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
-   LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
-       WHERE YEAR(rc.DATE_CONDUCTED) = report_year 
-         AND MONTH(rc.DATE_CONDUCTED) = report_month
-         AND rc.CLASS_NUMBER = class_no
-         AND (
-                QUOTE(lp.REGION_CODE) = QUOTE(psgc_code)
-             OR (IFNULL( psgc_code, 0 ) = 0)
-            )
-    ;
-
-      SELECT COUNT(apc.COUPLES_ID)
-        INTO approved_couples
-        FROM rpfp.couples apc 
-   LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
-   LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
-       WHERE apc.IS_ACTIVE = 0
-         AND YEAR(rc.DATE_CONDUCTED) = report_year 
-         AND MONTH(rc.DATE_CONDUCTED) = report_month
-         AND rc.CLASS_NUMBER = class_no
-         AND (
-                QUOTE(lp.REGION_CODE) = QUOTE(psgc_code)
-             OR (IFNULL( psgc_code, 0 ) = 0)
-            )
-    ;
-
-      SELECT COUNT(rad.REPORT_ID)
-        INTO duplicates
-        FROM rpfp.report_duplicate_encoded rad
-       WHERE rad.RPFP_CLASS_NO = class_no
-         AND rad.ACCOM_ID = random_id
-    ;
+         SELECT COUNT(rad.REPORT_ID)
+           INTO duplicates
+           FROM rpfp.report_duplicate_encoded rad
+          WHERE rad.RPFP_CLASS_NO = class_no
+            AND rad.ACCOM_ID = random_id
+        ;
 
         INSERT INTO rpfp.report_couples_encoded (
-                ACCOM_ID,
-                REPORT_YEAR,
-                REPORT_MONTH,
-                PSGC_CODE,
-                RPFP_CLASS_NO,
-                ENCODED_COUPLES,
-                APPROVED_COUPLES,
-                DUPLICATES,
-                INVALIDS,
-                DB_USER_ID,
-                DATE_PROCESSED
-            )
-        VALUES (
-                random_id,
-                report_year,
-                report_month,
-                psgc_code,
-                class_no,
-                encoded_couples,
-                approved_couples,
-                duplicates,
-                invalids,
-                username,
-                CURRENT_DATE()
-    )
-    ;
-        
-END LOOP get_cur_class_list;
-CLOSE cur_class_list;
+                    ACCOM_ID,
+                    REPORT_YEAR,
+                    REPORT_MONTH,
+                    PSGC_CODE,
+                    RPFP_CLASS_NO,
+                    ENCODED_COUPLES,
+                    APPROVED_COUPLES,
+                    DUPLICATES,
+                    INVALIDS,
+                    DB_USER_ID,
+                    DATE_PROCESSED
+        ) VALUES (
+                    random_id,
+                    report_year,
+                    report_month,
+                    psgc_code,
+                    class_no,
+                    encoded_couples,
+                    approved_couples,
+                    duplicates,
+                    invalids,
+                    username,
+                    CURRENT_DATE()
+        );
+            
+    END LOOP get_cur_class_list;
+    CLOSE cur_class_list;
 
-        SELECT CONCAT( "NEW ENTRY: ", LAST_INSERT_ID() ) AS MESSAGE;
-        LEAVE proc_exit_point;
-
-    SELECT "SUCCESS!" AS MESSAGE;
+    SELECT CONCAT( "NEW ENTRY: ", LAST_INSERT_ID() ) INTO output_message;
     
 END$$
 
@@ -3116,7 +3122,7 @@ CREATE DEFINER=root@localhost PROCEDURE process_check_duplication (
     IN report_month INT,
     IN psgc_code INT,
     IN random_id VARCHAR(400),
-   OUT output_message VARCHAR(400)
+   OUT output_message VARCHAR(100)
     )  MODIFIES SQL DATA
 proc_exit_point :
 BEGIN
@@ -3128,14 +3134,17 @@ BEGIN
     DECLARE extname VARCHAR(50);
     DECLARE birthdate DATE;
     DECLARE count_record INT;
-    DECLARE last_id INT;
+    DECLARE last_id INT DEFAULT 0;
 
     DECLARE cur_duplicate_list CURSOR FOR
          SELECT ic.FNAME, ic.LNAME, ic.EXT_NAME, ic.BDATE, rc.CLASS_NUMBER, COUNT(apc.COUPLES_ID)
            FROM rpfp.individual ic
-      LEFT JOIN rpfp.couples apc ON apc.COUPLES_ID = ic.COUPLES_ID
-      LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
-      LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
+      LEFT JOIN rpfp.couples apc
+             ON apc.COUPLES_ID = ic.COUPLES_ID
+      LEFT JOIN rpfp.rpfp_class rc
+             ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
+      LEFT JOIN rpfp.lib_psgc_locations lp
+             ON lp.PSGC_CODE = rc.BARANGAY_ID
           WHERE apc.IS_ACTIVE = 0
             AND (
                     ( QUOTE(lp.REGION_CODE) = QUOTE(psgc_code)
@@ -3156,7 +3165,6 @@ BEGIN
     get_cur_duplicate_list: LOOP
         FETCH cur_duplicate_list INTO firstname, lastname, extname, birthdate, class_no, duplicates;
         IF finished = 1 THEN
-            SET last_id := 0;
             LEAVE get_cur_duplicate_list;
         END IF;
 
@@ -3206,9 +3214,7 @@ BEGIN
     END LOOP;
     CLOSE cur_duplicate_list;
 
-    SELECT CONCAT( "NEW ENTRY: ", last_id ) INTO output_message;
-    LEAVE proc_exit_point;
-    
+    SELECT CONCAT( "NEW ENTRY: ", last_id ) INTO output_message;    
 END$$
 
 
