@@ -28,13 +28,11 @@ class Accomplishment extends CI_Controller
         $genData->ReportYear = $this->input->post('accompYearSelect');
         $genData->ReportMonth = $this->input->post('accompMonthSelect');
 
-        $data = $this->AccomplishmentModel->saveAccomplishment($username, $pscgc_code, $genData);
-        $data = explode(': ', $data);
-
-        if($data[1] > 0) {
-            $data = ['is_save' => true];
-        } else {
-            $data = ['is_save' => false];
+        $rows = $this->AccomplishmentModel->saveAccomplishment($username, $pscgc_code, $genData);
+        $rowdata = $rows[0];
+        $data = array('is_save' => false);
+        if (!empty($rowdata->message) && (strcmp($rowdata->message, "NEW ENTRY: 0") == 0)) {
+            $data = array('is_save' => false);
         }
 
         $this->output
