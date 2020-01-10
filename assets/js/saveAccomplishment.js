@@ -32,8 +32,9 @@ function genAccomp()
 			} else {
 				Toast.fire({
 					type: 'error',
-					title: 'An error occurred.'
+					title: 'No data to generate.'
 				});
+				$('#generateReportModal').modal('hide');
 			}
 		});
 		return false;
