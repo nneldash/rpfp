@@ -48,7 +48,9 @@ if (empty($title)) {
 <button id="refresh">refresher</button>
 <script>
     loadJs(base_url + 'NewAssets/templateJs', function() {
-        loadJs(base_url + 'assets/js/listCouples.js');
+        loadJs(base_url + 'assets/js/listCouples.js', function(){
+            listCoupleModal();
+        });
         loadJs(base_url + 'NewAssets/datatableJs', function() {
             loadJs(base_url + 'NewAssets/datatableBtJs', function() {
                 loadJs(base_url + 'NewAssets/datatableRpJs', function() {
