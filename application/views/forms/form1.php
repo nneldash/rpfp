@@ -306,9 +306,9 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 								<th rowspan="2" class="text-center padding-0" style="width: 30%">
 									<p class="small">
 										<b>
-											Name of Participants/Couple (Husband & <br>
-											Wife) PLEASE WRITE IN BOLD LETTERS <br>
-											(name, surname)<br> (1)
+											Name of Participants/Couple (Husband & 
+											Wife) <br>PLEASE WRITE IN BOLD LETTERS <br>
+											(First Name, Middle Initial, Last Name, Extension Name)<br> (1)
 										</b>
 									</p>
 								</th>
@@ -356,7 +356,7 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 								</th>
 								<th class="text-center" style="width: 15%">
 									<p class="small">
-										<b>Birthdate / Age <br>(4)</b>
+										<b>Birthdate / Age <br> (MM-DD-YYYY) <br>(4)</b>
 									</p>
 								</th>
 								<th class="text-center" style="width: 28%">
