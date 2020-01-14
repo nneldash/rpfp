@@ -49,7 +49,9 @@ if (empty($title)) {
 
 <script>
     loadJs(base_url + 'NewAssets/templateJs', function() {
-        loadJs(base_url + 'assets/js/modals.js');
+        loadJs(base_url + 'assets/js/modals.js', function(){
+            clickModalAccomp();
+        });
     });
 
     $(".accomplishmentList").DataTable({

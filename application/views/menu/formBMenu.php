@@ -47,7 +47,11 @@ if (empty($title)) {
     </tbody>
 </table>
 
-<script src="<?= base_url('assets/js/modals.js'); ?>"></script>
+<script>
+    loadJs(base_url + 'assets/js/modals.js', function(){
+        clickModalReportB();
+    });
+</script>
 
 <?php
 if (!empty($reload)) {
