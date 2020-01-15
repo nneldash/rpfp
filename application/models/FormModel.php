@@ -303,6 +303,7 @@ class FormModel extends BaseModel
                 'TraditionalFp' => array(
                     'Type' => 'tfp_type',
                     'Status' => 'tfp_status',
+                    'IntentionUse' => 'mfp_intention_use',
                     'ReasonForUse' => 'tfp_reason'
                 )
             ),

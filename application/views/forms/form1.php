@@ -675,7 +675,7 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 				                                "1"
 				                            );
 				                        ?>
-				                        <input type="text" disabled value="<?= ($couple->TraditionalFp->Status != 'N/A' ? $couple->TraditionalFp->Status : ''); ?>" class="height-50 text-center status-intention" maxlength="1" name="status_intention[<?= $i; ?>]" />
+				                        <input type="text" disabled value="<?= ($couple->TraditionalFp->IntentionUse != 'N/A' ? $couple->TraditionalFp->IntentionUse : ''); ?>" class="height-50 text-center intention-use" maxlength="1" name="intention_use[<?= $i; ?>]" />
 									</td>
 									<td class="small-20 text-center" rowspan="2">
 										<?php
