@@ -31,7 +31,7 @@ if (empty($title)) {
 					<td><?= $pendings->Barangay; ?></td>
 					<td><?= date('F d, Y', strtotime($pendings->DateConduct)); ?></td>
                     <td class="text-center">
-                        <button class="btn btn-primary btn-approve-listing" data-toggle="tooltip" data-placement="left" title="View List">
+                        <button class="btn btn-primary btn-pending-listing" data-toggle="tooltip" data-placement="left" title="View List">
                             <i class="fa fa-list"></i>
                         </button>					
                     </td>
@@ -48,7 +48,9 @@ if (empty($title)) {
 <button id="refresh">refresher</button>
 <script>
     loadJs(base_url + 'NewAssets/templateJs', function() {
-        loadJs(base_url + 'assets/js/listCouples.js');
+        loadJs(base_url + 'assets/js/listCouples.js', function(){
+            listCoupleModal();
+        });
         loadJs(base_url + 'NewAssets/datatableJs', function() {
             loadJs(base_url + 'NewAssets/datatableBtJs', function() {
                 loadJs(base_url + 'NewAssets/datatableRpJs', function() {

@@ -39,7 +39,10 @@ $current_year = date('Y');
         </form>
 	</div>
 </div>
-<script type="text/javascript" src="<?= base_url('assets/js/saveAccomplishment.js')?>"></script>
 <script>
-	loadJs(base_url + 'NewAssets/sweetalertJs');
+	loadJs(base_url + 'NewAssets/sweetalertJs', function(){
+        loadJs(base_url + 'assets/js/saveAccomplishment.js', function(){
+            genAccomp();
+        });
+    });
 </script>

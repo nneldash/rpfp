@@ -220,6 +220,7 @@ class Forms extends CI_Controller
 
         $traditionalFp->Type = $this->input->post('type')[$i];
         $traditionalFp->Status = $this->input->post('status')[$i];
+        $traditionalFp->IntentionUse = $this->input->post('intention_use')[$i];
         $traditionalFp->ReasonForUse = $this->input->post('reason')[$i];
 
         return $traditionalFp;

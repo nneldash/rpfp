@@ -10,11 +10,13 @@ if (empty($title)) {
 <link href="<?= base_url('NewAssets/fontAwesome'); ?>" rel="stylesheet">
 <link href="<?= base_url('assets/css/form.css') ?>" rel="stylesheet">
 
-<br>
-<div style="text-transform: none; width: 15%;">                    
-    <input type="submit" class="save genReportC" value="Generate Report" name="genReportC" />
+<div class="col-md-12" style="padding: 0 0 20px">
+    <div class="col-md-3" style="text-transform: none; padding: 0">
+        <input type="submit" class="save genAccomp" value="Generate Report" name="genAccomplishment" />
+    </div>
+    <div class="col-md-9"></div>
 </div>
-<br>
+
 <table id="datatable-responsive" class="table table-condensed table-striped table-hover table-bordered dt-responsive nowrap" cellspacing="0" width="100%">
     <thead>
         <tr>
@@ -47,7 +49,11 @@ if (empty($title)) {
     </tbody>
 </table>
 
-<script src="<?= base_url('assets/js/modals.js'); ?>"></script>
+<script>
+    loadJs(base_url + 'assets/js/modals.js', function(){
+        clickModalReportC();
+    });
+</script>
 
 <?php
 if (!empty($reload)) {

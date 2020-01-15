@@ -48,7 +48,9 @@ if (empty($title)) {
 
 <script>
     loadJs(base_url + 'NewAssets/templateJs', function() {
-        loadJs(base_url + 'assets/js/listCouples.js');
+        loadJs(base_url + 'assets/js/listCouples.js', function(){
+            listCoupleModal();
+        });
     });
 
     <?php

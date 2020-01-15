@@ -34,6 +34,21 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 			background-color: #ddd;
 			color: black;
 		}
+
+		.dropdownLoc {
+		    padding-bottom: 0!important;
+			padding-top: 7px!important;
+		}
+
+		.bootstrap-select .dropdown-toggle .filter-option-inner-inner {
+			height: 14px;
+			font-size: 12px;
+		}
+		.bootstrap-select>.dropdown-toggle {
+			border: none;
+			border-bottom: 1px solid !important;
+    		border-radius: 0px;
+		}
 	</style>
 <?php } ?>
 
@@ -176,17 +191,18 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 						<td class="border-0">
 							<span class="small">Prov/City/Mun.:</span>
 						</td>
-						<td class="border-0">
+						<td class="border-0 dropdownLoc">
 							<span class="small">
 								<select class="selectpicker" id="provinceList" data-live-search="true" title="Province">
 									
 								</select>
-								<input type="hidden" name="province" value="<?=$form1->Seminar->Location->Region->Code != 'N/A' ? $form1->Seminar->Location->Region->Code : ''; ?>">
-		                    </span>
-		                    <span>
-		                    	<select class="selectpicker" id="muniList" data-live-search="true">
+								<input type="hidden" readonly name="province" value="<?=$form1->Seminar->Location->Province->Code != 'N/A' ? $form1->Seminar->Location->Province->Code : ''; ?>">
+		                   <!--  </span>
+		                    <span> -->
+		                    	<select class="selectpicker" id="muniList" data-live-search="true" title="City/Municipality">
 									
 								</select>
+								<input type="hidden" readonly name="city" value="<?=$form1->Seminar->Location->City->Code != 'N/A' ? $form1->Seminar->Location->City->Code : ''; ?>">
 		                    </span>
 						</td> 
 					</tr>
@@ -234,11 +250,12 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 						<td class="border-0">
 							<span class="small">Barangay:</span>
 						</td>
-						<td class="border-0">
+						<td class="border-0 dropdownLoc">
 							<span class="small">
-								<select class="selectpicker" id="brgyList" data-live-search="true">
+								<select class="selectpicker" id="brgyList" data-size="3" data-live-search="true" title="Barangay">
 									
 								</select>
+								<input type="hidden" readonly name="barangay" value="<?=$form1->Seminar->Location->Barangay->Code != 'N/A' ? $form1->Seminar->Location->Barangay->Code : ''; ?>">
 		                    </span>
 						</td>
 					</tr>
@@ -292,9 +309,9 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 								<th rowspan="2" class="text-center padding-0" style="width: 30%">
 									<p class="small">
 										<b>
-											Name of Participants/Couple (Husband & <br>
-											Wife) PLEASE WRITE IN BOLD LETTERS <br>
-											(name, surname)<br> (1)
+											Name of Participants/Couple (Husband & 
+											Wife) <br>PLEASE WRITE IN BOLD LETTERS <br>
+											(First Name, Middle Initial, Last Name, Extension Name)<br> (1)
 										</b>
 									</p>
 								</th>
@@ -342,7 +359,7 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 								</th>
 								<th class="text-center" style="width: 15%">
 									<p class="small">
-										<b>Birthdate / Age <br>(4)</b>
+										<b>Birthdate / Age <br> (MM-DD-YYYY) <br>(4)</b>
 									</p>
 								</th>
 								<th class="text-center" style="width: 28%">
@@ -671,7 +688,7 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 												""
 				                            );
 				                        ?>
-				                        <input type="text" disabled value="<?= ($couple->TraditionalFp->Status != 'N/A' ? $couple->TraditionalFp->Status : ''); ?>" class="height-50 text-center status-intention" maxlength="1" name="status_intention[<?= $i; ?>]" />
+				                        <input type="text" disabled value="<?= ($couple->TraditionalFp->IntentionUse != 'N/A' ? $couple->TraditionalFp->IntentionUse : ''); ?>" class="height-50 text-center intention-use" maxlength="1" name="intention_use[<?= $i; ?>]" />
 									</td>
 									<td class="small-20 text-center" rowspan="2">
 										<?php

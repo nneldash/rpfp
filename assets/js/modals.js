@@ -1,10 +1,3 @@
-$(function(){
-	clickModalAccomp();
-	clickModalReportA();
-	clickModalReportB();
-	clickModalReportC();
-});
-
 function clickModalAccomp()
 {
 	$('.genAccomp').click(function(event){
