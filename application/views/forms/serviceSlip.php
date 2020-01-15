@@ -49,6 +49,7 @@ $slip = ServiceSlipClass::getServiceSlipFromVariable($slip);
 						"text",
 						"",
 						"padding-l10 underline",
+						"",
 						""
 					);
 				?>
@@ -68,6 +69,7 @@ $slip = ServiceSlipClass::getServiceSlipFromVariable($slip);
 						"text",
 						"",
 						"padding-l10 underline",
+						"",
 						""
 					);
 				?>
@@ -101,14 +103,14 @@ $slip = ServiceSlipClass::getServiceSlipFromVariable($slip);
 							<th class="text-center">Permanent Method</th>
 							<th class="text-center">Check</th>
 						</tr>
-					</thead>
+					</thead> 
 					<tbody>
 						<tr>
 							<td>SDM</td>
 							<td class="padding-0 back-eee">
 								<?php if (!$is_pdf) : ?>
 									<label class="cont">
-										<input type="radio" name="method" value="<?= ModernMethods::SDM ?>" <?= $slip->MethodUsed == '11' ? 'checked' : '' ?> />
+										<input type="radio" name="method" class="fp_method" value="<?= ModernMethods::SDM ?>" <?= $slip->MethodUsed == '11' ? 'checked' : '' ?> />
 										<span class="checkmark"></span>
 									</label>
 								<?php endif; ?>
@@ -117,7 +119,7 @@ $slip = ServiceSlipClass::getServiceSlipFromVariable($slip);
 							<td class="padding-0 back-eee">
 								<?php if (!$is_pdf) : ?>
 									<label class="cont">
-										<input type="radio" name="method" value="<?= ModernMethods::PILLS ?> <?= $slip->MethodUsed == '3' ? 'checked' : '' ?> " />
+										<input type="radio" name="method" class="fp_method" value="<?= ModernMethods::PILLS ?> <?= $slip->MethodUsed == '3' ? 'checked' : '' ?> " />
 										<span class="checkmark"></span>
 									</label>
 								<?php endif; ?>
@@ -126,7 +128,7 @@ $slip = ServiceSlipClass::getServiceSlipFromVariable($slip);
 							<td class="padding-0 back-eee">
 								<?php if (!$is_pdf) : ?>
 									<label class="cont">
-										<input type="radio" name="method" value="<?= ModernMethods::TUBAL_LIGATION ?>" <?= $slip->MethodUsed == '6' ? 'checked' : '' ?> />
+										<input type="radio" name="method" class="fp_method" value="<?= ModernMethods::TUBAL_LIGATION ?>" <?= $slip->MethodUsed == '6' ? 'checked' : '' ?> />
 										<span class="checkmark"></span>
 									</label>
 								<?php endif; ?>
@@ -137,7 +139,7 @@ $slip = ServiceSlipClass::getServiceSlipFromVariable($slip);
 							<td class="padding-0 back-eee">
 								<?php if (!$is_pdf) : ?>
 									<label class="cont">
-										<input type="radio" name="method" value="<?= ModernMethods::LAM ?>" <?= $slip->MethodUsed == '12' ? 'checked' : '' ?> />
+										<input type="radio" name="method" class="fp_method" value="<?= ModernMethods::LAM ?>" <?= $slip->MethodUsed == '12' ? 'checked' : '' ?> />
 										<span class="checkmark"></span>
 									</label>
 								<?php endif; ?>
@@ -146,7 +148,7 @@ $slip = ServiceSlipClass::getServiceSlipFromVariable($slip);
 							<td class="padding-0 back-eee">
 								<?php if (!$is_pdf) : ?>
 									<label class="cont">
-										<input type="radio" name="method" value="<?= ModernMethods::IUD ?>" <?= $slip->MethodUsed == '2' ? 'checked' : '' ?> />
+										<input type="radio" name="method" class="fp_method" value="<?= ModernMethods::IUD ?>" <?= $slip->MethodUsed == '2' ? 'checked' : '' ?> />
 										<span class="checkmark"></span>
 									</label>
 								<?php endif; ?>
@@ -155,7 +157,7 @@ $slip = ServiceSlipClass::getServiceSlipFromVariable($slip);
 							<td class="padding-0 back-eee">
 								<?php if (!$is_pdf) : ?>
 									<label class="cont">
-										<input type="radio" name="method" value="<?= ModernMethods::VASECTOMY ?>" <?= $slip->MethodUsed == '5' ? 'checked' : '' ?> />
+										<input type="radio" name="method" class="fp_method" value="<?= ModernMethods::VASECTOMY ?>" <?= $slip->MethodUsed == '5' ? 'checked' : '' ?> />
 										<span class="checkmark"></span>
 									</label>
 								<?php endif; ?>
@@ -166,7 +168,7 @@ $slip = ServiceSlipClass::getServiceSlipFromVariable($slip);
 							<td class="padding-0 back-eee">
 								<?php if (!$is_pdf) : ?>
 									<label class="cont"> 
-										<input type="radio" name="method" value="<?= ModernMethods::CMM_BILLINGS ?>" <?= $slip->MethodUsed == '8' ? 'checked' : '' ?> />
+										<input type="radio" name="method" class="fp_method" value="<?= ModernMethods::CMM_BILLINGS ?>" <?= $slip->MethodUsed == '8' ? 'checked' : '' ?> />
 										<span class="checkmark"></span>
 									</label>
 								<?php endif; ?>
@@ -175,7 +177,7 @@ $slip = ServiceSlipClass::getServiceSlipFromVariable($slip);
 							<td class="padding-0 back-eee">
 								<?php if (!$is_pdf) : ?>
 									<label class="cont">
-										<input type="radio" name="method" value="<?= ModernMethods::INJECTABLE ?>" <?= $slip->MethodUsed == '4' ? 'checked' : '' ?> />
+										<input type="radio" name="method" class="fp_method" value="<?= ModernMethods::INJECTABLE ?>" <?= $slip->MethodUsed == '4' ? 'checked' : '' ?> />
 										<span class="checkmark"></span>
 									</label>
 								<?php endif; ?>
@@ -188,7 +190,7 @@ $slip = ServiceSlipClass::getServiceSlipFromVariable($slip);
 							<td class="padding-0 back-eee">
 								<?php if (!$is_pdf) : ?>
 									<label class="cont">
-										<input type="radio" name="method" value="<?= ModernMethods::SYMPTO_THERMAL ?>" <?= $slip->MethodUsed == '10' ? 'checked' : '' ?> />
+										<input type="radio" name="method" class="fp_method" value="<?= ModernMethods::SYMPTO_THERMAL ?>" <?= $slip->MethodUsed == '10' ? 'checked' : '' ?> />
 										<span class="checkmark"></span>
 									</label>
 								<?php endif; ?>
@@ -197,7 +199,7 @@ $slip = ServiceSlipClass::getServiceSlipFromVariable($slip);
 							<td class="padding-0 back-eee">
 								<?php if (!$is_pdf) : ?>
 									<label class="cont">
-										<input type="radio" name="method" value="<?= ModernMethods::CONDOM ?>" <?= $slip->MethodUsed == '1' ? 'checked' : '' ?> />
+										<input type="radio" name="method" class="fp_method" value="<?= ModernMethods::CONDOM ?>" <?= $slip->MethodUsed == '1' ? 'checked' : '' ?> />
 										<span class="checkmark"></span>
 									</label>
 								<?php endif; ?>
@@ -212,7 +214,7 @@ $slip = ServiceSlipClass::getServiceSlipFromVariable($slip);
 							<td class="text-center padding-0 back-eee">
 								<?php if (!$is_pdf) : ?>
 									<label class="cont">
-										<input type="radio" name="method" value="<?= ModernMethods::IMPLANT ?>" <?= $slip->MethodUsed == '7' ? 'checked' : '' ?> />
+										<input type="radio" name="method" class="fp_method" value="<?= ModernMethods::IMPLANT ?>" <?= $slip->MethodUsed == '7' ? 'checked' : '' ?> />
 										<span class="checkmark"></span>
 									</label>
 								<?php endif; ?>
@@ -232,7 +234,7 @@ $slip = ServiceSlipClass::getServiceSlipFromVariable($slip);
 				<p><b> &nbsp; (</b></p>
 				<?php if (!$is_pdf) : ?>
 					<label class="cont">
-						<input type="radio" name="is_counseling" value="1" <?= $slip->IsCounseling == '1' ? 'checked' : '' ?> />
+						<input type="radio" name="is_counseling" class="counseling" value="1" <?= $slip->IsCounseling == '1' ? 'checked' : '' ?> />
 						<span class="smolCheck back-eee"></span>
 					</label>
 				<?php endif; ?>
@@ -256,7 +258,7 @@ $slip = ServiceSlipClass::getServiceSlipFromVariable($slip);
 						1. Needed FP method is not available in the facility
 						<p> &nbsp; (</p>
 						<label class="cont">
-							<input type="radio" name="other_concern" value="1" <?= $slip->OtherConcern == '1' ? 'checked' : '' ?> />
+							<input type="radio" name="other_concern" class="other_concerns" value="1" <?= $slip->OtherConcern == '1' ? 'checked' : '' ?> />
 							<span class="smolCheck back-eee"></span>
 						</label>
 						<p>)</p>
@@ -265,7 +267,7 @@ $slip = ServiceSlipClass::getServiceSlipFromVariable($slip);
 						2. No sevice provider available during the visit
 						<p> &nbsp; (</p>
 						<label class="cont">
-							<input type="radio" name="other_concern" value="2" <?= $slip->OtherConcern == '2' ? 'checked' : '' ?> />
+							<input type="radio" name="other_concern" class="other_concerns" value="2" <?= $slip->OtherConcern == '2' ? 'checked' : '' ?> />
 							<span class="smolCheck back-eee"></span>
 						</label>
 						<p>)</p>
@@ -274,7 +276,7 @@ $slip = ServiceSlipClass::getServiceSlipFromVariable($slip);
 						3. No trained personnel to do the needed FP service
 						<p> &nbsp; (</p>
 						<label class="cont">
-							<input type="radio" name="other_concern" value="3" <?= $slip->OtherConcern == '3' ? 'checked' : '' ?> />
+							<input type="radio" name="other_concern" class="other_concerns" value="3" <?= $slip->OtherConcern == '3' ? 'checked' : '' ?> />
 							<span class="smolCheck back-eee"></span>
 						</label>
 						<p>)</p>
@@ -309,16 +311,13 @@ $slip = ServiceSlipClass::getServiceSlipFromVariable($slip);
 					<br>
 					<li class="flex">
 						5. Other reasons, please specify: 
-						<?php
-                            echo HtmlHelper::inputPdf(
-                                $is_pdf,
-                                ($slip->OtherSpecify != 'N/A' ? $slip->OtherSpecify : ''),
-                                "text",
-                                "other_specify",
-                                "padding-l10 underline width-45 no5-input",
-                                ""
-                            );
-                        ?>
+							<p> &nbsp; (</p>
+							<label class="cont">
+								<input class="no5-check" type="radio" name="other_concern" value="5" <?= $slip->OtherConcern == '5' ? 'checked' : '' ?> />
+								<span class="smolCheck back-eee"></span>
+							</label>
+							<p>)</p>
+							<input class="padding-l10 underline width-45 no5-input" type="text" name="other_specify" value="<?= $slip->OtherSpecify != 'N/A' ? $slip->OtherSpecify : ''?>"/>
 					</li>
 				</ol>
 			</div>
@@ -335,7 +334,7 @@ $slip = ServiceSlipClass::getServiceSlipFromVariable($slip);
 						</p>
 						<p> &nbsp; (</p>
 						<label class="cont">
-							<input type="radio" name="is_provided_service" value="1" <?= $slip->IsProvided == '1' ? 'checked' : '' ?> />
+							<input type="radio" name="is_provided_service" class="provided_method" value="1" <?= $slip->IsProvided == '1' ? 'checked' : '' ?> />
 							<span class="smolCheck back-eee"></span>
 						</label>
 						<p>)</p>
@@ -357,7 +356,8 @@ $slip = ServiceSlipClass::getServiceSlipFromVariable($slip);
 	                            "text",
 	                            "client_advised",
 	                            "padding-l10 underline width-20",
-	                            ""
+								"",
+								""
 	                        );
 	                    ?>
 					</div>
@@ -371,8 +371,9 @@ $slip = ServiceSlipClass::getServiceSlipFromVariable($slip);
                         ($slip->ReferralFacility != 'N/A' ? $slip->ReferralFacility : ''),
                         "text",
                         "referral_facility",
-                        "padding-l10 underline width-35",
-                        ""
+						"padding-l10 underline width-35",
+						"required",
+						""
                     );
                 ?>
 			</div>
@@ -384,7 +385,8 @@ $slip = ServiceSlipClass::getServiceSlipFromVariable($slip);
                         ($slip->HealthServiceProvider != 'N/A' ? $slip->HealthServiceProvider : ''),
                         "text",
                         "health_service_provider",
-                        "padding-l10 underline width-70 text-center",
+						"padding-l10 underline width-70 text-center",
+						"required",
                         ""
                     );
                 ?>

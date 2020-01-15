@@ -65,7 +65,8 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
                     "text",
                     "purpose",
                     "padding-l10 underline width-10 text-left",
-                    ""
+					"",
+					""
                 );
             ?>
 		</div>
@@ -136,7 +137,8 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 		                                "text",
 		                                "class_no",
 		                                "padding-l10 underline width-70",
-		                                ""
+		                                "",
+										""
 		                            );
 		                        ?>
 	                        </span>
@@ -222,7 +224,8 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 		                                "text",
 		                                "others",
 		                                "padding-l10 underline width-20 disabled-others",
-		                                ""
+										"",
+										""
 		                            );
 		                        ?>
 		                    </span>
@@ -450,7 +453,8 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 					                                "hidden",
 					                                "couple_id[".$i."]",
 					                                "padding-l3 dupHighlight",
-					                                ""
+													"",
+													""
 					                            );
 					                        ?>
 											<?php
@@ -460,7 +464,8 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 					                                "hidden",
 					                                "individual_id1[".$i."]",
 					                                "padding-l3 dupHighlight",
-					                                ""
+													"",
+													""
 					                            );
 					                        ?>
 					                        <?php
@@ -513,7 +518,8 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 				                                "text",
 				                                "sex1[".$i."]",
 				                                "text-center sexValid gender1 dupHighlight",
-				                                "1"
+												"1",
+												""
 				                            );
 				                        ?>
 									</td>
@@ -525,7 +531,8 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 				                                "text",
 				                                "civil_status1[".$i."]",
 				                                "text-center",
-				                                "1"
+												"1",
+												""
 				                            );
 				                        ?>
 									</td>
@@ -594,7 +601,8 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 				                                "text",
 				                                "educ1[".$i."]",
 				                                "text-center",
-				                                "1"
+												"1",
+												""
 				                            );
 				                        ?>
 									</td>
@@ -606,7 +614,8 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 				                                "text",
 				                                "no_of_children[".$i."]",
 				                                "height-50 text-center",
-				                                "2"
+												"2",
+												""
 				                            );
 				                        ?>
 									</td>
@@ -619,7 +628,8 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 				                                "text",
 				                                "method[".$i."]",
 				                                "height-50 text-center",
-				                                "2"
+												"2",
+												""
 				                            );
 				                        ?>
 									</td>
@@ -631,7 +641,8 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 				                                "text",
 				                                "fp_method[".$i."]",
 				                                "height-50 text-center",
-				                                "2"
+												"2",
+												""
 				                            );
 				                        ?>
 									</td>
@@ -643,7 +654,8 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 				                                "text",
 				                                "type[".$i."]",
 				                                "height-50 text-center",
-				                                "1"
+												"1",
+												""
 				                            );
 				                        ?>
 									</td>
@@ -655,7 +667,8 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 				                                "text",
 				                                "status[".$i."]",
 				                                "height-50 text-center status-trad",
-				                                "1"
+												"1",
+												""
 				                            );
 				                        ?>
 				                        <input type="text" disabled value="<?= ($couple->TraditionalFp->Status != 'N/A' ? $couple->TraditionalFp->Status : ''); ?>" class="height-50 text-center status-intention" maxlength="1" name="status_intention[<?= $i; ?>]" />
@@ -668,7 +681,8 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 				                                "text",
 				                                "reason[".$i."]",
 				                                "height-50 text-center",
-				                                "1"
+												"1",
+												""
 				                            );
 				                        ?>
 									</td>
@@ -703,7 +717,8 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 					                                "hidden",
 					                                "individual_id2[".$i."]",
 					                                "padding-l3",
-					                                ""
+													"",
+													""
 					                            );
 					                        ?>
 					                        <?php
@@ -757,7 +772,8 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 				                                "text",
 				                                "sex2[".$i."]",
 				                                "text-center gender2",
-				                                "1"
+												"1",
+												""
 				                            );
 				                        ?>
 									</td>
@@ -769,7 +785,8 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 				                                "text",
 				                                "civil_status2[".$i."]",
 				                                "text-center",
-				                                "1"
+												"1",
+												""
 				                            );
 				                        ?>
 									</td>
@@ -796,7 +813,8 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 			                                "text",
 			                                "educ2[".$i."]",
 			                                "text-center",
-			                                "1"
+											"1",
+											""
 			                            );
 			                        ?>
 									</td>
