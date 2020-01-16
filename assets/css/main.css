@@ -590,3 +590,9 @@ iframe {
 .padding-10p0 {
     padding: 10% 0;
 }
+
+.dashboard-logo {
+    width: 50%;
+    border: 1px solid;
+    padding: 5px;
+}

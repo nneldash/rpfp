@@ -92,9 +92,9 @@
                 <p class="sans subheader">A Project of the Responsible Parenthood and Family Planning Program of the Commission on Population and Development</p>
                 <br>
                 <br>
-                    <img class="login-logo" src="<?=base_url('assets/images/executive_dashboard.jpg')?>" alt="Link to Executive Dashboard" width="5%">
+                    <img class="dashboard-logo" src="<?=base_url('assets/images/executive_dashboard.jpg')?>" alt="Link to Executive Dashboard" width="5%">
                 <br><br>
-                    <img class="login-logo" src="<?=base_url('assets/images/public_dashboard.jpg')?>" alt="Link to Public Dashboard" width="5%">
+                    <img class="dashboard-logo" src="<?=base_url('assets/images/public_dashboard.jpg')?>" alt="Link to Public Dashboard" width="5%">
             </div>
         </div>
     </section>
