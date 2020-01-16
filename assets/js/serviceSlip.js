@@ -60,6 +60,7 @@ function checkbox()
 			$('.no5-input').attr('disabled', 'disabled');
 		} else {
 			$('.no4-select').attr('disabled', 'disabled');
+			$('.no4-select').val('');
 		}
 
 		if ($('.no5-check').is(':checked')) {
@@ -80,7 +81,7 @@ function saveServiceSlip()
 			showConfirmButton: false,
 			timer: 3000
 		});
-		alert();return false;
+		
 		var formData = $('#service_slip').serialize();
 
 		$.ajax({
@@ -88,9 +89,7 @@ function saveServiceSlip()
 			data: formData,
 			url: base_url + '/forms/saveServiceSlip'
 		}).done(function(result){
-			alert(result);return false;
 			if(result.is_save == true) {
-				
 				Toast.fire({
 					type: 'success',
 					title: 'Service Slip successfully saved!'

@@ -245,7 +245,6 @@ class Forms extends CI_Controller
         $slip->ReferralFacility = $this->input->post('referral_facility');
         $slip->HealthServiceProvider = $this->input->post('health_service_provider');
 
-        
         if (!$this->FormModel->saveServiceSlip($couple_id, $slip)) {
             $data = ['is_save' => false];
         } else {
