@@ -305,7 +305,8 @@ class FormModel extends BaseModel
                     'Status' => 'tfp_status',
                     'IntentionUse' => 'mfp_intention_use',
                     'ReasonForUse' => 'tfp_reason'
-                )
+                ),
+                'IsActive' => 'is_active'
             ),
             'encoder_get_couples_with_fp_details',
             array($classNo)

@@ -32,6 +32,7 @@ $(function() {
 	traditionalStatus();
 	getDataDuplicate();
 	getProvinces();
+	isApprove();
 
 	Inputmask().mask(".birthAge");
 
@@ -54,6 +55,27 @@ $(function() {
 
 
 });
+
+function isApprove()
+{
+	var i = 0;
+	for (i = 0; i <= 9; i ++) {
+		var hasClass = $('.tr1' + i).hasClass('isApprove');
+		if (hasClass) {
+			$('.tr1' + i).find('td input').attr('disabled', true);
+			$('.tr1' + i).find('td input').css('cursor', 'not-allowed');
+			$('.tr1' + i).find('td textarea').attr('disabled', true);
+			$('.tr1' + i).find('td textarea').css('cursor', 'not-allowed');
+			$('.tr1' + i).find('td input[class="check"]').attr('disabled', false);
+
+			$('.tr2' + i).find('td input').attr('disabled', true);
+			$('.tr2' + i).find('td input').css('cursor', 'not-allowed');
+			$('.tr2' + i).find('td textarea').attr('disabled', true);
+			$('.tr2' + i).find('td textarea').css('cursor', 'not-allowed');
+			$('.tr2' + i).find('td input[class="check"]').attr('disabled', false);
+		}
+	}
+}
 
 function getProvinces()
 {
