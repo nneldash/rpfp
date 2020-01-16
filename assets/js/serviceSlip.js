@@ -89,15 +89,20 @@ function saveServiceSlip()
 			data: formData,
 			url: base_url + '/forms/saveServiceSlip'
 		}).done(function(result){
-			if(result.is_save == true) {
+			if(result.is_save == 'added') {
 				Toast.fire({
 					type: 'success',
 					title: 'Service Slip successfully saved!'
 				});
+			} else if (result.is_save == 'existed'){
+				Toast.fire({
+					type: 'warning',
+					title: 'Data Already Exist.'
+				});
 			} else {
 				Toast.fire({
-					type: 'error',
-					title: 'Data Already Exist.'
+					type: 'warning',
+					title: 'No input data.'
 				});
 			}
 		});

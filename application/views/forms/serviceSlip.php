@@ -23,7 +23,7 @@ $slip = ServiceSlipClass::getServiceSlipFromVariable($slip);
 					<p class="small">
 						<b>
 							Date of visit: 
-							<input type="date" name="date_of_visit" value="<?= $slip->DateOfVisit; ?>" class="padding-l10 underline width-70" />
+							<input type="date" name="date_of_visit" value="<?= $slip->DateOfVisit; ?>" class="padding-l10 underline width-70"  />
 						</b>
 					</p>
 				</div>
@@ -110,7 +110,7 @@ $slip = ServiceSlipClass::getServiceSlipFromVariable($slip);
 							<td class="padding-0 back-eee">
 								<?php if (!$is_pdf) : ?>
 									<label class="cont">
-										<input type="radio" name="method" class="fp_method" value="<?= ModernMethods::SDM ?>" <?= $slip->MethodUsed == '11' ? 'checked' : '' ?> />
+										<input type="radio" name="method" class="fp_method" value="<?= ModernMethods::SDM ?>" <?= $slip->MethodUsed == '11' ? 'checked' : '' ?> required />
 										<span class="checkmark"></span>
 									</label>
 								<?php endif; ?>
