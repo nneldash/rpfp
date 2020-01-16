@@ -3025,10 +3025,8 @@ BEGIN
                   WHERE YEAR(rc.DATE_CONDUCTED) = report_year 
                     AND MONTH(rc.DATE_CONDUCTED) = report_month
                     AND (
-                            (QUOTE(lp.REGION_CODE) = QUOTE(psgc_code)
-                                AND lp.INTER_LEVEL = 'REG'
-                            )
-                            OR (IFNULL( psgc_code, 0 ) = 0)
+                            QUOTE(lp.REGION_CODE) = QUOTE(psgc_code)
+                         OR (IFNULL( psgc_code, 0 ) = 0)
                         )
     ;
 
@@ -3149,9 +3147,7 @@ BEGIN
              ON lp.PSGC_CODE = rc.BARANGAY_ID
           WHERE apc.IS_ACTIVE = 0
             AND (
-                    ( QUOTE(lp.REGION_CODE) = QUOTE(psgc_code)
-                      AND lp.INTER_LEVEL = 'REG'
-                    )
+                    QUOTE(lp.REGION_CODE) = QUOTE(psgc_code)
                  OR (IFNULL( psgc_code, 0 ) = 0)
                 )
        GROUP BY ic.FNAME, ic.LNAME, ic.EXT_NAME, ic.BDATE
