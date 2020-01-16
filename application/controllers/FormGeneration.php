@@ -6,14 +6,14 @@ class FormGeneration extends CI_Controller
     public function __construct()
     {
         parent::__construct();
-        $this->load->library('formA/GenerateFormAClass');
-        $this->load->library('formB/GenerateFormBClass');
-        $this->load->library('formC/GenerateFormCClass');
-
         if (!$this->LoginModel->isLoggedIn()) {
             redirect(site_url());
             return;
         }
+
+        $this->load->library('formA/GenerateFormAClass');
+        $this->load->library('formB/GenerateFormBClass');
+        $this->load->library('formC/GenerateFormCClass');
 
         $this->load->model('FormAModel');
         $this->load->model('FormBModel');

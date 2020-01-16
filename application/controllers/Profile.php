@@ -6,7 +6,6 @@ class Profile extends CI_Controller
     public function __construct()
     {
         parent::__construct();
-
         if (!$this->LoginModel->isLoggedIn()) {
             redirect(site_url());
             return;
@@ -17,25 +16,18 @@ class Profile extends CI_Controller
 
     public function index($params = array()) 
     {
-        if (!$this->LoginModel->isLoggedIn()) {
-            $header['title'] =' Online RPFP Monitoring System';
-
-            $this->load->view("includes/header", $header);
-            $this->load->view('index/landingPage');
-            
-            return;
-        }
-
         $profile = $this->getOwnProfile();
         $the_title = 'Profile | Online RPFP Monitoring System';
 
         $this->load->view('includes/header', array('title' => $the_title));
         $this->load->view('profile/profile.php', array('profile' => $profile));
         $this->load->view('includes/footer');
-        return;
+
+        $this->load->library('common/PageHandler');
+        PageHandler::setCurrentPage();
     }
 
-    public function getProfile($user_id = BLANK)
+    private function getProfile($user_id = BLANK) : UserProfile
     {
         if (!$this->ProfileModel->isITDMU()) {
             return "ERROR NOT ALLOWED";
@@ -48,7 +40,7 @@ class Profile extends CI_Controller
         return $this->ProfileModel->getProfile($user_id);
     }
 
-    public function getOwnProfile()
+    private function getOwnProfile() : UserProfile
     {
         return $this->ProfileModel->getOwnProfile();
     }

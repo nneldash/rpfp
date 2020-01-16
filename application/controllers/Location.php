@@ -12,11 +12,11 @@ class Location extends CI_Controller
     public function __construct()
     {
         parent::__construct();
-
         if (!$this->LoginModel->isLoggedIn()) {
             redirect(site_url());
             return;
         }
+        
         $this->load->model('LocationModel');
         $this->user = $this->LoginModel->getUserName();
         $this->user = empty($this->user) ? BLANK : $this->user;

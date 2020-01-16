@@ -49,6 +49,16 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 			border-bottom: 1px solid !important;
     		border-radius: 0px;
 		}
+		textarea::placeholder {
+			padding-top: 8px;
+			padding-left: 5px;
+			font-size: 13px;
+		}
+		.isApprove,
+		.isApprove input,
+		.isApprove textarea {
+			background: #e0e0e0;
+		}		
 	</style>
 <?php } ?>
 
@@ -444,7 +454,7 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 										$bday2 = $bday2[1].'-'.$bday2[2].'-'.$bday2[0];
 									}
 								?>
-								<tr class="approveCheck tr1<?= $i?>">
+								<tr class="approveCheck tr1<?= $i?> <?= $couple->Id != 'N/A' ? $couple->IsActive != 'N/A' ? ' ' : 'isApprove' : '' ?>">
 									<?php if (!$is_pdf): ?>
 										<?php if($isRegionalDataManager): ?>
 											<td rowspan="2" class="back-eee padding-0">
@@ -722,7 +732,7 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 										<?php endif; ?>
 									<?php endif; ?>
 								</tr>
-								<tr class="tr2<?= $i; ?>">
+								<tr class="tr2<?= $i; ?> <?= $couple->Id != 'N/A' ? $couple->IsActive != 'N/A' ? ' ' : 'isApprove' : '' ?>">
 									<td class="small">
 										<div style="display: inline-flex; border: 1px solid transparent;">
 											<input type="hidden" id="isDuplicate2[<?= $i; ?>]" value="" />
