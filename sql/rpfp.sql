@@ -1515,7 +1515,8 @@ BEGIN
                 NULL AS tfp_type,
                 NULL AS tfp_status,
                 NULL AS mfp_intention_use,
-                NULL AS tfp_reason
+                NULL AS tfp_reason,
+                NULL AS is_active
         ;
     ELSE
          SELECT apc.COUPLES_ID AS couplesid,
@@ -1552,7 +1553,8 @@ BEGIN
                 fp.TFP_TYPE_ID AS tfp_type,
                 fp.TFP_STATUS_ID AS tfp_status,
                 fp.MFP_INTENTION_USE_ID AS mfp_intention_use,
-                fp.REASON_INTENDING_USE_ID AS tfp_reason
+                fp.REASON_INTENDING_USE_ID AS tfp_reason,
+                apc.is_active AS is_active
            FROM rpfp.rpfp_class rc
       LEFT JOIN rpfp.couples apc
              ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
