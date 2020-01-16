@@ -174,7 +174,9 @@ class FormModel extends BaseModel
         $fp_service =  $this->saveToDb($method, $params);
         
         if ($fp_service == 'FP SERVICE ADDED') {
-            return true;
+            return 'added';
+        } else if ($fp_service == 'DATA IS UPDATED') {
+            return 'existed';
         } else {
             return false;
         }
