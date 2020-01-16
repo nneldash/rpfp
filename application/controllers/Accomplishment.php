@@ -6,12 +6,12 @@ class Accomplishment extends CI_Controller
     public function __construct()
     {
         parent::__construct();
-        $this->load->library('accomplishment/AccomplishmentClass');
-
         if (!$this->LoginModel->isLoggedIn()) {
             redirect(site_url());
             return;
         }
+
+        $this->load->library('accomplishment/AccomplishmentClass');
 
         $this->load->model('AccomplishmentModel');
         $this->load->model('ProfileModel');

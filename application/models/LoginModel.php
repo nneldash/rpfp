@@ -209,9 +209,6 @@ class LoginModel extends CI_Model
 
     public function isDeactivated()
     {
-        if (!$this->isLoggedIn()) {
-            return true;
-        }
         return !$this->runTrueFalseQuery('login_check_if_active', array());
     }
 
