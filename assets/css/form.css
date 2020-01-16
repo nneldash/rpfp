@@ -478,11 +478,9 @@ a:hover {
 .has-duplicate {
 	background: lightblue;
 }
-.highlight {
-  	background: rgba(38, 185, 154, 0.16);
-}
+.highlight,
 .highlight > td > input {
-	background: rgb(220, 244, 239);
+  	background: #e0e0e0;
 }
 
 /*------------------------------------------------------------------
