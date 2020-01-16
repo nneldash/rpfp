@@ -7,7 +7,7 @@ class Forms extends CI_Controller
     {
         parent::__construct();
         if (!$this->LoginModel->isLoggedIn()) {
-            redirect('Login');
+            redirect(site_url());
             return;
         }
 
@@ -27,19 +27,6 @@ class Forms extends CI_Controller
 
     public function index()
     {
-        if (isset($GLOBALS[NO_OUTPUT]) && $GLOBALS[NO_OUTPUT]) {
-            return;
-        }
-
-        if (!$this->LoginModel->isLoggedIn()) {
-            $header['title'] =' Online RPFP Monitoring System';
-
-            $this->load->view("includes/header", $header);
-            $this->load->view('index/landingPage');
-
-            return;
-        }
-
         $header['title'] =' Online RPFP Monitoring System | Form 1';
 
         $this->load->model('ProfileModel');
@@ -73,20 +60,13 @@ class Forms extends CI_Controller
             )
         );
         $this->load->view('includes/footer');
-        return;
+
+        $this->load->library('common/PageHandler');
+        PageHandler::setCurrentPage();
     }
 
     public function saveForm1()
     {
-        if (!$this->LoginModel->isLoggedIn()) {
-            $header['title'] =' Online RPFP Monitoring System';
-
-            $this->load->view("includes/header", $header);
-            $this->load->view('index/landingPage');
-
-            return;
-        }
-
         $form1 = new FormClass();
 
         $form1->Seminar = $this->getInputFromSeminar();
@@ -105,7 +85,7 @@ class Forms extends CI_Controller
             ->set_output(json_encode($data));
     }
     
-    public function getInputFromSeminar()
+    private function getInputFromSeminar() : SeminarInterface
     {
         $seminar = new SeminarClass();
 
@@ -119,7 +99,7 @@ class Forms extends CI_Controller
         return $seminar;
     }
 
-    public function getInputFromListCouples() : ListCoupleInterface
+    private function getInputFromListCouples() : ListCoupleInterface
     {
         $listCouple = new ListCoupleClass();
         
@@ -148,7 +128,7 @@ class Forms extends CI_Controller
         return $listCouple;
     }
 
-    public function getFirstEntry(int $i) : IndividualInterface
+    private function getFirstEntry(int $i) : IndividualInterface
     {
 
         $individual = new IndividualClass();
@@ -178,7 +158,7 @@ class Forms extends CI_Controller
         return $individual;
     }
 
-    public function getSecondEntry(int $i) : IndividualInterface
+    private function getSecondEntry(int $i) : IndividualInterface
     {
         $individual = new IndividualClass();
 
@@ -203,7 +183,7 @@ class Forms extends CI_Controller
         return $individual;
     }
 
-    public function getModernFp(int $i) : ModernFpUserInterface
+    private function getModernFp(int $i) : ModernFpUserInterface
     {
         $modernFp = new ModernFpUserClass();
 
@@ -214,7 +194,7 @@ class Forms extends CI_Controller
         return $modernFp;
     }
 
-    public function getTraditionalFp(int $i) : TraditionalFpUserInterface
+    private function getTraditionalFp(int $i) : TraditionalFpUserInterface
     {
         $traditionalFp = new TraditionalFpUserClass();
 
@@ -259,15 +239,6 @@ class Forms extends CI_Controller
 
     public function accomplishment()
     {
-        if (!$this->LoginModel->isLoggedIn()) {
-            $header['title'] =' Online RPFP Monitoring System';
-
-            $this->load->view("includes/header", $header);
-            $this->load->view('index/landingPage');
-
-            return;
-        }
-
         $header['title'] = 'Online RPFP Monitoring System | Form A';
 
         $this->load->model('FormModel');
@@ -277,20 +248,14 @@ class Forms extends CI_Controller
 
         $this->load->view('includes/header', $header);
         $this->load->view('forms/accomplishment', array('accomplishment' => $accomplishment, 'is_pdf' => false));
-        $this->load->view('includes/footer');     
+        $this->load->view('includes/footer');
+
+        $this->load->library('common/PageHandler');
+        PageHandler::setCurrentPage();
     }
 
     public function formA()
     {
-        if (!$this->LoginModel->isLoggedIn()) {
-            $header['title'] =' Online RPFP Monitoring System';
-
-            $this->load->view("includes/header", $header);
-            $this->load->view('index/landingPage');
-
-            return;
-        }
-
         $header['title'] = 'Online RPFP Monitoring System | Form A';
 
         $this->load->model('FormAModel');
@@ -302,54 +267,37 @@ class Forms extends CI_Controller
         $this->load->view('includes/header', $header);
         $this->load->view('forms/forma', array('form_A' => $formA, 'is_pdf' => false, RELOAD => true));
         $this->load->view('includes/footer');
+
+        $this->load->library('common/PageHandler');
+        PageHandler::setCurrentPage();
     }
 
     public function formB()
     {
-        if (!$this->LoginModel->isLoggedIn()) {
-            $header['title'] =' Online RPFP Monitoring System';
-
-            $this->load->view("includes/header", $header);
-            $this->load->view('index/landingPage');
-
-            return;
-        }
-
         $header['title'] = 'Online RPFP Monitoring System | Form B';
 
         $this->load->view('includes/header', $header);
         $this->load->view('forms/formb', array('is_pdf' => false));
         $this->load->view('includes/footer');
+
+        $this->load->library('common/PageHandler');
+        PageHandler::setCurrentPage();
     }
 
     public function formC()
     {
-        if (!$this->LoginModel->isLoggedIn()) {
-            $header['title'] =' Online RPFP Monitoring System';
-
-            $this->load->view("includes/header", $header);
-            $this->load->view('index/landingPage');
-
-            return;
-        }
-
         $header['title'] = 'Online RPFP Monitoring System | Form C';
 
         $this->load->view('includes/header', $header);
         $this->load->view('forms/formc', array('is_pdf' => false));
         $this->load->view('includes/footer');
+
+        $this->load->library('common/PageHandler');
+        PageHandler::setCurrentPage();
     }
 
     public function serviceSlip()
     {
-        if (!$this->LoginModel->isLoggedIn()) {
-            $header['title'] =' Online RPFP Monitoring System';
-
-            $this->load->view("includes/header", $header);
-            $this->load->view('index/landingPage');
-
-            return;
-        }
         $couple_id = $this->input->post('couple_id') != 'N/A' ? $this->input->post('couple_id') : 0;
         $couple_name = $this->input->post('couple_name') != 'N/A' ? $this->input->post('couple_name') : '';
         $address = $this->input->post('address') != 'N/A' ? $this->input->post('address') : '';
@@ -359,20 +307,22 @@ class Forms extends CI_Controller
         $serviceSlip = $this->FormModel->getServiceSlip($couple_id);
 
         $header['title'] = 'Online RPFP Monitoring System | Service Slip';
-        $this->load->view('forms/serviceSlip', array('slip' => $serviceSlip, 'couple_id' => $couple_id, 'couple_name' => $couple_name, 'address' => $address, 'is_pdf' => false));
+        $this->load->view('forms/serviceSlip',
+            array(
+                'slip' => $serviceSlip,
+                'couple_id' => $couple_id,
+                'couple_name' => $couple_name,
+                'address' => $address,
+                'is_pdf' => false
+            )
+        );
+
+        $this->load->library('common/PageHandler');
+        PageHandler::setCurrentPage();
     }
 
     public function viewform1()
     {
-        if (!$this->LoginModel->isLoggedIn()) {
-            $header['title'] =' Online RPFP Monitoring System';
-
-            $this->load->view("includes/header", $header);
-            $this->load->view('index/landingPage');
-
-            return;
-        }
-
         $this->load->model('FormModel');
         $form1 = $this->FormModel->getForm1();
         $form1 = FormClass::getFromVariable($form1);
@@ -407,15 +357,6 @@ class Forms extends CI_Controller
 
     public function viewforma()
     {
-        if (!$this->LoginModel->isLoggedIn()) {
-            $header['title'] =' Online RPFP Monitoring System';
-
-            $this->load->view("includes/header", $header);
-            $this->load->view('index/landingPage');
-
-            return;
-        }
-
         $mpdfConfig = array(
             'format' => 'A4',
             'orientation' => 'L'
@@ -437,15 +378,6 @@ class Forms extends CI_Controller
 
     public function viewformb()
     {
-        if (!$this->LoginModel->isLoggedIn()) {
-            $header['title'] =' Online RPFP Monitoring System';
-
-            $this->load->view("includes/header", $header);
-            $this->load->view('index/landingPage');
-
-            return;
-        }
-
         $mpdfConfig = array(
             'format' => 'A4',
             'orientation' => 'L'
@@ -467,15 +399,6 @@ class Forms extends CI_Controller
 
     public function viewformc()
     {
-        if (!$this->LoginModel->isLoggedIn()) {
-            $header['title'] =' Online RPFP Monitoring System';
-
-            $this->load->view("includes/header", $header);
-            $this->load->view('index/landingPage');
-            
-            return;
-        }
-
         $mpdfConfig = array(
             'format' => 'A4',
             'orientation' => 'L'

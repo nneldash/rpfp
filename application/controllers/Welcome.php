@@ -22,6 +22,9 @@ class Welcome extends CI_Controller
             return;
         }
 
+        $this->load->library('common/PageHandler');
+        PageHandler::redirectToPreviousPageIfNotEmpty();
+
         $this->load->Model('ProfileModel');
         $profile = $this->ProfileModel->getOwnProfile();
         $profile = UserProfile::getFromVariable($profile);

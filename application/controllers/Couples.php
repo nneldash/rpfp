@@ -7,8 +7,8 @@ class Couples extends CI_Controller
     {
         parent::__construct();
         if (!$this->LoginModel->isLoggedIn()) {
-             redirect('Login');
-             return;
+            redirect(site_url());
+            return;
         }
 
         $this->load->model('CoupleModel');

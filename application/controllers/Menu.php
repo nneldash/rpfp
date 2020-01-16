@@ -7,7 +7,7 @@ class Menu extends CI_Controller
     {
         parent::__construct();
         if (!$this->LoginModel->isLoggedIn()) {
-            redirect('Login');
+            redirect(site_url());
             return;
         }
 
@@ -25,7 +25,10 @@ class Menu extends CI_Controller
 
         if (empty($this->do_not_render_footer)) {
             $this->footer();
-        }        
+        }
+
+        $this->load->library('common/PageHandler');
+        PageHandler::setCurrentPage();
     }
 
     private function footer()
@@ -48,6 +51,9 @@ class Menu extends CI_Controller
         $this->index();
         $this->load->view('menu/pending', array('pending' => $pending));
         $this->footer();
+
+        $this->load->library('common/PageHandler');
+        PageHandler::setCurrentPage();
     }
 
     public function approve()
@@ -64,7 +70,10 @@ class Menu extends CI_Controller
         $this->do_not_render_footer = true;
         $this->index();
         $this->load->view('menu/approve', array('approve' => $approve));
-        $this->footer();        
+        $this->footer();
+
+        $this->load->library('common/PageHandler');
+        PageHandler::setCurrentPage();
     }
 
     public function importExcel()
@@ -87,6 +96,9 @@ class Menu extends CI_Controller
         $this->index();
         $this->load->view('menu/accomplishment', array('accomplishment' => $accomplishment));
         $this->footer();
+
+        $this->load->library('common/PageHandler');
+        PageHandler::setCurrentPage();
     }
 
 
@@ -101,6 +113,9 @@ class Menu extends CI_Controller
         $this->index();
         $this->load->view('menu/search');
         $this->footer();
+
+        $this->load->library('common/PageHandler');
+        PageHandler::setCurrentPage();
     }
 
     public function printAccomplishment()
@@ -140,6 +155,9 @@ class Menu extends CI_Controller
         $this->index();
         $this->load->view('menu/dashboard');
         $this->footer();
+
+        $this->load->library('common/PageHandler');
+        PageHandler::setCurrentPage();
     }
 
     public function formA()
@@ -156,7 +174,10 @@ class Menu extends CI_Controller
         $this->do_not_render_footer = true;
         $this->index();
         $this->load->view('menu/formAMenu', array('form_A' => $forma));
-        $this->footer();        
+        $this->footer();      
+        
+        $this->load->library('common/PageHandler');
+        PageHandler::setCurrentPage();
     }
 
     public function formB()
@@ -173,7 +194,10 @@ class Menu extends CI_Controller
         $this->do_not_render_footer = true;
         $this->index();
         $this->load->view('menu/formBMenu', array('form_B' => $formb));
-        $this->footer();        
+        $this->footer();    
+        
+        $this->load->library('common/PageHandler');
+        PageHandler::setCurrentPage();
     }
 
     public function formC()
@@ -190,7 +214,10 @@ class Menu extends CI_Controller
         $this->do_not_render_footer = true;
         $this->index();
         $this->load->view('menu/formCMenu', array('form_C' => $formc));
-        $this->footer();        
+        $this->footer();
+        
+        $this->load->library('common/PageHandler');
+        PageHandler::setCurrentPage();
     }
 
     public function pendingCoupleModal()
@@ -200,6 +227,9 @@ class Menu extends CI_Controller
         $this->load->model('CoupleModel');
         $formList = $this->CoupleModel->getFormList($classId);
         $this->load->view('menu/listTables/pendingTable', array('forms' => $formList));
+
+        $this->load->library('common/PageHandler');
+        PageHandler::setCurrentPage();
     }
 
     public function approveCoupleModal()
@@ -209,15 +239,13 @@ class Menu extends CI_Controller
         $this->load->model('CoupleModel');
         $formList = $this->CoupleModel->getFormList($classId);
         $this->load->view('menu/listTables/approveTable', array('forms' => $formList));
+        
+        $this->load->library('common/PageHandler');
+        PageHandler::setCurrentPage();
     }
 
     public function profile()
     {
-        if (!$this->LoginModel->isLoggedIn()) {
-            redirect('Login');
-            return;
-        }
-
         if ($this->input->server('REQUEST_METHOD') != 'POST') {
             redirect(site_url('Menu'));
             return;
@@ -226,6 +254,9 @@ class Menu extends CI_Controller
         $this->load->model('ProfileModel');
         $profile = $this->ProfileModel->getOwnProfile();
         $this->load->view('profile/profile.php', array('profile' => $profile));
+
+        $this->load->library('common/PageHandler');
+        PageHandler::setCurrentPage();
     }
 
     public function barGraph()
