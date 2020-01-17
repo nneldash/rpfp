@@ -170,7 +170,7 @@ class FormModel extends BaseModel
             $data->ReferralFacility == N_A ? BLANK : $data->ReferralFacility,
             $data->HealthServiceProvider == N_A ? BLANK : $data->HealthServiceProvider
         ];
-
+        
         $fp_service =  $this->saveToDb($method, $params);
         
         if ($fp_service == 'FP SERVICE ADDED') {

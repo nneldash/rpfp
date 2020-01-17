@@ -42,17 +42,7 @@ $slip = ServiceSlipClass::getServiceSlipFromVariable($slip);
 					</p>
 				</div>
 				<div class="col-md-8">
-				<?php
-					echo HtmlHelper::inputPdf(
-						$is_pdf,
-						$couple_name,
-						"text",
-						"",
-						"padding-l10 underline",
-						"",
-						""
-					);
-				?>
+					<input type="text" value="<?= $couple_name; ?>" class="padding-l10 underline" readonly />
 				</div>
 			</div>
 			<div class="col-md-12 padding-b15">
@@ -62,17 +52,7 @@ $slip = ServiceSlipClass::getServiceSlipFromVariable($slip);
 					</p>
 				</div>
 				<div class="col-md-8">
-				<?php
-					echo HtmlHelper::inputPdf(
-						$is_pdf,
-						$address,
-						"text",
-						"",
-						"padding-l10 underline",
-						"",
-						""
-					);
-				?>
+					<input type="text" value="<?= $address; ?>" class="padding-l10 underline" readonly />
 				</div>
 			</div>
 			<div class="col-md-12 padding-r3p text-center border-t1">
