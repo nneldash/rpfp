@@ -2,6 +2,14 @@ var base_url = window.location.origin + '/rpfp';
 $(function() {
 	  checkbox();
 	  saveServiceSlip();
+
+	  var coupleId = $('input[name="couple_id"]').val();
+
+	  if (coupleId == 0) {
+		$('input').attr('disabled', 'disabled');
+	  } else {
+		$('input').removeAttr('disabled');
+	  }
 });
 
 function checkbox()
