@@ -5,6 +5,10 @@ if (empty($title)) {
     $title = 'Online RPFP Monitoring System | Pending';
 }
 
+// echo '<pre>';
+// print_r($pending);
+// exit;
+
 ?>
 <script>document.querySelector("head title").innerHTML = '<?=$title?>';</script>
 
@@ -17,8 +21,12 @@ if (empty($title)) {
         <tr>
             <th>Class #</th>
             <th>Type Class</th>
+            <th>Province</th>
+            <th>Municipality/City</th>
             <th>Barangay</th>
+            <th>Number of Couples</th>
             <th>Date Conducted</th>
+            <th>Encoded By</th>
             <th style="width: 10%;">Action</th>
         </tr>
     </thead>
@@ -28,12 +36,21 @@ if (empty($title)) {
                 <tr>
 					<td><?= $pendings->ClassNo; ?></td>
 					<td><?= $pendings->TypeClass; ?></td>
+                    <td></td>
+                    <td></td>
 					<td><?= $pendings->Barangay; ?></td>
+                    <td></td>
 					<td><?= date('F d, Y', strtotime($pendings->DateConduct)); ?></td>
+                    <td></td>
                     <td class="text-center">
-                        <button class="btn btn-primary btn-pending-listing" data-toggle="tooltip" data-placement="left" title="View List">
+                        <a href="<?= base_url('forms?rpfpId='); ?>" target="_blank">
+                            <button class="btn btn-primary" data-toggle="tooltip" data-placement="left" title="Edit">
+                                <i class="fa fa-edit"></i>
+                            </button>
+                        </a>
+                       <!--  <button class="btn btn-primary btn-pending-listing" data-toggle="tooltip" data-placement="left" title="View List">
                             <i class="fa fa-list"></i>
-                        </button>					
+                        </button> -->					
                     </td>
                 </tr>
             <?php } else { ?>

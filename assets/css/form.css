@@ -524,3 +524,7 @@ textarea::placeholder {
 .dropdown-menu>.active>a:hover {
 	background-color: #076c1b!important;
 }
+
+.required {
+	color: red;
+}

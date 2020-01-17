@@ -1,5 +1,12 @@
 /** PREVENT SAVE FORM UPON CLICK OF SERVICE SLIP */
 $(document).ready(function(){
+	$(window).keydown(function(event){
+	    if(event.keyCode == 13) {
+			event.preventDefault();
+			return false;
+	    }
+	});
+
 	$('#provinceList').on('changed.bs.select', function (e, clickedIndex, isSelected, previousValue) {
 		var provinceId = $(this).find('option:selected').val();
 		$('#muniList').find('option').remove();
@@ -21,6 +28,8 @@ $(document).ready(function(){
 var getProv = $('input[name="province"]').val();
 var getCity = $('input[name="city"]').val();
 var getBrgy = $('input[name="barangay"]').val();
+var isRDM = $('#rdm').val();
+var isFocal = $('#focal').val();
 
 $(function() {
   	serviceModal();
@@ -34,10 +43,7 @@ $(function() {
 	getProvinces();
 	isApprove();
 
-	Inputmask().mask(".birthAge");
-
-	var isRDM = $('#rdm').val();
-	var isFocal = $('#focal').val();
+	Inputmask().mask(".birthAge");	
 
     $('.selectpicker').selectpicker({
     	container: 'body'
@@ -52,8 +58,6 @@ $(function() {
 		$('td select').css('cursor', 'not-allowed');
 		$('td input[class="check"]').attr('disabled', false);
 	}
-
-
 });
 
 function isApprove()
@@ -62,6 +66,10 @@ function isApprove()
 	for (i = 0; i <= 9; i ++) {
 		var hasClass = $('.tr1' + i).hasClass('isApprove');
 		if (hasClass) {
+			// if (isRDM) {
+			// 	$('.tr1' + i).find('td input[class="check"]').attr('disabled', true);
+			// }
+
 			$('.tr1' + i).find('td input').attr('disabled', true);
 			$('.tr1' + i).find('td input').css('cursor', 'not-allowed');
 			$('.tr1' + i).find('td textarea').attr('disabled', true);
@@ -153,8 +161,10 @@ function traditionalStatus()
 		var index = $(this).closest('tr').find('input[name="slipIndex"]').val();
 
 		if (stat === 'A') {
-			$(this).closest('tr').find('input[name="status_intention['+ index +']"]').removeAttr('disabled', 'disabled');
+		console.log(stat);
+			$(this).find('input[name="status_intention['+ index +']"]').removeAttr('disabled', 'disabled');
 		} else {
+			console.log(stat+ 'hahaha');
 			$(this).closest('tr').find('input[name="status_intention['+ index +']"]').attr('disabled', 'disabled');
 		}
 	});
@@ -479,7 +489,6 @@ function saveForm1()
 		});
 		
 		var formData = $('#form_validation').serialize();
-		
 		
 		$.ajax({
 			type: 'POST',

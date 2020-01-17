@@ -3,7 +3,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 class HtmlHelper
 {
-    public static function inputPdf($is_pdf, $field, $type, $name, $class, $attr, $returnIfEmpty = "")
+    public static function inputPdf($is_pdf, $field, $type, $name, $class, $maxlength, $attr, $returnIfEmpty = "")
     {
         $date = "";
         if ($field == N_A) {
@@ -25,7 +25,8 @@ class HtmlHelper
                 ),
                 "class" => $class,
                 "type" => $type,
-                "maxlength" => $attr
+                "maxlength" => $maxlength,
+                $attr => $attr
             );
             return form_input($data);
         } else {
@@ -39,7 +40,7 @@ class HtmlHelper
         }
     }
 
-    public static function inputName($is_pdf, $field, $type, $name, $class, $placeholder, $returnIfEmpty = "")
+    public static function inputName($is_pdf, $field, $type, $name, $class, $placeholder, $attr, $returnIfEmpty = "")
     {
         if (!$is_pdf) {            
             if($type == 'text') {  
@@ -63,14 +64,15 @@ class HtmlHelper
                 "type" => $type,
                 "placeholder" => $placeholder,
                 "cols" => 15,
-                "rows" => 2
+                "rows" => 2,
+                $attr => $attr
             );
                 return form_textarea($data);
             }
         }
     }
 
-    public static function inputMaskPdf($is_pdf, $field, $type, $name, $class, $mask, $returnIfEmpty = "")
+    public static function inputMaskPdf($is_pdf, $field, $type, $name, $class, $mask, $attr, $returnIfEmpty = "")
     {
         $date = "";        
         if (!$is_pdf) {
@@ -81,7 +83,8 @@ class HtmlHelper
                 ),
                 "class" => $class,
                 "type" => $type,
-                "data-inputmask" => $mask
+                "data-inputmask" => $mask,
+                $attr => $attr
             );
             return form_input($data);
         } else {
