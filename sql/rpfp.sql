@@ -1452,6 +1452,33 @@ BEGIN
     END IF;
 END$$
 
+CREATE DEFINER=root@localhost PROCEDURE encoder_get_footer_details(
+    IN rpfp_classid VARCHAR(50)
+    )   READS SQL DATA
+BEGIN
+    IF NOT EXISTS (
+         SELECT rf.RPFP_FOOTER_ID
+           FROM rpfp.rpfp_footer rf
+      LEFT JOIN rpfp.rpfp_class rc
+             ON rf.RPFP_CLASS_ID = rc.RPFP_CLASS_ID
+          WHERE rf.RPFP_CLASS_ID = rpfp_classid
+    ) THEN
+         SELECT NULL AS prepared_by,
+                NULL AS reviewed_by,
+                NULL AS approved_by
+        ;
+    ELSE
+         SELECT rf.PREPARED_BY AS prepared_by,
+                rf.REVIEWED_BY AS reviewed_by,
+                rf.APPROVED_BY AS approved_by
+           FROM rpfp.rpfp_footer rf
+      LEFT JOIN rpfp.rpfp_class rc
+             ON rf.RPFP_CLASS_ID = rc.RPFP_CLASS_ID
+          WHERE rf.RPFP_CLASS_ID = rpfp_classid
+        ;
+    END IF;
+END$$
+
 CREATE DEFINER=root@localhost PROCEDURE encoder_get_couples_with_fp_details(
     IN class_num VARCHAR(50)
     )   READS SQL DATA
@@ -1645,6 +1672,53 @@ BEGIN
     ;
 
     SELECT "SAVE SUCCESSFUL" AS MESSAGE;
+END$$
+
+CREATE DEFINER=root@localhost PROCEDURE encoder_save_footer(
+    IN footer_id INT UNSIGNED,
+    IN rpfp_classid INT,
+    IN prepared_by VARCHAR(100),
+    IN reviewed_by VARCHAR(100),
+    IN approved_by VARCHAR(100)
+    )  MODIFIES SQL DATA
+proc_exit_point :
+BEGIN
+    IF ( IFNULL( rpfp_classid, 0 ) = 0 ) THEN
+        SELECT "CANNOT SAVE RECORD WITH GIVEN PARAMETERS" AS MESSAGE;
+        LEAVE proc_exit_point;
+    END IF;
+
+    IF ( IFNULL( footer_id, 0 ) = 0 ) THEN
+        /**
+            INSERT FOR NEW DATA
+            
+        */
+        INSERT INTO rpfp.rpfp_footer (
+                    RPFP_CLASS_ID,
+                    PREPARED_BY,
+                    REVIEWED_BY,
+                    APPROVED_BY
+            )
+             VALUES (
+                    rpfp_classid,
+                    prepared_by,
+                    reviewed_by,
+                    approved_by
+            )
+    ;
+
+        SELECT CONCAT( "NEW ENTRY: ", LAST_INSERT_ID() ) AS MESSAGE;
+        LEAVE proc_exit_point;
+    END IF;
+
+             UPDATE rpfp.rpfp_footer rf
+                SET rf.RPFP_CLASS_ID = IF( IFNULL( rpfp_classid, '') = '', rf.RPFP_CLASS_ID, rpfp_classid ),
+                    rf.PREPARED_BY = IF( IFNULL( prepared_by, '') = '', rf.PREPARED_BY, prepared_by ),
+                    rf.REVIEWED_BY = IF( IFNULL( reviewed_by, '') = '', rf.REVIEWED_BY, reviewed_by ),
+                    rf.APPROVED_BY = IF( IFNULL( approved_by, '') = '', rf.APPROVED_BY, approved_by )
+              WHERE rf.RPFP_FOOTER_ID = footer_id
+    ;
+    SELECT "UPDATE SUCCESS!" AS MESSAGE;
 END$$
 /** END OF CLASSES */
 
@@ -5590,6 +5664,19 @@ CREATE TABLE rpfp_class (
          DATE_CONDUCTED DATE NOT NULL,
              DB_USER_ID VARCHAR(50),
             PRIMARY KEY (RPFP_CLASS_ID)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Table structure for table rpfp_footer
+--
+
+CREATE TABLE rpfp_footer (
+         RPFP_FOOTER_ID INT UNSIGNED NOT NULL AUTO_INCREMENT,
+          RPFP_CLASS_ID INT NOT NULL,
+            PREPARED_BY VARCHAR(100),
+            REVIEWED_BY VARCHAR(100),
+            APPROVED_BY VARCHAR(100),
+            PRIMARY KEY (RPFP_FOOTER_ID)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
