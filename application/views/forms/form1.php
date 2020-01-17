@@ -58,7 +58,14 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 		.isApprove input,
 		.isApprove textarea {
 			background: #e0e0e0;
-		}		
+		}
+		.accordionDropdown {
+			padding: 0;
+			float: right;
+		}
+		.accordionDropdown:hover {
+			background-color: none;
+		}
 	</style>
 <?php } ?>
 
@@ -91,9 +98,13 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
                     "purpose",
                     "padding-l10 underline width-10 text-left",
 					"",
+					"",
 					""
                 );
             ?>
+	        <a class="accordionDropdown" data-toggle="collapse" data-parent="#accordion" href="#rpfpClass">
+	        	Hide/Show RPFP Class
+	        </a>
 		</div>
 		<form id="form_validation" class="form-horizontal">
 			<?php if(!$is_pdf) : ?>
@@ -108,6 +119,7 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 							<span class="caret"></span>
 						</button>
 						<ul class="dropdown-menu">
+							<li><a href="<?= base_url('forms')?>">New Form 1</a></li>
 							<li><a href="<?= base_url('menu')?>">Back</a></li>
 							<?php if($isEncoder): ?>
 								<li><a class="btn-import">Import Excel</a></li>
@@ -118,186 +130,193 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 			    </div>
 			<?php endif; ?>
 			<input type="hidden" name="class_id" value="<?= $rpfpId; ?>" />
-			<div class="border-t1 table-responsive">
-				<div style="padding-top: 10px"></div>
-				<table style="float: left" class="table">
-					<tr>
-						<td class="border-1 padding-0 back-eee" style="border-left: none">
-							<?php if (!$is_pdf) : ?>
-								<label class="cont border-t1">
-									<input id="4ps" type="radio" name="type_of_class" value="1" 
-										<?= $form1->Seminar->TypeOfClass->Type == '4Ps' ? 'checked' : '' ?>
-									/>
-									<span class="checkmark"></span>
-								</label>
-							<?php endif; ?>
-						</td>
-						<td class="padding-r20p border-0">
-							<span class="small"><b>&nbsp;&nbsp;4Ps</b></span>
-						</td>
+	        <br>
+			<div id="rpfpClass" class="collapse <?= $rpfpId == '' ? 'in' : '' ?>">
+				<div class="border-t1 table-responsive">
+					<div style="padding-top: 10px"></div>
+					<table style="float: left" class="table">
+						<tr>
+							<td class="border-1 padding-0 back-eee" style="border-left: none">
+								<?php if (!$is_pdf) : ?>
+									<label class="cont border-t1">
+										<input id="4ps" type="radio" name="type_of_class" value="1" 
+											<?= $form1->Seminar->TypeOfClass->Type == '4Ps' ? 'checked' : '' ?>
+										/>
+										<span class="checkmark"></span>
+									</label>
+								<?php endif; ?>
+							</td>
+							<td class="padding-r20p border-0">
+								<span class="small"><b>&nbsp;&nbsp;4Ps</b></span>
+							</td>
 
-						<td class="border-1 padding-0 back-eee" style="border: 1px solid">
-							<?php if (!$is_pdf) : ?>
-								<label class="cont">
-									<input id="house" type="radio" name="type_of_class" value="5" 
-										<?= $form1->Seminar->TypeOfClass->Type == 'House-to-House' ? 'checked' : '' ?>
-									/>
-									<span class="checkmark"></span>
-								</label>
-							<?php endif; ?>
-						</td>
-						<td class="padding-r20p border-0">
-							<span class="small"><b>&nbsp;&nbsp;House-to-House</b></span>
-						</td>
+							<td class="border-1 padding-0 back-eee" style="border: 1px solid">
+								<?php if (!$is_pdf) : ?>
+									<label class="cont">
+										<input id="house" type="radio" name="type_of_class" value="5" 
+											<?= $form1->Seminar->TypeOfClass->Type == 'House-to-House' ? 'checked' : '' ?>
+										/>
+										<span class="checkmark"></span>
+									</label>
+								<?php endif; ?>
+							</td>
+							<td class="padding-r20p border-0">
+								<span class="small"><b>&nbsp;&nbsp;House-to-House</b></span>
+							</td>
 
-						<td class="padding-r8p border-0">
-							<span class="small">Class No.:</span>
-						</td>
-						<td class="padding-r15p border-0">
-							<span class="small">
-								<?php
-		                            echo HtmlHelper::inputPdf(
-		                                $is_pdf,
-		                                $form1->Seminar->ClassNumber,
-		                                "text",
-		                                "class_no",
-		                                "padding-l10 underline width-70",
-		                                "",
-										""
-		                            );
-		                        ?>
-	                        </span>
-						</td>
-					</tr>
-					<tr>
-						<td class="border-1 width-30 padding-0 back-eee" style="border-left: none!important;">
-							<?php if (!$is_pdf) : ?>
-								<label class="cont border-t1">
-									<input id="faith" type="radio" name="type_of_class" value="2" 
-										<?= $form1->Seminar->TypeOfClass->Type == 'Faith-Based Organization' ? 'checked' : '' ?> 
-									/>
-									<span class="checkmark"></span>
-								</label>
-							<?php endif; ?>
-						</td>
-						<td class="border-0">
-							<span class="small"><b>&nbsp;&nbsp;Faith-Based Organization</b></span>
-						</td>
+							<td class="padding-r8p border-0">
+								<span class="required">*</span>
+								<span class="small">Class No.:</span>
+							</td>
+							<td class="padding-r15p border-0">
+								<span class="small">
+									<?php
+			                            echo HtmlHelper::inputPdf(
+			                                $is_pdf,
+			                                $form1->Seminar->ClassNumber,
+			                                "text",
+			                                "class_no",
+			                                "padding-l10 underline width-70",
+			                                "",
+			                                "required",
+											""
+			                            );
+			                        ?>
+		                        </span>
+							</td>
+						</tr>
+						<tr>
+							<td class="border-1 width-30 padding-0 back-eee" style="border-left: none!important;">
+								<?php if (!$is_pdf) : ?>
+									<label class="cont border-t1">
+										<input id="faith" type="radio" name="type_of_class" value="2" 
+											<?= $form1->Seminar->TypeOfClass->Type == 'Faith-Based Organization' ? 'checked' : '' ?> 
+										/>
+										<span class="checkmark"></span>
+									</label>
+								<?php endif; ?>
+							</td>
+							<td class="border-0">
+								<span class="small"><b>&nbsp;&nbsp;Faith-Based Organization</b></span>
+							</td>
 
-						<td class="border-1 width-30 padding-0 back-eee">
-							<?php if (!$is_pdf) : ?>
-								<label class="cont border-t1">
-									<input id="profile" type="radio" name="type_of_class" value="6" 
-										<?= $form1->Seminar->TypeOfClass->Type == 'Profile only' ? 'checked' : '' ?>
-									/>
-									<span class="checkmark"></span>
-								</label>
-							<?php endif; ?>
-						</td>
-						<td class="border-0">
-							<span class="small"><b>&nbsp;&nbsp;Profile only</b></span>
-						</td>
+							<td class="border-1 width-30 padding-0 back-eee">
+								<?php if (!$is_pdf) : ?>
+									<label class="cont border-t1">
+										<input id="profile" type="radio" name="type_of_class" value="6" 
+											<?= $form1->Seminar->TypeOfClass->Type == 'Profile only' ? 'checked' : '' ?>
+										/>
+										<span class="checkmark"></span>
+									</label>
+								<?php endif; ?>
+							</td>
+							<td class="border-0">
+								<span class="small"><b>&nbsp;&nbsp;Profile only</b></span>
+							</td>
 
-						<td class="border-0">
-							<span class="small">Prov/City/Mun.:</span>
-						</td>
-						<td class="border-0 dropdownLoc">
-							<span class="small">
-								<select class="selectpicker" id="provinceList" data-live-search="true" title="Province">
-									
-								</select>
-								<input type="hidden" readonly name="province" value="<?=$form1->Seminar->Location->Province->Code != 'N/A' ? $form1->Seminar->Location->Province->Code : ''; ?>">
-		                   <!--  </span>
-		                    <span> -->
-		                    	<select class="selectpicker" id="muniList" data-live-search="true" title="City/Municipality">
-									
-								</select>
-								<input type="hidden" readonly name="city" value="<?=$form1->Seminar->Location->City->Code != 'N/A' ? $form1->Seminar->Location->City->Code : ''; ?>">
-		                    </span>
-						</td> 
-					</tr>
-					<tr>
-						<td class="border-1 width-30 padding-0 back-eee" style="border-left: none">
-							<?php if (!$is_pdf) : ?>
-								<label class="cont border-t1">
-									<input id="pmc" type="radio" name="type_of_class" value="3" 
-										<?= $form1->Seminar->TypeOfClass->Type == 'PMC' ? 'checked' : '' ?>
-									/>
-									<span class="checkmark"></span>
-								</label>
-							<?php endif; ?>
-						</td>
-						<td class="border-0">
-							<span class="small"><b>&nbsp;&nbsp;PMC</b></span>
-						</td>
+							<td class="border-0">
+								<span class="required">*</span>
+								<span class="small">Prov/City/Mun.:</span>
+							</td>
+							<td class="border-0 dropdownLoc">
+								<span class="small">
+									<select class="selectpicker" id="provinceList" data-live-search="true" title="Province" required>
+										
+									</select>
+									<input type="hidden" readonly name="province" value="<?=$form1->Seminar->Location->Province->Code != 'N/A' ? $form1->Seminar->Location->Province->Code : ''; ?>">
+			                    	<select class="selectpicker" id="muniList" data-live-search="true" title="City/Municipality" required>
+										
+									</select>
+									<input type="hidden" readonly name="city" value="<?=$form1->Seminar->Location->City->Code != 'N/A' ? $form1->Seminar->Location->City->Code : ''; ?>">
+			                    </span>
+							</td> 
+						</tr>
+						<tr>
+							<td class="border-1 width-30 padding-0 back-eee" style="border-left: none">
+								<?php if (!$is_pdf) : ?>
+									<label class="cont border-t1">
+										<input id="pmc" type="radio" name="type_of_class" value="3" 
+											<?= $form1->Seminar->TypeOfClass->Type == 'PMC' ? 'checked' : '' ?>
+										/>
+										<span class="checkmark"></span>
+									</label>
+								<?php endif; ?>
+							</td>
+							<td class="border-0">
+								<span class="small"><b>&nbsp;&nbsp;PMC</b></span>
+							</td>
 
-						<td class="border-1 width-30 padding-0 back-eee">
-							<?php if (!$is_pdf) : ?>
-								<label class="cont border-t1">
-									<input id="others" type="radio" name="type_of_class" value="7" 
-										<?= $form1->Seminar->TypeOfClass->Type == 'Others' ? 'checked' : '' ?>
-									/>
-									<span class="checkmark"></span>
-								</label>
-							<?php endif; ?>
-						</td>
-						<td class="border-0">
-							<span class="small"><b>&nbsp;&nbsp;Others, please specify </b>
-								<?php
-		                            echo HtmlHelper::inputPdf(
-		                                $is_pdf,
-		                                isset($form1->Seminar->TypeOfClass->Others) ? $form1->Seminar->TypeOfClass->Others : '',
-		                                "text",
-		                                "others",
-		                                "padding-l10 underline width-20 disabled-others",
-										"",
-										""
-		                            );
-		                        ?>
-		                    </span>
-						</td>
+							<td class="border-1 width-30 padding-0 back-eee">
+								<?php if (!$is_pdf) : ?>
+									<label class="cont border-t1">
+										<input id="others" type="radio" name="type_of_class" value="7" 
+											<?= $form1->Seminar->TypeOfClass->Type == 'Others' ? 'checked' : '' ?>
+										/>
+										<span class="checkmark"></span>
+									</label>
+								<?php endif; ?>
+							</td>
+							<td class="border-0">
+								<span class="small"><b>&nbsp;&nbsp;Others, please specify </b>
+									<?php
+			                            echo HtmlHelper::inputPdf(
+			                                $is_pdf,
+			                                isset($form1->Seminar->TypeOfClass->Others) ? $form1->Seminar->TypeOfClass->Others : '',
+			                                "text",
+			                                "others",
+			                                "padding-l10 underline width-20 disabled-others",
+											"",
+											"",
+											""
+			                            );
+			                        ?>
+			                    </span>
+							</td>
 
-						<td class="border-0">
-							<span class="small">Barangay:</span>
-						</td>
-						<td class="border-0 dropdownLoc">
-							<span class="small">
-								<select class="selectpicker" id="brgyList" data-size="3" data-live-search="true" title="Barangay">
-									
-								</select>
-								<input type="hidden" readonly name="barangay" value="<?=$form1->Seminar->Location->Barangay->Code != 'N/A' ? $form1->Seminar->Location->Barangay->Code : ''; ?>">
-		                    </span>
-						</td>
-					</tr>
-					<tr>
-						<td class="border-1 width-30 padding-0 back-eee" style="border-left: none">
-							<?php if (!$is_pdf) : ?>
-								<label class="cont border-t1">
-									<input id="usapan" type="radio" name="type_of_class" value="4" 
-										<?= $form1->Seminar->TypeOfClass->Type == 'Usapan' ? 'checked' : '' ?>
-									/>
-									<span class="checkmark"></span>
-								</label>
-							<?php endif; ?>
-						</td>
-						<td class="border-0">
-							<span class="small"><b>&nbsp;&nbsp;Usapan</b></span>
-						</td>
+							<td class="border-0">
+								<span class="required">*</span>
+								<span class="small">Barangay:</span>
+							</td>
+							<td class="border-0 dropdownLoc">
+								<span class="small">
+									<select class="selectpicker" id="brgyList" data-size="3" data-live-search="true" title="Barangay" required>
+										
+									</select>
+									<input type="hidden" readonly name="barangay" value="<?=$form1->Seminar->Location->Barangay->Code != 'N/A' ? $form1->Seminar->Location->Barangay->Code : ''; ?>">
+			                    </span>
+							</td>
+						</tr>
+						<tr>
+							<td class="border-1 width-30 padding-0 back-eee" style="border-left: none">
+								<?php if (!$is_pdf) : ?>
+									<label class="cont border-t1">
+										<input id="usapan" type="radio" name="type_of_class" value="4" 
+											<?= $form1->Seminar->TypeOfClass->Type == 'Usapan' ? 'checked' : '' ?>
+										/>
+										<span class="checkmark"></span>
+									</label>
+								<?php endif; ?>
+							</td>
+							<td class="border-0">
+								<span class="small"><b>&nbsp;&nbsp;Usapan</b></span>
+							</td>
 
-						<td class="border-t1"></td>
-						<td class="border-0"></td>
+							<td class="border-t1"></td>
+							<td class="border-0"></td>
 
-						<td class="border-0">
-							<span class="small">Date Conducted:</span>
-						</td>
-						<td class="border-0">
-							<span class="small">
-								<input type="date" name="date_conducted" value="<?= ($form1->Seminar->DateConducted != 'N/A' ? $form1->Seminar->DateConducted : ''); ?>" class="padding-l10 underline width-70" />
-		                    </span>
-						</td>
-						
-					</tr>
-				</table>
+							<td class="border-0">
+								<span class="required">*</span>
+								<span class="small">Date Conducted:</span>
+							</td>
+							<td class="border-0">
+								<span class="small">
+									<input type="date" name="date_conducted" value="<?= ($form1->Seminar->DateConducted != 'N/A' ? $form1->Seminar->DateConducted : ''); ?>" class="padding-l10 underline width-70" required />
+			                    </span>
+							</td>
+							
+						</tr>
+					</table>
+				</div>
 			</div>
 
 			<div class="padding-t20" style="page-break-inside: avoid">
@@ -459,7 +478,8 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 										<?php if($isRegionalDataManager): ?>
 											<td rowspan="2" class="back-eee padding-0">
 												<label class="cont">
-													<input class="check" type="checkbox" name="approveCouple" value="aproveCouple" />
+													<input class="check" type="checkbox" <?= $couple->Id != 'N/A' ? $couple->IsActive != 'N/A' ? ' ' : 'checked' : '' ?> 
+													name="approveCouple" value="aproveCouple" <?= $couple->Id != 'N/A' ? $couple->IsActive != 'N/A' ? ' ' : 'disabled' : '' ?>  />
 													<span class="checkmark"></span>
 												</label>
 											</td>
@@ -481,6 +501,7 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 					                                "couple_id[".$i."]",
 					                                "padding-l3 dupHighlight",
 													"",
+													"",
 													""
 					                            );
 					                        ?>
@@ -492,9 +513,11 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 					                                "individual_id1[".$i."]",
 					                                "padding-l3 dupHighlight",
 													"",
+													"",
 													""
 					                            );
 					                        ?>
+					                        <span class="required">*</span>
 					                        <?php
 					                        	echo HtmlHelper::inputName(
 					                            	$is_pdf,
@@ -502,9 +525,11 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 					                                "textarea",
 					                                "firstname1[".$i."]",
 					                                "padding-l3 fname1",
-					                                "FIRST"
+					                                "FIRST",
+					                                "required"
 					                            );
-					                        ?> ,
+					                        ?>
+					                        <span style="padding-top:25px">,</span>
 					                        <?php
 					                        	echo HtmlHelper::inputName(
 					                            	$is_pdf,
@@ -512,9 +537,12 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 					                                "textarea",
 					                                "middlename1[".$i."]",
 					                                "padding-l3",
-					                                "MIDDLE"
+					                                "MIDDLE",
+					                                ""
 					                            );
-					                        ?> ,
+					                        ?>
+					                        <span style="padding-top:25px">,</span>
+					                        <span class="required">*</span>
 					                        <?php
 					                        	echo HtmlHelper::inputName(
 					                            	$is_pdf,
@@ -522,9 +550,11 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 					                                "textarea",
 					                                "lastname1[".$i."]",
 					                                "padding-l3 lname1",
-					                                "LAST"
+					                                "LAST",
+					                                "required"
 					                            );
-					                        ?> ,
+					                        ?>
+					                        <span style="padding-top:25px">,</span>
 					                        <?php
 					                        	echo HtmlHelper::inputName(
 					                            	$is_pdf,
@@ -532,12 +562,14 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 					                                "text",
 					                                "extname1[".$i."]",
 					                                "padding-l3 text-center max-width10 width-35 extname1",
-					                                "EXT"
+					                                "EXT",
+					                                ""
 					                            );
 					                        ?>
 					                    </div>
 									</td>
-									<td class="small-20 text-center">
+									<td class="small-20">
+										<span class="required">*</span>
 										<?php
 				                            echo HtmlHelper::inputPdf(
 				                            	$is_pdf,
@@ -546,11 +578,13 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 				                                "sex1[".$i."]",
 				                                "text-center sexValid gender1 dupHighlight",
 												"1",
+												"required",
 												""
 				                            );
 				                        ?>
 									</td>
-									<td class="small-20 text-center">
+									<td class="small-20">
+										<span class="required">*</span>
 										<?php
 				                            echo HtmlHelper::inputPdf(
 				                            	$is_pdf,
@@ -559,12 +593,15 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 				                                "civil_status1[".$i."]",
 				                                "text-center",
 												"1",
+												"required",
 												""
 				                            );
 				                        ?>
 									</td>
 									<td class="small-20">
 										<div style="display: inline-flex; border: 1px solid transparent;">
+											<span class="required">*</span>
+											<br><br>
 					                        <?php
 					                            echo HtmlHelper::inputMaskPdf(
 					                            	$is_pdf,
@@ -572,9 +609,11 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 					                                "text",
 					                                "bday1[".$i."]",
 					                                "text-center birthAge bday1 dupHighlight",
-					                                "'mask': '99-99-9999'"
+					                                "'mask': '99-99-9999'",
+					                                "required"
 					                            );
-					                        ?> /
+					                        ?>
+					                        <span style="padding-top: 15px">/</span>
 					                        <input type="text" name="age1[<?=$i?>]" maxlength="2" class="text-center getAge1" style="width: 50%;" readonly value="<?= HtmlHelper::firstEntry_BirthAge($couple->FirstEntry->Age, $couple->SecondEntry->Age) ?>" />
 										</div>								
 									</td>
@@ -586,7 +625,8 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 				                                "text",
 				                                "house_no_st[".$i."]",
 				                                "padding-l10",
-				                                "House No. & Street"
+				                                "House No. & Street",
+				                                ""
 				                            );
 				                        ?>
 				                        <?php
@@ -596,7 +636,8 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 				                                "text",
 				                                "brgy[".$i."]",
 				                                "padding-l10",
-				                                "Brgy"
+				                                "Brgy",
+				                                ""
 				                            );
 				                        ?>
 				                        <?php
@@ -606,7 +647,8 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 				                                "text",
 				                                "city[".$i."]",
 				                                "padding-l10",
-				                                "City / Municipality"
+				                                "City / Municipality",
+				                                ""
 				                            );
 				                        ?>
 				                        <?php
@@ -616,7 +658,8 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 				                                "text",
 				                                "household_id[".$i."]",
 				                                "padding-l10",
-				                                "Household ID No."
+				                                "Household ID No.",
+				                                ""
 				                            );
 				                        ?>
 									</td>
@@ -629,6 +672,7 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 				                                "educ1[".$i."]",
 				                                "text-center",
 												"1",
+												"",
 												""
 				                            );
 				                        ?>
@@ -642,6 +686,7 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 				                                "no_of_children[".$i."]",
 				                                "height-50 text-center",
 												"2",
+												"",
 												""
 				                            );
 				                        ?>
@@ -656,6 +701,7 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 				                                "method[".$i."]",
 				                                "height-50 text-center",
 												"2",
+												"",
 												""
 				                            );
 				                        ?>
@@ -669,6 +715,7 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 				                                "fp_method[".$i."]",
 				                                "height-50 text-center",
 												"2",
+												"",
 												""
 				                            );
 				                        ?>
@@ -682,11 +729,12 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 				                                "type[".$i."]",
 				                                "height-50 text-center",
 												"1",
+												"",
 												""
 				                            );
 				                        ?>
 									</td>
-									<td class="small-20 text-center" rowspan="2">
+									<td class="small-20" rowspan="2">
 										<?php
 				                            echo HtmlHelper::inputPdf(
 				                            	$is_pdf,
@@ -695,6 +743,7 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 				                                "status[".$i."]",
 				                                "height-50 text-center status-trad",
 												"1",
+												"",
 												""
 				                            );
 				                        ?>
@@ -709,6 +758,7 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 				                                "reason[".$i."]",
 				                                "height-50 text-center",
 												"1",
+												"",
 												""
 				                            );
 				                        ?>
@@ -748,6 +798,7 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 													""
 					                            );
 					                        ?>
+					                        <span class="required">*</span>
 					                        <?php
 					                        	echo HtmlHelper::inputName(
 					                            	$is_pdf,
@@ -755,9 +806,11 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 					                                "textarea",
 					                                "firstname2[".$i."]",
 					                                "padding-l3 fname2",
-					                                "FIRST"
+					                                "FIRST",
+					                                "required"
 					                            );
-					                        ?>,
+					                        ?>
+					                        <span style="padding-top:25px">,</span>
 					                        <?php
 					                        	echo HtmlHelper::inputName(
 					                            	$is_pdf,
@@ -765,9 +818,12 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 					                                "textarea",
 					                                "middlename2[".$i."]",
 					                                "padding-l3",
-					                                "MIDDLE"
+					                                "MIDDLE",
+					                                ""
 					                            );
-					                        ?>,
+					                        ?>
+					                        <span style="padding-top:25px">,</span>
+					                        <span class="required">*</span>
 					                        <?php
 					                        	echo HtmlHelper::inputName(
 					                            	$is_pdf,
@@ -775,9 +831,11 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 					                                "textarea",
 					                                "lastname2[".$i."]",
 					                                "padding-l3 lname2",
-					                                "LAST"
+					                                "LAST",
+					                                "required"
 					                            );
-					                        ?>,
+					                        ?>
+					                        <span style="padding-top:25px">,</span>
 					                        <?php
 					                        	echo HtmlHelper::inputName(
 					                            	$is_pdf,
@@ -785,12 +843,14 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 					                                "text",
 					                                "extname2[".$i."]",
 					                                "padding-l3 text-center max-width10 width-35 extname2",
-					                                "EXT"
+					                                "EXT",
+					                                ""
 					                            );
 					                        ?>
 					                    </div>
 									</td>
-									<td class="small-20 text-center">
+									<td class="small-20">
+										<span class="required">*</span>
 										<input type="hidden" value="" class="getSex1" />
 										<?php
 				                            echo HtmlHelper::inputPdf(
@@ -800,11 +860,13 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 				                                "sex2[".$i."]",
 				                                "text-center gender2",
 												"1",
+												"required",
 												""
 				                            );
 				                        ?>
 									</td>
-									<td class="small-20 text-center">
+									<td class="small-20">
+										<span class="required">*</span>
 										<?php
 				                            echo HtmlHelper::inputPdf(
 				                            	$is_pdf,
@@ -813,12 +875,15 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 				                                "civil_status2[".$i."]",
 				                                "text-center",
 												"1",
+												"required",
 												""
 				                            );
 				                        ?>
 									</td>
 									<td class="small-20">
 										<div style="display: inline-flex; border: 1px solid transparent;">
+											<span class="required">*</span>
+											<br><br>
 											<?php
 				                            	echo HtmlHelper::inputMaskPdf(
 					                            	$is_pdf,
@@ -826,9 +891,11 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 					                                "text",
 					                                "bday2[".$i."]",
 					                                "text-center birthAge bday2",
-					                                "'mask': '99-99-9999'"
+					                                "'mask': '99-99-9999'",
+					                                "required"
 					                            );
-				                        	?> /
+				                        	?>
+				                        	<span style="padding-top: 15px">/</span>
 				                        	<input type="text" name="age2[<?=$i?>]" maxlength="2" style="width: 50%;" class="text-center getAge2" readonly value="<?= HtmlHelper::secondEntry_BirthAge($couple->FirstEntry->Age, $couple->SecondEntry->Age) ?>" />
 										</div>
 									</td>
@@ -841,6 +908,7 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 			                                "educ2[".$i."]",
 			                                "text-center",
 											"1",
+											"",
 											""
 			                            );
 			                        ?>
@@ -1034,13 +1102,13 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 					<tr>
 						<td class="border-0 padding-l20"></td>
 						<td class="border-0">
-							_______________________________
+							<input type="text" style="border-bottom: 1px solid black; width: 75%" name="prepared_by" />
 						</td>
 						<td class="border-0">
-							_______________________________
+							<input type="text" style="border-bottom: 1px solid black; width: 75%" name="reviewed_by" />
 						</td>
 						<td class="border-0">
-							_______________________________
+							<input type="text" style="border-bottom: 1px solid black; width: 75%" name="approved_by" />
 						</td>
 						<td class="border-0"></td>
 					</tr>
