@@ -212,7 +212,7 @@ class Forms extends CI_Controller
         
         $slip = new ServiceSlipClass();
 
-        if (!$this->input->post('date_of_visit') || !$this->input->post('referral_facility') || !$this->input->post('health_service_provider')) {
+        if (!$this->input->post('date_of_visit') || !$this->input->post('referral_facility') || !$this->input->post('health_service_provider')|| $couple_id == 0) {
             return $slip;
         }
 
