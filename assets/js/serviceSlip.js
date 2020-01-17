@@ -6,9 +6,9 @@ $(function() {
 	  var coupleId = $('input[name="couple_id"]').val();
 
 	  if (coupleId == 0) {
-		$('input').attr('disabled', 'disabled');
+		$('#service_slip input').attr('disabled', 'disabled');
 	  } else {
-		$('input').removeAttr('disabled');
+		$('#service_slip input').removeAttr('disabled');
 	  }
 });
 
