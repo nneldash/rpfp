@@ -8,7 +8,12 @@ abstract class ApproveInterface extends BaseInterface
     public $RpfpClass;
     public $TypeClass;
     public $OthersSpecify;
+    public $Province;
+    public $Municipality;
     public $Barangay;
+    public $CouplesEncoded;
     public $ClassNo;
     public $DateConduct;
+    public $LastName;
+    public $FirstName;
 }

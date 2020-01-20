@@ -18,8 +18,12 @@ if (empty($title)) {
         <tr>
             <th>Class #</th>
             <th>Type Class</th>
+            <th>Province</th>
+            <th>Municipality / City</th>
             <th>Barangay</th>
+            <th>Number of Couples</th>
             <th>Date Conducted</th>
+            <th>Encoded By</th>
             <th style="width: 10%;">Action</th>
         </tr>
     </thead>
@@ -28,13 +32,19 @@ if (empty($title)) {
             <?php if ($approved->ClassNo != 'N/A') { ?>
                 <tr>
 					<td><?= $approved->ClassNo; ?></td>
-					<td><?= $approved->TypeClass; ?></td>
-					<td><?= $approved->Barangay; ?></td>
-					<td><?= date('F d, Y', strtotime($approved->DateConduct)); ?></td>
+                    <td><?= $approved->TypeClass; ?></td>
+                    <td><?= $approved->Province; ?></td>
+                    <td><?= $approved->Municipality; ?></td>
+                    <td><?= $approved->Barangay; ?></td>
+                    <td><?= $approved->CouplesEncoded; ?></td>
+                    <td><?= date('F d, Y', strtotime($approved->DateConduct)); ?></td>
+                    <td><?= $approved->FirstName .' '. $approved->LastName; ?></td>
                     <td class="text-center">
-                        <button class="btn btn-primary btn-approve-listing" data-toggle="tooltip" data-placement="left" title="View List">
-                            <i class="fa fa-list"></i>
-                        </button>					
+                        <a href="<?= base_url('forms?rpfpId='. $approved->RpfpClass); ?>" target="_blank">
+                            <button class="btn btn-primary" data-toggle="tooltip" data-placement="left" title="Edit">
+                                <i class="fa fa-edit"></i>
+                            </button>
+                        </a>			
                     </td>
                 </tr>
             <?php } else { ?>

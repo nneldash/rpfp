@@ -4,11 +4,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
 if (empty($title)) {
     $title = 'Online RPFP Monitoring System | Pending';
 }
-
-// echo '<pre>';
-// print_r($pending);
-// exit;
-
 ?>
 <script>document.querySelector("head title").innerHTML = '<?=$title?>';</script>
 
@@ -22,7 +17,7 @@ if (empty($title)) {
             <th>Class #</th>
             <th>Type Class</th>
             <th>Province</th>
-            <th>Municipality/City</th>
+            <th>Municipality / City</th>
             <th>Barangay</th>
             <th>Number of Couples</th>
             <th>Date Conducted</th>
@@ -36,21 +31,18 @@ if (empty($title)) {
                 <tr>
 					<td><?= $pendings->ClassNo; ?></td>
 					<td><?= $pendings->TypeClass; ?></td>
-                    <td></td>
-                    <td></td>
+                    <td><?= $pendings->Province; ?></td>
+                    <td><?= $pendings->Municipality; ?></td>
 					<td><?= $pendings->Barangay; ?></td>
-                    <td></td>
+                    <td><?= $pendings->CouplesEncoded; ?></td>
 					<td><?= date('F d, Y', strtotime($pendings->DateConduct)); ?></td>
-                    <td></td>
+                    <td><?= $pendings->FirstName .' '. $pendings->LastName; ?></td>
                     <td class="text-center">
-                        <a href="<?= base_url('forms?rpfpId='); ?>" target="_blank">
+                        <a href="<?= base_url('forms?rpfpId='. $pendings->RpfpClass); ?>" target="_blank">
                             <button class="btn btn-primary" data-toggle="tooltip" data-placement="left" title="Edit">
                                 <i class="fa fa-edit"></i>
                             </button>
-                        </a>
-                       <!--  <button class="btn btn-primary btn-pending-listing" data-toggle="tooltip" data-placement="left" title="View List">
-                            <i class="fa fa-list"></i>
-                        </button> -->					
+                        </a>				
                     </td>
                 </tr>
             <?php } else { ?>
