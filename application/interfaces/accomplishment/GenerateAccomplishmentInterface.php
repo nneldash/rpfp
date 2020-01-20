@@ -5,6 +5,6 @@ $CI->load->iface('base/BaseInterface');
 
 abstract class GenerateAccomplishmentInterface extends BaseInterface
 {
-    public $ReportYear;
-    public $ReportMonth;
+    public $DateFrom;
+    public $DateTo;
 }

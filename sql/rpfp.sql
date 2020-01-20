@@ -3020,8 +3020,8 @@ END$$
 
 /** PROCESS REPORTS */
 CREATE DEFINER=root@localhost PROCEDURE encoder_process_accomplishment (
-    IN report_year INT,
-    IN report_month INT
+    IN date_from DATE,
+    IN date_to DATE
     )  READS SQL DATA
 proc_exit_point :
 BEGIN
@@ -3035,17 +3035,17 @@ BEGIN
     CALL rpfp.lib_extract_user_name( USER(), name_user, db_user_name );
     SET user_scope := rpfp.profile_get_scope( name_user );
     SET multiplier := rpfp.lib_get_multiplier( user_scope );
-    SET user_location := rpfp.profile_get_location( name_user, user_scope );
+    SET user_location := rpfp.profile_get_location( name_user, user_scope ) DIV POWER(10, 7);
     SET is_not_encoder := NOT IFNULL(rpfp.profile_check_if_encoder(), FALSE);
 
-    CALL rpfp.process_accomplishment( name_user, report_year, report_month, user_location );
+    CALL rpfp.process_accomplishment( name_user, date_from, date_to, user_location );
 
 END$$
 
 CREATE DEFINER=root@localhost PROCEDURE process_accomplishment (
     IN username VARCHAR(50),
-    IN report_year INT,
-    IN report_month INT,
+    IN date_from DATE,
+    IN date_to DATE,
     IN psgc_code INT
     )  READS SQL DATA
 proc_exit_point :
@@ -3055,7 +3055,7 @@ BEGIN
     DECLARE out_message_1 VARCHAR(100);
     DECLARE out_message_2 VARCHAR(100);
 
-    SET random_no = CONCAT("RPFP-",report_year,report_month,"-",CEILING(RAND()*10000000000));
+    SET random_no = CONCAT("RPFP-",YEAR(date_from),MONTH(date_to),"-",CEILING(RAND()*10000000000));
 
     SELECT COUNT(*) INTO count_id FROM report_random_id WHERE RANDOM_ID = random_no;
 
@@ -3065,15 +3065,15 @@ BEGIN
     END IF
     ;
 
-    CALL process_check_duplication( username, report_year, report_month, psgc_code, random_no, out_message_1 );
-    CALL process_couples_encoded( username, report_year, report_month, psgc_code, random_no, out_message_2 );
+    CALL process_check_duplication( username, date_from, date_to, psgc_code, random_no, out_message_1 );
+    CALL process_couples_encoded( username, date_from, date_to, psgc_code, random_no, out_message_2 );
     SELECT out_message_2 AS MESSAGE;
 END$$
 
 CREATE DEFINER=root@localhost PROCEDURE process_couples_encoded (
     IN username VARCHAR(50),
-    IN report_year INT,
-    IN report_month INT,
+    IN date_from DATE,
+    IN date_to DATE,
     IN psgc_code INT,
     IN random_id VARCHAR(400),
    OUT output_message VARCHAR(100)
@@ -3096,8 +3096,8 @@ BEGIN
                    FROM rpfp.rpfp_class rc 
               LEFT JOIN rpfp.lib_psgc_locations lp
                      ON lp.PSGC_CODE = rc.BARANGAY_ID
-                  WHERE YEAR(rc.DATE_CONDUCTED) = report_year 
-                    AND MONTH(rc.DATE_CONDUCTED) = report_month
+                  WHERE rc.DATE_CONDUCTED >= date_from 
+                    AND rc.DATE_CONDUCTED <= date_to
                     AND (
                             QUOTE(lp.REGION_CODE) = QUOTE(psgc_code)
                          OR (IFNULL( psgc_code, 0 ) = 0)
@@ -3124,8 +3124,8 @@ BEGIN
              ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
       LEFT JOIN rpfp.lib_psgc_locations lp
              ON lp.PSGC_CODE = rc.BARANGAY_ID
-          WHERE YEAR(rc.DATE_CONDUCTED) = report_year 
-            AND MONTH(rc.DATE_CONDUCTED) = report_month
+          WHERE rc.DATE_CONDUCTED >= date_from 
+            AND rc.DATE_CONDUCTED <= date_to
             AND rc.CLASS_NUMBER = class_no
             AND (
                     QUOTE(lp.REGION_CODE) = QUOTE(psgc_code)
@@ -3141,8 +3141,8 @@ BEGIN
       LEFT JOIN rpfp.lib_psgc_locations lp
              ON lp.PSGC_CODE = rc.BARANGAY_ID
           WHERE apc.IS_ACTIVE = 0
-            AND YEAR(rc.DATE_CONDUCTED) = report_year 
-            AND MONTH(rc.DATE_CONDUCTED) = report_month
+            AND rc.DATE_CONDUCTED >= date_from 
+            AND rc.DATE_CONDUCTED <= date_to
             AND rc.CLASS_NUMBER = class_no
             AND (
                     QUOTE(lp.REGION_CODE) = QUOTE(psgc_code)
@@ -3159,8 +3159,8 @@ BEGIN
 
         INSERT INTO rpfp.report_couples_encoded (
                     ACCOM_ID,
-                    REPORT_YEAR,
-                    REPORT_MONTH,
+                    DATE_FROM,
+                    DATE_TO,
                     PSGC_CODE,
                     RPFP_CLASS_NO,
                     ENCODED_COUPLES,
@@ -3171,8 +3171,8 @@ BEGIN
                     DATE_PROCESSED
         ) VALUES (
                     random_id,
-                    report_year,
-                    report_month,
+                    date_from,
+                    date_to,
                     psgc_code,
                     class_no,
                     encoded_couples,
@@ -3192,8 +3192,8 @@ END$$
 
 CREATE DEFINER=root@localhost PROCEDURE process_check_duplication (
     IN username VARCHAR(50),
-    IN report_year INT,
-    IN report_month INT,
+    IN date_from DATE,
+    IN date_to DATE,
     IN psgc_code INT,
     IN random_id VARCHAR(400),
    OUT output_message VARCHAR(100)
@@ -3255,8 +3255,8 @@ BEGIN
             IF count_record = 0 THEN
                 INSERT INTO rpfp.report_duplicate_encoded (
                             ACCOM_ID,
-                            REPORT_YEAR,
-                            REPORT_MONTH,
+                            DATE_FROM,
+                            DATE_TO,
                             PSGC_CODE,
                             RPFP_CLASS_NO,
                             DUPLICATES,
@@ -3268,8 +3268,8 @@ BEGIN
                             DATE_PROCESSED
                 ) VALUES (
                             random_id,
-                            report_year,
-                            report_month,
+                            date_from,
+                            date_to,
                             psgc_code,
                             class_no,
                             duplicates,
@@ -4191,8 +4191,8 @@ BEGIN
           WHERE up.DB_USER_ID = name_user
     ) THEN
          SELECT NULL AS report_id,
-                NULL AS report_year,
-                NULL AS report_month,
+                NULL AS date_from,
+                NULL AS date_to,
                 NULL AS accom_id,
                 NULL AS date_processed
         ;
@@ -4208,8 +4208,8 @@ BEGIN
 
         SET read_offset := (page_no - 1) * items_per_page;
          SELECT rce.REPORT_ID AS report_id,
-                rce.REPORT_YEAR AS report_year,
-                rce.REPORT_MONTH AS report_month,
+                rce.DATE_FROM AS date_from,
+                rce.DATE_TO AS date_to,
                 rce.ACCOM_ID AS accom_id,
                 rce.DATE_PROCESSED AS date_processed
            FROM rpfp.report_couples_encoded rce
@@ -4562,8 +4562,8 @@ BEGIN
           WHERE rce.ACCOM_ID = accom_id
     ) THEN
         BEGIN
-             SELECT NULL AS report_year,
-                    NULL AS report_month,
+             SELECT NULL AS date_from,
+                    NULL AS date_to,
                     NULL AS psgc_code,
                     NULL AS accomplishment_id,
                     NULL AS class_no,
@@ -4577,8 +4577,8 @@ BEGIN
         END;
     ELSE
         BEGIN
-             SELECT rce.REPORT_YEAR AS report_year,
-                    rce.REPORT_MONTH AS report_month,
+             SELECT rce.DATE_FROM AS date_from,
+                    rce.DATE_TO AS date_to,
                     rce.PSGC_CODE AS psgc_code,
                     rce.RPFP_CLASS_NO AS class_no,
                     rce.ENCODED_COUPLES AS encoded_couples,
@@ -5857,8 +5857,8 @@ CREATE TABLE report_served_method_mix (
 CREATE TABLE report_couples_encoded (
               REPORT_ID INT UNSIGNED NOT NULL AUTO_INCREMENT,
                ACCOM_ID VARCHAR(400),
-            REPORT_YEAR INT NOT NULL,
-           REPORT_MONTH INT NOT NULL,
+              DATE_FROM DATE NOT NULL,
+                DATE_TO DATE NOT NULL,
               PSGC_CODE INT NOT NULL,
           RPFP_CLASS_NO VARCHAR(100),
         ENCODED_COUPLES INT,
@@ -5879,9 +5879,9 @@ CREATE TABLE report_couples_encoded (
 CREATE TABLE report_duplicate_encoded (
               REPORT_ID INT UNSIGNED NOT NULL AUTO_INCREMENT,
                ACCOM_ID VARCHAR(400),
-            REPORT_YEAR INT NOT NULL,
+              DATE_FROM DATE NOT NULL,
+                DATE_TO DATE NOT NULL,
               PSGC_CODE INT NOT NULL,
-           REPORT_MONTH INT NOT NULL,
           RPFP_CLASS_NO VARCHAR(100),
              DUPLICATES INT,
                   FNAME VARCHAR(50),

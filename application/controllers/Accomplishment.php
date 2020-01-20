@@ -25,8 +25,8 @@ class Accomplishment extends CI_Controller
         $profile = $this->ProfileModel->getOwnProfile();
         $pscgc_code = $profile->DesignatedLocation->Region->Code;
 
-        $genData->ReportYear = $this->input->post('accompYearSelect');
-        $genData->ReportMonth = $this->input->post('accompMonthSelect');
+        $genData->DateFrom = $this->input->post('accompDateFromSelect');
+        $genData->DateTo = $this->input->post('accompDateToSelect');
 
         $rows = $this->AccomplishmentModel->saveAccomplishment($username, $pscgc_code, $genData);
         $rowdata = $rows;

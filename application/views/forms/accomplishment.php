@@ -24,7 +24,7 @@ $accomp_no = $this->input->get('ReportNo');
 	<div class="container">
 		<div class="row">
 			<div class="col padding-r3p padding-b8">
-				<h5 class=" text-center">ACCOMPLISHMENT REPORT OF RPFP COUPLES PROFILE ENCODED</h5>
+				<h3 class=" text-center">ACCOMPLISHMENT REPORT OF RPFP COUPLES PROFILE ENCODED</h3>
 			</div>
 		</div>		
 		<?php if(!$is_pdf) : ?>

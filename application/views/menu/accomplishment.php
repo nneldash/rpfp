@@ -4,6 +4,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 if (empty($title)) {
     $title = 'Online RPFP Monitoring System | Accomplishment Report';
 }
+
 ?>
 <script>document.querySelector("head title").innerHTML = '<?=$title?>';</script>
 
@@ -21,8 +22,9 @@ if (empty($title)) {
     <thead>
         <tr>
             <th>Report #</th>
-            <th>Report Year | Month</th>
-            <th>Date Conducted</th>
+            <th>Encoded From</th>
+            <th>Encoded To</th>
+            <th>Date Processed</th>
             <th style="width: 10%;">Action</th>
         </tr>
     </thead>
@@ -31,7 +33,8 @@ if (empty($title)) {
             <?php if ($accomplished->ReportNo != 'N/A') { ?>
                 <tr>
                     <td><?= $accomplished->ReportNo ?></td>
-                    <td><?= $accomplished->ReportYear ?> - <?php if ($accomplished->ReportMonth != 0) { echo strftime("%b" ,mktime(0,0,0, $accomplished->ReportMonth )); } else { echo $accomplished->ReportMonth; } ?></td>
+                    <td><?= date('F d, Y', strtotime($accomplished->DateFrom)); ?></td>
+                    <td><?= date('F d, Y', strtotime($accomplished->DateTo)); ?></td>
                     <td><?= date('F d, Y', strtotime($accomplished->DateProcessed)); ?></td>
                     <td class="text-center">
                         <a class="viewForm folderview" href="<?= base_url('forms/accomplishment?ReportNo='. $accomplished->ReportNo); ?>" target="_blank">

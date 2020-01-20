@@ -7,30 +7,11 @@ $current_year = date('Y');
 <div class="container-fluid">	
 	<div class="row">
         <form id="accompGen" class="form-horizontal">
-    		<label>Report Year: </label>
-    		<select class="form-control" name="accompYearSelect" required>
-    			<option id="repYear" value="">Year</option>
-    			<?php for ($i = $current_year; $i > 2017; $i--): ?>
-                    <option id="repYear" value="<?=$i?>"><?= $i?></option>
-                <?php endfor?>
-    		</select>
+    		<label>Date From: </label>
+    		<input class="form-control" name="accompDateFromSelect" type="date" required />
     		<br>
-    		<label>Report Month: </label>
-    		<select class="form-control" name="accompMonthSelect" required>
-    			<option id="repMonth" value="">Month</option>
-                <option id="repMonth" value="01">January</option>
-                <option id="repMonth" value="02">February</option>
-                <option id="repMonth" value="03">March</option>
-                <option id="repMonth" value="04">April</option>
-                <option id="repMonth" value="05">May</option>
-                <option id="repMonth" value="06">June</option>
-                <option id="repMonth" value="07">July</option>
-                <option id="repMonth" value="08">August</option>
-                <option id="repMonth" value="09">September</option>
-                <option id="repMonth" value="10">October</option>
-                <option id="repMonth" value="11">November</option>
-                <option id="repMonth" value="12">December</option>
-    		</select>
+    		<label>Date To: </label>
+    		<input class="form-control" name="accompDateToSelect" type="date" required />
     		<br>
     		<div style="text-transform: none; ">
                 <input type="submit" class="save genAccompSubmit buttonload" name="saveAccomp" value="SUBMIT" />

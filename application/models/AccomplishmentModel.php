@@ -24,8 +24,8 @@ class AccomplishmentModel extends BaseModel
             'AccomplishmentClass',
             array(
                 'ReportID' => 'report_id',
-                'ReportYear' => 'report_year',
-                'ReportMonth' => 'report_month',
+                'DateFrom' => 'date_from',
+                'DateTo' => 'date_to',
                 'ReportNo' => 'accom_id',
                 'DateProcessed' => 'date_processed'
             ),
@@ -72,8 +72,8 @@ class AccomplishmentModel extends BaseModel
 
         $params =[
             $username == N_A ? BLANK : $username,
-            $data->ReportYear == N_A ? BLANK : $data->ReportYear,
-            $data->ReportMonth == N_A ? BLANK : $data->ReportMonth,
+            $data->DateFrom == N_A ? BLANK : $data->DateFrom,
+            $data->DateTo == N_A ? BLANK : $data->DateTo,
             $psgc_code == N_A ? BLANK : $psgc_code
         ];
 
