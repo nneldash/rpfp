@@ -1053,6 +1053,8 @@ BEGIN
     DECLARE user_location INT;
     DECLARE multiplier INT;
     DECLARE is_not_encoder INT(1);
+    DECLARE barangay_id_no INT;
+    DECLARE record_id INT;
     
     CALL rpfp.lib_extract_user_name( USER(), name_user, db_user_name );
     SET user_scope := rpfp.profile_get_scope( name_user );
@@ -1076,8 +1078,16 @@ BEGIN
          SELECT NULL AS rpfpclass,
                 NULL AS typeclass,
                 NULL AS others_specify,
+                NULL AS region_id,
+                NULL AS region_name,
+                NULL AS province_id,
+                NULL AS province_name,
+                NULL AS municipality_id,
+                NULL AS municipality_name,
+                NULL AS psgc_code,
                 NULL AS barangay,
                 NULL AS class_no,
+                NULL AS no_couples,
                 NULL AS date_conduct,
                 NULL AS lastname,
                 NULL AS firstname
@@ -1093,20 +1103,28 @@ BEGIN
             END IF;
 
             SET read_offset := (page_no - 1) * items_per_page;
+            --  SELECT rc.BARANGAY_ID INTO barangay_id_no FROM rpfp.rpfp_class rc WHERE rc.RPFP_CLASS_ID = record_id;
+
              SELECT rc.RPFP_CLASS_ID AS rpfpclass,
                     tc.TYPE_CLASS_DESC AS typeclass,
                     rc.OTHERS_SPECIFY AS others_specify,
-                    lp.LOCATION_DESCRIPTION AS barangay,
+                    prov.LOCATION_DESCRIPTION AS province_name,
+                    city.LOCATION_DESCRIPTION AS municipality_name,
+                    brgy.LOCATION_DESCRIPTION AS barangay,
                     rc.CLASS_NUMBER AS class_no,
                     rc.DATE_CONDUCTED AS date_conduct,
-                    ic.LNAME AS lastname,
-                    ic.FNAME AS firstname
+                    up.LAST_NAME AS lastname,
+                    up.FIRST_NAME AS firstname
                FROM rpfp.rpfp_class rc
-          LEFT JOIN rpfp.couples apc 
-		         ON apc.RPFP_CLASS_ID = rc.RPFP_CLASS_ID
+          LEFT JOIN rpfp.couples apc ON apc.RPFP_CLASS_ID = rc.RPFP_CLASS_ID
           LEFT JOIN rpfp.lib_type_class tc ON tc.TYPE_CLASS_ID = rc.TYPE_CLASS_ID
-          LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
-          LEFT JOIN rpfp.individual ic ON ic.COUPLES_ID = apc.COUPLES_ID
+                      LEFT JOIN rpfp.lib_psgc_locations brgy
+                             ON brgy.PSGC_CODE = rc.BARANGAY_ID
+                      LEFT JOIN rpfp.lib_psgc_locations city
+                             ON city.PSGC_CODE = (brgy.MUNICIPALITY_CODE * POWER( 10, 3 ))
+                      LEFT JOIN rpfp.lib_psgc_locations prov
+                             ON prov.PSGC_CODE = (brgy.PROVINCE_CODE * POWER( 10, 5 ))
+          LEFT JOIN rpfp.user_profile up ON up.DB_USER_ID = rc.DB_USER_ID
               WHERE apc.IS_ACTIVE = status_active
                 AND (   rc.DB_USER_ID = name_user
                     OR (   is_not_encoder
