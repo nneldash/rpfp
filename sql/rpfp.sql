@@ -1111,6 +1111,7 @@ BEGIN
                     prov.LOCATION_DESCRIPTION AS province_name,
                     city.LOCATION_DESCRIPTION AS municipality_name,
                     brgy.LOCATION_DESCRIPTION AS barangay,
+                    COUNT(apc.COUPLES_ID) AS couples_encoded,
                     rc.CLASS_NUMBER AS class_no,
                     rc.DATE_CONDUCTED AS date_conduct,
                     up.LAST_NAME AS lastname,
