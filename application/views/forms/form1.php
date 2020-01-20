@@ -120,10 +120,10 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 						</button>
 						<ul class="dropdown-menu">
 							<li><a href="<?= base_url('forms')?>">New Form 1</a></li>
-							<li><a href="<?= base_url('menu')?>">Back</a></li>
 							<?php if($isEncoder): ?>
 								<li><a class="btn-import">Import Excel</a></li>
 							<?php endif; ?>
+							<li><a href="<?= base_url('menu')?>">Back</a></li>
 							<li><a href="<?= base_url('login/logoffUser')?>">Logout</a></li>
 						</ul>
 					</div>
@@ -456,10 +456,11 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 							</tr>
 						</thead>
 						<tbody>
-							<?php for($i = 0; $i <= 9; $i++): ?>
-								<?php 
+							<?php
+								$ListCouples = $form1->ListCouple;
+								foreach($ListCouples as $i => $couple) {
 									$dummy = new CoupleClass();
-									$couple = (empty($form1->ListCouple[$i]) ? $dummy : $form1->ListCouple[$i]);
+									$couple = (empty($couple) ? $dummy : $couple);
 
 									$bday = 'N/A';
 									$bday2 = 'N/A';
@@ -472,7 +473,7 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 										$bday2 = explode('-', $couple->SecondEntry->Birthdate);
 										$bday2 = $bday2[1].'-'.$bday2[2].'-'.$bday2[0];
 									}
-								?>
+							?>
 								<tr class="approveCheck tr1<?= $i?> <?= $couple->Id != 'N/A' ? $couple->IsActive != 'N/A' ? ' ' : 'isApprove' : '' ?>">
 									<?php if (!$is_pdf): ?>
 										<?php if($isRegionalDataManager): ?>
@@ -922,7 +923,7 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 										<?php endif; ?>
 									</td>
 								</tr>
-							<?php endfor; ?>
+							<?php } ?>
 						</tbody>
 					</table>
 				</div>
