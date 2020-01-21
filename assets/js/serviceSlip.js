@@ -15,6 +15,13 @@ $(function() {
 function checkbox()
 {
 	$('.no5-input').attr('disabled', 'disabled');
+	$('.date_method').prop('readonly', true);
+	
+	$('.date_visit').change(function(){
+		var dateVisit = $('.date_visit').val();
+		$('.date_method').val(dateVisit);
+	})
+
 	
 	$('input[type="radio"]').click(function(){
 		var thisRadio = $(this);
@@ -27,6 +34,7 @@ function checkbox()
 			thisRadio.addClass('imChecked');
 		}
 
+	
 		if ($('.fp_method').is(':checked')) {
 			$('.provided_method').prop('checked', true);
 			$('.no4-check').prop('checked', false);
