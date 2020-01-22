@@ -47,6 +47,7 @@ $(function() {
 	methodValidation();
 	typeValidation();
 	statusValidation();
+	intentionStatusValidation();
 	reasonValidation();
 
 	Inputmask().mask(".birthAge");	
@@ -269,6 +270,8 @@ function typeValidation()
 function statusValidation()
 {
 	$('.status-trad').keydown(function(event){
+		var index = $(this).closest('tr').find('input[name="slipIndex"]').val();
+
 		if(!(event.keyCode == 65 || 
 			event.keyCode == 66  ||
 			event.keyCode == 67  ||
@@ -280,10 +283,33 @@ function statusValidation()
 			return false;
 	    }
 
-	    var haha = $(this).val();
 	    if(event.keyCode == 65) {
-	    	$(this).find('.intention-use').val('haha');
-	    	console.log(haha);
+	    	$(this).closest('tr').find('input[name="intention_use['+index+']"]').removeAttr('disabled', 'disabled');
+	    }
+	});
+}
+
+function intentionStatusValidation()
+{
+	$('.intention_use').keydown(function(event){
+		console.log('pressed');
+		if(!(event.keyCode == 49 || 
+			event.keyCode == 50  ||
+			event.keyCode == 51  ||
+			event.keyCode == 52  ||
+			event.keyCode == 53  ||
+			event.keyCode == 54  ||
+			event.keyCode == 97  || 
+			event.keyCode == 98  ||
+			event.keyCode == 99  ||
+			event.keyCode == 100 ||
+			event.keyCode == 101 ||
+			event.keyCode == 102 ||
+			event.keyCode == 8 || 
+			event.keyCode == 9)) 
+		{
+			event.preventDefault();
+			return false;
 	    }
 	});
 }
