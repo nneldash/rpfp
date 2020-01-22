@@ -38,10 +38,16 @@ $(function() {
 	inputValid();
 	saveForm1();
 	checkBox();
-	traditionalStatus();
 	getDataDuplicate();
 	getProvinces();
 	isApprove();
+	sexValidation();
+	civilStatusValidation();
+	educationValidation();
+	methodValidation();
+	typeValidation();
+	statusValidation();
+	reasonValidation();
 
 	Inputmask().mask(".birthAge");	
 
@@ -60,16 +66,254 @@ $(function() {
 	}
 });
 
+function sexValidation()
+{
+	$('.gender1').keydown(function(event){
+		if(!(event.keyCode == 70 || event.keyCode == 77 || event.keyCode == 8 || event.keyCode == 9) ) {
+			event.preventDefault();
+			return false;
+	    }
+	});
+
+	$('.gender2').keydown(function(event){
+		if(!(event.keyCode == 70 || event.keyCode == 77 || event.keyCode == 8 || event.keyCode == 9) ) {
+			event.preventDefault();
+			return false;
+	    }
+	});
+}
+
+function civilStatusValidation()
+{
+	$('.civil1').keydown(function(event){
+		if(!(event.keyCode == 49 || 
+			event.keyCode == 50  ||
+			event.keyCode == 51  ||
+			event.keyCode == 52  ||
+			event.keyCode == 53  ||
+			event.keyCode == 97  || 
+			event.keyCode == 98  ||
+			event.keyCode == 99  ||
+			event.keyCode == 100 ||
+			event.keyCode == 101 ||
+			event.keyCode == 8 || 
+			event.keyCode == 9)) 
+		{
+			event.preventDefault();
+			return false;
+	    }
+	});
+
+	$('.civil2').keydown(function(event){
+		if(!(event.keyCode == 49 || 
+			event.keyCode == 50  ||
+			event.keyCode == 51  ||
+			event.keyCode == 52  ||
+			event.keyCode == 53  ||
+			event.keyCode == 97  || 
+			event.keyCode == 98  ||
+			event.keyCode == 99  ||
+			event.keyCode == 100 ||
+			event.keyCode == 101 ||
+			event.keyCode == 8 || 
+			event.keyCode == 9)) 
+		{
+			event.preventDefault();
+			return false;
+	    }
+	});
+}
+
+function educationValidation()
+{
+	$('.education1').keydown(function(event){
+		if(!(event.keyCode == 49 || 
+			event.keyCode == 50  ||
+			event.keyCode == 51  ||
+			event.keyCode == 52  ||
+			event.keyCode == 53  ||
+			event.keyCode == 54  ||
+			event.keyCode == 55  ||
+			event.keyCode == 56  ||
+			event.keyCode == 57  ||
+			event.keyCode == 97  || 
+			event.keyCode == 98  ||
+			event.keyCode == 99  ||
+			event.keyCode == 100 ||
+			event.keyCode == 101 ||
+			event.keyCode == 102 ||
+			event.keyCode == 103 ||
+			event.keyCode == 104 ||
+			event.keyCode == 105 ||
+			event.keyCode == 8 || 
+			event.keyCode == 9)) 
+		{
+			event.preventDefault();
+			return false;
+	    }
+	});
+
+	$('.education2').keydown(function(event){
+		if(!(event.keyCode == 49 || 
+			event.keyCode == 50  ||
+			event.keyCode == 51  ||
+			event.keyCode == 52  ||
+			event.keyCode == 53  ||
+			event.keyCode == 54  ||
+			event.keyCode == 55  ||
+			event.keyCode == 56  ||
+			event.keyCode == 57  ||
+			event.keyCode == 97  || 
+			event.keyCode == 98  ||
+			event.keyCode == 99  ||
+			event.keyCode == 100 ||
+			event.keyCode == 101 ||
+			event.keyCode == 102 ||
+			event.keyCode == 103 ||
+			event.keyCode == 104 ||
+			event.keyCode == 105 ||
+			event.keyCode == 8 || 
+			event.keyCode == 9)) 
+		{
+			event.preventDefault();
+			return false;
+	    }
+	});
+}
+
+function methodValidation()
+{
+	$('.method8').keydown(function(event){
+		if(!(event.keyCode == 48 ||
+			event.keyCode == 49  || 
+			event.keyCode == 50  ||
+			event.keyCode == 51  ||
+			event.keyCode == 52  ||
+			event.keyCode == 53  ||
+			event.keyCode == 54  ||
+			event.keyCode == 55  ||
+			event.keyCode == 56  ||
+			event.keyCode == 57  ||
+			event.keyCode == 96  ||
+			event.keyCode == 97  || 
+			event.keyCode == 98  ||
+			event.keyCode == 99  ||
+			event.keyCode == 100 ||
+			event.keyCode == 101 ||
+			event.keyCode == 102 ||
+			event.keyCode == 103 ||
+			event.keyCode == 104 ||
+			event.keyCode == 105 ||
+			event.keyCode == 8 || 
+			event.keyCode == 9)) 
+		{
+			event.preventDefault();
+			return false;
+	    }
+	});
+
+	$('.method9').keydown(function(event){
+		if(!(event.keyCode == 48 ||
+			event.keyCode == 49  || 
+			event.keyCode == 50  ||
+			event.keyCode == 51  ||
+			event.keyCode == 52  ||
+			event.keyCode == 53  ||
+			event.keyCode == 54  ||
+			event.keyCode == 55  ||
+			event.keyCode == 56  ||
+			event.keyCode == 57  ||
+			event.keyCode == 96  ||
+			event.keyCode == 97  || 
+			event.keyCode == 98  ||
+			event.keyCode == 99  ||
+			event.keyCode == 100 ||
+			event.keyCode == 101 ||
+			event.keyCode == 102 ||
+			event.keyCode == 103 ||
+			event.keyCode == 104 ||
+			event.keyCode == 105 ||
+			event.keyCode == 8 || 
+			event.keyCode == 9)) 
+		{
+			event.preventDefault();
+			return false;
+	    }
+	});
+}
+
+function typeValidation()
+{
+	$('.typeFp').keydown(function(event){
+		if(!(event.keyCode == 49 || 
+			event.keyCode == 50  ||
+			event.keyCode == 51  ||
+			event.keyCode == 52  ||
+			event.keyCode == 53  ||
+			event.keyCode == 54  ||
+			event.keyCode == 97  || 
+			event.keyCode == 98  ||
+			event.keyCode == 99  ||
+			event.keyCode == 100 ||
+			event.keyCode == 101 ||
+			event.keyCode == 102 ||
+			event.keyCode == 8 || 
+			event.keyCode == 9)) 
+		{
+			event.preventDefault();
+			return false;
+	    }
+	});
+}
+
+function statusValidation()
+{
+	$('.status-trad').keydown(function(event){
+		if(!(event.keyCode == 65 || 
+			event.keyCode == 66  ||
+			event.keyCode == 67  ||
+			event.keyCode == 68  ||
+			event.keyCode == 8 || 
+			event.keyCode == 9)) 
+		{
+			event.preventDefault();
+			return false;
+	    }
+
+	    var haha = $(this).val();
+	    if(event.keyCode == 65) {
+	    	$(this).find('.intention-use').val('haha');
+	    	console.log(haha);
+	    }
+	});
+}
+
+function reasonValidation()
+{
+	$('.reasonFp').keydown(function(event){
+		if(!(event.keyCode == 49 || 
+			event.keyCode == 50  ||
+			event.keyCode == 51  ||
+			event.keyCode == 97  || 
+			event.keyCode == 98  ||
+			event.keyCode == 99  ||
+			event.keyCode == 8 || 
+			event.keyCode == 9)) 
+		{
+			event.preventDefault();
+			return false;
+	    }
+	});
+}
+
 function isApprove()
 {
+	var count = $('tr:last-child').find('.loopIndex2').val();
 	var i = 0;
-	for (i = 0; i <= 9; i ++) {
+
+	for (i = 0; i <= count; i ++) {
 		var hasClass = $('.tr1' + i).hasClass('isApprove');
 		if (hasClass) {
-			// if (isRDM) {
-			// 	$('.tr1' + i).find('td input[class="check"]').attr('disabled', true);
-			// }
-
 			$('.tr1' + i).find('td input').attr('disabled', true);
 			$('.tr1' + i).find('td input').css('cursor', 'not-allowed');
 			$('.tr1' + i).find('td textarea').attr('disabled', true);
@@ -150,23 +394,6 @@ function getBrgys(muniId)
 		}
 
 		$('#brgyList').selectpicker('render').selectpicker('refresh');
-	});
-}
-
-function traditionalStatus()
-{
-	$('.status-trad').keyup(function(){
-		var stat = $(this).val();
-		var stat = stat.toUpperCase();
-		var index = $(this).closest('tr').find('input[name="slipIndex"]').val();
-
-		if (stat === 'A') {
-		console.log(stat);
-			$(this).find('input[name="status_intention['+ index +']"]').removeAttr('disabled', 'disabled');
-		} else {
-			console.log(stat+ 'hahaha');
-			$(this).closest('tr').find('input[name="status_intention['+ index +']"]').attr('disabled', 'disabled');
-		}
 	});
 }
 
@@ -397,7 +624,6 @@ function autoGetData(fname, lname, extname, sex, bday, index, row)
 		'sex' 		: sex, 
 		'bday' 		: bday
 	}).done(function(result){
-		console.log(result);		
 		if (result === '1') {
 			$('.tr'+ row + + index + ' td').addClass('has-duplicate');
 			$('.tr'+ row + + index + ' td input').addClass('has-duplicate');
@@ -522,82 +748,3 @@ function checkBox()
     	$('td:first-child input[value="aproveCouple"]').closest('tr').next('tr').toggleClass("highlight", this.checked);
     });
 }
-
-// change the codes
-
-// function changeSex(name, index)
-// {
-// 	$('.gender1').change(function(){
-// 		var sex = $(this).val();
-// 		var sex = sex.toUpperCase();
-
-// 		if (sex === 'F' || sex === 'M') {
-// 			$('.tr2' + index + ' td .getSex1').val(sex);
-
-// 			$(this).closest('td').removeAttr('data-tip', 'Invalid Input!');
-// 			$(this).closest('td').removeClass('has-duplicate');
-// 			$(this).removeClass('has-duplicate');
-			
-// 			if (sex === 'M') {
-// 				gender = 1;
-// 			} else if (sex === 'F') {
-// 				gender = 2;
-// 			}
-
-// 			getDate1(name, gender, index);
-// 		} else {
-// 			alert('Invalid Input!');
-
-// 			$(this).closest('td').attr('data-tip', 'Invalid Input!');
-// 			$(this).closest('td').addClass('has-duplicate');
-// 			$(this).addClass('has-duplicate');
-// 		}
-// 	});
-// }
-
-// function getSex(name, index)
-// {
-// 	var sex1 = $('.tr2' + index + ' td .getSex1').val();
-
-// 	$('.gender2').keyup(function() {
-// 		var sex2 = $(this).val();
-// 		var sex2 = sex2.toUpperCase();
-// 		if (sex1 === 'F') {
-// 			if (sex2 === 'M') {
-// 				gender = 1;
-// 				$(this).closest('td').removeAttr('data-tip', 'Invalid Data!');
-// 				$(this).closest('td').removeClass('has-duplicate');
-// 				$(this).removeClass('has-duplicate');
-
-// 				getDate2(name, gender, index);
-// 			} else {
-// 				alert('Data value must be "M"');
-
-// 				$(this).closest('td').attr('data-tip', 'Invalid Data!');
-// 				$(this).closest('td').addClass('has-duplicate');
-// 				$(this).addClass('has-duplicate');
-// 			}
-// 		} else if (sex1 === 'M') {
-// 			if (sex2 === 'F') {
-// 				gender = 2;
-// 				$(this).closest('td').removeAttr('data-tip', 'Invalid Data!');
-// 				$(this).closest('td').removeClass('has-duplicate');
-// 				$(this).removeClass('has-duplicate');
-
-// 				getDate2(name, gender, index);
-// 			} else {
-// 				alert('Data value must be "F"');
-
-// 				$(this).closest('td').attr('data-tip', 'Invalid Data!');
-// 				$(this).closest('td').addClass('has-duplicate');
-// 				$(this).addClass('has-duplicate');
-// 			}
-// 		} else {
-// 			alert('Invalid Data!');
-
-// 			$(this).closest('td').attr('data-tip', 'Invalid Data!');
-// 			$(this).closest('td').addClass('has-duplicate');
-// 			$(this).addClass('has-duplicate');
-// 		}
-// 	});
-// }
