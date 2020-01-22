@@ -1499,7 +1499,8 @@ BEGIN
 END$$
 
 CREATE DEFINER=root@localhost PROCEDURE encoder_get_couples_with_fp_details(
-    IN class_num VARCHAR(50)
+    IN class_num VARCHAR(50),
+    IN active_status INT
     )   READS SQL DATA
 BEGIN
     DECLARE name_user VARCHAR(50);
@@ -1613,6 +1614,7 @@ BEGIN
       LEFT JOIN rpfp.fp_details fp
              ON fp.COUPLES_ID = apc.COUPLES_ID
           WHERE rc.CLASS_NUMBER = class_num
+            AND apc.IS_ACTIVE = active_status
             AND (   rc.DB_USER_ID = name_user
                 OR (   is_not_encoder
                     AND user_location = (rc.BARANGAY_ID DIV POWER( 10, multiplier ))

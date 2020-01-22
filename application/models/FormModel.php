@@ -208,14 +208,14 @@ class FormModel extends BaseModel
         );
     }
 
-    public function getForm1($classId): FormInterface
+    public function getForm1($classId,$status): FormInterface
     {
         $form1 = new FormClass();
 
         $form1->Seminar = $this->getForm1Seminar($classId);
         $classNo = $form1->Seminar->ClassNumber;
 
-        $form1->ListCouple = $this->getForm1Couples($classNo);
+        $form1->ListCouple = $this->getForm1Couples($classNo,$status);
 
         return $form1;
     }
@@ -254,7 +254,7 @@ class FormModel extends BaseModel
         );
     }
 
-    public function getForm1Couples($classNo = null) : ListCoupleInterface
+    public function getForm1Couples($classNo = null,$status = null) : ListCoupleInterface
     {
 
         return $this->fromDbGetList(
@@ -311,7 +311,7 @@ class FormModel extends BaseModel
                 'IsActive' => 'is_active'
             ),
             'encoder_get_couples_with_fp_details',
-            array($classNo)
+            array($classNo,$status)
         );
     }
 

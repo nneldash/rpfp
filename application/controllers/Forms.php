@@ -33,8 +33,9 @@ class Forms extends CI_Controller
         $this->load->model('FormModel');
 
         $classId = $this->input->get('rpfpId');
+        $status = $this->input->get('status');
         
-        $form1 = $this->FormModel->getForm1($classId);
+        $form1 = $this->FormModel->getForm1($classId,$status);
 
         $this->load->model('ProfileModel');
         $profile = $this->ProfileModel->getOwnProfile();

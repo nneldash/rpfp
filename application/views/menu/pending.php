@@ -38,7 +38,7 @@ if (empty($title)) {
 					<td><?= date('F d, Y', strtotime($pendings->DateConduct)); ?></td>
                     <td><?= $pendings->FirstName .' '. $pendings->LastName; ?></td>
                     <td class="text-center">
-                        <a href="<?= base_url('forms?rpfpId='. $pendings->RpfpClass); ?>" target="_blank">
+                        <a href="<?= base_url('forms?rpfpId='. $pendings->RpfpClass.'&status=2'); ?>" target="_blank">
                             <button class="btn btn-primary" data-toggle="tooltip" data-placement="left" title="Edit">
                                 <i class="fa fa-edit"></i>
                             </button>
