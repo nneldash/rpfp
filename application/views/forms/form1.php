@@ -20,6 +20,13 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 	<link href="<?= base_url('NewAssets/FontAwesome'); ?>" rel="stylesheet">
 	<link href="<?= base_url('NewAssets/bootstrapSelectCss'); ?>" rel="stylesheet">	
 	<style>
+		.table >tbody > .approveCheck > td,
+		.table >tbody > .secondRow > td {
+			padding-bottom: 0;
+			padding: 2px;
+			vertical-align: inherit;
+		}
+
 		.table-bordered > tbody > tr > td,
 		.table-bordered > thead > tr > th,
 		.table-bordered {
@@ -34,37 +41,8 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 			background-color: #ddd;
 			color: black;
 		}
-
-		.dropdownLoc {
-		    padding-bottom: 0!important;
-			padding-top: 7px!important;
-		}
-
-		.bootstrap-select .dropdown-toggle .filter-option-inner-inner {
-			height: 14px;
-			font-size: 12px;
-		}
-		.bootstrap-select>.dropdown-toggle {
-			border: none;
-			border-bottom: 1px solid !important;
-    		border-radius: 0px;
-		}
-		textarea::placeholder {
-			padding-top: 8px;
-			padding-left: 5px;
-			font-size: 13px;
-		}
-		.isApprove,
-		.isApprove input,
-		.isApprove textarea {
-			background: #e0e0e0;
-		}
-		.accordionDropdown {
-			padding: 0;
-			float: right;
-		}
-		.accordionDropdown:hover {
-			background-color: none;
+		input, textarea {
+			border-bottom: 1px solid #a7bfc1;
 		}
 	</style>
 <?php } ?>
@@ -458,9 +436,15 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 						<tbody>
 							<?php
 								$ListCouples = $form1->ListCouple;
-								foreach($ListCouples as $i => $couple) {
+								$max = count($ListCouples);
+
+								if($max < 10) {
+									$max = 10;
+								}
+
+								for ($i = 0; $i < $max; $i++) { 
 									$dummy = new CoupleClass();
-									$couple = (empty($couple) ? $dummy : $couple);
+									$couple = (empty($form1->ListCouple[$i]) ? $dummy : $form1->ListCouple[$i]);
 
 									$bday = 'N/A';
 									$bday2 = 'N/A';
@@ -483,7 +467,7 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 													name="approveCouple" value="aproveCouple" <?= $couple->Id != 'N/A' ? $couple->IsActive != 'N/A' ? ' ' : 'disabled' : '' ?>  />
 													<span class="checkmark"></span>
 												</label>
-											</td>
+											</td> 
 										<?php endif; ?>
 									<?php endif; ?>
 									<td class="text-center" style="border-left: none" rowspan="2">
@@ -577,7 +561,7 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 				                                HtmlHelper::firstEntry_Sex($couple->FirstEntry->Sex, $couple->SecondEntry->Sex),
 				                                "text",
 				                                "sex1[".$i."]",
-				                                "text-center sexValid gender1 dupHighlight",
+				                                "text-center gender1 dupHighlight",
 												"1",
 												"required",
 												""
@@ -592,7 +576,7 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 				                            	HtmlHelper::firstEntry_Civil($couple->FirstEntry->CivilStatus, $couple->SecondEntry->CivilStatus),
 				                                "text",
 				                                "civil_status1[".$i."]",
-				                                "text-center",
+				                                "text-center civil1",
 												"1",
 												"required",
 												""
@@ -671,7 +655,7 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 				                            	HtmlHelper::firstEntry_Education($couple->FirstEntry->HighestEducation, $couple->SecondEntry->HighestEducation),
 				                                "text",
 				                                "educ1[".$i."]",
-				                                "text-center",
+				                                "text-center education1",
 												"1",
 												"",
 												""
@@ -700,7 +684,7 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 				                            	($couple->ModernFp->MethodUsed != 'N/A' ? $couple->ModernFp->MethodUsed : ''),
 				                                "text",
 				                                "method[".$i."]",
-				                                "height-50 text-center",
+				                                "height-50 text-center method8",
 												"2",
 												"",
 												""
@@ -714,7 +698,7 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 				                            	($couple->ModernFp->IntentionToShift != 'N/A' ? $couple->ModernFp->IntentionToShift : ''),
 				                                "text",
 				                                "fp_method[".$i."]",
-				                                "height-50 text-center",
+				                                "height-50 text-center method9",
 												"2",
 												"",
 												""
@@ -728,7 +712,7 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 				                            	($couple->TraditionalFp->Type != 'N/A' ? $couple->TraditionalFp->Type : ''),
 				                                "text",
 				                                "type[".$i."]",
-				                                "height-50 text-center",
+				                                "height-50 text-center typeFp",
 												"1",
 												"",
 												""
@@ -757,7 +741,7 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 				                            	($couple->TraditionalFp->ReasonForUse != 'N/A' ? $couple->TraditionalFp->ReasonForUse : ''),
 				                                "text",
 				                                "reason[".$i."]",
-				                                "height-50 text-center",
+				                                "height-50 text-center reasonFp",
 												"1",
 												"",
 												""
@@ -783,7 +767,7 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 										<?php endif; ?>
 									<?php endif; ?>
 								</tr>
-								<tr class="tr2<?= $i; ?> <?= $couple->Id != 'N/A' ? $couple->IsActive != 'N/A' ? ' ' : 'isApprove' : '' ?>">
+								<tr class="secondRow tr2<?= $i; ?> <?= $couple->Id != 'N/A' ? $couple->IsActive != 'N/A' ? ' ' : 'isApprove' : '' ?>">
 									<td class="small">
 										<div style="display: inline-flex; border: 1px solid transparent;">
 											<input type="hidden" id="isDuplicate2[<?= $i; ?>]" value="" />
@@ -874,7 +858,7 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 				                            	HtmlHelper::secondEntry_Civil($couple->FirstEntry->CivilStatus, $couple->SecondEntry->CivilStatus),
 				                                "text",
 				                                "civil_status2[".$i."]",
-				                                "text-center",
+				                                "text-center civil2",
 												"1",
 												"required",
 												""
@@ -907,7 +891,7 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 			                            	HtmlHelper::secondEntry_Education($couple->FirstEntry->HighestEducation, $couple->SecondEntry->HighestEducation),
 			                                "text",
 			                                "educ2[".$i."]",
-			                                "text-center",
+			                                "text-center education2",
 											"1",
 											"",
 											""

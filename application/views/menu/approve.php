@@ -38,7 +38,7 @@ if (empty($title)) {
                     <td><?= $approved->Barangay; ?></td>
                     <td><?= $approved->CouplesEncoded; ?></td>
                     <td><?= date('F d, Y', strtotime($approved->DateConduct)); ?></td>
-                    <td><?= $approved->FirstName .' '. $approved->LastName; ?></td>
+                    <td><?= ucfirst($approved->FirstName) .' '. ucfirst($approved->LastName); ?></td>
                     <td class="text-center">
                         <a href="<?= base_url('forms?rpfpId='. $approved->RpfpClass.'&status=0'); ?>" target="_blank">
                             <button class="btn btn-primary" data-toggle="tooltip" data-placement="left" title="Edit">
