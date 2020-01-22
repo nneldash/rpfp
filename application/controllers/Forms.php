@@ -67,12 +67,14 @@ class Forms extends CI_Controller
 
     public function saveForm1()
     {
+        // echo '<pre>';
+        // print_r($_POST);exit;
         $form1 = new FormClass();
 
         $form1->Seminar = $this->getInputFromSeminar();
         $form1->ListCouple = $this->getInputFromListCouples();
-        // echo '<pre>';
-        // print_r($form1);exit;
+        echo '<pre>';
+        print_r($form1->Seminar);exit;
         // print_r($this->FormModel->saveForm1($form1));exit;
         if (!$this->FormModel->saveForm1($form1)) {
             $data = ['is_save' => false];
@@ -103,10 +105,10 @@ class Forms extends CI_Controller
     {
         $listCouple = new ListCoupleClass();
         
-        for ($i = 0; $i <= 9; $i++) {
-            if (!$this->input->post('firstname1')[$i] && !$this->input->post('firstname2')[$i]) {
-                break;
-            }
+        for ($i = 1; $i <= 10; $i++) {
+            // if (!$this->input->post('firstname1')[$i] && !$this->input->post('firstname2')[$i]) {
+            //     break;
+            // }
 
             $couple = new CoupleClass();
 
@@ -208,12 +210,18 @@ class Forms extends CI_Controller
 
     public function saveServiceSlip()
     {  
+        
         $couple_id = (!$this->input->post('couple_id') ? 0 : $this->input->post('couple_id'));
         
         $slip = new ServiceSlipClass();
 
         if (!$this->input->post('date_of_visit') || !$this->input->post('referral_facility') || !$this->input->post('health_service_provider')|| $couple_id == 0) {
             return $slip;
+        }
+
+        if (!empty($this->input->post('date_of_method'))) {
+            $date_method = explode('/', $this->input->post('date_of_method'));
+            $date_accepting_method = $date_method[2].'-'.$date_method[1].'-'.$date_method[0];
         }
 
         $slip->Id = $this->input->post('slip_id');
@@ -224,7 +232,7 @@ class Forms extends CI_Controller
         $slip->CounseledToUse = $this->input->post('counseled_to_use');
         $slip->OtherSpecify = $this->input->post('other_specify');
         $slip->IsProvided = $this->input->post('is_provided_service');
-        $slip->DateOfMethod = $this->input->post('date_of_method');
+        $slip->DateOfMethod = $date_accepting_method;
         $slip->ClientAdvised = $this->input->post('client_advised');
         $slip->ReferralFacility = $this->input->post('referral_facility');
         $slip->HealthServiceProvider = $this->input->post('health_service_provider');

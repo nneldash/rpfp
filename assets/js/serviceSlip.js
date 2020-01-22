@@ -16,6 +16,7 @@ function checkbox()
 {
 	$('.no5-input').attr('disabled', 'disabled');
 	$('.date_method').prop('readonly', true);
+	$('.no4-select').attr('disabled', 'disabled');
 	
 	$('.date_visit').change(function(){
 		var dateVisit = $('.date_visit').val();
@@ -34,9 +35,17 @@ function checkbox()
 			thisRadio.addClass('imChecked');
 		}
 
-	
+		var today = new Date();
+		var dd = String(today.getDate()).padStart(2, '0');
+		var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+		var yyyy = today.getFullYear();
+		
+		today = dd + '/' + mm + '/' + yyyy;
+
 		if ($('.fp_method').is(':checked')) {
 			$('.provided_method').prop('checked', true);
+			$('.date_method').prop('type', 'text');
+			$('.date_method').val(today);
 			$('.no4-check').prop('checked', false);
 			$('.counseling').prop('checked', false);
 			$('.other_concerns').prop('checked', false);
@@ -55,6 +64,8 @@ function checkbox()
 			$('.other_concerns').removeAttr('disabled');
 			$('.no5-check').removeAttr('disabled');
 			$('.no5-input').removeAttr('disabled');
+			$('.date_method').val('');
+
 		}
 
 		if ($('.counseling').is(':checked')) {
