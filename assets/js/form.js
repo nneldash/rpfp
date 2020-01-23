@@ -16,7 +16,6 @@ $(document).ready(function(){
 		getMunicipalities(provinceId);
 	});
 
-
 	$('#muniList').on('changed.bs.select', function (e, clickedIndex, isSelected, previousValue) {
 		var muniId = $(this).find('option:selected').val();
 		$('#brgyList').find('option').remove();
@@ -47,7 +46,6 @@ $(function() {
 	methodValidation();
 	typeValidation();
 	statusValidation();
-	intentionStatusValidation();
 	reasonValidation();
 
 	Inputmask().mask(".birthAge");	
@@ -70,16 +68,34 @@ $(function() {
 function sexValidation()
 {
 	$('.gender1').keydown(function(event){
-		if(!(event.keyCode == 70 || event.keyCode == 77 || event.keyCode == 8 || event.keyCode == 9) ) {
+		if(!(event.keyCode == 70 ||
+			event.keyCode == 77  ||
+			event.keyCode == 8 	 || 
+			event.keyCode == 9)) 
+		{
 			event.preventDefault();
 			return false;
+	    }
+
+	    if(!$(this).prop('required')) {
+	    	$(this).closest('tr').find('.require-this').attr('required', 'required');
+	    	$(this).closest('tr').find('.required').removeAttr('hidden', 'hidden');
 	    }
 	});
 
 	$('.gender2').keydown(function(event){
-		if(!(event.keyCode == 70 || event.keyCode == 77 || event.keyCode == 8 || event.keyCode == 9) ) {
+		if(!(event.keyCode == 70 || 
+			event.keyCode == 77  || 
+			event.keyCode == 8   || 
+			event.keyCode == 9)) 
+		{
 			event.preventDefault();
 			return false;
+	    }
+
+	    if(!$(this).prop('required')) {
+	    	$(this).closest('tr').find('.require-this').attr('required', 'required');
+	    	$(this).closest('tr').find('.required').removeAttr('hidden', 'hidden');
 	    }
 	});
 }
@@ -97,11 +113,16 @@ function civilStatusValidation()
 			event.keyCode == 99  ||
 			event.keyCode == 100 ||
 			event.keyCode == 101 ||
-			event.keyCode == 8 || 
+			event.keyCode == 8   || 
 			event.keyCode == 9)) 
 		{
 			event.preventDefault();
 			return false;
+	    }
+
+	    if(!$(this).prop('required')) {
+	    	$(this).closest('tr').find('.require-this').attr('required', 'required');
+	    	$(this).closest('tr').find('.required').removeAttr('hidden', 'hidden');
 	    }
 	});
 
@@ -116,11 +137,16 @@ function civilStatusValidation()
 			event.keyCode == 99  ||
 			event.keyCode == 100 ||
 			event.keyCode == 101 ||
-			event.keyCode == 8 || 
+			event.keyCode == 8   || 
 			event.keyCode == 9)) 
 		{
 			event.preventDefault();
 			return false;
+	    }
+
+	    if(!$(this).prop('required')) {
+	    	$(this).closest('tr').find('.require-this').attr('required', 'required');
+	    	$(this).closest('tr').find('.required').removeAttr('hidden', 'hidden');
 	    }
 	});
 }
@@ -146,11 +172,16 @@ function educationValidation()
 			event.keyCode == 103 ||
 			event.keyCode == 104 ||
 			event.keyCode == 105 ||
-			event.keyCode == 8 || 
+			event.keyCode == 8   || 
 			event.keyCode == 9)) 
 		{
 			event.preventDefault();
 			return false;
+	    }
+
+	    if(!$(this).prop('required')) {
+	    	$(this).closest('tr').find('.require-this').attr('required', 'required');
+	    	$(this).closest('tr').find('.required').removeAttr('hidden', 'hidden');
 	    }
 	});
 
@@ -173,11 +204,16 @@ function educationValidation()
 			event.keyCode == 103 ||
 			event.keyCode == 104 ||
 			event.keyCode == 105 ||
-			event.keyCode == 8 || 
+			event.keyCode == 8   || 
 			event.keyCode == 9)) 
 		{
 			event.preventDefault();
 			return false;
+	    }
+
+	    if(!$(this).prop('required')) {
+	    	$(this).closest('tr').find('.require-this').attr('required', 'required');
+	    	$(this).closest('tr').find('.required').removeAttr('hidden', 'hidden');
 	    }
 	});
 }
@@ -205,11 +241,16 @@ function methodValidation()
 			event.keyCode == 103 ||
 			event.keyCode == 104 ||
 			event.keyCode == 105 ||
-			event.keyCode == 8 || 
+			event.keyCode == 8   || 
 			event.keyCode == 9)) 
 		{
 			event.preventDefault();
 			return false;
+	    }
+
+	    if(!$(this).prop('required')) {
+	    	$(this).closest('tr').find('.require-this').attr('required', 'required');
+	    	$(this).closest('tr').find('.required').removeAttr('hidden', 'hidden');
 	    }
 	});
 
@@ -234,11 +275,16 @@ function methodValidation()
 			event.keyCode == 103 ||
 			event.keyCode == 104 ||
 			event.keyCode == 105 ||
-			event.keyCode == 8 || 
+			event.keyCode == 8   || 
 			event.keyCode == 9)) 
 		{
 			event.preventDefault();
 			return false;
+	    }
+
+	    if(!$(this).prop('required')) {
+	    	$(this).closest('tr').find('.require-this').attr('required', 'required');
+	    	$(this).closest('tr').find('.required').removeAttr('hidden', 'hidden');
 	    }
 	});
 }
@@ -258,11 +304,16 @@ function typeValidation()
 			event.keyCode == 100 ||
 			event.keyCode == 101 ||
 			event.keyCode == 102 ||
-			event.keyCode == 8 || 
+			event.keyCode == 8   || 
 			event.keyCode == 9)) 
 		{
 			event.preventDefault();
 			return false;
+	    }
+
+	    if(!$(this).prop('required')) {
+	    	$(this).closest('tr').find('.require-this').attr('required', 'required');
+	    	$(this).closest('tr').find('.required').removeAttr('hidden', 'hidden');
 	    }
 	});
 }
@@ -276,7 +327,7 @@ function statusValidation()
 			event.keyCode == 66  ||
 			event.keyCode == 67  ||
 			event.keyCode == 68  ||
-			event.keyCode == 8 || 
+			event.keyCode == 8   || 
 			event.keyCode == 9)) 
 		{
 			event.preventDefault();
@@ -285,6 +336,9 @@ function statusValidation()
 
 	    if(event.keyCode == 65) {
 	    	$(this).closest('tr').find('input[name="intention_use['+index+']"]').removeAttr('disabled', 'disabled');
+	    	intentionStatusValidation(index);
+	    } else {
+	    	$(this).closest('tr').find('input[name="intention_use['+index+']"]').attr('disabled', 'disabled');
 	    }
 	});
 }
@@ -292,7 +346,6 @@ function statusValidation()
 function intentionStatusValidation()
 {
 	$('.intention_use').keydown(function(event){
-		console.log('pressed');
 		if(!(event.keyCode == 49 || 
 			event.keyCode == 50  ||
 			event.keyCode == 51  ||
@@ -305,11 +358,16 @@ function intentionStatusValidation()
 			event.keyCode == 100 ||
 			event.keyCode == 101 ||
 			event.keyCode == 102 ||
-			event.keyCode == 8 || 
+			event.keyCode == 8 	 || 
 			event.keyCode == 9)) 
 		{
 			event.preventDefault();
 			return false;
+	    }
+
+	    if(!$(this).prop('required')) {
+	    	$(this).closest('tr').find('.require-this').attr('required', 'required');
+	    	$(this).closest('tr').find('.required').removeAttr('hidden', 'hidden');
 	    }
 	});
 }
@@ -323,11 +381,16 @@ function reasonValidation()
 			event.keyCode == 97  || 
 			event.keyCode == 98  ||
 			event.keyCode == 99  ||
-			event.keyCode == 8 || 
+			event.keyCode == 8 	 || 
 			event.keyCode == 9)) 
 		{
 			event.preventDefault();
 			return false;
+	    }
+
+	    if(!$(this).prop('required')) {
+	    	$(this).closest('tr').find('.require-this').attr('required', 'required');
+	    	$(this).closest('tr').find('.required').removeAttr('hidden', 'hidden');
 	    }
 	});
 }

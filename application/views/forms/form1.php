@@ -87,11 +87,9 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 		</div>
 		<form id="form_validation" class="form-horizontal">
 			<?php if(!$is_pdf) : ?>
-				<?php if($this->input->get('status') == 2 || empty($this->input->get('status')) && empty($this->input->get('rpfpId')) ): ?>
-					<div id="rightButton" style="text-transform: none; ">					
-			            <input type="submit" class="save saveForm1" value="Save" name="saveform1" />
-			        </div>
-		    	<?php endif; ?>
+				<div id="rightButton" style="text-transform: none; ">					
+		            <input type="submit" class="save saveForm1" value="Save" name="saveform1" />
+		        </div>
 
 		        <div id="leftButton">
 		        	<div class="dropdown save">
@@ -505,16 +503,16 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 													""
 					                            );
 					                        ?>
-					                        <span class="--required--">*</span>
+					                        <span class="required" hidden>*</span>
 					                        <?php
 					                        	echo HtmlHelper::inputName(
 					                            	$is_pdf,
 					                            	HtmlHelper::firstEntry_FirstName($couple->FirstEntry->Name, $couple->SecondEntry->Name),
 					                                "textarea",
 					                                "firstname1[".$i."]",
-					                                "padding-l3 fname1",
+					                                "padding-l3 fname1 require-this",
 					                                "FIRST",
-					                                "--required--"
+					                                ""
 					                            );
 					                        ?>
 					                        <span style="padding-top:25px">,</span>
@@ -530,16 +528,16 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 					                            );
 					                        ?>
 					                        <span style="padding-top:25px">,</span>
-					                        <span class="--required--">*</span>
+					                        <span class="required" hidden>*</span>
 					                        <?php
 					                        	echo HtmlHelper::inputName(
 					                            	$is_pdf,
 					                            	HtmlHelper::firstEntry_LastName($couple->FirstEntry->Name, $couple->SecondEntry->Name),
 					                                "textarea",
 					                                "lastname1[".$i."]",
-					                                "padding-l3 lname1",
+					                                "padding-l3 lname1 require-this",
 					                                "LAST",
-					                                "--required--"
+					                                ""
 					                            );
 					                        ?>
 					                        <span style="padding-top:25px">,</span>
@@ -557,38 +555,38 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 					                    </div>
 									</td>
 									<td class="small-20">
-										<span class="--required--">*</span>
+										<span class="required" hidden>*</span>
 										<?php
 				                            echo HtmlHelper::inputPdf(
 				                            	$is_pdf,
 				                                HtmlHelper::firstEntry_Sex($couple->FirstEntry->Sex, $couple->SecondEntry->Sex),
 				                                "text",
 				                                "sex1[".$i."]",
-				                                "text-center gender1 dupHighlight",
+				                                "text-center gender1 dupHighlight require-this",
 												"1",
-												"--required--",
+												"",
 												""
 				                            );
 				                        ?>
 									</td>
 									<td class="small-20">
-										<span class="--required--">*</span>
+										<span class="required" hidden>*</span>
 										<?php
 				                            echo HtmlHelper::inputPdf(
 				                            	$is_pdf,
 				                            	HtmlHelper::firstEntry_Civil($couple->FirstEntry->CivilStatus, $couple->SecondEntry->CivilStatus),
 				                                "text",
 				                                "civil_status1[".$i."]",
-				                                "text-center civil1",
+				                                "text-center civil1 require-this",
 												"1",
-												"--required--",
+												"",
 												""
 				                            );
 				                        ?>
 									</td>
 									<td class="small-20">
 										<div style="display: inline-flex; border: 1px solid transparent;">
-											<span class="--required--">*</span>
+											<span class="required" hidden>*</span>
 											<br><br>
 					                        <?php
 					                            echo HtmlHelper::inputMaskPdf(
@@ -596,9 +594,9 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 					                            	HtmlHelper::firstEntry_Birthday($bday, $bday2),
 					                                "text",
 					                                "bday1[".$i."]",
-					                                "text-center birthAge bday1 dupHighlight",
+					                                "text-center birthAge bday1 dupHighlight require-this",
 					                                "'mask': '99-99-9999'",
-					                                "--required--"
+					                                ""
 					                            );
 					                        ?>
 					                        <span style="padding-top: 15px">/</span>
@@ -786,16 +784,16 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 													""
 					                            );
 					                        ?>
-					                        <span class="--required--">*</span>
+					                        <span class="required" hidden>*</span>
 					                        <?php
 					                        	echo HtmlHelper::inputName(
 					                            	$is_pdf,
 					                            	HtmlHelper::secondEntry_FirstName($couple->FirstEntry->Name, $couple->SecondEntry->Name),
 					                                "textarea",
 					                                "firstname2[".$i."]",
-					                                "padding-l3 fname2",
+					                                "padding-l3 fname2 require-this",
 					                                "FIRST",
-					                                "--required--"
+					                                ""
 					                            );
 					                        ?>
 					                        <span style="padding-top:25px">,</span>
@@ -811,16 +809,16 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 					                            );
 					                        ?>
 					                        <span style="padding-top:25px">,</span>
-					                        <span class="--required--">*</span>
+					                        <span class="required" hidden>*</span>
 					                        <?php
 					                        	echo HtmlHelper::inputName(
 					                            	$is_pdf,
 					                            	HtmlHelper::secondEntry_LastName($couple->FirstEntry->Name, $couple->SecondEntry->Name),
 					                                "textarea",
 					                                "lastname2[".$i."]",
-					                                "padding-l3 lname2",
+					                                "padding-l3 lname2 require-this",
 					                                "LAST",
-					                                "--required--"
+					                                ""
 					                            );
 					                        ?>
 					                        <span style="padding-top:25px">,</span>
@@ -838,7 +836,7 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 					                    </div>
 									</td>
 									<td class="small-20">
-										<span class="--required--">*</span>
+										<span class="required" hidden>*</span>
 										<input type="hidden" value="" class="getSex1" name="getSex1" />
 										<?php
 				                            echo HtmlHelper::inputPdf(
@@ -846,31 +844,31 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 				                                HtmlHelper::secondEntry_Sex($couple->FirstEntry->Sex, $couple->SecondEntry->Sex),
 				                                "text",
 				                                "sex2[".$i."]",
-				                                "text-center gender2",
+				                                "text-center gender2 require-this",
 												"1",
-												"--required--",
+												"",
 												""
 				                            );
 				                        ?>
 									</td>
 									<td class="small-20">
-										<span class="--required--">*</span>
+										<span class="required" hidden>*</span>
 										<?php
 				                            echo HtmlHelper::inputPdf(
 				                            	$is_pdf,
 				                            	HtmlHelper::secondEntry_Civil($couple->FirstEntry->CivilStatus, $couple->SecondEntry->CivilStatus),
 				                                "text",
 				                                "civil_status2[".$i."]",
-				                                "text-center civil2",
+				                                "text-center civil2 require-this",
 												"1",
-												"--required--",
+												"",
 												""
 				                            );
 				                        ?>
 									</td>
 									<td class="small-20">
 										<div style="display: inline-flex; border: 1px solid transparent;">
-											<span class="--required--">*</span>
+											<span class="required" hidden>*</span>
 											<br><br>
 											<?php
 				                            	echo HtmlHelper::inputMaskPdf(
@@ -878,9 +876,9 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 					                            	HtmlHelper::secondEntry_Birthday($bday, $bday2),
 					                                "text",
 					                                "bday2[".$i."]",
-					                                "text-center birthAge bday2",
+					                                "text-center birthAge bday2 require-this",
 					                                "'mask': '99-99-9999'",
-					                                "--required--"
+					                                ""
 					                            );
 				                        	?>
 				                        	<span style="padding-top: 15px">/</span>
