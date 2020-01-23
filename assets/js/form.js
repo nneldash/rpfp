@@ -740,14 +740,21 @@ function saveForm1()
 			timer: 3000
 		});
 		
-		var formData = $('#form_validation').serialize();
+		var formData = {};
+		/** iterate all inputs/textarea */
+		$.each( $('#form_validation input, #form_validation textarea'), function(key, value) {
+			formData[$(value).attr('name')] = $(value).val();
+		});
+		
+		//var formData = $('#form_validation').serialize();
 		
 		$.ajax({
 			type: 'POST',
+			dataType: 'JSON',
 			data: formData,
 			url: base_url + '/forms/saveForm1'
 		}).done(function(result){
-			$('body').html(result);return false;
+			//$('body').html(result);
 			if(result.is_save == true) {
 				Toast.fire({
 					type: 'success',
@@ -773,4 +780,127 @@ function checkBox()
     	$('td:first-child input[value="aproveCouple"]').closest('tr').toggleClass("highlight", this.checked);
     	$('td:first-child input[value="aproveCouple"]').closest('tr').next('tr').toggleClass("highlight", this.checked);
     });
+}
+
+
+$(document).ready(function(){
+	var current = current_page();
+	var total_pages = num_pages();
+
+
+	if (current > 0) {
+		fill_page_from_memory(current);
+		if (total_pages < current) {
+			num_pages(total_pages = current);			
+		}
+	} else {
+		current = 1;
+		total_pages = 1;
+	}
+	update_pages(current, total_pages);
+
+	$('.next').click(function() {
+		/** load variables from browser storage */
+		var current = current_page();
+		var total_pages = num_pages();
+
+		/** save current page  */
+		fill_memory_from_page(current);
+
+		if (++current > total_pages) {
+			num_pages(total_pages = current);
+		}
+
+		/** erase contents of form (couples data only) */
+		clear_form();
+		fill_page_from_memory(current);
+		current_page(current);
+		update_pages(current, total_pages);
+	});
+
+	$('.previous').click(function() {
+		var current = current_page();
+
+		/** save current page */
+		fill_memory_from_page(current);
+
+		if (--current < 1) {
+			current = 1;
+		}
+
+		/** erase contents of form (couples data only) */
+		clear_form();
+		fill_page_from_memory(current);
+		current_page(current);
+		
+		var total_pages = num_pages();
+		update_pages(current, total_pages);
+	});
+});
+
+function current_page(page_num=null) {
+	if (page_num == null) {
+		var temp = localStorage.getItem('current_page');
+		return temp != null ? temp : 0;
+	}
+	localStorage.setItem('current_page', page_num);
+}
+
+function num_pages(page_num=null) {
+	if (page_num == null) {
+		var temp = localStorage.getItem('num_pages');
+		return temp != null ? temp : 0;
+	}
+	localStorage.setItem('num_pages', page_num);
+}
+
+
+function reset_page_storage() {
+	current_page(1);
+	num_pages(1);
+	$.each(Object.keys(localStorage), function(key, value) {
+		 if (value.search('items_page_') == 0) {
+			 localStorage.removeItem(value);
+		 }
+	});
+}
+
+function clear_form() {
+	// $('form')[0].reset();
+	$('#paged_form input[type="checkbox"]').attr('checked', 'false');
+	$('#paged_form input[type="hidden"]').not($('.loopIndex1')).not($('[name="slipIndex"')).val('');
+	$('#paged_form textarea').val('');
+	$('#paged_form input[type="text"]').val('');
+}
+
+function fill_memory_from_page(page_num) {
+	var data_array = {};
+
+	/** iterate all inputs/textarea */
+	$.each( $('#paged_form input, #paged_form textarea'), function(key, value) {
+		data_array[$(value).attr('name')] = $(value).val();
+	});
+
+	/** convert to jason */
+	data_json = JSON.stringify(data_array);
+
+	/** save to local storage */
+	localStorage.setItem('items_page_' + page_num, data_json);
+}
+
+function fill_page_from_memory(page_num) {
+	/** convert json data to array */
+	var array_data = $.parseJSON(localStorage.getItem('items_page_' + page_num));
+
+	/** load page if not empty*/
+	if (array_data != null) {
+		/** iterate and save to all inputs/textarea */
+		$.each(array_data, function(key, value) {
+			$($('#paged_form input[name="' + key + '"], #paged_form textarea[name="' + key + '"]')[0]).val(value);
+		});
+	}
+}
+
+function update_pages(page_num, total_pages) {
+	$("#pager").html("Page " + page_num + " of " + total_pages);
 }
