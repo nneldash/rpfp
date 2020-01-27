@@ -1925,6 +1925,55 @@ DECLARE check_details INT;
     SELECT check_details;
 END$$
 
+CREATE DEFINER=root@localhost PROCEDURE check_couples_details(
+    IN firstname_h VARCHAR(50),
+    IN lastname_h VARCHAR(50),
+    IN extname_h VARCHAR(50),
+    IN birthdate_h DATE,
+    IN firstname_w VARCHAR(50),
+    IN lastname_w VARCHAR(50),
+    IN birthdate_w DATE
+    )   READS SQL DATA
+proc_exit_point :
+BEGIN
+DECLARE check_details INT;
+
+      SELECT 	COUNT(couples.COUPLES_ID) AS check_details,
+                couples.COUPLES_ID AS couplesid,
+                couples.IS_ACTIVE AS active_status,
+      			husband.LNAME AS h_last,
+      			husband.FNAME AS h_first,
+      			husband.EXT_NAME AS h_ext,
+      			husband.BDATE AS h_bday,
+      			husband.SEX AS h_sex,
+                full_data.w_couplesid AS w_couplesid,
+      			full_data.w_last AS w_last,
+      			full_data.w_first AS w_first,
+      			full_data.w_bday AS w_bday,
+      			full_data.w_sex AS w_sex
+        FROM rpfp.couples couples
+   LEFT JOIN rpfp.individual husband ON husband.COUPLES_ID = couples.COUPLES_ID AND husband.SEX = 1
+   LEFT JOIN (
+       SELECT wic.COUPLES_ID AS w_couplesid,
+      			wife.LNAME AS w_last,
+      			wife.FNAME AS w_first,
+      			wife.BDATE AS w_bday,
+      			wife.SEX AS w_sex
+       FROM rpfp.couples wic
+       LEFT JOIN rpfp.individual wife ON wife.COUPLES_ID = wic.COUPLES_ID AND wife.SEX = 2
+       ) full_data
+       ON full_data.w_couplesid = couples.COUPLES_ID
+       
+       WHERE husband.LNAME = lastname_h
+         AND husband.FNAME = firstname_h
+         AND husband.EXT_NAME = extname_h
+         AND husband.BDATE = birthdate_h
+         AND full_data.w_last = lastname_w
+         AND full_data.w_first = firstname_w
+         AND full_data.w_bday = birthdate_w
+    ;
+END$$
+
 CREATE DEFINER=root@localhost PROCEDURE encoder_save_couple (
     IN couplesid INT UNSIGNED,
     IN rpfp_classid INT,
@@ -2327,20 +2376,219 @@ END$$
 /** END SAVE TARGET COUPLES */
 
 /** SEARCH COUPLES */
-CREATE DEFINER=root@localhost PROCEDURE search_advance_approved (
-    IN search_class VARCHAR(100),
+CREATE DEFINER=root@localhost PROCEDURE search_data (
+    IN loc_province INT,
+    IN loc_municipality INT,
+    IN loc_barangay INT,
+    IN class_number VARCHAR(100),
     IN search_date_from DATE,
     IN search_date_to DATE,
-    IN search_couples VARCHAR(100),
+    IN type_class INT,
+    IN couples_name VARCHAR(100),
+    IN search_age_from INT,
+    IN search_age_to INT,
+    IN no_child INT,
+    IN mfp_used INT,
+    IN tfp_used INT,
+    IN intention_status INT,
+    IN search_status INT,
+    IN status_active INT,
+    IN username VARCHAR(50),
+    IN page_no INT,
+    IN items_per_page INT
+    )   READS SQL DATA
+proc_exit_point :
+BEGIN
+    /** 
+    SEARCH_STATUS
+        0 - all data
+        1 - unmet need
+        2 - served unmet need
+        3 - shifters
+        4 - served shifters
+    */
+    DECLARE name_user VARCHAR(50);
+    DECLARE db_user_name VARCHAR(50);
+    DECLARE read_offset INT;
+    DECLARE type_class_range INT;
+
+    CALL rpfp.lib_extract_user_name( username, name_user, db_user_name );
+
+    IF (IFNULL( search_status, NULL ) = NULL ) THEN
+        SET search_status = 0;
+    END IF;
+
+    IF (IFNULL( loc_province, NULL ) = NULL ) THEN
+        SET loc_province = '';
+    END IF;
+
+    IF (IFNULL( loc_municipality, NULL ) = NULL ) THEN
+        SET loc_municipality = '';
+    END IF;
+
+    IF (IFNULL( loc_barangay, NULL ) = NULL ) THEN
+        SET loc_barangay = '';
+    END IF;
+
+    IF (IFNULL( type_class, NULL ) = NULL ) THEN
+        SET type_class = 1;
+        SET type_class_range = 7;
+    END IF;
+
+    IF (IFNULL( search_age_from, NULL ) = NULL) THEN
+        SET search_age_from = 0;
+    END IF;
+
+    IF (IFNULL( search_age_to, NULL ) = NULL) THEN
+        SET search_age_to = 200;
+    END IF;
+
+    IF (IFNULL( status_active, NULL ) = NULL ) THEN
+        SET status_active = 0;
+    END IF;
+
+    IF (IFNULL( search_date_from, NULL ) = NULL ) THEN
+        SET search_date_from = YEAR(NOW()) & '-01-01';
+    END IF;
+
+    IF (IFNULL( search_date_to, NULL ) = NULL ) THEN
+        SET search_date_to = YEAR(NOW()) & '-12-31';
+    END IF;
+
+    IF search_status = 0 THEN
+        IF NOT EXISTS (
+            SELECT rc.RPFP_CLASS_ID
+            FROM rpfp.RPFP_CLASS rc
+        LEFT JOIN rpfp.couples apc
+                ON apc.RPFP_CLASS_ID = rc.RPFP_CLASS_ID
+            WHERE apc.IS_ACTIVE = status_active
+                AND rc.DB_USER_ID = name_user
+        ) THEN
+            SELECT NULL AS rpfpclass,
+                    NULL AS typeclass,
+                    NULL AS others_specify,
+                    NULL AS city,
+                    NULL AS barangay,
+                    NULL AS class_no,
+                    NULL AS date_conduct
+            ;
+        ELSE
+            IF (IFNULL( page_no, 0) = 0) THEN
+                /** DEFAULT PAGE NO. */
+                SET page_no := 1;
+            END IF;
+            IF (IFNULL( items_per_page, 0) = 0) THEN
+                /** DEFAULT COUNT PER PAGE*/
+                SET items_per_page := 10;
+            END IF;
+
+            SET read_offset := (page_no - 1) * items_per_page;
+            SELECT rc.RPFP_CLASS_ID AS rpfpclass,
+                rc.TYPE_CLASS_ID AS typeclass,
+                rc.OTHERS_SPECIFY AS others_specify,
+                lp.LOCATION_DESCRIPTION AS barangay,
+                rc.CLASS_NUMBER AS class_no,
+                rc.DATE_CONDUCTED AS date_conduct
+            FROM rpfp.rpfp_class rc 
+        LEFT JOIN rpfp.couples apc ON apc.RPFP_CLASS_ID = rc.RPFP_CLASS_ID
+        LEFT JOIN rpfp.individual ic ON ic.COUPLES_ID = apc.COUPLES_ID
+        LEFT JOIN rpfp.fp_details fd ON fd.COUPLES_ID = ic.COUPLES_ID
+        LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID 
+            WHERE rc.CLASS_NUMBER LIKE CONCAT('%',class_number,'%')
+            AND rc.TYPE_CLASS_ID >= type_class
+            AND rc.TYPE_CLASS_ID <= type_class_range
+            AND rc.DB_USER_ID = username
+            AND (
+                rc.DATE_CONDUCTED >= search_date_from
+            AND rc.DATE_CONDUCTED <= search_date_to
+            )
+            AND apc.IS_ACTIVE = status_active
+           AND (
+               ic.FNAME LIKE CONCAT('%',couples_name,'%')
+            OR ic.LNAME LIKE CONCAT('%',couples_name,'%')
+           )
+           AND ic.AGE >= search_age_from
+           AND ic.AGE <= search_age_to
+        GROUP BY rc.CLASS_NUMBER
+        ORDER BY rc.DATE_CONDUCTED DESC
+            LIMIT read_offset, items_per_page
+        ; 
+        END IF;
+    ELSE
+        IF search_status = 1 THEN
+        CALL rpfp.get_class_list_unmet(
+            class_number,
+            search_date_from,
+            search_date_to,
+            search_age_from,
+            search_age_to,
+            status_active,
+            USER(),
+            page_no,
+            items_per_page
+        );
+        END IF;
+
+        IF search_status = 2 THEN
+        CALL rpfp.get_class_list_served_unmet(
+            class_number,
+            search_date_from,
+            search_date_to,
+            search_age_from,
+            search_age_to,
+            status_active,
+            USER(),
+            page_no,
+            items_per_page
+        );
+        END IF;
+        
+        IF search_status = 3 THEN
+        CALL rpfp.get_class_list_shifters(
+            class_number,
+            search_date_from,
+            search_date_to,
+            search_age_from,
+            search_age_to,
+            status_active,
+            USER(),
+            page_no,
+            items_per_page
+        );
+        END IF;
+        
+        IF search_status = 4 THEN
+        CALL rpfp.get_class_list_served_shifters(
+            class_number,
+            search_date_from,
+            search_date_to,
+            search_age_from,
+            search_age_to,
+            status_active,
+            USER(),
+            page_no,
+            items_per_page
+        );
+        END IF;
+    END IF;
+END$$
+
+CREATE DEFINER=root@localhost PROCEDURE search_advance_approved (
+    IN class_number VARCHAR(100),
+    IN search_date_from DATE,
+    IN search_date_to DATE,
+    IN couples_name VARCHAR(100),
     IN search_age_from INT,
     IN search_age_to INT,
     IN search_status INT,
     IN page_no INT,
     IN items_per_page INT
     )   READS SQL DATA
+proc_exit_point :
 BEGIN
     /** 
     SEARCH_STATUS
+        0 - all data
         1 - unmet need
         2 - served unmet need
         3 - shifters
@@ -2348,14 +2596,14 @@ BEGIN
     */
     DECLARE status_approved INT DEFAULT 0;
 
-    IF( IFNULL( search_couples, 0 ) = 0 ) THEN
+    IF( IFNULL( couples_name, 0 ) = 0 ) THEN
         CALL rpfp.search_class(
-            search_class,
+            class_number,
             search_date_from,
             search_date_to,
-            search_status,
             search_age_from,
             search_age_to,
+            search_status,
             status_approved,
             USER(),
             page_no,
@@ -2363,7 +2611,7 @@ BEGIN
         );
     ELSE
         CALL rpfp.search_couples(
-             search_couples,
+             couples_name,
              status_approved,
              USER(),
              page_no,
@@ -2457,12 +2705,12 @@ BEGIN
      LEFT JOIN rpfp.couples apc ON apc.RPFP_CLASS_ID = rc.RPFP_CLASS_ID
      LEFT JOIN rpfp.individual ic ON ic.COUPLES_ID = apc.COUPLES_ID
      LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID 
-         WHERE ic.FNAME = '%' + QUOTE(search_couples) + '%'
-            OR ic.LNAME = '%' + QUOTE(search_couples) + '%'
-            OR rc.CLASS_NUMBER = '%' + QUOTE(search_couples) + '%'
-            OR rc.DATE_CONDUCTED = '%' + QUOTE(search_couples) + '%'
-           AND apc.IS_ACTIVE = status_active
+         WHERE apc.IS_ACTIVE = status_active
            AND rc.DB_USER_ID = name_user
+           AND (
+               ic.FNAME LIKE CONCAT('%',search_couples,'%')
+            OR ic.LNAME LIKE CONCAT('%',search_couples,'%')
+           )
       GROUP BY rc.CLASS_NUMBER
       ORDER BY rc.DATE_CONDUCTED DESC
          LIMIT read_offset, items_per_page
@@ -2533,23 +2781,19 @@ BEGIN
 
     CALL rpfp.lib_extract_user_name( username, name_user, db_user_name );
 
-    IF (IFNULL( search_date_from, 0) = 0) THEN
-        SET search_date_from = NOW();
+    IF (IFNULL( search_status, NULL ) = NULL ) THEN
+        SET search_status = 0;
     END IF;
 
-    IF (IFNULL( search_date_to, 0) = 0) THEN
-        SET search_date_to = NOW();
+    IF (IFNULL( search_date_from, 0 ) = 0 ) THEN
+        SET search_date_from = YEAR(NOW()) & '-01-01';
     END IF;
 
-    IF (IFNULL( search_age_from, 0 ) = 0) THEN
-        SET search_age_from = 15;
+    IF (IFNULL( search_date_to, 0 ) = 0 ) THEN
+        SET search_date_to = YEAR(NOW()) & '-12-31';
     END IF;
 
-    IF (IFNULL( search_age_to, 0 ) = 0) THEN
-        SET search_age_to = 49;
-    END IF;
-
-    IF (IFNULL( search_status, 0) = 0) THEN
+    IF search_status = 0 THEN
         IF NOT EXISTS (
             SELECT rc.RPFP_CLASS_ID
             FROM rpfp.RPFP_CLASS rc
@@ -2587,11 +2831,13 @@ BEGIN
         LEFT JOIN rpfp.couples apc ON apc.RPFP_CLASS_ID = rc.RPFP_CLASS_ID
         LEFT JOIN rpfp.individual ic ON ic.COUPLES_ID = apc.COUPLES_ID
         LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID 
-            WHERE rc.CLASS_NUMBER = '%' + search_class + '%'
-            AND rc.DATE_CONDUCTED >= search_date_from
-            AND rc.DATE_CONDUCTED <= search_date_to
+            WHERE rc.CLASS_NUMBER LIKE CONCAT('%',search_class,'%')
             AND apc.IS_ACTIVE = status_active
             AND rc.DB_USER_ID = name_user
+            AND (
+                rc.DATE_CONDUCTED >= search_date_from
+            AND rc.DATE_CONDUCTED <= search_date_to
+            )
         GROUP BY rc.CLASS_NUMBER
         ORDER BY rc.DATE_CONDUCTED DESC
             LIMIT read_offset, items_per_page
@@ -2738,7 +2984,7 @@ BEGIN
           LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
           LEFT JOIN rpfp.individual ic ON ic.COUPLES_ID = apc.COUPLES_ID
           LEFT JOIN rpfp.fp_details fd ON fd.COUPLES_ID = apc.COUPLES_ID
-              WHERE rc.CLASS_NUMBER = '%' + search_class + '%'
+              WHERE rc.CLASS_NUMBER LIKE CONCAT('%',search_class,'%')
                 AND rc.DATE_CONDUCTED >= search_date_from
                 AND rc.DATE_CONDUCTED <= search_date_to
                 AND ic.AGE >= 15
@@ -2832,7 +3078,7 @@ BEGIN
           LEFT JOIN rpfp.individual ic ON ic.COUPLES_ID = apc.COUPLES_ID
           LEFT JOIN rpfp.fp_service fs ON fs.COUPLES_ID = apc.COUPLES_ID
           LEFT JOIN rpfp.fp_details fd ON fd.COUPLES_ID = apc.COUPLES_ID
-              WHERE rc.CLASS_NUMBER = '%' + search_class + '%'
+              WHERE rc.CLASS_NUMBER LIKE CONCAT('%',search_class,'%')
                 AND rc.DATE_CONDUCTED >= search_date_from
                 AND rc.DATE_CONDUCTED <= search_date_to
                 AND ic.AGE >= 15
@@ -2925,7 +3171,7 @@ BEGIN
           LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
           LEFT JOIN rpfp.individual ic ON ic.COUPLES_ID = apc.COUPLES_ID
           LEFT JOIN rpfp.fp_details fd ON fd.COUPLES_ID = apc.COUPLES_ID
-              WHERE rc.CLASS_NUMBER = '%' + search_class + '%'
+              WHERE rc.CLASS_NUMBER LIKE CONCAT('%',search_class,'%')
                 AND rc.DATE_CONDUCTED >= search_date_from
                 AND rc.DATE_CONDUCTED <= search_date_to
                 AND ic.AGE >= search_age_from
@@ -3017,7 +3263,7 @@ BEGIN
           LEFT JOIN rpfp.individual ic ON ic.COUPLES_ID = apc.COUPLES_ID
           LEFT JOIN rpfp.fp_service fs ON fs.COUPLES_ID = apc.COUPLES_ID
           LEFT JOIN rpfp.fp_details fd ON fd.COUPLES_ID = apc.COUPLES_ID
-              WHERE rc.CLASS_NUMBER = '%' + search_class + '%'
+              WHERE rc.CLASS_NUMBER LIKE CONCAT('%',search_class,'%')
                 AND rc.DATE_CONDUCTED >= search_date_from
                 AND rc.DATE_CONDUCTED <= search_date_to
                 AND ic.AGE >= search_age_from
