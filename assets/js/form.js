@@ -43,6 +43,7 @@ $(function() {
 	sexValidation();
 	civilStatusValidation();
 	educationValidation();
+	noChildrenValidation();
 	methodValidation();
 	typeValidation();
 	statusValidation();
@@ -63,6 +64,13 @@ $(function() {
 		$('td select').css('cursor', 'not-allowed');
 		$('td input[class="check"]').attr('disabled', false);
 	}
+
+	$("[data-toggle=popover]").popover({
+	    html: true, 
+		content: function() {
+	          return $('#popover-content').html();
+	        }
+	});
 });
 
 function sexValidation()
@@ -218,9 +226,41 @@ function educationValidation()
 	});
 }
 
+function noChildrenValidation()
+{
+	$('.noChildren').keydown(function(event){
+		if(!(event.keyCode == 48 ||
+			event.keyCode == 49 || 
+			event.keyCode == 50  ||
+			event.keyCode == 51  ||
+			event.keyCode == 52  ||
+			event.keyCode == 53  ||
+			event.keyCode == 54  ||
+			event.keyCode == 55  ||
+			event.keyCode == 56  ||
+			event.keyCode == 57  ||
+			event.keyCode == 96  ||
+			event.keyCode == 97  || 
+			event.keyCode == 98  ||
+			event.keyCode == 99  ||
+			event.keyCode == 100 ||
+			event.keyCode == 101 ||
+			event.keyCode == 102 ||
+			event.keyCode == 103 ||
+			event.keyCode == 104 ||
+			event.keyCode == 105 ||
+			event.keyCode == 8   || 
+			event.keyCode == 9)) 
+		{
+			event.preventDefault();
+			return false;
+	    }
+	});
+}
+
 function methodValidation()
 {
-	$('.method8').keydown(function(event){
+	$('.method8').keyup(function(event){
 		if(!(event.keyCode == 48 ||
 			event.keyCode == 49  || 
 			event.keyCode == 50  ||
@@ -248,13 +288,21 @@ function methodValidation()
 			return false;
 	    }
 
+	    var val = $(this).val();
+
+	    if (val > 12) {
+	    	$(this).val('');
+	    	event.preventDefault();
+			return false;
+	    }
+
 	    if(!$(this).prop('required')) {
 	    	$(this).closest('tr').find('.require-this').attr('required', 'required');
 	    	$(this).closest('tr').find('.required').removeAttr('hidden', 'hidden');
 	    }
 	});
 
-	$('.method9').keydown(function(event){
+	$('.method9').keyup(function(event){
 		if(!(event.keyCode == 48 ||
 			event.keyCode == 49  || 
 			event.keyCode == 50  ||
@@ -279,6 +327,14 @@ function methodValidation()
 			event.keyCode == 9)) 
 		{
 			event.preventDefault();
+			return false;
+	    }
+
+	    var val = $(this).val();
+
+	    if (val > 12) {
+	    	$(this).val('');
+	    	event.preventDefault();
 			return false;
 	    }
 
@@ -321,8 +377,6 @@ function typeValidation()
 function statusValidation()
 {
 	$('.status-trad').keydown(function(event){
-		var index = $(this).closest('tr').find('input[name="slipIndex"]').val();
-
 		if(!(event.keyCode == 65 || 
 			event.keyCode == 66  ||
 			event.keyCode == 67  ||
@@ -333,19 +387,28 @@ function statusValidation()
 			event.preventDefault();
 			return false;
 	    }
+		
+		var index = $(this).closest('tr').find('input[class="slipIndex"]').val();
+	    var val = $(this).val();
+	    val = val.toUpperCase();
 
-	    if(event.keyCode == 65) {
+	    if(val == 'A') {
+	    	$(this).closest('tr').find('.intention-use').attr('required', 'required');
+	    	$(this).closest('tr').find('.intention-required').removeAttr('hidden', 'hidden');
 	    	$(this).closest('tr').find('input[name="intention_use['+index+']"]').removeAttr('disabled', 'disabled');
 	    	intentionStatusValidation(index);
 	    } else {
+	    	$(this).closest('tr').find('.intention-use').removeAttr('required', 'required');
+	    	$(this).closest('tr').find('.intention-required').attr('hidden', 'hidden');
 	    	$(this).closest('tr').find('input[name="intention_use['+index+']"]').attr('disabled', 'disabled');
-	    }
+	    }    
+
 	});
 }
 
 function intentionStatusValidation()
 {
-	$('.intention_use').keydown(function(event){
+	$('.intention-use').keydown(function(event){
 		if(!(event.keyCode == 49 || 
 			event.keyCode == 50  ||
 			event.keyCode == 51  ||
@@ -714,13 +777,13 @@ function autoGetData(fname, lname, extname, sex, bday, index, row)
 		'bday' 		: bday
 	}).done(function(result){
 		if (result === '1') {
-			$('.tr'+ row + + index + ' td').addClass('has-duplicate');
-			$('.tr'+ row + + index + ' td input').addClass('has-duplicate');
-			$('.tr'+ row + + index + ' td textarea').addClass('has-duplicate');
+			$('.tr'+ row + index + ' td'+ row +index).addClass('has-duplicate');
+			// $('.tr'+ row + + index + ' td input').addClass('has-duplicate');
+			$('.tr'+ row + index + ' td textarea').addClass('has-duplicate');
 		} else {
-			$('.tr'+ row + + index + ' td').removeClass('has-duplicate');
-			$('.tr'+ row + + index + ' td input').removeClass('has-duplicate');
-			$('.tr'+ row + + index + ' td textarea').removeClass('has-duplicate');
+			// $('.tr'+ row + + index + ' td').removeClass('has-duplicate');
+			// $('.tr'+ row + + index + ' td input').removeClass('has-duplicate');
+			$('.tr'+ row + index + ' td textarea').removeClass('has-duplicate');
 		}
 	});
 }

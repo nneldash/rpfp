@@ -438,17 +438,20 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 							<?php
 								$ListCouples = $form1->ListCouple;
 								$max = count($ListCouples);
+								$i = 0;
 
 								if($max < 10) {
 									$max = 10;
 								}
 
 								for ($i = 0; $i < $max; $i++) { 
+
 									$dummy = new CoupleClass();
 									$couple = (empty($form1->ListCouple[$i]) ? $dummy : $form1->ListCouple[$i]);
 
 									$bday = 'N/A';
 									$bday2 = 'N/A';
+
 									if ($couple->FirstEntry->Birthdate != 'N/A') {
 										$bday = explode('-', $couple->FirstEntry->Birthdate);
 										$bday = $bday[1].'-'.$bday[2].'-'.$bday[0];
@@ -478,7 +481,7 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 									<td class="small">
 										<div style="display: inline-flex; border: 1px solid transparent;">
 											<input type="hidden" id="isDuplicate1[<?= $i; ?>]" name="isDuplicate1[<?= $i; ?>]" value="" />
-											<input type="hidden" class="loopIndex1" name="loopIndex1" value="<?= $i;?>" />
+											<input type="hidden" class="loopIndex1" value="<?= $i; ?>" />
 											<?php
 					                            echo HtmlHelper::inputPdf(
 					                                $is_pdf,
@@ -670,7 +673,7 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 				                            	($couple->NumberOfChildren != 'N/A' ? $couple->NumberOfChildren : ''),
 				                                "text",
 				                                "no_of_children[".$i."]",
-				                                "height-50 text-center",
+				                                "height-50 text-center noChildren",
 												"2",
 												"",
 												""
@@ -733,7 +736,10 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 												""
 				                            );
 				                        ?>
-				                        <input type="text" disabled value="<?= ($couple->TraditionalFp->IntentionUse != 'N/A' ? $couple->TraditionalFp->IntentionUse : ''); ?>" class="height-50 text-center intention-use" maxlength="1" name="intention_use[<?= $i; ?>]" />
+				                        <div style="display: inline-flex">
+					                        <span class="required intention-required" hidden>*</span>
+					                        <input type="text" disabled value="<?= ($couple->TraditionalFp->IntentionUse != 'N/A' ? $couple->TraditionalFp->IntentionUse : ''); ?>" class="height-50 text-center intention-use" maxlength="1" name="intention_use[<?= $i; ?>]" />
+				                        </div>
 									</td>
 									<td class="small-20 text-center" rowspan="2">
 										<?php
@@ -760,7 +766,7 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 									<?php if(!$is_pdf): ?>
 										<?php if($isEncoder): ?>
 											<td class="small text-center" rowspan="2">
-												<input type="hidden" name="slipIndex" value="<?= $i; ?>">
+												<input type="hidden" class="slipIndex" value="<?= $i; ?>">
 												<button class="btn-slip" data-couple="<?= $couple->Id; ?>" data-couple-name="<?= HtmlHelper::firstEntry_Name($couple->FirstEntry->Name, $couple->SecondEntry->Name); ?>" data-address="<?= $couple->Address_St; ?>" data-toggle="tooltip" data-placement="left" title="View Service Slip">
 													<i class="fa fa-file"></i>
 												</button>
