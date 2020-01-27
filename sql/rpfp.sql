@@ -1744,6 +1744,75 @@ END$$
 /** END OF CLASSES */
 
 /** COUPLES DETAILS */
+CREATE DEFINER=root@localhost PROCEDURE encoder_get_duplicate_details (
+    IN couplesid INT UNSIGNED
+    )  READS SQL DATA
+BEGIN
+    DECLARE name_user VARCHAR(50);
+    DECLARE db_user_name VARCHAR(50);
+    DECLARE user_scope INT;
+    DECLARE user_location INT;
+    DECLARE multiplier INT;
+    DECLARE is_not_encoder INT(1);
+    
+    CALL rpfp.lib_extract_user_name( USER(), name_user, db_user_name );
+    SET user_scope := rpfp.profile_get_scope( name_user );
+    SET multiplier := rpfp.lib_get_multiplier( user_scope );
+    SET user_location := rpfp.profile_get_location( name_user, user_scope );
+    SET is_not_encoder := NOT IFNULL(rpfp.profile_check_if_encoder(), FALSE);
+
+    IF NOT EXISTS (
+         SELECT apc.COUPLES_ID
+           FROM rpfp.couples apc
+      LEFT JOIN rpfp.individual ic
+             ON ic.COUPLES_ID = apc.COUPLES_ID
+      LEFT JOIN rpfp.rpfp_class rc
+             ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
+          WHERE ic.COUPLES_ID = couplesid
+            AND (   rc.DB_USER_ID = name_user
+                OR (   is_not_encoder
+                    AND user_location = (rc.BARANGAY_ID DIV POWER( 10, multiplier ))
+                    )
+                )
+    ) THEN
+        BEGIN
+             SELECT NULL AS couplesid,
+                    NULL AS address_no_st,
+                    NULL AS address_barangay,
+                    NULL AS address_city,
+                    NULL AS household_no,
+                    NULL AS number_child,
+                    NULL AS status_active
+            ;
+        END;
+    ELSE
+        BEGIN
+             SELECT apc.COUPLES_ID AS couplesid,
+                    apc.ADDRESS_NO_ST AS address_no_st,
+                    apc.ADDRESS_BRGY AS address_barangay,
+                    apc.ADDRESS_CITY AS address_city,
+                    apc.HH_ID_NO AS household_no,
+                    apc.NO_CHILDREN AS number_child,
+                    apc.IS_ACTIVE AS status_active
+               FROM rpfp.couples apc
+          LEFT JOIN rpfp.individual ic
+                 ON ic.COUPLES_ID = apc.COUPLES_ID
+          LEFT JOIN rpfp.rpfp_class rc
+                 ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
+              WHERE ic.COUPLES_ID = couplesid
+                AND (   rc.DB_USER_ID = name_user
+                    OR (   is_not_encoder
+                        AND user_location = (rc.BARANGAY_ID DIV POWER( 10, multiplier ))
+                        )
+                    )
+           GROUP BY apc.COUPLES_ID
+            ;
+
+        CALL encoder_get_couple_fp_details(couplesid);
+        END;
+    END IF;
+END$$
+
 CREATE DEFINER=root@localhost PROCEDURE encoder_get_couple_fp_details (IN couplesid INT UNSIGNED)  READS SQL DATA
 BEGIN
     DECLARE name_user VARCHAR(50);
@@ -1938,6 +2007,20 @@ proc_exit_point :
 BEGIN
 DECLARE check_details INT;
 
+    DECLARE name_user VARCHAR(50);
+    DECLARE db_user_name VARCHAR(50);
+    DECLARE read_offset INT;
+    DECLARE user_scope INT;
+    DECLARE user_location INT;
+    DECLARE multiplier INT;
+    DECLARE is_not_encoder INT(1);
+    
+    CALL rpfp.lib_extract_user_name( USER(), name_user, db_user_name );
+    SET user_scope := rpfp.profile_get_scope( name_user );
+    SET multiplier := rpfp.lib_get_multiplier( user_scope );
+    SET user_location := rpfp.profile_get_location( name_user, user_scope );
+    SET is_not_encoder := NOT IFNULL(rpfp.profile_check_if_encoder(), FALSE);
+    
       SELECT 	COUNT(couples.COUPLES_ID) AS check_details,
                 couples.COUPLES_ID AS couplesid,
                 couples.IS_ACTIVE AS active_status,
@@ -1952,18 +2035,18 @@ DECLARE check_details INT;
       			full_data.w_bday AS w_bday,
       			full_data.w_sex AS w_sex
         FROM rpfp.couples couples
+   LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = couples.RPFP_CLASS_ID 
    LEFT JOIN rpfp.individual husband ON husband.COUPLES_ID = couples.COUPLES_ID AND husband.SEX = 1
    LEFT JOIN (
        SELECT wic.COUPLES_ID AS w_couplesid,
-      			wife.LNAME AS w_last,
-      			wife.FNAME AS w_first,
-      			wife.BDATE AS w_bday,
-      			wife.SEX AS w_sex
-       FROM rpfp.couples wic
-       LEFT JOIN rpfp.individual wife ON wife.COUPLES_ID = wic.COUPLES_ID AND wife.SEX = 2
-       ) full_data
-       ON full_data.w_couplesid = couples.COUPLES_ID
-       
+      		  wife.LNAME AS w_last,
+      		  wife.FNAME AS w_first,
+      		  wife.BDATE AS w_bday,
+      		  wife.SEX AS w_sex
+         FROM rpfp.couples wic
+    LEFT JOIN rpfp.individual wife ON wife.COUPLES_ID = wic.COUPLES_ID AND wife.SEX = 2
+              ) full_data
+           ON full_data.w_couplesid = couples.COUPLES_ID
        WHERE husband.LNAME = lastname_h
          AND husband.FNAME = firstname_h
          AND husband.EXT_NAME = extname_h
@@ -1971,6 +2054,11 @@ DECLARE check_details INT;
          AND full_data.w_last = lastname_w
          AND full_data.w_first = firstname_w
          AND full_data.w_bday = birthdate_w
+         AND (   rc.DB_USER_ID = name_user
+             OR (   is_not_encoder
+                AND user_location = (rc.BARANGAY_ID DIV POWER( 10, multiplier ))
+                )
+             )
     ;
 END$$
 
