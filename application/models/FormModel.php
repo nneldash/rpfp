@@ -428,19 +428,33 @@ class FormModel extends BaseModel
 
     public function getDuplicateCouple() : DuplicateCoupleInterface
     {
-        $firstname  = $this->input->post('firstname');
-        $surname    = $this->input->post('surname');
-        $extname    = $this->input->post('extname');
-        $bday       = $this->input->post('bday');
-        $sex        = $this->input->post('sex');
+        $h_fname    = $this->input->post('h_fname');
+        $h_lname    = $this->input->post('h_lname');
+        $h_extname  = $this->input->post('h_extname');
+        $h_bday     = $this->input->post('h_bday');
+        $w_fname    = $this->input->post('w_fname');
+        $w_lname    = $this->input->post('w_lname');
+        $w_bday     = $this->input->post('w_bday');
 
         return $this->fromDbGetSpecific(
             'DuplicateCoupleClass',
             array(
-                'CheckDetails' => 'check_details'
+                'CheckDetails' => 'check_details',
+                'CouplesId' => 'couplesid',
+                'ActiveStatus' => 'active_status',
+                'H_Last' => 'h_last',
+                'H_First' => 'h_first',
+                'H_Ext' => 'h_ext',
+                'H_Bday' => 'h_bday',
+                'H_Sex' => 'h_sex',
+                'W_CouplesId' => 'w_couplesid',
+                'W_Last' => 'w_last',
+                'W_First' => 'w_first',
+                'W_Bday' => 'w_bday',
+                'W_Sex' => 'w_sex'
             ),
-            'encoder_check_couples_details',
-            array($firstname, $surname, $extname, $bday, $sex)
+            'check_couples_details',
+            array($h_fname, $h_lname, $h_extname, $h_bday, $w_fname, $w_lname, $w_bday)
         );
     }
 }

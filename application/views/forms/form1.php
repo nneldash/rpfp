@@ -603,7 +603,22 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 					                            );
 					                        ?>
 					                        <span style="padding-top: 15px">/</span>
-					                        <input type="text" name="age1[<?=$i?>]" maxlength="2" class="text-center getAge1" style="width: 50%;" readonly value="<?= HtmlHelper::firstEntry_BirthAge($couple->FirstEntry->Age, $couple->SecondEntry->Age) ?>" />
+					                        <input type="text" name="age1[<?=$i?>]" maxlength="2" class="text-center getAge1" style="width: 50%;" readonly value="<?= HtmlHelper::firstEntry_BirthAge($couple->FirstEntry->Age, $couple->SecondEntry->Age) ?>" 
+					                        	data-placement="right" data-toggle="popover" data-container="body" data-placement="left" data-html="true"
+					                        />
+
+											<div id="popover-content" class="hide">
+												<div class="row">
+													<div class="col-xs-12">																												
+														<p>
+															Possible Duplicate in
+															<u><b>Approve</b></u>
+														</p>
+														<p>Husband:</p>
+														<p>Wife:</p>
+													</div>
+												</div>
+											</div>
 										</div>								
 									</td>
 									<td class="small text-center" rowspan="2">										

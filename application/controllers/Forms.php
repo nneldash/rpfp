@@ -449,6 +449,14 @@ class Forms extends CI_Controller
         $this->load->model('FormModel');
         $count = $this->FormModel->getDuplicateCouple();
 
-        echo $count->CheckDetails;
+        $count = [  
+                    $count->CheckDetails,
+                    $count->CouplesId,
+                    $count->ActiveStatus
+                ];
+
+        $this->output
+            ->set_content_type('application/json')
+            ->set_output(json_encode($count));
     }
 }
