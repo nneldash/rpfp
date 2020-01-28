@@ -934,7 +934,7 @@ function autoGetData(fname1, lname1, extname1, sex1, bday1, fname2, lname2, extn
 				'w_bday'	: w_bday
 			}
 	}).done(function(result){
-		if (result[0] == 'N/A') {
+		if (result.CheckCount >= 1) {
 			$('.tr1' + index + ' td:nth-child(1)').addClass('has-duplicate');
 			$('.tr2' + index + ' td:nth-child(1)').addClass('has-duplicate');
 

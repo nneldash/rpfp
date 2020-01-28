@@ -447,16 +447,21 @@ class Forms extends CI_Controller
     public function checkCoupleDuplicate()
     {
         $this->load->model('FormModel');
-        $count = $this->FormModel->getDuplicateCouple();
+        $data = $this->FormModel->getDuplicateCouple();
 
-        $count = [  
-                    $count->CheckDetails,
-                    $count->CouplesId,
-                    $count->ActiveStatus
+        $husband = $data->H_First . ' ' . $data->H_Last;
+        $wife = $data->W_First . ' ' . $data->W_Last;
+
+        $data = [  
+                    'CheckCount' => $data->CheckDetails,
+                    'CouplesId' => $data->CouplesId,
+                    'ActiveStatus' => $data->ActiveStatus,
+                    'Husband' => $husband,
+                    'Wife' => $wife
                 ];
 
         $this->output
             ->set_content_type('application/json')
-            ->set_output(json_encode($count));
+            ->set_output(json_encode($data));
     }
 }
