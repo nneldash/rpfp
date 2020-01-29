@@ -25,7 +25,7 @@ class Forms extends CI_Controller
         $this->load->library('formA/FormAClass');
     }
 
-    public function index()
+    public function index($data="")
     {
         $header['title'] =' Online RPFP Monitoring System | Form 1';
 
@@ -36,6 +36,8 @@ class Forms extends CI_Controller
         $status = $this->input->get('status');
         
         $form1 = $this->FormModel->getForm1($classId,$status);
+        $form1 = FormClass::getFromVariable($form1);
+        $first = CoupleClass::getFromVariable($form1->ListCouple[0]);
 
         $this->load->model('ProfileModel');
         $profile = $this->ProfileModel->getOwnProfile();
@@ -57,13 +59,19 @@ class Forms extends CI_Controller
                 'is_pdf' => false,
                 'isEncoder' => $isEncoder,
                 'isRegionalDataManager' => $isRegionalDataManager,
-                'isFocalPerson' => $isFocalPerson
+                'isFocalPerson' => $isFocalPerson,
+                'is_new' => $data
             )
         );
         $this->load->view('includes/footer');
 
         $this->load->library('common/PageHandler');
         PageHandler::setCurrentPage();
+    }
+
+    public function new()
+    {
+        $this->index('new_form');
     }
 
     public function saveForm1()
@@ -82,6 +90,8 @@ class Forms extends CI_Controller
         } else {
             $data = ['is_save' => true];
         }
+
+        $_SESSION[HAS_ENTRY] = HAS_ENTRY;
 
         $this->output
             ->set_content_type('application/json')
@@ -156,7 +166,7 @@ class Forms extends CI_Controller
         $individual->Birthdate = $this->input->post('bday1')[$i];
         $individual->Age = $this->input->post('age1')[$i];
         $individual->HighestEducation = $this->input->post('educ1')[$i];
-        $individual->Attendee = 'Yes';
+        $individual->Attendee = $this->input->post('attendee1')[$i];
 
         return $individual;
     }
@@ -181,7 +191,7 @@ class Forms extends CI_Controller
         $individual->Birthdate = $this->input->post('bday2')[$i];
         $individual->Age = $this->input->post('age2')[$i];
         $individual->HighestEducation = $this->input->post('educ2')[$i];
-        $individual->Attendee = 'Yes';
+        $individual->Attendee = $this->input->post('attendee2')[$i];
 
         return $individual;
     }

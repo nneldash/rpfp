@@ -47,10 +47,10 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 	</style>
 <?php } ?>
 
-
+<?= !empty($is_new) ? '<div class="hidden" id="is_new"></div>' : BLANK ?>
 <link href="<?= base_url('assets/css/form.css') ?>" rel="stylesheet">
 <input type="hidden" id="rdm" name="rdm" value="<?= $isRegionalDataManager; ?>" />
-<input type="hidden" id="focal" id="focal" value="<?= $isFocalPerson; ?>" />
+<input type="hidden" id="focal" name="focal" value="<?= $isFocalPerson; ?>" />
 <div class="container-fluid text-center">
 	<a href="#" class="previous">&laquo; Previous</a>
 	<a href="#" class="next">Next &raquo;</a>
@@ -481,7 +481,7 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 									<td class="small">
 										<div style="display: inline-flex; border: 1px solid transparent;">
 											<input type="hidden" id="isDuplicate1[<?= $i; ?>]" name="isDuplicate1[<?= $i; ?>]" value="" />
-											<input type="hidden" class="loopIndex1" value="<?= $i; ?>" />
+											<input type="hidden" class="loopIndex1" name="loopIndex1" value="<?= $i; ?>" />
 											<?php
 					                            echo HtmlHelper::inputPdf(
 					                                $is_pdf,
@@ -758,7 +758,7 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 									<td class="small <?php if (!$is_pdf): ?> back-eee <?php endif;?>" style="border-right: none; padding: 0">
 										<?php if (!$is_pdf) : ?>
 											<label class="cont">
-												<input type="checkbox" name="type[<?= $i ?>]" value="attended" <?= ($couple->FirstEntry->Attendee == 1) ? 'checked' : '' ?> />
+												<input type="checkbox" name="attendee1[<?= $i ?>]" value="attended" <?= ($couple->FirstEntry->Attendee == 1) ? 'checked' : '' ?> />
 												<span class="checkmark height-34"></span>
 											</label>
 										<?php endif; ?>
@@ -766,7 +766,7 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 									<?php if(!$is_pdf): ?>
 										<?php if($isEncoder): ?>
 											<td class="small text-center" rowspan="2">
-												<input type="hidden" class="slipIndex" value="<?= $i; ?>">
+												<input type="hidden" class="slipIndex" name="slipIndex" value="<?= $i; ?>">
 												<button class="btn-slip" data-couple="<?= $couple->Id; ?>" data-couple-name="<?= HtmlHelper::firstEntry_Name($couple->FirstEntry->Name, $couple->SecondEntry->Name); ?>" data-address="<?= $couple->Address_St; ?>" data-toggle="tooltip" data-placement="left" title="View Service Slip">
 													<i class="fa fa-file"></i>
 												</button>
@@ -908,8 +908,8 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 									<td class="small back-eee" style="border-right: none; padding: 0">
 										<?php if (!$is_pdf) : ?>
 											<label class="cont">
-												<input type="checkbox" name="type2[<?= $i ?>]" value="attended" <?= ($couple->SecondEntry->Attendee == 1) ? 'checked' : '' ?> />
-												<span class="checkmark height-35"></span>
+												<input type="checkbox" name="attendee2[<?= $i ?>]" value="attended" <?= ($couple->SecondEntry->Attendee == 1) ? 'checked' : '' ?> />
+												<span class="checkmark height-35" ></span>
 											</label>
 										<?php endif; ?>
 									</td>

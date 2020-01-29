@@ -8,7 +8,9 @@ $(document).ready(function(){
 	});
 
 	$('#provinceList').on('changed.bs.select', function (e, clickedIndex, isSelected, previousValue) {
-		var provinceId = $(this).find('option:selected').val();
+		var provinceId = $(e.target.options[clickedIndex]).val();
+		$($('#form_validation input[name="province"]')[0]).val(provinceId);
+
 		$('#muniList').find('option').remove();
 		$('#muniList').selectpicker('refresh');
 		$('#brgyList').find('option').remove();
@@ -17,10 +19,17 @@ $(document).ready(function(){
 	});
 
 	$('#muniList').on('changed.bs.select', function (e, clickedIndex, isSelected, previousValue) {
-		var muniId = $(this).find('option:selected').val();
+		var muniId = $(e.target.options[clickedIndex]).val();
+		$($('#form_validation input[name="city"]')[0]).val(muniId);
+
 		$('#brgyList').find('option').remove();
 		$('#brgyList').selectpicker('refresh');
 		getBrgys(muniId);
+	});
+
+	$('#brgyList').on('changed.bs.select', function (e, clickedIndex, isSelected, previousValue) {
+		var brgy_id = $(e.target.options[clickedIndex]).val();
+		$($('#form_validation input[name="barangay"]')[0]).val(brgy_id);
 	});
 });
 
@@ -866,14 +875,13 @@ function saveForm1()
 			timer: 3000
 		});
 		
+		fill_memory_from_page(current_page());
 		var formData = {};
 		/** iterate all inputs/textarea */
 		$.each( $('#form_validation input, #form_validation textarea'), function(key, value) {
 			formData[$(value).attr('name')] = $(value).val();
 		});
-		
-		//var formData = $('#form_validation').serialize();
-		
+				
 		$.ajax({
 			type: 'POST',
 			dataType: 'JSON',
@@ -910,9 +918,15 @@ function checkBox()
 
 
 $(document).ready(function(){
+	var all_input="";
+	$.each($('#paged_form textarea, #paged_form input[type="text"]'), function() {
+		all_input += $(this).val();
+	});
+	if (($('#new_form').val() != undefined)) {
+		reset_page_storage();
+	}
 	var current = current_page();
 	var total_pages = num_pages();
-
 
 	if (current > 0) {
 		fill_page_from_memory(current);
@@ -962,6 +976,11 @@ $(document).ready(function(){
 		var total_pages = num_pages();
 		update_pages(current, total_pages);
 	});
+
+	$('input[type=checkbox] + span').click(function(){
+		var current_value = $($(this).siblings('input[type=checkbox]')[0]).val();
+		$($(this).siblings('input[type=checkbox]')[0]).val(current_value == 'attended' ? "" : 'attended');
+	});
 });
 
 function current_page(page_num=null) {
@@ -992,11 +1011,12 @@ function reset_page_storage() {
 }
 
 function clear_form() {
-	// $('form')[0].reset();
-	$('#paged_form input[type="checkbox"]').attr('checked', 'false');
+	$('#paged_form input[type="checkbox"]').attr('checked', false);
+	$('#paged_form input[type="checkbox"]').val('');
 	$('#paged_form input[type="hidden"]').not($('.loopIndex1')).not($('[name="slipIndex"')).val('');
 	$('#paged_form textarea').val('');
 	$('#paged_form input[type="text"]').val('');
+	
 }
 
 function fill_memory_from_page(page_num) {
@@ -1004,7 +1024,7 @@ function fill_memory_from_page(page_num) {
 
 	/** iterate all inputs/textarea */
 	$.each( $('#paged_form input, #paged_form textarea'), function(key, value) {
-		data_array[$(value).attr('name')] = $(value).val();
+		data_array[$(value).prop('name')] = $(value).val();
 	});
 
 	/** convert to jason */
@@ -1020,8 +1040,11 @@ function fill_page_from_memory(page_num) {
 
 	/** load page if not empty*/
 	if (array_data != null) {
-		/** iterate and save to all inputs/textarea */
+	/** iterate and save to all inputs/textarea */
 		$.each(array_data, function(key, value) {
+			if (key.indexOf('attendee') == 0) {
+				$($('#paged_form input[name="' + key + '"]')[0]).prop('checked', value=='attended');
+			}
 			$($('#paged_form input[name="' + key + '"], #paged_form textarea[name="' + key + '"]')[0]).val(value);
 		});
 	}
