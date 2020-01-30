@@ -558,3 +558,16 @@ textarea::placeholder {
 .accordionDropdown:hover {
 	background-color: none;
 }
+
+.button-fill {
+    background: #54a5d4;
+    border: 1px solid #54a5d4;
+    color: white;
+    text-align: center;
+    cursor: pointer;
+}
+.button-fill:hover {
+	color: #333;
+	background: white;
+	border: 1px solid #54a5d4;
+}

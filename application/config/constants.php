@@ -112,6 +112,7 @@ defined('BLANK') or define('BLANK', '');
 defined('REQUEST_METHOD') or define('REQUEST_METHOD', 'REQUEST_METHOD');
 defined('POST') or define('POST', 'POST');
 defined('RELOAD') or define('RELOAD', 'reload');
+defined('IS_NEW') or define('IS_NEW', 'is_new');
 
 defined('BOOTSRAP_CSS') or define('BOOTSRAP_CSS', '/../node_modules/bootstrap/dist/css/bootstrap.min.css');
 defined('BOOTSRAP_JS') or define('BOOTSRAP_JS', '/../node_modules/bootstrap/dist/js/bootstrap.min.js');

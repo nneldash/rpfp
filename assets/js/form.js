@@ -8,7 +8,9 @@ $(document).ready(function(){
 	});
 
 	$('#provinceList').on('changed.bs.select', function (e, clickedIndex, isSelected, previousValue) {
-		var provinceId = $(this).find('option:selected').val();
+		var provinceId = $(e.target.options[clickedIndex]).val();
+		$($('#form_validation input[name="province"]')[0]).val(provinceId);
+
 		$('#muniList').find('option').remove();
 		$('#muniList').selectpicker('refresh');
 		$('#brgyList').find('option').remove();
@@ -17,10 +19,17 @@ $(document).ready(function(){
 	});
 
 	$('#muniList').on('changed.bs.select', function (e, clickedIndex, isSelected, previousValue) {
-		var muniId = $(this).find('option:selected').val();
+		var muniId = $(e.target.options[clickedIndex]).val();
+		$($('#form_validation input[name="city"]')[0]).val(muniId);
+
 		$('#brgyList').find('option').remove();
 		$('#brgyList').selectpicker('refresh');
 		getBrgys(muniId);
+	});
+
+	$('#brgyList').on('changed.bs.select', function (e, clickedIndex, isSelected, previousValue) {
+		var brgy_id = $(e.target.options[clickedIndex]).val();
+		$($('#form_validation input[name="barangay"]')[0]).val(brgy_id);
 	});
 });
 
@@ -43,10 +52,12 @@ $(function() {
 	sexValidation();
 	civilStatusValidation();
 	educationValidation();
+	noChildrenValidation();
 	methodValidation();
 	typeValidation();
 	statusValidation();
 	reasonValidation();
+	tooltip();
 
 	Inputmask().mask(".birthAge");	
 
@@ -63,7 +74,39 @@ $(function() {
 		$('td select').css('cursor', 'not-allowed');
 		$('td input[class="check"]').attr('disabled', false);
 	}
+
+	setTimeout(getIntentionUse, 2000);
 });
+
+function getIntentionUse() 
+{
+	for(var i = 0; i <= 9 ; i ++) {
+		var val = $('.tr1' + i).find('input[name="status[' + i +']"]').val();
+
+		if(val == 'A') {
+	    	$('input[name="intention-use[' + i +']"').attr('required', 'required');
+	    	$('input[name="intention-use[' + i +']"').find('.intention-required').removeAttr('hidden', 'hidden');
+	    	$('input[name="intention_use['+i+']"').removeAttr('disabled', 'disabled');
+	    	intentionStatusValidation(i);
+	    } else {
+	    	$('input[name="intention-use[' + i +']"').removeAttr('required', 'required');
+	    	$('input[name="intention-use[' + i +']"').find('.intention-required').attr('hidden', 'hidden');
+	    	$('input[name="intention_use['+i+']"').attr('disabled', 'disabled');
+	    }
+	}
+}
+
+function tooltip()
+{
+	$("[data-toggle=popover]").on('click', function(event) {
+		event.preventDefault();
+	}).popover({
+	    html: true,
+		content: function() {
+	        return $('#popover-content').html();
+	    }
+	});
+}
 
 function sexValidation()
 {
@@ -218,9 +261,41 @@ function educationValidation()
 	});
 }
 
+function noChildrenValidation()
+{
+	$('.noChildren').keydown(function(event){
+		if(!(event.keyCode == 48 ||
+			event.keyCode == 49 || 
+			event.keyCode == 50  ||
+			event.keyCode == 51  ||
+			event.keyCode == 52  ||
+			event.keyCode == 53  ||
+			event.keyCode == 54  ||
+			event.keyCode == 55  ||
+			event.keyCode == 56  ||
+			event.keyCode == 57  ||
+			event.keyCode == 96  ||
+			event.keyCode == 97  || 
+			event.keyCode == 98  ||
+			event.keyCode == 99  ||
+			event.keyCode == 100 ||
+			event.keyCode == 101 ||
+			event.keyCode == 102 ||
+			event.keyCode == 103 ||
+			event.keyCode == 104 ||
+			event.keyCode == 105 ||
+			event.keyCode == 8   || 
+			event.keyCode == 9)) 
+		{
+			event.preventDefault();
+			return false;
+	    }
+	});
+}
+
 function methodValidation()
 {
-	$('.method8').keydown(function(event){
+	$('.method8').keyup(function(event){
 		if(!(event.keyCode == 48 ||
 			event.keyCode == 49  || 
 			event.keyCode == 50  ||
@@ -248,13 +323,21 @@ function methodValidation()
 			return false;
 	    }
 
+	    var val = $(this).val();
+
+	    if (val > 12) {
+	    	$(this).val('');
+	    	event.preventDefault();
+			return false;
+	    }
+
 	    if(!$(this).prop('required')) {
 	    	$(this).closest('tr').find('.require-this').attr('required', 'required');
 	    	$(this).closest('tr').find('.required').removeAttr('hidden', 'hidden');
 	    }
 	});
 
-	$('.method9').keydown(function(event){
+	$('.method9').keyup(function(event){
 		if(!(event.keyCode == 48 ||
 			event.keyCode == 49  || 
 			event.keyCode == 50  ||
@@ -279,6 +362,14 @@ function methodValidation()
 			event.keyCode == 9)) 
 		{
 			event.preventDefault();
+			return false;
+	    }
+
+	    var val = $(this).val();
+
+	    if (val > 12) {
+	    	$(this).val('');
+	    	event.preventDefault();
 			return false;
 	    }
 
@@ -321,8 +412,6 @@ function typeValidation()
 function statusValidation()
 {
 	$('.status-trad').keydown(function(event){
-		var index = $(this).closest('tr').find('input[name="slipIndex"]').val();
-
 		if(!(event.keyCode == 65 || 
 			event.keyCode == 66  ||
 			event.keyCode == 67  ||
@@ -333,19 +422,28 @@ function statusValidation()
 			event.preventDefault();
 			return false;
 	    }
+		
+		var index = $(this).closest('tr').find('input[class="slipIndex"]').val();
+	    var val = $(this).val();
+	    val = val.toUpperCase();
 
-	    if(event.keyCode == 65) {
+	    if(val == 'A') {
+	    	$(this).closest('tr').find('.intention-use').attr('required', 'required');
+	    	$(this).closest('tr').find('.intention-required').removeAttr('hidden', 'hidden');
 	    	$(this).closest('tr').find('input[name="intention_use['+index+']"]').removeAttr('disabled', 'disabled');
 	    	intentionStatusValidation(index);
 	    } else {
+	    	$(this).closest('tr').find('.intention-use').removeAttr('required', 'required');
+	    	$(this).closest('tr').find('.intention-required').attr('hidden', 'hidden');
 	    	$(this).closest('tr').find('input[name="intention_use['+index+']"]').attr('disabled', 'disabled');
-	    }
+	    }    
+
 	});
 }
 
 function intentionStatusValidation()
 {
-	$('.intention_use').keydown(function(event){
+	$('.intention-use').keydown(function(event){
 		if(!(event.keyCode == 49 || 
 			event.keyCode == 50  ||
 			event.keyCode == 51  ||
@@ -488,239 +586,478 @@ function getBrgys(muniId)
 
 function getDataDuplicate()
 {
-	var row1 = 1;
-	var row2 = 2;
-
 	$('.fname1').keyup(function(){
-		var fname = $(this).val();
-		var lname = $(this).closest('tr').find('.lname1').val();
-		var extname = $(this).closest('tr').find('.extname1').val();
-		var sex = $(this).closest('tr').find('.gender1').val();
-		var sex = sex.toUpperCase();
+		var fname1 = $(this).val();
+		var lname1 = $(this).closest('tr').find('.lname1').val();
+		var extname1 = $(this).closest('tr').find('.extname1').val();
+		var sex1 = $(this).closest('tr').find('.gender1').val();
+		var sex1 = sex1.toUpperCase();
 		
-		var bday = $(this).closest('tr').find('.bday1').val();
-		var dateArr = bday.split('-');
-		var month = $.trim(dateArr[0]);
-		var day = $.trim(dateArr[1]);
-		var year = $.trim(dateArr[2]);
-		var bday = year + '-' + month + '-' + day;
+		var bday1 = $(this).closest('tr').find('.bday1').val();
+		var dateArr1 = bday1.split('-');
+		var month1 = $.trim(dateArr1[0]);
+		var day1 = $.trim(dateArr1[1]);
+		var year1 = $.trim(dateArr1[2]);
+		var bday1 = year1 + '-' + month1 + '-' + day1;
+
+		var fname2 = $(this).closest('tr').next('.secondRow').find('.fname2').val();
+		var lname2 = $(this).closest('tr').next('.secondRow').find('.lname2').val();
+		var extname2 = $(this).closest('tr').next('.secondRow').find('.extname2').val();
+		var sex2 = $(this).closest('tr').next('.secondRow').find('.gender2').val();
+		var sex2 = sex2.toUpperCase();
+		
+		var bday2 = $(this).closest('tr').next('.secondRow').find('.bday2').val();
+		var dateArr2 = bday2.split('-');
+		var month2 = $.trim(dateArr2[0]);
+		var day2 = $.trim(dateArr2[1]);
+		var year2 = $.trim(dateArr2[2]);
+		var bday2 = year2 + '-' + month2 + '-' + day2;
 
 		var index = $(this).closest('tr').find('.loopIndex1').val();
 
-		autoGetData(fname, lname, extname, sex, bday, index, row1);
+		autoGetData(fname1, lname1, extname1, sex1, bday1, fname2, lname2, extname2, sex2, bday2, index);
+
+		if(!$(this).prop('required')) {
+	    	$(this).closest('tr').find('.require-this').attr('required', 'required');
+	    	$(this).closest('tr').find('.required').removeAttr('hidden', 'hidden');
+	    }
 	});
 
 	$('.lname1').keyup(function(){
-		var lname = $(this).val();
-		var fname = $(this).closest('tr').find('.fname1').val();
-		var extname = $(this).closest('tr').find('.extname1').val();
-		var sex = $(this).closest('tr').find('.gender1').val();
-		var sex = sex.toUpperCase();
+		var lname1 = $(this).val();
+		var fname1 = $(this).closest('tr').find('.fname1').val();
+		var extname1 = $(this).closest('tr').find('.extname1').val();
+		var sex1 = $(this).closest('tr').find('.gender1').val();
+		var sex1 = sex1.toUpperCase();
 		
-		var bday = $(this).closest('tr').find('.bday1').val();
-		var dateArr = bday.split('-');
-		var month = $.trim(dateArr[0]);
-		var day = $.trim(dateArr[1]);
-		var year = $.trim(dateArr[2]);
-		var bday = year + '-' + month + '-' + day;
+		var bday1 = $(this).closest('tr').find('.bday1').val();
+		var dateArr1 = bday1.split('-');
+		var month1 = $.trim(dateArr1[0]);
+		var day1 = $.trim(dateArr1[1]);
+		var year1 = $.trim(dateArr1[2]);
+		var bday1 = year1 + '-' + month1 + '-' + day1;
+
+		var fname2 = $(this).closest('tr').next('.secondRow').find('.fname2').val();
+		var lname2 = $(this).closest('tr').next('.secondRow').find('.lname2').val();
+		var extname2 = $(this).closest('tr').next('.secondRow').find('.extname2').val();
+		var sex2 = $(this).closest('tr').next('.secondRow').find('.gender2').val();
+		var sex2 = sex2.toUpperCase();
+		
+		var bday2 = $(this).closest('tr').next('.secondRow').find('.bday2').val();
+		var dateArr2 = bday2.split('-');
+		var month2 = $.trim(dateArr2[0]);
+		var day2 = $.trim(dateArr2[1]);
+		var year2 = $.trim(dateArr2[2]);
+		var bday2 = year2 + '-' + month2 + '-' + day2;
 
 		var index = $(this).closest('tr').find('.loopIndex1').val();
 
-		autoGetData(fname, lname, extname, sex, bday, index, row1);
+		autoGetData(fname1, lname1, extname1, sex1, bday1, fname2, lname2, extname2, sex2, bday2, index);
+
+		if(!$(this).prop('required')) {
+	    	$(this).closest('tr').find('.require-this').attr('required', 'required');
+	    	$(this).closest('tr').find('.required').removeAttr('hidden', 'hidden');
+	    }
 	});
 
 	$('.extname1').keyup(function(){
-		var extname = $(this).val();
-		var fname = $(this).closest('tr').find('.fname1').val();
-		var lname = $(this).closest('tr').find('.lname1').val();
-		var sex = $(this).closest('tr').find('.gender1').val();
-		var sex = sex.toUpperCase();
+		var extname1 = $(this).val();
+		var fname1 = $(this).closest('tr').find('.fname1').val();
+		var lname1 = $(this).closest('tr').find('.lname1').val();
+		var sex1 = $(this).closest('tr').find('.gender1').val();
+		var sex1 = sex1.toUpperCase();
 		
-		var bday = $(this).closest('tr').find('.bday1').val();
-		var dateArr = bday.split('-');
-		var month = $.trim(dateArr[0]);
-		var day = $.trim(dateArr[1]);
-		var year = $.trim(dateArr[2]);
-		var bday = year + '-' + month + '-' + day;
+		var bday1 = $(this).closest('tr').find('.bday1').val();
+		var dateArr1 = bday1.split('-');
+		var month1 = $.trim(dateArr1[0]);
+		var day1 = $.trim(dateArr1[1]);
+		var year1 = $.trim(dateArr1[2]);
+		var bday1 = year1 + '-' + month1 + '-' + day1;
+
+		var fname2 = $(this).closest('tr').next('.secondRow').find('.fname2').val();
+		var lname2 = $(this).closest('tr').next('.secondRow').find('.lname2').val();
+		var extname2 = $(this).closest('tr').next('.secondRow').find('.extname2').val();
+		var sex2 = $(this).closest('tr').next('.secondRow').find('.gender2').val();
+		var sex2 = sex2.toUpperCase();
+		
+		var bday2 = $(this).closest('tr').next('.secondRow').find('.bday2').val();
+		var dateArr2 = bday2.split('-');
+		var month2 = $.trim(dateArr2[0]);
+		var day2 = $.trim(dateArr2[1]);
+		var year2 = $.trim(dateArr2[2]);
+		var bday2 = year2 + '-' + month2 + '-' + day2;
 
 		var index = $(this).closest('tr').find('.loopIndex1').val();
 
-		autoGetData(fname, lname, extname, sex, bday, index, row1);
+		autoGetData(fname1, lname1, extname1, sex1, bday1, fname2, lname2, extname2, sex2, bday2, index);
 	});
 
 	$('.gender1').keyup(function(){
-		var sex = $(this).val();
-		var sex = sex.toUpperCase();
-		var fname = $(this).closest('tr').find('.fname1').val();
-		var lname = $(this).closest('tr').find('.lname1').val();
-		var extname = $(this).closest('tr').find('.extname1').val();
+		var sex1 = $(this).val();
+		var sex1 = sex1.toUpperCase();
+		var fname1 = $(this).closest('tr').find('.fname1').val();
+		var lname1 = $(this).closest('tr').find('.lname1').val();
+		var extname1 = $(this).closest('tr').find('.extname1').val();
 		
-		var bday = $(this).closest('tr').find('.bday1').val();
-		var dateArr = bday.split('-');
-		var month = $.trim(dateArr[0]);
-		var day = $.trim(dateArr[1]);
-		var year = $.trim(dateArr[2]);
-		var bday = year + '-' + month + '-' + day;
+		var bday1 = $(this).closest('tr').find('.bday1').val();
+		var dateArr1 = bday1.split('-');
+		var month1 = $.trim(dateArr1[0]);
+		var day1 = $.trim(dateArr1[1]);
+		var year1 = $.trim(dateArr1[2]);
+		var bday1 = year1 + '-' + month1 + '-' + day1;
+
+		var fname2 = $(this).closest('tr').next('.secondRow').find('.fname2').val();
+		var lname2 = $(this).closest('tr').next('.secondRow').find('.lname2').val();
+		var extname2 = $(this).closest('tr').next('.secondRow').find('.extname2').val();
+		var sex2 = $(this).closest('tr').next('.secondRow').find('.gender2').val();
+		var sex2 = sex2.toUpperCase();
+		
+		var bday2 = $(this).closest('tr').next('.secondRow').find('.bday2').val();
+		var dateArr2 = bday2.split('-');
+		var month2 = $.trim(dateArr2[0]);
+		var day2 = $.trim(dateArr2[1]);
+		var year2 = $.trim(dateArr2[2]);
+		var bday2 = year2 + '-' + month2 + '-' + day2;
 
 		var index = $(this).closest('tr').find('.loopIndex1').val();
 
-		autoGetData(fname, lname, extname, sex, bday, index, row1);
+		autoGetData(fname1, lname1, extname1, sex1, bday1, fname2, lname2, extname2, sex2, bday2, index);
 	});
 
 	$('.bday1').keyup(function(){
 		var bday1 = $(this).val();
 
-		dob = new Date(bday1);
-		var today = new Date();
-		var age = Math.floor((today-dob) / (365.25 * 24 * 60 * 60 * 1000));
+		dob1 = new Date(bday1);
+		var today1 = new Date();
+		var age1 = Math.floor((today1 - dob1) / (365.25 * 24 * 60 * 60 * 1000));
 
-		var dateArr = bday1.split('-');
+		var dateArr1 = bday1.split('-');
 
-		var month = $.trim(dateArr[0]);
-		var day = $.trim(dateArr[1]);
-		var year = $.trim(dateArr[2]);
+		var month1 = $.trim(dateArr1[0]);
+		var day1 = $.trim(dateArr1[1]);
+		var year1 = $.trim(dateArr1[2]);
 
-		var bday = year + '-' + month + '-' + day;
-		$(this).closest('td').find('.getAge1').val(age);
+		var bday1 = year1 + '-' + month1 + '-' + day1;
+		$(this).closest('td').find('.getAge1').val(age1);
+
+		var fname1 = $(this).closest('tr').find('.fname1').val();
+		var lname1 = $(this).closest('tr').find('.lname1').val();
+		var extname1 = $(this).closest('tr').find('.extname1').val();
+		var sex1 = $(this).closest('tr').find('.gender1').val();
+		var sex1 = sex1.toUpperCase();
+
+		var fname2 = $(this).closest('tr').next('.secondRow').find('.fname2').val();
+		var lname2 = $(this).closest('tr').next('.secondRow').find('.lname2').val();
+		var extname2 = $(this).closest('tr').next('.secondRow').find('.extname2').val();
+		var sex2 = $(this).closest('tr').next('.secondRow').find('.gender2').val();
+		var sex2 = sex2.toUpperCase();
+		
+		var bday2 = $(this).closest('tr').next('.secondRow').find('.bday2').val();
+		var dateArr2 = bday2.split('-');
+		var month2 = $.trim(dateArr2[0]);
+		var day2 = $.trim(dateArr2[1]);
+		var year2 = $.trim(dateArr2[2]);
+		var bday2 = year2 + '-' + month2 + '-' + day2;
 
 		var index = $(this).closest('tr').find('.loopIndex1').val();
-		var fname = $(this).closest('tr').find('.fname1').val();
-		var lname = $(this).closest('tr').find('.lname1').val();
-		var extname = $(this).closest('tr').find('.extname1').val();
-		var sex = $(this).closest('tr').find('.gender1').val();
-		var sex = sex.toUpperCase();
-		
-		autoGetData(fname, lname, extname, sex, bday, index, row1);
+
+		autoGetData(fname1, lname1, extname1, sex1, bday1, fname2, lname2, extname2, sex2, bday2, index);
 	});
 
 	$('.fname2').keyup(function(){
-		var fname = $(this).val();
-		var lname = $(this).closest('tr').find('.lname2').val();
-		var extname = $(this).closest('tr').find('.extname2').val();
-		var sex = $(this).closest('tr').find('.gender2').val();
-		var sex = sex.toUpperCase();
+		var fname2 = $(this).val();
+		var lname2 = $(this).closest('tr').find('.lname2').val();
+		var extname2 = $(this).closest('tr').find('.extname2').val();
+		var sex2 = $(this).closest('tr').find('.gender2').val();
+		var sex2 = sex2.toUpperCase();
 		
-		var bday = $(this).closest('tr').find('.bday2').val();
-		var dateArr = bday.split('-');
-		var month = $.trim(dateArr[0]);
-		var day = $.trim(dateArr[1]);
-		var year = $.trim(dateArr[2]);
-		var bday = year + '-' + month + '-' + day;
+		var bday2 = $(this).closest('tr').find('.bday2').val();
+		var dateArr2 = bday2.split('-');
+		var month2 = $.trim(dateArr2[0]);
+		var day2 = $.trim(dateArr2[1]);
+		var year2 = $.trim(dateArr2[2]);
+		var bday2 = year2 + '-' + month2 + '-' + day2;
+
+		var fname1 = $(this).closest('tr').prev('tr').find('.fname1').val();
+		var lname1 = $(this).closest('tr').prev('tr').find('.lname1').val();
+		var extname1 = $(this).closest('tr').prev('tr').find('.extname1').val();
+		var sex1 = $(this).closest('tr').prev('tr').find('.gender1').val();
+		var sex1 = sex1.toUpperCase();
+		
+		var bday1 = $(this).closest('tr').prev('tr').find('.bday1').val();
+		var dateArr1 = bday1.split('-');
+		var month1 = $.trim(dateArr1[0]);
+		var day1 = $.trim(dateArr1[1]);
+		var year1 = $.trim(dateArr1[2]);
+		var bday1 = year1 + '-' + month1 + '-' + day1;
 		
 		var index = $(this).closest('tr').find('.loopIndex2').val();
 
-		autoGetData(fname, lname, extname, sex, bday, index, row2);
+		autoGetData(fname1, lname1, extname1, sex1, bday1, fname2, lname2, extname2, sex2, bday2, index);
 	});
 
 	$('.lname2').keyup(function(){
-		var lname = $(this).val();
-		var fname = $(this).closest('tr').find('.fname2').val();
-		var extname = $(this).closest('tr').find('.extname2').val();
-		var sex = $(this).closest('tr').find('.gender2').val();
-		var sex = sex.toUpperCase();
+		var lname2 = $(this).val();
+		var fname2 = $(this).closest('tr').find('.fname2').val();
+		var extname2 = $(this).closest('tr').find('.extname2').val();
+		var sex2 = $(this).closest('tr').find('.gender2').val();
+		var sex2 = sex2.toUpperCase();
 		
-		var bday = $(this).closest('tr').find('.bday2').val();
-		var dateArr = bday.split('-');
-		var month = $.trim(dateArr[0]);
-		var day = $.trim(dateArr[1]);
-		var year = $.trim(dateArr[2]);
-		var bday = year + '-' + month + '-' + day;
+		var bday2 = $(this).closest('tr').find('.bday2').val();
+		var dateArr2 = bday2.split('-');
+		var month2 = $.trim(dateArr2[0]);
+		var day2 = $.trim(dateArr2[1]);
+		var year2 = $.trim(dateArr2[2]);
+		var bday2 = year2 + '-' + month2 + '-' + day2;
+
+		var fname1 = $(this).closest('tr').prev('tr').find('.fname1').val();
+		var lname1 = $(this).closest('tr').prev('tr').find('.lname1').val();
+		var extname1 = $(this).closest('tr').prev('tr').find('.extname1').val();
+		var sex1 = $(this).closest('tr').prev('tr').find('.gender1').val();
+		var sex1 = sex1.toUpperCase();
+		
+		var bday1 = $(this).closest('tr').prev('tr').find('.bday1').val();
+		var dateArr1 = bday1.split('-');
+		var month1 = $.trim(dateArr1[0]);
+		var day1 = $.trim(dateArr1[1]);
+		var year1 = $.trim(dateArr1[2]);
+		var bday1 = year1 + '-' + month1 + '-' + day1;
 
 		var index = $(this).closest('tr').find('.loopIndex2').val();
 
-		autoGetData(fname, lname, extname, sex, bday, index, row2);
+		autoGetData(fname1, lname1, extname1, sex1, bday1, fname2, lname2, extname2, sex2, bday2, index);
 	});
 
 	$('.extname2').keyup(function(){
-		var extname = $(this).val();
-		var fname = $(this).closest('tr').find('.fname2').val();
-		var lname = $(this).closest('tr').find('.lname2').val();
-		var sex = $(this).closest('tr').find('.gender2').val();
-		var sex = sex.toUpperCase();
+		var extname2 = $(this).val();
+		var fname2 = $(this).closest('tr').find('.fname2').val();
+		var lname2 = $(this).closest('tr').find('.lname2').val();
+		var sex2 = $(this).closest('tr').find('.gender2').val();
+		var sex2 = sex2.toUpperCase();
 		
-		var bday = $(this).closest('tr').find('.bday2').val();
-		var dateArr = bday.split('-');
-		var month = $.trim(dateArr[0]);
-		var day = $.trim(dateArr[1]);
-		var year = $.trim(dateArr[2]);
-		var bday = year + '-' + month + '-' + day;
+		var bday2 = $(this).closest('tr').find('.bday2').val();
+		var dateArr2 = bday2.split('-');
+		var month2 = $.trim(dateArr2[0]);
+		var day2 = $.trim(dateArr2[1]);
+		var year2 = $.trim(dateArr2[2]);
+		var bday2 = year2 + '-' + month2 + '-' + day2;
+
+		var fname1 = $(this).closest('tr').prev('tr').find('.fname1').val();
+		var lname1 = $(this).closest('tr').prev('tr').find('.lname1').val();
+		var extname1 = $(this).closest('tr').prev('tr').find('.extname1').val();
+		var sex1 = $(this).closest('tr').prev('tr').find('.gender1').val();
+		var sex1 = sex1.toUpperCase();
+		
+		var bday1 = $(this).closest('tr').prev('tr').find('.bday1').val();
+		var dateArr1 = bday1.split('-');
+		var month1 = $.trim(dateArr1[0]);
+		var day1 = $.trim(dateArr1[1]);
+		var year1 = $.trim(dateArr1[2]);
+		var bday1 = year1 + '-' + month1 + '-' + day1;
 
 		var index = $(this).closest('tr').find('.loopIndex2').val();
 
-		autoGetData(fname, lname, extname, sex, bday, index, row2);
+		autoGetData(fname1, lname1, extname1, sex1, bday1, fname2, lname2, extname2, sex2, bday2, index);
 	});
 
 	$('.gender2').keyup(function(){
-		var sex = $(this).val();
-		var sex = sex.toUpperCase();
-		var fname = $(this).closest('tr').find('.fname2').val();
-		var lname = $(this).closest('tr').find('.lname2').val();
-		var extname = $(this).closest('tr').find('.extname2').val();
+		var sex2 = $(this).val();
+		var sex2 = sex2.toUpperCase();
+		var fname2 = $(this).closest('tr').find('.fname2').val();
+		var lname2 = $(this).closest('tr').find('.lname2').val();
+		var extname2 = $(this).closest('tr').find('.extname2').val();
 		
-		var bday = $(this).closest('tr').find('.bday2').val();
-		var dateArr = bday.split('-');
-		var month = $.trim(dateArr[0]);
-		var day = $.trim(dateArr[1]);
-		var year = $.trim(dateArr[2]);
-		var bday = year + '-' + month + '-' + day;
+		var bday2 = $(this).closest('tr').find('.bday2').val();
+		var dateArr2 = bday2.split('-');
+		var month2 = $.trim(dateArr2[0]);
+		var day2 = $.trim(dateArr2[1]);
+		var year2 = $.trim(dateArr2[2]);
+		var bday2 = year2 + '-' + month2 + '-' + day2;
+
+		var fname1 = $(this).closest('tr').prev('tr').find('.fname1').val();
+		var lname1 = $(this).closest('tr').prev('tr').find('.lname1').val();
+		var extname1 = $(this).closest('tr').prev('tr').find('.extname1').val();
+		var sex1 = $(this).closest('tr').prev('tr').find('.gender1').val();
+		var sex1 = sex1.toUpperCase();
+		
+		var bday1 = $(this).closest('tr').prev('tr').find('.bday1').val();
+		var dateArr1 = bday1.split('-');
+		var month1 = $.trim(dateArr1[0]);
+		var day1 = $.trim(dateArr1[1]);
+		var year1 = $.trim(dateArr1[2]);
+		var bday1 = year1 + '-' + month1 + '-' + day1;
 
 		var index = $(this).closest('tr').find('.loopIndex2').val();
 
-		autoGetData(fname, lname, extname, sex, bday, index, row2);
+		autoGetData(fname1, lname1, extname1, sex1, bday1, fname2, lname2, extname2, sex2, bday2, index);
 	});
 
 	$('.bday2').keyup(function(){
 		var bday2 = $(this).val();
 
-		dob = new Date(bday2);
-		var today = new Date();
-		var age = Math.floor((today-dob) / (365.25 * 24 * 60 * 60 * 1000));
+		dob2 = new Date(bday2);
+		var today2 = new Date();
+		var age2 = Math.floor((today2 - dob2) / (365.25 * 24 * 60 * 60 * 1000));
 
-		var dateArr = bday2.split('-');
+		var dateArr2 = bday2.split('-');
 
-		var month = $.trim(dateArr[0]);
-		var day = $.trim(dateArr[1]);
-		var year = $.trim(dateArr[2]);
+		var month2 = $.trim(dateArr2[0]);
+		var day2 = $.trim(dateArr2[1]);
+		var year2 = $.trim(dateArr2[2]);
 
-		var bday = year + '-' + month + '-' + day;
-		$(this).closest('td').find('.getAge2').val(age);
+		var bday2 = year2 + '-' + month2 + '-' + day2;
+		$(this).closest('td').find('.getAge2').val(age2);
 
-		var index = $(this).closest('tr').find('.loopIndex2').val();
-		var fname = $(this).closest('tr').find('.fname2').val();
-		var lname = $(this).closest('tr').find('.lname2').val();
-		var extname = $(this).closest('tr').find('.extname2').val();
-		var sex = $(this).closest('tr').find('.gender2').val();
-		var sex = sex.toUpperCase();
+		var index2 = $(this).closest('tr').find('.loopIndex2').val();
+		var fname2 = $(this).closest('tr').find('.fname2').val();
+		var lname2 = $(this).closest('tr').find('.lname2').val();
+		var extname2 = $(this).closest('tr').find('.extname2').val();
+		var sex2 = $(this).closest('tr').find('.gender2').val();
+		var sex2 = sex2.toUpperCase();
+
+		var fname1 = $(this).closest('tr').prev('tr').find('.fname1').val();
+		var lname1 = $(this).closest('tr').prev('tr').find('.lname1').val();
+		var extname1 = $(this).closest('tr').prev('tr').find('.extname1').val();
+		var sex1 = $(this).closest('tr').prev('tr').find('.gender1').val();
+		var sex1 = sex1.toUpperCase();
 		
-		autoGetData(fname, lname, extname, sex, bday, index, row2);
+		var bday1 = $(this).closest('tr').prev('tr').find('.bday1').val();
+		var dateArr1 = bday1.split('-');
+		var month1 = $.trim(dateArr1[0]);
+		var day1 = $.trim(dateArr1[1]);
+		var year1 = $.trim(dateArr1[2]);
+		var bday1 = year1 + '-' + month1 + '-' + day1;
+		
+		var index = $(this).closest('tr').find('.loopIndex2').val();
+
+		autoGetData(fname1, lname1, extname1, sex1, bday1, fname2, lname2, extname2, sex2, bday2, index);
 	});
 }
 
-function autoGetData(fname, lname, extname, sex, bday, index, row)
+function autoGetData(fname1, lname1, extname1, sex1, bday1, fname2, lname2, extname2, sex2, bday2, index)
 {
-	if (sex === 'F') {
-		sex = 2;
-	} else if(sex === 'M') {
-		sex = 1;
+	var status = '';
+	if (sex1 === 'F' && sex2 === 'M') {
+		var h_fname = fname2;
+		var h_lname = lname2;
+		var h_extname = extname2;
+		var h_bday = bday2;
+		var w_fname = fname1;
+		var w_lname = lname1;
+		var w_bday = bday1;
+	} else if(sex2 === 'F' && sex1 === 'M') {
+		var h_fname = fname1;
+		var h_lname = lname1;
+		var h_extname = extname1;
+		var h_bday = bday1;
+		var w_fname = fname2;
+		var w_lname = lname2;
+		var w_bday = bday2;
 	} else {
-		sex = 0;
+		return false;
 	}
 
-	$.post(base_url + 'forms/checkCoupleDuplicate', {
-		'firstname' : fname, 
-		'surname' 	: lname, 
-		'extname' 	: extname, 
-		'sex' 		: sex, 
-		'bday' 		: bday
+	$.ajax({
+			type : 'POST',
+			cache : true,
+			url : base_url + 'forms/checkCoupleDuplicate',
+			data : {
+				'h_fname'	: h_fname, 
+				'h_lname' 	: h_lname, 
+				'h_ext' 	: h_extname,
+				'h_bday'	: h_bday,
+				'w_fname'	: w_fname,
+				'w_lname'	: w_lname,
+				'w_bday'	: w_bday
+			}
 	}).done(function(result){
-		if (result === '1') {
-			$('.tr'+ row + + index + ' td').addClass('has-duplicate');
-			$('.tr'+ row + + index + ' td input').addClass('has-duplicate');
-			$('.tr'+ row + + index + ' td textarea').addClass('has-duplicate');
+		console.log(result);
+		if (result.ActiveStatus === 2) {
+			status = 'Pending';
+		} else if (result.ActiveStatus === 0) {
+			status = 'Approve';
 		} else {
-			$('.tr'+ row + + index + ' td').removeClass('has-duplicate');
-			$('.tr'+ row + + index + ' td input').removeClass('has-duplicate');
-			$('.tr'+ row + + index + ' td textarea').removeClass('has-duplicate');
+			status;
+		}
+
+		$('.tr1' + index + ' td #popover-content').find('.couple-status').text(status); // remove before push
+		
+		if (result.CheckCount >= 1) {
+			$('.tr1' + index + ' td:nth-child(1)').addClass('has-duplicate');
+			$('.tr2' + index + ' td:nth-child(1)').addClass('has-duplicate');
+
+			$('.tr1' + index + ' td:nth-child(2)').addClass('has-duplicate');
+			$('.tr2' + index + ' td:nth-child(2)').addClass('has-duplicate');
+
+			$('.tr1' + index + ' td:nth-child(3)').addClass('has-duplicate');
+			$('.tr2' + index + ' td:nth-child(3)').addClass('has-duplicate');
+
+			$('.tr1' + index + ' td:nth-child(4)').addClass('has-duplicate');
+			$('.tr2' + index + ' td:nth-child(4)').addClass('has-duplicate');
+
+			$('.tr1' + index + ' td:nth-child(5)').addClass('has-duplicate');
+
+			$('.tr1' + index + ' td .extname1').addClass('has-duplicate');
+			$('.tr2' + index + ' td .extname2').addClass('has-duplicate');
+
+			$('.tr1' + index + ' td .gender1').addClass('has-duplicate');
+			$('.tr2' + index + ' td .gender2').addClass('has-duplicate');
+
+			$('.tr1' + index + ' td .bday1').addClass('has-duplicate');
+			$('.tr2' + index + ' td .bday2').addClass('has-duplicate');
+
+			$('.tr1' + index + ' td .civil1').addClass('has-duplicate');
+			$('.tr2' + index + ' td .civil2').addClass('has-duplicate');
+
+			$('.tr1' + index + ' td .getAge1').addClass('has-duplicate');
+			$('.tr2' + index + ' td .getAge2').addClass('has-duplicate');
+
+			$('.tr1' + index + ' td textarea').addClass('has-duplicate');
+			$('.tr2' + index + ' td textarea').addClass('has-duplicate');
+
+			$('.tr1' + index + ' td .duplicateBtn').removeAttr('hidden');
+
+			$('.tr1' + index + ' td #popover-content').find('.fill-husband').text(result.Husband);
+			$('.tr1' + index + ' td #popover-content').find('.fill-wife').text(result.Wife);
+
+			// $('.tr1' + index + ' td .button-fill').click(function(){
+			// 	console.log('hhe');
+			// });
+
+			// $('.tr1' + index + ' td #popover-content').find('.couple-status').text(status);
+		} else {
+
+			$('.tr1' + index + ' td:nth-child(1)').removeClass('has-duplicate');
+			$('.tr2' + index + ' td:nth-child(1)').removeClass('has-duplicate');
+
+			$('.tr1' + index + ' td:nth-child(2)').removeClass('has-duplicate');
+			$('.tr2' + index + ' td:nth-child(2)').removeClass('has-duplicate');
+
+			$('.tr1' + index + ' td:nth-child(3)').removeClass('has-duplicate');
+			$('.tr2' + index + ' td:nth-child(3)').removeClass('has-duplicate');
+
+			$('.tr1' + index + ' td:nth-child(4)').removeClass('has-duplicate');
+			$('.tr2' + index + ' td:nth-child(4)').removeClass('has-duplicate');
+
+			$('.tr1' + index + ' td:nth-child(5)').removeClass('has-duplicate');
+
+			$('.tr1' + index + ' td .extname1').removeClass('has-duplicate');
+			$('.tr2' + index + ' td .extname2').removeClass('has-duplicate');
+
+			$('.tr1' + index + ' td .gender1').removeClass('has-duplicate');
+			$('.tr2' + index + ' td .gender2').removeClass('has-duplicate');
+
+			$('.tr1' + index + ' td .bday1').removeClass('has-duplicate');
+			$('.tr2' + index + ' td .bday2').removeClass('has-duplicate');
+
+			$('.tr1' + index + ' td .civil1').removeClass('has-duplicate');
+			$('.tr2' + index + ' td .civil2').removeClass('has-duplicate');
+
+			$('.tr1' + index + ' td .getAge1').removeClass('has-duplicate');
+			$('.tr2' + index + ' td .getAge2').removeClass('has-duplicate');
+
+			$('.tr1' + index + ' td textarea').removeClass('has-duplicate');
+			$('.tr2' + index + ' td textarea').removeClass('has-duplicate');
 		}
 	});
 }
@@ -803,14 +1140,13 @@ function saveForm1()
 			timer: 3000
 		});
 		
+		fill_memory_from_page(current_page());
 		var formData = {};
 		/** iterate all inputs/textarea */
 		$.each( $('#form_validation input, #form_validation textarea'), function(key, value) {
 			formData[$(value).attr('name')] = $(value).val();
 		});
-		
-		//var formData = $('#form_validation').serialize();
-		
+				
 		$.ajax({
 			type: 'POST',
 			dataType: 'JSON',
@@ -847,9 +1183,15 @@ function checkBox()
 
 
 $(document).ready(function(){
+	var all_input="";
+	$.each($('#paged_form textarea, #paged_form input[type="text"]'), function() {
+		all_input += $(this).val();
+	});
+	if (($('#new_form').val() != undefined)) {
+		reset_page_storage();
+	}
 	var current = current_page();
 	var total_pages = num_pages();
-
 
 	if (current > 0) {
 		fill_page_from_memory(current);
@@ -899,6 +1241,11 @@ $(document).ready(function(){
 		var total_pages = num_pages();
 		update_pages(current, total_pages);
 	});
+
+	$('input[type=checkbox] + span').click(function(){
+		var current_value = $($(this).siblings('input[type=checkbox]')[0]).val();
+		$($(this).siblings('input[type=checkbox]')[0]).val(current_value == 'attended' ? "" : 'attended');
+	});
 });
 
 function current_page(page_num=null) {
@@ -929,11 +1276,12 @@ function reset_page_storage() {
 }
 
 function clear_form() {
-	// $('form')[0].reset();
-	$('#paged_form input[type="checkbox"]').attr('checked', 'false');
+	$('#paged_form input[type="checkbox"]').attr('checked', false);
+	$('#paged_form input[type="checkbox"]').val('');
 	$('#paged_form input[type="hidden"]').not($('.loopIndex1')).not($('[name="slipIndex"')).val('');
 	$('#paged_form textarea').val('');
 	$('#paged_form input[type="text"]').val('');
+	
 }
 
 function fill_memory_from_page(page_num) {
@@ -941,7 +1289,7 @@ function fill_memory_from_page(page_num) {
 
 	/** iterate all inputs/textarea */
 	$.each( $('#paged_form input, #paged_form textarea'), function(key, value) {
-		data_array[$(value).attr('name')] = $(value).val();
+		data_array[$(value).prop('name')] = $(value).val();
 	});
 
 	/** convert to jason */
@@ -957,8 +1305,11 @@ function fill_page_from_memory(page_num) {
 
 	/** load page if not empty*/
 	if (array_data != null) {
-		/** iterate and save to all inputs/textarea */
+	/** iterate and save to all inputs/textarea */
 		$.each(array_data, function(key, value) {
+			if (key.indexOf('attendee') == 0) {
+				$($('#paged_form input[name="' + key + '"]')[0]).prop('checked', value=='attended');
+			}
 			$($('#paged_form input[name="' + key + '"], #paged_form textarea[name="' + key + '"]')[0]).val(value);
 		});
 	}
@@ -967,3 +1318,11 @@ function fill_page_from_memory(page_num) {
 function update_pages(page_num, total_pages) {
 	$("#pager").html("Page " + page_num + " of " + total_pages);
 }
+
+$(document).ready(function() {
+	$('#new_form_1').click(function() {
+		if (confirm('Changes will be LOST!!!, proceed to NEW FORM?')) {
+			window.location.href = base_url + "/Forms/new";
+		}
+	});
+});

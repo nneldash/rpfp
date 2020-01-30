@@ -47,10 +47,10 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 	</style>
 <?php } ?>
 
-
+<?= !empty($is_new) ? '<div class="hidden" id="is_new"></div>' : BLANK ?>
 <link href="<?= base_url('assets/css/form.css') ?>" rel="stylesheet">
 <input type="hidden" id="rdm" name="rdm" value="<?= $isRegionalDataManager; ?>" />
-<input type="hidden" id="focal" id="focal" value="<?= $isFocalPerson; ?>" />
+<input type="hidden" id="focal" name="focal" value="<?= $isFocalPerson; ?>" />
 <div class="container-fluid text-center">
 	<a href="#" class="previous">&laquo; Previous</a>
 	<a href="#" class="next">Next &raquo;</a>
@@ -98,7 +98,7 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 							<span class="caret"></span>
 						</button>
 						<ul class="dropdown-menu">
-							<li><a href="<?= base_url('forms')?>">New Form 1</a></li>
+							<li><a href="#" id="new_form_1" >New Form 1</a></li>
 							<?php if($isEncoder): ?>
 								<li><a class="btn-import">Import Excel</a></li>
 							<?php endif; ?>
@@ -438,17 +438,20 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 							<?php
 								$ListCouples = $form1->ListCouple;
 								$max = count($ListCouples);
+								$i = 0;
 
 								if($max < 10) {
 									$max = 10;
 								}
 
 								for ($i = 0; $i < $max; $i++) { 
+
 									$dummy = new CoupleClass();
 									$couple = (empty($form1->ListCouple[$i]) ? $dummy : $form1->ListCouple[$i]);
 
 									$bday = 'N/A';
 									$bday2 = 'N/A';
+
 									if ($couple->FirstEntry->Birthdate != 'N/A') {
 										$bday = explode('-', $couple->FirstEntry->Birthdate);
 										$bday = $bday[1].'-'.$bday[2].'-'.$bday[0];
@@ -478,7 +481,7 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 									<td class="small">
 										<div style="display: inline-flex; border: 1px solid transparent;">
 											<input type="hidden" id="isDuplicate1[<?= $i; ?>]" name="isDuplicate1[<?= $i; ?>]" value="" />
-											<input type="hidden" class="loopIndex1" name="loopIndex1" value="<?= $i;?>" />
+											<input type="hidden" class="loopIndex1" name="loopIndex1" value="<?= $i; ?>" />
 											<?php
 					                            echo HtmlHelper::inputPdf(
 					                                $is_pdf,
@@ -601,6 +604,27 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 					                        ?>
 					                        <span style="padding-top: 15px">/</span>
 					                        <input type="text" name="age1[<?=$i?>]" maxlength="2" class="text-center getAge1" style="width: 50%;" readonly value="<?= HtmlHelper::firstEntry_BirthAge($couple->FirstEntry->Age, $couple->SecondEntry->Age) ?>" />
+
+					                        <div class="duplicateBtn" hidden>
+						                        <button data-placement="right" data-toggle="popover" data-container="body" data-placement="left" data-html="true" title="Possible Duplicate in">
+						                        	<i class="fa fa-exclamation-circle" style="color: #e2919f;"></i>
+						                        </button>					                        	
+					                        </div>
+
+					                        <style>
+					                        	
+					                        </style>
+
+					                        <div id="popover-content" class="hide">
+				                        		<p>
+													<u>
+														<b class="couple-status"></b>
+													</u>
+												</p>
+												<p>Husband: <span class="fill-husband"></span></p>
+												<p>Wife: <span class="fill-wife"></span></p>
+												<p class="button-fill">Autofill data</p>
+					                        </div>
 										</div>								
 									</td>
 									<td class="small text-center" rowspan="2">										
@@ -670,7 +694,7 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 				                            	($couple->NumberOfChildren != 'N/A' ? $couple->NumberOfChildren : ''),
 				                                "text",
 				                                "no_of_children[".$i."]",
-				                                "height-50 text-center",
+				                                "height-50 text-center noChildren",
 												"2",
 												"",
 												""
@@ -733,7 +757,10 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 												""
 				                            );
 				                        ?>
-				                        <input type="text" disabled value="<?= ($couple->TraditionalFp->IntentionUse != 'N/A' ? $couple->TraditionalFp->IntentionUse : ''); ?>" class="height-50 text-center intention-use" maxlength="1" name="intention_use[<?= $i; ?>]" />
+				                        <div style="display: inline-flex">
+					                        <span style="color: red" class="intention-required" hidden>*</span>
+					                        <input type="text" disabled value="<?= ($couple->TraditionalFp->IntentionUse != 'N/A' ? $couple->TraditionalFp->IntentionUse : ''); ?>" class="height-50 text-center intention-use" maxlength="1" name="intention_use[<?= $i; ?>]" />
+				                        </div>
 									</td>
 									<td class="small-20 text-center" rowspan="2">
 										<?php
@@ -752,7 +779,7 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 									<td class="small <?php if (!$is_pdf): ?> back-eee <?php endif;?>" style="border-right: none; padding: 0">
 										<?php if (!$is_pdf) : ?>
 											<label class="cont">
-												<input type="checkbox" name="type[<?= $i ?>]" value="attended" <?= ($couple->FirstEntry->Attendee == 1) ? 'checked' : '' ?> />
+												<input type="checkbox" name="attendee1[<?= $i ?>]" value="attended" <?= ($couple->FirstEntry->Attendee == 1) ? 'checked' : '' ?> />
 												<span class="checkmark height-34"></span>
 											</label>
 										<?php endif; ?>
@@ -760,7 +787,7 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 									<?php if(!$is_pdf): ?>
 										<?php if($isEncoder): ?>
 											<td class="small text-center" rowspan="2">
-												<input type="hidden" name="slipIndex" value="<?= $i; ?>">
+												<input type="hidden" class="slipIndex" name="slipIndex" value="<?= $i; ?>">
 												<button class="btn-slip" data-couple="<?= $couple->Id; ?>" data-couple-name="<?= HtmlHelper::firstEntry_Name($couple->FirstEntry->Name, $couple->SecondEntry->Name); ?>" data-address="<?= $couple->Address_St; ?>" data-toggle="tooltip" data-placement="left" title="View Service Slip">
 													<i class="fa fa-file"></i>
 												</button>
@@ -902,8 +929,8 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 									<td class="small back-eee" style="border-right: none; padding: 0">
 										<?php if (!$is_pdf) : ?>
 											<label class="cont">
-												<input type="checkbox" name="type2[<?= $i ?>]" value="attended" <?= ($couple->SecondEntry->Attendee == 1) ? 'checked' : '' ?> />
-												<span class="checkmark height-35"></span>
+												<input type="checkbox" name="attendee2[<?= $i ?>]" value="attended" <?= ($couple->SecondEntry->Attendee == 1) ? 'checked' : '' ?> />
+												<span class="checkmark height-35" ></span>
 											</label>
 										<?php endif; ?>
 									</td>

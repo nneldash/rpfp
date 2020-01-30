@@ -24,14 +24,15 @@ class FormModel extends BaseModel
 
     public function saveForm1(FormInterface $form)
     {
+        $error = BLANK;
         $class_id = $this->saveSeminar($form->Seminar);
 
-        if ($class_id == 'INVALID LOCATION') {
-            return 'error1';
-            exit;
+        if (empty($class_id)) {
+            $error = 'error0';
+        } elseif ($class_id == 'INVALID LOCATION') {
+            $error = 'error1';
         } elseif ($class_id == 'INVALID ROLE') {
-            return 'error2';
-            exit;
+            $error = 'error2';
         } elseif ($class_id == 'SAVE SUCCESSFUL') {
             $class_id = $form->Seminar->ClassId;
         } else {
@@ -39,19 +40,15 @@ class FormModel extends BaseModel
             $class_id = $class_id[2];
         }
 
-        if (!$class_id) {
-            /** return exception or error message */
-            return;
+        if (empty($error)) {
+            $couple = $this->saveCouple($class_id, $form->ListCouple);
         }
-        // print_r($class_id);exit;
-       $couple = $this->saveCouple($class_id, $form->ListCouple);
         
-       if (!$couple) {
-           return false;
-       }
+        if (empty($couple)) {
+           $error = 'error3';
+        }
 
-       return true;
-
+       return $error;
     }
 
     public function saveSeminar(SeminarInterface $data)
@@ -70,13 +67,12 @@ class FormModel extends BaseModel
         return $this->saveToDb($method, $params);
     }
 
-    public function saveCouple(int $class_id, ListCoupleInterface $listCouple)
+    private function saveCouple(int $class_id, ListCoupleInterface $listCouple)
     {
+        $errors = BLANK;
         foreach ($listCouple as $current_couple) {
             $couple = CoupleClass::getFromVariable($current_couple);
-
             $method = "encoder_save_couple";
-
             $params1 = [
                 $couple->Id == N_A ? BLANK : $couple->Id,
                 $class_id == 0 ? BLANK : $class_id,
@@ -89,9 +85,12 @@ class FormModel extends BaseModel
             ];
 
             $couple_id = $this->saveToDb($method, $params1);
-
-            if ($couple_id == "CANNOT SAVE RECORD WITH GIVEN PARAMETERS") {
-                return false;
+            if (empty($couple_id)) {
+                $errors = "DB ERROR SAVE COUPLE";
+                break;
+            } elseif ($couple_id == "CANNOT SAVE RECORD WITH GIVEN PARAMETERS") {
+                $errors = "INVALID PARAMETERS";
+                break;
             } elseif ($couple_id == "UPDATE SUCCESS!") {
                 $couple_id = $couple->Id;
             } else {
@@ -127,7 +126,11 @@ class FormModel extends BaseModel
                 $wife->HighestEducation == N_A ? BLANK : $wife->HighestEducation,
                 $wife->Attendee == N_A ? BLANK : $wife->Attendee
             ];
-            $this->saveToDb($method2, $params2);
+            $indiv = $this->saveToDb($method2, $params2);
+            if (empty($indiv)) {
+                $errors = "DB ERROR INDIVIDUALS";
+                break;
+            }
 
             $modern = $couple->ModernFp;
             $traditional = $couple->TraditionalFp;
@@ -145,8 +148,13 @@ class FormModel extends BaseModel
                 $traditional->ReasonForUse == N_A ? BLANK : $traditional->ReasonForUse
             ];
 
-           $this->saveToDb($method3, $params3);
+            $fp_details = $this->saveToDb($method3, $params3);
+            if (empty($indiv)) {
+                $errors = "DB ERROR FP DETAILS";
+                break;
+            }
         }
+        return $errors;
     }
 
     public function saveServiceSlip(int $couple_id, ServiceSlipInterface $data)
@@ -428,19 +436,33 @@ class FormModel extends BaseModel
 
     public function getDuplicateCouple() : DuplicateCoupleInterface
     {
-        $firstname  = $this->input->post('firstname');
-        $surname    = $this->input->post('surname');
-        $extname    = $this->input->post('extname');
-        $bday       = $this->input->post('bday');
-        $sex        = $this->input->post('sex');
+        $h_fname    = $this->input->post('h_fname');
+        $h_lname    = $this->input->post('h_lname');
+        $h_extname  = $this->input->post('h_extname');
+        $h_bday     = $this->input->post('h_bday');
+        $w_fname    = $this->input->post('w_fname');
+        $w_lname    = $this->input->post('w_lname');
+        $w_bday     = $this->input->post('w_bday');
 
         return $this->fromDbGetSpecific(
             'DuplicateCoupleClass',
             array(
-                'CheckDetails' => 'check_details'
+                'CheckDetails' => 'check_details',
+                'CouplesId' => 'couplesid',
+                'ActiveStatus' => 'active_status',
+                'H_Last' => 'h_last',
+                'H_First' => 'h_first',
+                'H_Ext' => 'h_ext',
+                'H_Bday' => 'h_bday',
+                'H_Sex' => 'h_sex',
+                'W_CouplesId' => 'w_couplesid',
+                'W_Last' => 'w_last',
+                'W_First' => 'w_first',
+                'W_Bday' => 'w_bday',
+                'W_Sex' => 'w_sex'
             ),
-            'encoder_check_couples_details',
-            array($firstname, $surname, $extname, $bday, $sex)
+            'check_couples_details',
+            array($h_fname, $h_lname, $h_extname, $h_bday, $w_fname, $w_lname, $w_bday)
         );
     }
 }

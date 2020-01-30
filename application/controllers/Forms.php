@@ -36,6 +36,7 @@ class Forms extends CI_Controller
         $status = $this->input->get('status');
         
         $form1 = $this->FormModel->getForm1($classId,$status);
+        $form1 = FormClass::getFromVariable($form1);
 
         $this->load->model('ProfileModel');
         $profile = $this->ProfileModel->getOwnProfile();
@@ -50,6 +51,12 @@ class Forms extends CI_Controller
         $isRegionalDataManager = $profile->isRegionalDataManager();
         $isFocalPerson = $profile->isFocal();
 
+        $is_new = BLANK;
+        if (isset($_SESSION[IS_NEW])) {
+            $is_new = IS_NEW;
+            unset($_SESSION[IS_NEW]);
+        }
+
         $this->load->view('includes/header', $header);
         $this->load->view('forms/form1', 
             array(
@@ -57,7 +64,8 @@ class Forms extends CI_Controller
                 'is_pdf' => false,
                 'isEncoder' => $isEncoder,
                 'isRegionalDataManager' => $isRegionalDataManager,
-                'isFocalPerson' => $isFocalPerson
+                'isFocalPerson' => $isFocalPerson,
+                'is_new' => $is_new
             )
         );
         $this->load->view('includes/footer');
@@ -66,21 +74,23 @@ class Forms extends CI_Controller
         PageHandler::setCurrentPage();
     }
 
+    public function new()
+    {
+        $_SESSION[IS_NEW] = IS_NEW;
+        redirect('Forms');
+    }
+
     public function saveForm1()
     {
-        // echo '<pre>';
-        // print_r($_POST);exit;
         $form1 = new FormClass();
 
         $form1->Seminar = $this->getInputFromSeminar();
         $form1->ListCouple = $this->getInputFromListCouples();
-        echo '<pre>';
-        print_r($form1->Seminar);exit;
-        // print_r($this->FormModel->saveForm1($form1));exit;
-        if (!$this->FormModel->saveForm1($form1)) {
-            $data = ['is_save' => false];
+        $errors = $this->FormModel->saveForm1($form1);
+        if (!empty($errors)) {
+            $data = ['is_save' => false, 'message' => $errors];
         } else {
-            $data = ['is_save' => true];
+            $data = ['is_save' => true, 'message' => "SUCCESS!!!"];
         }
 
         $this->output
@@ -146,17 +156,17 @@ class Forms extends CI_Controller
 
         $individual->Id = $this->input->post('individual_id1')[$i];
         
-        $individual->Name->Surname      = (empty($this->input->post('lastname1')[$i]) ? "" : $this->input->post('lastname1')[$i]);
-        $individual->Name->Firstname    = (empty($this->input->post('firstname1')[$i]) ? "" : $this->input->post('firstname1')[$i]);
-        $individual->Name->Middlename   = (empty($this->input->post('middlename1')[$i]) ? "" : $this->input->post('middlename1')[$i]);
-        $individual->Name->Extname      = (empty($this->input->post('extname1')[$i]) ? "" : $this->input->post('extname1')[$i]);
+        $individual->Name->Surname      = (empty($this->input->post('lastname1')[$i]) ? BLANK : $this->input->post('lastname1')[$i]);
+        $individual->Name->Firstname    = (empty($this->input->post('firstname1')[$i]) ? BLANK : $this->input->post('firstname1')[$i]);
+        $individual->Name->Middlename   = (empty($this->input->post('middlename1')[$i]) ? BLANK : $this->input->post('middlename1')[$i]);
+        $individual->Name->Extname      = (empty($this->input->post('extname1')[$i]) ? BLANK : $this->input->post('extname1')[$i]);
 
         $individual->Sex = $this->input->post('sex1')[$i];
         $individual->CivilStatus = $this->input->post('civil_status1')[$i];
         $individual->Birthdate = $this->input->post('bday1')[$i];
         $individual->Age = $this->input->post('age1')[$i];
         $individual->HighestEducation = $this->input->post('educ1')[$i];
-        $individual->Attendee = 'Yes';
+        $individual->Attendee = $this->input->post('attendee1')[$i];
 
         return $individual;
     }
@@ -171,17 +181,17 @@ class Forms extends CI_Controller
 
         $individual->Id = $this->input->post('individual_id2')[$i];
 
-        $individual->Name->Surname      = (empty($this->input->post('lastname2')[$i]) ? "" : $this->input->post('lastname2')[$i]);
-        $individual->Name->Firstname    = (empty($this->input->post('firstname2')[$i]) ? "" : $this->input->post('firstname2')[$i]);
-        $individual->Name->Middlename   = (empty($this->input->post('middlename2')[$i]) ? "" : $this->input->post('middlename2')[$i]);
-        $individual->Name->Extname      = (empty($this->input->post('extname2')[$i]) ? "" : $this->input->post('extname2')[$i]);
+        $individual->Name->Surname      = (empty($this->input->post('lastname2')[$i]) ? BLANK : $this->input->post('lastname2')[$i]);
+        $individual->Name->Firstname    = (empty($this->input->post('firstname2')[$i]) ? BLANK : $this->input->post('firstname2')[$i]);
+        $individual->Name->Middlename   = (empty($this->input->post('middlename2')[$i]) ? BLANK : $this->input->post('middlename2')[$i]);
+        $individual->Name->Extname      = (empty($this->input->post('extname2')[$i]) ? BLANK : $this->input->post('extname2')[$i]);
 
         $individual->Sex = $this->input->post('sex2')[$i];
         $individual->CivilStatus = $this->input->post('civil_status2')[$i];
         $individual->Birthdate = $this->input->post('bday2')[$i];
         $individual->Age = $this->input->post('age2')[$i];
         $individual->HighestEducation = $this->input->post('educ2')[$i];
-        $individual->Attendee = 'Yes';
+        $individual->Attendee = $this->input->post('attendee2')[$i];
 
         return $individual;
     }
@@ -437,8 +447,21 @@ class Forms extends CI_Controller
     public function checkCoupleDuplicate()
     {
         $this->load->model('FormModel');
-        $count = $this->FormModel->getDuplicateCouple();
+        $data = $this->FormModel->getDuplicateCouple();
 
-        echo $count->CheckDetails;
+        $husband = $data->H_First . ' ' . $data->H_Last;
+        $wife = $data->W_First . ' ' . $data->W_Last;
+
+        $data = [  
+                    'CheckCount' => $data->CheckDetails,
+                    'CouplesId' => $data->CouplesId,
+                    'ActiveStatus' => $data->ActiveStatus,
+                    'Husband' => $husband,
+                    'Wife' => $wife
+                ];
+
+        $this->output
+            ->set_content_type('application/json')
+            ->set_output(json_encode($data));
     }
 }
