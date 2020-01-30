@@ -13,6 +13,47 @@ if (empty($title)) {
 <link href="<?= base_url('assets/css/form.css'); ?>" rel="stylesheet" />
 
 <br>
+<form>
+    <p><b>LOCATION:</b></p>
+    <p>Province: <input type="text" name="province_search" style="width: 30%"></p>
+    <p>City/Municipality: <input type="text" name="municipality_search" style="width: 30%"></p>
+    <p>Barangay: <input type="text" name="barangay_search" style="width: 30%"></p>
+    <br>
+    <p>
+        Class Number: <input type="text" name="classno_search" style="width: 30%">
+        To: <input type="date" name="dateto_search" style="width: 15%">
+        From: <input type="date" name="datefrom_search" style="width: 15%">
+    </p>
+    <p>
+        Type of Class: <select style="width: 15%">
+            <option></option>
+            <option>4Ps</option>
+            <option>Profile</option>
+            <option>FBOs</option>
+            <option>PMC</option>
+            <option>Usapan</option>
+            <option>House to House</option>
+            <option>Others</option>
+        </select>
+    </p>
+    <br>
+    <p>Name: <input type="text" name="name_search" style="width: 30%"></p>
+    <p>
+        Age: <input type="number" name="agefrom_search" max="200" style="width: 5%"> To: <input type="number" name="agefrom_search" maxlen="200" style="width: 5%">
+    </p>
+    <br>
+    <p>
+        FP Type: <select name="fptype_search" style="width: 15%" class="fp_type">
+            <option value=""></option>
+            <option value="fp_user">FP User</option>
+            <option value="non_fp_user">Non-FP User</option>
+        </select>
+    </p>
+    <p class="for_fp_user"></p>
+    <p class="non_fp_intention_status"></p>
+    <br>
+    <p><input type="submit" name="search" value="Search" style="width: 10%"></p>
+</form>   
 <table id="datatable-responsive" class="table table-condensed table-striped table-hover table-bordered dt-responsive nowrap" cellspacing="0" width="100%">
     <thead>
         <tr>
@@ -60,6 +101,7 @@ if (empty($title)) {
     loadJs(base_url + 'NewAssets/templateJs', function() {
         loadJs(base_url + 'assets/js/listCouples.js', function(){
             listCoupleModal();
+            fpType();
         });
     });
 
