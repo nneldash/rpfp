@@ -57,6 +57,7 @@ $(function() {
 	typeValidation();
 	statusValidation();
 	reasonValidation();
+	tooltip();
 
 	Inputmask().mask(".birthAge");	
 
@@ -74,13 +75,38 @@ $(function() {
 		$('td input[class="check"]').attr('disabled', false);
 	}
 
-	$("[data-toggle=popover]").popover({
-	    html: true, 
-		content: function() {
-	          return $('#popover-content').html();
-	        }
-	});
+	setTimeout(getIntentionUse, 2000);
 });
+
+function getIntentionUse() 
+{
+	for(var i = 0; i <= 9 ; i ++) {
+		var val = $('.tr1' + i).find('input[name="status[' + i +']"]').val();
+
+		if(val == 'A') {
+	    	$('input[name="intention-use[' + i +']"').attr('required', 'required');
+	    	$('input[name="intention-use[' + i +']"').find('.intention-required').removeAttr('hidden', 'hidden');
+	    	$('input[name="intention_use['+i+']"').removeAttr('disabled', 'disabled');
+	    	intentionStatusValidation(i);
+	    } else {
+	    	$('input[name="intention-use[' + i +']"').removeAttr('required', 'required');
+	    	$('input[name="intention-use[' + i +']"').find('.intention-required').attr('hidden', 'hidden');
+	    	$('input[name="intention_use['+i+']"').attr('disabled', 'disabled');
+	    }
+	}
+}
+
+function tooltip()
+{
+	$("[data-toggle=popover]").on('click', function(event) {
+		event.preventDefault();
+	}).popover({
+	    html: true,
+		content: function() {
+	        return $('#popover-content').html();
+	    }
+	});
+}
 
 function sexValidation()
 {
@@ -590,6 +616,11 @@ function getDataDuplicate()
 		var index = $(this).closest('tr').find('.loopIndex1').val();
 
 		autoGetData(fname1, lname1, extname1, sex1, bday1, fname2, lname2, extname2, sex2, bday2, index);
+
+		if(!$(this).prop('required')) {
+	    	$(this).closest('tr').find('.require-this').attr('required', 'required');
+	    	$(this).closest('tr').find('.required').removeAttr('hidden', 'hidden');
+	    }
 	});
 
 	$('.lname1').keyup(function(){
@@ -622,6 +653,11 @@ function getDataDuplicate()
 		var index = $(this).closest('tr').find('.loopIndex1').val();
 
 		autoGetData(fname1, lname1, extname1, sex1, bday1, fname2, lname2, extname2, sex2, bday2, index);
+
+		if(!$(this).prop('required')) {
+	    	$(this).closest('tr').find('.require-this').attr('required', 'required');
+	    	$(this).closest('tr').find('.required').removeAttr('hidden', 'hidden');
+	    }
 	});
 
 	$('.extname1').keyup(function(){
@@ -900,6 +936,7 @@ function getDataDuplicate()
 
 function autoGetData(fname1, lname1, extname1, sex1, bday1, fname2, lname2, extname2, sex2, bday2, index)
 {
+	var status = '';
 	if (sex1 === 'F' && sex2 === 'M') {
 		var h_fname = fname2;
 		var h_lname = lname2;
@@ -917,7 +954,7 @@ function autoGetData(fname1, lname1, extname1, sex1, bday1, fname2, lname2, extn
 		var w_lname = lname2;
 		var w_bday = bday2;
 	} else {
-		sex = 0;
+		return false;
 	}
 
 	$.ajax({
@@ -934,6 +971,17 @@ function autoGetData(fname1, lname1, extname1, sex1, bday1, fname2, lname2, extn
 				'w_bday'	: w_bday
 			}
 	}).done(function(result){
+		console.log(result);
+		if (result.ActiveStatus === 2) {
+			status = 'Pending';
+		} else if (result.ActiveStatus === 0) {
+			status = 'Approve';
+		} else {
+			status;
+		}
+
+		$('.tr1' + index + ' td #popover-content').find('.couple-status').text(status); // remove before push
+		
 		if (result.CheckCount >= 1) {
 			$('.tr1' + index + ' td:nth-child(1)').addClass('has-duplicate');
 			$('.tr2' + index + ' td:nth-child(1)').addClass('has-duplicate');
@@ -966,7 +1014,20 @@ function autoGetData(fname1, lname1, extname1, sex1, bday1, fname2, lname2, extn
 
 			$('.tr1' + index + ' td textarea').addClass('has-duplicate');
 			$('.tr2' + index + ' td textarea').addClass('has-duplicate');
+
+			$('.tr1' + index + ' td .duplicateBtn').removeAttr('hidden');
+
+			$('.tr1' + index + ' td #popover-content').find('.fill-husband').text(result.Husband);
+			$('.tr1' + index + ' td #popover-content').find('.fill-wife').text(result.Wife);
+
+			// $('.tr1' + index + ' td .button-fill').click(function(){
+			// 	console.log('hhe');
+			// });
+
+			// $('.tr1' + index + ' td #popover-content').find('.couple-status').text(status);
 		} else {
+
+			$('.tr1' + index + ' td:nth-child(1)').removeClass('has-duplicate');
 			$('.tr2' + index + ' td:nth-child(1)').removeClass('has-duplicate');
 
 			$('.tr1' + index + ' td:nth-child(2)').removeClass('has-duplicate');

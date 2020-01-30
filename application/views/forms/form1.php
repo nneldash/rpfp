@@ -603,22 +603,28 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 					                            );
 					                        ?>
 					                        <span style="padding-top: 15px">/</span>
-					                        <input type="text" name="age1[<?=$i?>]" maxlength="2" class="text-center getAge1" style="width: 50%;" readonly value="<?= HtmlHelper::firstEntry_BirthAge($couple->FirstEntry->Age, $couple->SecondEntry->Age) ?>" 
-					                        	data-placement="right" data-toggle="popover" data-container="body" data-placement="left" data-html="true"
-					                        />
+					                        <input type="text" name="age1[<?=$i?>]" maxlength="2" class="text-center getAge1" style="width: 50%;" readonly value="<?= HtmlHelper::firstEntry_BirthAge($couple->FirstEntry->Age, $couple->SecondEntry->Age) ?>" />
 
-											<div id="popover-content" class="hide">
-												<div class="row">
-													<div class="col-xs-12">																												
-														<p>
-															Possible Duplicate in
-															<u><b>Approve</b></u>
-														</p>
-														<p>Husband:</p>
-														<p>Wife:</p>
-													</div>
-												</div>
-											</div>
+					                        <div class="duplicateBtn" hidden>
+						                        <button data-placement="right" data-toggle="popover" data-container="body" data-placement="left" data-html="true" title="Possible Duplicate in">
+						                        	<i class="fa fa-exclamation-circle" style="color: #e2919f;"></i>
+						                        </button>					                        	
+					                        </div>
+
+					                        <style>
+					                        	
+					                        </style>
+
+					                        <div id="popover-content" class="hide">
+				                        		<p>
+													<u>
+														<b class="couple-status"></b>
+													</u>
+												</p>
+												<p>Husband: <span class="fill-husband"></span></p>
+												<p>Wife: <span class="fill-wife"></span></p>
+												<p class="button-fill">Autofill data</p>
+					                        </div>
 										</div>								
 									</td>
 									<td class="small text-center" rowspan="2">										
@@ -752,7 +758,7 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 				                            );
 				                        ?>
 				                        <div style="display: inline-flex">
-					                        <span class="required intention-required" hidden>*</span>
+					                        <span style="color: red" class="intention-required" hidden>*</span>
 					                        <input type="text" disabled value="<?= ($couple->TraditionalFp->IntentionUse != 'N/A' ? $couple->TraditionalFp->IntentionUse : ''); ?>" class="height-50 text-center intention-use" maxlength="1" name="intention_use[<?= $i; ?>]" />
 				                        </div>
 									</td>
