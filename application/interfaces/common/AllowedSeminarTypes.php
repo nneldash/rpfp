@@ -16,19 +16,19 @@ abstract class AllowedSeminarTypes extends BasicEnum
     public static function enumerate() : array
     {
         return array(
-            AllowedSeminarTypes::FOUR_PS => '4Ps',
-            AllowedSeminarTypes::FAITHBASED_ORG => 'Faith-Based Organization',
-            AllowedSeminarTypes::PMC => 'Pre-Marriage Counseling',
-            AllowedSeminarTypes::USAPAN => 'USAPAN',
-            AllowedSeminarTypes::HOUSE_2_HOUSE => 'House-To-House',
-            AllowedSeminarTypes::PROFILE_ONLY => 'Profile Only',
-            AllowedSeminarTypes::OTHERS => 'Others'
+            self::FOUR_PS => '4Ps',
+            self::FAITHBASED_ORG => 'Faith-Based Organization',
+            self::PMC => 'Pre-Marriage Counseling',
+            self::USAPAN => 'USAPAN',
+            self::HOUSE_2_HOUSE => 'House-To-House',
+            self::PROFILE_ONLY => 'Profile Only',
+            self::OTHERS => 'Others'
         );
     }
 
     public static function getString(int $key) : string
     {
-        return (AllowedSeminarTypes::enumerate()[$key]);
+        return (self::enumerate()[$key]);
     }
 
     public static function count() : int

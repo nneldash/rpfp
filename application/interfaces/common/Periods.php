@@ -14,17 +14,17 @@ abstract class Periods extends BasicEnum
     public static function enumerate() : array
     {
         return array(
-            Periods::WEEKLY => 'Weekly',
-            Periods::MONTHLY => 'Monthly',
-            Periods::QUARTERLY => 'Quarterly',
-            Periods::SEMI_ANNUALY => 'Semi-Annually',
-            Periods::ANNUALLY => 'Annually'
+            self::WEEKLY => 'Weekly',
+            self::MONTHLY => 'Monthly',
+            self::QUARTERLY => 'Quarterly',
+            self::SEMI_ANNUALY => 'Semi-Annually',
+            self::ANNUALLY => 'Annually'
         );
     }
 
     public static function getString(int $key) : string
     {
-        return (Periods::enumerate()[$key]);
+        return (self::enumerate()[$key]);
     }
 
     public static function count() : int

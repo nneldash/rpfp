@@ -116,12 +116,23 @@ class Forms extends CI_Controller
     {
         $listCouple = new ListCoupleClass();
         
-        for ($i = 1; $i <= 10; $i++) {
+        for ($i = 0; $i < 10; $i++) {
             // if (!$this->input->post('firstname1')[$i] && !$this->input->post('firstname2')[$i]) {
             //     break;
             // }
 
             $couple = new CoupleClass();
+
+            $couple->FirstEntry = $this->getIndividual(1, $i);
+            $couple->SecondEntry = $this->getIndividual(2, $i);
+
+            if (($couple->FirstEntry->Name->Firstname == N_A) &&
+                ($couple->FirstEntry->Name->Surname == N_A) &&
+                ($couple->SecondEntry->Name->Firstname == N_A) &&
+                ($couple->SecondEntry->Name->Surname == N_A)
+            ) {
+                continue;
+            }
 
             $couple->Id = $this->input->post('couple_id')[$i];
             $couple->Address_St = $this->input->post('house_no_st')[$i];
@@ -130,8 +141,6 @@ class Forms extends CI_Controller
             $couple->Address_HH_No = $this->input->post('household_id')[$i];
             $couple->NumberOfChildren = $this->input->post('no_of_children')[$i];
 
-            $couple->FirstEntry = $this->getFirstEntry($i);
-            $couple->SecondEntry = $this->getSecondEntry($i);
             $couple->ModernFp = $this->getModernFp($i);
             $couple->TraditionalFp = $this->getTraditionalFp($i);
 
@@ -141,57 +150,27 @@ class Forms extends CI_Controller
         return $listCouple;
     }
 
-    private function getFirstEntry(int $i) : IndividualInterface
+    private function getIndividual(int $entry_num, int $index) : IndividualInterface
     {
-
         $individual = new IndividualClass();
-        if (!$this->input->post('firstname1')[$i] && !$this->input->post('lastname1')[$i]) {
+        if (!$this->input->post('firstname' . $entry_num)[$index] && !$this->input->post('lastname' . $entry_num)[$index]) {
             return $individual;
         }
 
-        if ($this->input->post('sex1')[$i] == 'F') {
-            return $this->getSecondEntry($i);
-        }
-
-
-        $individual->Id = $this->input->post('individual_id1')[$i];
+        $individual->Id = $this->input->post('individual_id' . $entry_num)[$index];
         
-        $individual->Name->Surname      = (empty($this->input->post('lastname1')[$i]) ? BLANK : $this->input->post('lastname1')[$i]);
-        $individual->Name->Firstname    = (empty($this->input->post('firstname1')[$i]) ? BLANK : $this->input->post('firstname1')[$i]);
-        $individual->Name->Middlename   = (empty($this->input->post('middlename1')[$i]) ? BLANK : $this->input->post('middlename1')[$i]);
-        $individual->Name->Extname      = (empty($this->input->post('extname1')[$i]) ? BLANK : $this->input->post('extname1')[$i]);
+        $individual->Name->Surname      = (empty($this->input->post('lastname' . $entry_num)[$index]) ? BLANK : $this->input->post('lastname' . $entry_num)[$index]);
+        $individual->Name->Firstname    = (empty($this->input->post('firstname' . $entry_num)[$index]) ? BLANK : $this->input->post('firstname' . $entry_num)[$index]);
+        $individual->Name->Middlename   = (empty($this->input->post('middlename' . $entry_num)[$index]) ? BLANK : $this->input->post('middlename' . $entry_num)[$index]);
+        $individual->Name->Extname      = (empty($this->input->post('extname' . $entry_num)[$index]) ? BLANK : $this->input->post('extname' . $entry_num)[$index]);
 
-        $individual->Sex = $this->input->post('sex1')[$i];
-        $individual->CivilStatus = $this->input->post('civil_status1')[$i];
-        $individual->Birthdate = $this->input->post('bday1')[$i];
-        $individual->Age = $this->input->post('age1')[$i];
-        $individual->HighestEducation = $this->input->post('educ1')[$i];
-        $individual->Attendee = $this->input->post('attendee1')[$i];
-
-        return $individual;
-    }
-
-    private function getSecondEntry(int $i) : IndividualInterface
-    {
-        $individual = new IndividualClass();
-
-        if (!$this->input->post('firstname2')[$i] && !$this->input->post('lastname2')[$i]) {
-            return $individual;
-        }
-
-        $individual->Id = $this->input->post('individual_id2')[$i];
-
-        $individual->Name->Surname      = (empty($this->input->post('lastname2')[$i]) ? BLANK : $this->input->post('lastname2')[$i]);
-        $individual->Name->Firstname    = (empty($this->input->post('firstname2')[$i]) ? BLANK : $this->input->post('firstname2')[$i]);
-        $individual->Name->Middlename   = (empty($this->input->post('middlename2')[$i]) ? BLANK : $this->input->post('middlename2')[$i]);
-        $individual->Name->Extname      = (empty($this->input->post('extname2')[$i]) ? BLANK : $this->input->post('extname2')[$i]);
-
-        $individual->Sex = $this->input->post('sex2')[$i];
-        $individual->CivilStatus = $this->input->post('civil_status2')[$i];
-        $individual->Birthdate = $this->input->post('bday2')[$i];
-        $individual->Age = $this->input->post('age2')[$i];
-        $individual->HighestEducation = $this->input->post('educ2')[$i];
-        $individual->Attendee = $this->input->post('attendee2')[$i];
+        $temp_sex = strtoupper($this->input->post('sex' . $entry_num)[$index]);
+        $individual->Sex = (!in_array($temp_sex, Sexes::UI_Enumerate()) ? 0 :  ($temp_sex == Sexes::UI_FEMALE ? Sexes::FEMALE : Sexes::MALE));
+        $individual->CivilStatus = $this->input->post('civil_status' . $entry_num)[$index];
+        $individual->Birthdate = DateTime::createFromFormat('n-j-Y', $this->input->post('bday' . $entry_num)[$index]);
+        $individual->Age = $this->input->post('age' . $entry_num)[$index];
+        $individual->HighestEducation = $this->input->post('educ' . $entry_num)[$index];
+        $individual->Attendee = $this->input->post('attendee1' . $entry_num)[$index];
 
         return $individual;
     }
@@ -212,8 +191,29 @@ class Forms extends CI_Controller
         $traditionalFp = new TraditionalFpUserClass();
 
         $traditionalFp->Type = $this->input->post('type')[$i];
-        $traditionalFp->Status = $this->input->post('status')[$i];
+
+        $temp_status = strtoupper($this->input->post('status')[$i]);
+        $new_status = 0;
+        if (!in_array($temp_status, TraditionalStatuses::UI_Enumerate())) {
+            switch ($temp_status) {
+                case TraditionalStatuses::UI_EXPRESSING_INTENTION:
+                    $new_status = TraditionalStatuses::EXPRESSING_INTENTION;
+                break;
+                case TraditionalStatuses::UI_UNDECIDED:
+                    $new_status = TraditionalStatuses::UNDECIDED;
+                break;
+                case TraditionalStatuses::UI_CURRENTLY_PREGNANT:
+                    $new_status = TraditionalStatuses::CURRENTLY_PREGNANT;
+                break;
+                case TraditionalStatuses::UI_NO_INTENTION:
+                    $new_status = TraditionalStatuses::NO_INTENTION;
+                break;
+            }
+        }
+        $traditionalFp->Status = $new_status;
+
         $traditionalFp->IntentionUse = $this->input->post('intention_use')[$i];
+
         $traditionalFp->ReasonForUse = $this->input->post('reason')[$i];
 
         return $traditionalFp;

@@ -14,17 +14,17 @@ abstract class CivilStatuses extends BasicEnum
     public static function enumerate() : array
     {
         return array(
-            CivilStatuses::MARRIED => 'Married',
-            CivilStatuses::SINGLE => 'Single',
-            CivilStatuses::WIDOW => 'Widow/Widower',
-            CivilStatuses::SEPARATED => 'Separated',
-            CivilStatuses::LIVE_IN => 'Living-in'
+            self::MARRIED => 'Married',
+            self::SINGLE => 'Single',
+            self::WIDOW => 'Widow/Widower',
+            self::SEPARATED => 'Separated',
+            self::LIVE_IN => 'Living-in'
         );
     }
 
     public static function getString(int $key) : string
     {
-        return (CivilStatuses::enumerate()[$key]);
+        return (self::enumerate()[$key]);
     }
 
     public static function count() : int

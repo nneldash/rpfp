@@ -15,18 +15,18 @@ abstract class Roles extends BasicEnum
     public static function Enumerate() : array
     {
         return array(
-            Roles::ENCODER => 'Encoder',
-            Roles::PARTNER => 'Partner',
-            Roles::FOCAL_PERSON => 'Regional/Provincial Focal Person',
-            Roles::DATA_MANAGER => 'Regional Data Manager',
-            Roles::PMED_STAFF => 'PMED/Central Office Staff',
-            Roles::ITDMU_STAFF => 'Administrator'
+            self::ENCODER => 'Encoder',
+            self::PARTNER => 'Partner',
+            self::FOCAL_PERSON => 'Regional/Provincial Focal Person',
+            self::DATA_MANAGER => 'Regional Data Manager',
+            self::PMED_STAFF => 'PMED/Central Office Staff',
+            self::ITDMU_STAFF => 'Administrator'
         );
     }
 
     public static function getString(int $key) : string
     {
-        return (Roles::enumerate()[$key]);
+        return (self::enumerate()[$key]);
     }
 
     public static function count() : int

@@ -15,18 +15,18 @@ abstract class TraditionalMethods extends BasicEnum
     public static function Enumerate() : array
     {
         return array(
-            TraditionalMethods::WITHDRAWAL => 'Withdrawal Method',
-            TraditionalMethods::RHYTHM => 'Rhythm Method',
-            TraditionalMethods::CALENDAR => 'Calendar Method',
-            TraditionalMethods::ABSTINENCE => 'Abstinence',
-            TraditionalMethods::HERBAL => 'Herbal',
-            TraditionalMethods::NO_METHOD => 'No Specific Method'
+            self::WITHDRAWAL => 'Withdrawal Method',
+            self::RHYTHM => 'Rhythm Method',
+            self::CALENDAR => 'Calendar Method',
+            self::ABSTINENCE => 'Abstinence',
+            self::HERBAL => 'Herbal',
+            self::NO_METHOD => 'No Specific Method'
         );
     }
     
     public static function getString(int $key) : string
     {
-        return (TraditionalMethods::enumerate()[$key]);
+        return (self::enumerate()[$key]);
     }
 
     public static function count() : int

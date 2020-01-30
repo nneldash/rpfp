@@ -96,16 +96,17 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 						<button class="dropdown-toggle" type="button" data-toggle="dropdown">
 							Menu
 							<span class="caret"></span>
-						</button>
+							</button>
 						<ul class="dropdown-menu">
-							<li><a href="#" id="new_form_1" >New Form 1</a></li>
+							<li><a href="<?= base_url('Forms/new')?>" id="new_form_1" >New Form 1</a></li>
 							<?php if($isEncoder): ?>
-								<li><a class="btn-import">Import Excel</a></li>
+								<li><a class="btn-import" id="import_excel">Import Excel</a></li>
 							<?php endif; ?>
-							<li><a href="<?= base_url('menu')?>">Back</a></li>
-							<li><a href="<?= base_url('login/logoffUser')?>">Logout</a></li>
+							<li><a href="<?= base_url('menu')?>" id="main_menu">Back</a></li>
+							<li><a href="<?= base_url('login/logoffUser')?>" id="log_off">Logout</a></li>
 						</ul>
 					</div>
+	
 			    </div>
 			<?php endif; ?>
 			<input type="hidden" name="class_id" value="<?= $rpfpId; ?>" />

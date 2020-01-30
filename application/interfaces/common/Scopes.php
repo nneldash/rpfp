@@ -13,16 +13,16 @@ abstract class Scopes extends BasicEnum
     public static function Enumerate() : array
     {
         return array(
-            Scopes::NATIONAL => 'National/Central Office',
-            Scopes::REGIONAL => 'Regional Level',
-            Scopes::PROVINCIAL => 'Provincial Level',
-            Scopes::CITYWIDE => 'City/Municipality Level'
+            self::NATIONAL => 'National/Central Office',
+            self::REGIONAL => 'Regional Level',
+            self::PROVINCIAL => 'Provincial Level',
+            self::CITYWIDE => 'City/Municipality Level'
         );
     }
 
     public static function getString(int $key) : string
     {
-        return (Scopes::enumerate()[$key]);
+        return (self::enumerate()[$key]);
     }
 
     public static function count() : int

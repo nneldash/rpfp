@@ -22,7 +22,7 @@ class CoupleClass extends CoupleInterface
     
     public function Wife() : IndividualInterface
     {
-        if ($this->FirstEntry->Sex == Sexes::MALE ) {
+        if ($this->FirstEntry->Sex == Sexes::FEMALE ) {
             return $this->FirstEntry;
         }
         return $this->SecondEntry;
@@ -30,7 +30,7 @@ class CoupleClass extends CoupleInterface
 
     public function Husband() : IndividualInterface
     {
-        if ($this->FirstEntry->Sex == Sexes::FEMALE ) {
+        if ($this->FirstEntry->Sex == Sexes::MALE ) {
             return $this->FirstEntry;
         }
         return $this->SecondEntry;

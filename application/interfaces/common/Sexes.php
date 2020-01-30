@@ -8,17 +8,28 @@ abstract class Sexes extends BasicEnum
     const MALE = 1;
     const FEMALE = 2;
 
+    const UI_MALE = 'M';
+    const UI_FEMALE = 'F';
+
     public static function Enumerate() : array
     {
         return array(
-            Sexes::MALE => 'Male',
-            Sexes::FEMALE => 'Female'
+            self::MALE => 'Male',
+            self::FEMALE => 'Female'
+        );
+    }
+
+    public static function UI_Enumerate() : array
+    {
+        return array(
+            self::UI_MALE => 'Male',
+            self::UI_FEMALE => 'Female'
         );
     }
 
     public static function getString(int $key) : string
     {
-        return (Sexes::enumerate()[$key]);
+        return (self::enumerate()[$key]);
     }
 
     public static function count() : int

@@ -44,7 +44,7 @@ class FormModel extends BaseModel
             $couple = $this->saveCouple($class_id, $form->ListCouple);
         }
         
-        if (empty($couple)) {
+        if (!empty($couple)) {
            $error = 'error3';
         }
 
@@ -132,27 +132,27 @@ class FormModel extends BaseModel
                 break;
             }
 
-            $modern = $couple->ModernFp;
-            $traditional = $couple->TraditionalFp;
+            // $modern = $couple->ModernFp;
+            // $traditional = $couple->TraditionalFp;
 
-            $method3 = 'encoder_save_fp_details';
+            // $method3 = 'encoder_save_fp_details';
 
-            $params3 = [
-                $modern->Id == N_A ? BLANK : $modern->Id,
-                $couple_id == 0 ? BLANK : $couple_id,
-                $modern->MethodUsed == N_A ? BLANK : $modern->MethodUsed,
-                $modern->IntentionToShift == N_A ? BLANK : $modern->IntentionToShift,
+            // $params3 = [
+            //     $modern->Id == N_A ? BLANK : $modern->Id,
+            //     $couple_id == 0 ? BLANK : $couple_id,
+            //     $modern->MethodUsed == N_A ? BLANK : $modern->MethodUsed,
+            //     $modern->IntentionToShift == N_A ? BLANK : $modern->IntentionToShift,
 
-                $traditional->Type == N_A ? BLANK : $traditional->Type,
-                $traditional->Status == N_A ? BLANK : $traditional->Status,
-                $traditional->ReasonForUse == N_A ? BLANK : $traditional->ReasonForUse
-            ];
+            //     $traditional->Type == N_A ? BLANK : $traditional->Type,
+            //     $traditional->Status == N_A ? BLANK : $traditional->Status,
+            //     $traditional->ReasonForUse == N_A ? BLANK : $traditional->ReasonForUse
+            // ];
 
-            $fp_details = $this->saveToDb($method3, $params3);
-            if (empty($indiv)) {
-                $errors = "DB ERROR FP DETAILS";
-                break;
-            }
+            // $fp_details = $this->saveToDb($method3, $params3);
+            // if (empty($indiv)) {
+            //     $errors = "DB ERROR FP DETAILS";
+            //     break;
+            // }
         }
         return $errors;
     }

@@ -11,14 +11,14 @@ abstract class CoupleStatus extends BasicEnum
     public static function enumerate() : array
     {
         return array(
-            CoupleStatus::PENDING => 'Pending',
-            CoupleStatus::APPROVE => 'Approve'
+            self::PENDING => 'Pending',
+            self::APPROVE => 'Approve'
         );
     }
 
     public static function getString(int $key) : string
     {
-        return (CoupleStatus::enumerate()[$key]);
+        return (self::enumerate()[$key]);
     }
 
     public static function count() : int

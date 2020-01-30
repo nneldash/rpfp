@@ -12,15 +12,15 @@ abstract class ReasonsForUsing extends BasicEnum
     public static function enumerate() : array
     {
         return array(
-            ReasonsForUsing::SPACING => 'Condom',
-            ReasonsForUsing::LIMITING => 'IUD',
-            ReasonsForUsing::ACHIEVING => 'LAM'
+            self::SPACING => 'Condom',
+            self::LIMITING => 'IUD',
+            self::ACHIEVING => 'LAM'
         );
     }
 
     public static function getString(int $key) : string
     {
-        return (ReasonsForUsing::enumerate()[$key]);
+        return (self::enumerate()[$key]);
     }
 
     public static function count() : int

@@ -21,24 +21,24 @@ abstract class ModernMethods extends BasicEnum
     public static function enumerate() : array
     {
         return array(
-            ModernMethods::CONDOM => 'Condom',
-            ModernMethods::IUD => 'IUD',
-            ModernMethods::PILLS => 'Pills',
-            ModernMethods::INJECTABLE => 'Injectable',
-            ModernMethods::VASECTOMY => 'Vasectomy',
-            ModernMethods::TUBAL_LIGATION => 'Tubal Ligation',
-            ModernMethods::IMPLANT => 'Implant',
-            ModernMethods::CMM_BILLINGS => 'CMM Billings',
-            ModernMethods::BBT => 'BBT',
-            ModernMethods::SYMPTO_THERMAL => 'Sympto-Thermal',
-            ModernMethods::SDM => 'SDM',
-            ModernMethods::LAM => 'LAM'
+            self::CONDOM => 'Condom',
+            self::IUD => 'IUD',
+            self::PILLS => 'Pills',
+            self::INJECTABLE => 'Injectable',
+            self::VASECTOMY => 'Vasectomy',
+            self::TUBAL_LIGATION => 'Tubal Ligation',
+            self::IMPLANT => 'Implant',
+            self::CMM_BILLINGS => 'CMM Billings',
+            self::BBT => 'BBT',
+            self::SYMPTO_THERMAL => 'Sympto-Thermal',
+            self::SDM => 'SDM',
+            self::LAM => 'LAM'
         );
     }
 
     public static function getString(int $key) : string
     {
-        return (ModernMethods::enumerate()[$key]);
+        return (self::enumerate()[$key]);
     }
 
     public static function count() : int
