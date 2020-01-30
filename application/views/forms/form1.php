@@ -98,7 +98,7 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 							<span class="caret"></span>
 						</button>
 						<ul class="dropdown-menu">
-							<li><a href="<?= base_url('forms')?>">New Form 1</a></li>
+							<li><a href="#" id="new_form_1" >New Form 1</a></li>
 							<?php if($isEncoder): ?>
 								<li><a class="btn-import">Import Excel</a></li>
 							<?php endif; ?>

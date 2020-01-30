@@ -1318,3 +1318,11 @@ function fill_page_from_memory(page_num) {
 function update_pages(page_num, total_pages) {
 	$("#pager").html("Page " + page_num + " of " + total_pages);
 }
+
+$(document).ready(function() {
+	$('#new_form_1').click(function() {
+		if (confirm('Changes will be LOST!!!, proceed to NEW FORM?')) {
+			window.location.href = base_url + "/Forms/new";
+		}
+	});
+});
