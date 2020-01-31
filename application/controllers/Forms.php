@@ -54,8 +54,8 @@ class Forms extends CI_Controller
         $is_new = BLANK;
         if (isset($_SESSION[IS_NEW])) {
             $is_new = IS_NEW;
-            unset($_SESSION[IS_NEW]);
         }
+        unset($_SESSION[IS_NEW]);
 
         $this->load->view('includes/header', $header);
         $this->load->view('forms/form1', 
