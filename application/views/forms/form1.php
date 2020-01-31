@@ -44,10 +44,40 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 		input, textarea {
 			border-bottom: 1px solid #a7bfc1;
 		}
+
+		.loading ~ div div {
+			z-index: -1!important;
+		}
+
+		.loading {
+			position: fixed;
+			background-color: rgba(35,35,60,.5);
+			top: 0;
+			bottom: 0;
+			left: 0;
+			right: 0;
+			z-index: 999!important;
+		}
+
+		#loading-text {
+			background-image: url('assets/images/Vanilla-1s-280px.gif');
+			background-repeat: no-repeat;
+			position: relative;
+			margin-left: auto;
+			margin-right: auto;
+			width: 16%;
+			height: 25%;
+			z-index: 9999!important;
+			top: 20%;
+			background-color: transparent;
+		}
 	</style>
 <?php } ?>
 
 <?= !empty($is_new) ? '<div class="hidden" id="is_new"></div>' : BLANK ?>
+<div class="loading" id="loading-wrapper" >
+	<div id="loading-text" role="status"></div>
+</div>
 <link href="<?= base_url('assets/css/form.css') ?>" rel="stylesheet">
 <input type="hidden" id="rdm" name="rdm" value="<?= $isRegionalDataManager; ?>" />
 <input type="hidden" id="focal" name="focal" value="<?= $isFocalPerson; ?>" />

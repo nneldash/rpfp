@@ -1187,7 +1187,7 @@ $(document).ready(function(){
 	$.each($('#paged_form textarea, #paged_form input[type="text"]'), function() {
 		all_input += $(this).val();
 	});
-	if (($('#new_form').val() != undefined)) {
+	if (($('#new_form').val() != undefined) || all_input == "") {
 		reset_page_storage();
 	}
 	var current = current_page();
@@ -1246,6 +1246,8 @@ $(document).ready(function(){
 		var current_value = $($(this).siblings('input[type=checkbox]')[0]).val();
 		$($(this).siblings('input[type=checkbox]')[0]).val(current_value == 'attended' ? "" : 'attended');
 	});
+
+	$('#loading-wrapper').removeClass('loading');
 });
 
 function current_page(page_num=null) {
