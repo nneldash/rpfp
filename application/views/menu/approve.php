@@ -29,13 +29,13 @@ if (empty($title)) {
         <input type="hidden" readonly name="province_hidden" value="" style="width: 15%">
     </p>
     <p>
-        City/Municipality: <select class="selectpicker" name="muni_search" id="muniList" data-live-search="true" title="" style="width: 30%">
+        City/Municipality: <select class="selectpicker" id="muniList" data-live-search="true" title="" style="width: 30%">
     
         </select>
         <input type="hidden" readonly name="muni_hidden" value="" style="width: 15%">
     </p>
     <p>
-        Barangay: <select class="selectpicker" name="brgy_search" id="brgyList" data-live-search="true" title="" style="width: 30%">
+        Barangay: <select class="selectpicker" id="brgyList" data-live-search="true" title="" style="width: 30%">
 
         </select>
         <input type="hidden" readonly name="brgy_hidden" value="" style="width: 15%">
