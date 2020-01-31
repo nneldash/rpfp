@@ -268,4 +268,10 @@ class Menu extends CI_Controller
         echo '<pre>';
         print_r($data);
     }
+
+    public function approvedClassSearch()
+    {
+        echo '<pre>';
+        print_r($_POST);
+    }
 }
