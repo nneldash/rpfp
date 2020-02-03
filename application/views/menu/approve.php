@@ -17,158 +17,141 @@ if (empty($title)) {
         padding-bottom: 0!important;
         padding-top: 7px!important;
     }
-    td {
-        padding: 0!important;
-        border: none!important;
-    }
 </style>
 
 <br>
-<div class="container-fluid">
-    <div class="row">        
-        <div class="col-md-12">    
-            <form class="form-horizontal">
-                <div class="col-md-6 table-responsive">
-                    <table class="table nowrap dt-responsive table-condensed" cellspacing="0">
-                        <tr>
-                            <td><label>LOCATION:</label></td>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <td></td>
-                            <td style="width: 10%"><label>Province:</label></td>
-                            <td><input type="text" name="province_search"></p></td>
-                        </tr>
-                        <tr>
-                            <td></td>
-                            <td><label>City/Municipality:</label></td>
-                            <td><input type="text" name="municipality_search"></td>
-                        </tr>
-                        <tr>
-                            <td></td>
-                            <td><label>Barangay:</label></td>
-                            <td><input type="text" name="barangay_search"></p></td>
-                        </tr>
-                        <tr>
-                            <td></td>
-                            <td style=""><label>Class Number:</label></td>
-                            <td><input type="text" name="classno_search"></td>
-                        </tr>
-                        <tr>
-                            <td></td>
-                            <td><label>Date Conducted:</label></td>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <td></td>
-                            <td><label>To:</label> </td>
-                            <td><input type="date" name="dateto_search"></td>
-                        </tr>
-                        <tr>
-                            <td></td>
-                            <td><label>From:</label></td>
-                            <td><input type="date" name="datefrom_search"></td>
-                        </tr>
-                        
-                    </table>
+<form class="form-horizontal form-label-left"> 
+    <div class="col-md-12">
+        <div class="col-md-6">
+            <div class="x_title">
+                <h3>Class</h3>
+                <div class="clearfix"></div>
+            </div>
+            <div class="row">
+                <!-- <div class="form-group">
+                    <label>Location</label>
+                </div> -->
+                <div class="form-group">
+                    <label class="control-label col-md-3">Province</label>
+                    <div class="col-md-7">
+                        <input type="text" name="province_search">
+                    </div>
                 </div>
-                <div class="col-md-6">
-                    <table class="table">
-                        <tr>
-                            <td style="width: 6%;"><label>Name:</label></td>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <td></td>
-                            <td style="width: 10%"><label>Province:</label></td>
-                            <td><input type="text" name="province_search"></p></td>
-                        </tr>
-                        <tr>
-                            <td></td>
-                            <td><label>City/Municipality:</label></td>
-                            <td><input type="text" name="municipality_search"></td>
-                        </tr>
-                        <tr>
-                            <td></td>
-                            <td><label>Barangay:</label></td>
-                            <td><input type="text" name="barangay_search"></p></td>
-                        </tr>
-                        <tr>
-                            <td></td>
-                            <td style=""><label>Class Number:</label></td>
-                            <td><input type="text" name="classno_search"></td>
-                        </tr>
-                        <tr>
-                            <td><label>Date Conducted:</label></td>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <td></td>
-                            <td><label>To:</label> <input type="date" name="dateto_search"></td>
-                            <td><label>From:</label> <input type="date" name="datefrom_search"></td>
-                        </tr>
-                        <tr>
-                            <td></td>
-                            <td><label>From:</label></td>
-                            <td><input type="date" name="datefrom_search"></td>
-                        </tr>
-                        
-                    </table>
+                <div class="form-group">
+                    <label class="control-label col-md-3">City/Municipality</label>
+                    <div class="col-md-7">
+                        <input type="text" name="municipality_search">
+                    </div>
                 </div>
-                 <br>
-                
-                
-                
-                
-                <br>
-
-                <p><b>LOCATION:</b></p>
-                <p>Province: <input type="text" name="province_search" style="width: 30%"></p>
-                <p>City/Municipality: <input type="text" name="municipality_search" style="width: 30%"></p>
-                <p>Barangay: <input type="text" name="barangay_search" style="width: 30%"></p>
-                <br>
-                <p>
-                    Class Number: <input type="text" name="classno_search" style="width: 30%">
-                    To: <input type="date" name="dateto_search" style="width: 15%">
-                    From: <input type="date" name="datefrom_search" style="width: 15%">
-                </p>
-                <p>
-                    Type of Class: <select style="width: 15%">
-                        <option></option>
-                        <option>4Ps</option>
-                        <option>Profile</option>
-                        <option>FBOs</option>
-                        <option>PMC</option>
-                        <option>Usapan</option>
-                        <option>House to House</option>
-                        <option>Others</option>
-                    </select>
-                </p>
-                <br>
-                <p>Name: <input type="text" name="name_search" style="width: 30%"></p>
-                <p>
-                    Age: <input type="number" name="agefrom_search" max="200" style="width: 5%"> To: <input type="number" name="agefrom_search" maxlen="200" style="width: 5%">
-                </p>
-                <br>
-                <p>
-                    FP Type: <select name="fptype_search" style="width: 15%" class="fp_type">
-                        <option value=""></option>
-                        <option value="fp_user">FP User</option>
-                        <option value="non_fp_user">Non-FP User</option>
-                    </select>
-                </p>
-                <p class="for_fp_user"></p>
-                <p class="non_fp_intention_status"></p>
-                <br>
-                <p><input type="submit" name="search" value="Search" style="width: 10%"></p>
-            </form>   
+                <div class="form-group">
+                    <label class="control-label col-md-3">Barangay</label>
+                    <div class="col-md-7">
+                        <input type="text" name="barangay_search">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-3">Class Number</label>
+                    <div class="col-md-7">
+                        <input type="text" name="classno_search">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-3">Date Conducted</label>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-3">From</label>
+                    <div class="col-md-7">
+                        <input type="date" name="datefrom_search">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-3">To</label>
+                    <div class="col-md-7">
+                        <input type="date" name="dateto_search">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-3">Type of Class</label>
+                    <div class="col-md-7">
+                        <select class="form-control">
+                            <option></option>
+                            <option>4Ps</option>
+                            <option>Profile</option>
+                            <option>FBOs</option>
+                            <option>PMC</option>
+                            <option>Usapan</option>
+                            <option>House to House</option>
+                            <option>Others</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>    
-</div>
-
+        <div class="col-md-6">
+            <div class="x_title">
+                <h3>Couples</h3>
+                <div class="clearfix"></div>
+            </div>
+            <div class="row">
+                <div class="form-group">
+                    <label class="control-label col-md-3">Name</label>
+                    <div class="col-md-7">
+                        <input type="text" name="name_search"></p>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-3">Age</label>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-3">From</label>
+                    <div class="col-md-7">
+                        <input type="number" name="agefrom_search" max="200">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-3">To</label>
+                    <div class="col-md-7">
+                        <input type="number" name="agefrom_search" maxlen="200">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-3">Number of Children</label>
+                    <div class="col-md-7">
+                        <input type="number" name="no_children_search" max="200">
+                    </div>
+                </div>
+            </div>
+            <div class="x_title">
+                <h3>FP Details</h3>
+                <div class="clearfix"></div>
+            </div>
+            <div class="row">
+                <div class="form-group">
+                    <label class="control-label col-md-3">FP Type</label>
+                    <div class="col-md-7">
+                        <select name="fptype_search" class="form-control fp_type">
+                            <option value=""></option>
+                            <option value="fp_user">FP User</option>
+                            <option value="non_fp_user">Non-FP User</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <p class="for_fp_user"></p>
+                </div>
+                <div class="form-group">
+                    <p class="non_fp_intention_status"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 col-md-offset-4 text-center">
+        <br>
+        <input class="btn btn-primary" type="submit" name="search" value="Search">
+    </div>
+</form>
+<br><br>
+<hr>
 <table id="datatable-responsive" class="table table-condensed table-striped table-hover table-bordered dt-responsive nowrap" cellspacing="0" width="100%">
     <thead>
         <tr>

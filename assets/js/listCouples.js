@@ -41,28 +41,34 @@ function fpType()
 			$('.intention_status').prop('disabled', true);
 			$('.for_fp_user').show();
 			$('.fp_user').prop('disabled', false);
-			$('.for_fp_user').html('FP User: <select name="fpuser_search" class="fp_user" style="width: 15%">'+
-										'<option value=""></option>'+
-										'<option value="condom">Condom</option>'+
-										'<option value="iud">IUD</option>'+
-										'<option value="pills">Pills</option>'+
-										'<option value="injectible">Injectible</option>'+
-										'<option value="vasectomy">Vasectomy</option>'+
-										'<option value="ligation">Ligation</option>'+
-										'<option value="implant">Implant</option>'+
-										'<option value="cmm">CMM</option>'+
-										'<option value="bbt">BBT</option>'+
-										'<option value="stm">STM</option>'+
-										'<option value="sdm">SDM</option>'+
-										'<option value="lam">LAM</option>'+
-									'</select>');
+			$('.for_fp_user').html('<label class="control-label col-md-3">FP User</label>' +
+                					'<div class="col-md-7">' +
+                						'<select name="fpuser_search" class="form-control fp_user">' +
+											'<option value=""></option>' +
+											'<option value="condom">Condom</option>' +
+											'<option value="iud">IUD</option>' +
+											'<option value="pills">Pills</option>' +
+											'<option value="injectible">Injectible</option>' +
+											'<option value="vasectomy">Vasectomy</option>' +
+											'<option value="ligation">Ligation</option>' +
+											'<option value="implant">Implant</option>' +
+											'<option value="cmm">CMM</option>' +
+											'<option value="bbt">BBT</option>' +
+											'<option value="stm">STM</option>' +
+											'<option value="sdm">SDM</option>' +
+											'<option value="lam">LAM</option>' +
+										'</select>' +
+									'</div>');
 		} else if (fpType == 'non_fp_user') {
 			$('.for_fp_user').show();
-			$('.for_fp_user').html('Non FP User: <select name="nonfpuser_search" class="non_fp" style="width: 15%" onChange="nonFpUser();">'+
-										'<option value=""></option>'+
-										'<option value="non_modern_fp">Non Modern FP Method</option>'+
-										'<option value="intention_status">Intention Status</option>'+
-									'</select>');
+			$('.for_fp_user').html('<label class="control-label col-md-3">Non FP User</label>' +
+									'<div class="col-md-7">' +
+										'<select name="nonfpuser_search" class="form-control non_fp" onChange="nonFpUser();">' +
+											'<option value=""></option>' +
+											'<option value="non_modern_fp">Non Modern FP Method</option>' +
+											'<option value="intention_status">Intention Status</option>' +
+										'</select>' +
+									'</div>');
 		} else {
 			$('.for_fp_user').hide();
 			$('.fp_user').prop('disabled', true);
@@ -82,13 +88,16 @@ function nonFpUser()
 	if (nonFp == 'intention_status') {
 		$('.non_fp_intention_status').show();
 		$('.intention_status').prop('disabled', false);
-		$('.non_fp_intention_status').html('Intention Status: <select name="intention_status_search" class="intention_status" style="width: 										15%"'+
-												'<option value=""><option>'+
-												'<option value="with_intention">With Intention</option>'+
-												'<option value="undecided">Undecided</option>'+
-												'<option value="currently_pregnant">Currently Pregnant</option>'+
-												'<option value="no_intention">No Intention</option>'+
-											'</select>');
+		$('.non_fp_intention_status').html('<label class="control-label col-md-3">Intention Status</label>' +
+											'<div class="col-md-7">' +
+												'<select name="intention_status_search" class="form-control intention_status">' +
+													'<option value=""><option>' +
+													'<option value="with_intention">With Intention</option>' +
+													'<option value="undecided">Undecided</option>' +
+													'<option value="currently_pregnant">Currently Pregnant</option>' +
+													'<option value="no_intention">No Intention</option>' +
+												'</select>' +
+											'</div>');
 	} else {
 		$('.non_fp_intention_status').hide();
 		$('.intention_status').prop('disabled', true);
