@@ -1769,11 +1769,6 @@ BEGIN
       LEFT JOIN rpfp.rpfp_class rc
              ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
           WHERE ic.COUPLES_ID = couplesid
-            AND (   rc.DB_USER_ID = name_user
-                OR (   is_not_encoder
-                    AND user_location = (rc.BARANGAY_ID DIV POWER( 10, multiplier ))
-                    )
-                )
     ) THEN
         BEGIN
              SELECT NULL AS couplesid,
@@ -1782,7 +1777,14 @@ BEGIN
                     NULL AS address_city,
                     NULL AS household_no,
                     NULL AS number_child,
-                    NULL AS status_active
+                    NULL AS status_active,
+                    NULL AS fpdetailsid,
+                    NULL AS mfp_used,
+                    NULL AS mfp_shift,
+                    NULL AS tfp_type,
+                    NULL AS tfp_status,
+                    NULL AS mfp_intention_use,
+                    NULL AS reason_use
             ;
         END;
     ELSE
@@ -1793,22 +1795,24 @@ BEGIN
                     apc.ADDRESS_CITY AS address_city,
                     apc.HH_ID_NO AS household_no,
                     apc.NO_CHILDREN AS number_child,
-                    apc.IS_ACTIVE AS status_active
+                    apc.IS_ACTIVE AS status_active,
+                    fd.FP_DETAILS_ID AS fpdetailsid,
+                    fd.MFP_METHOD_USED_ID AS mfp_used,
+                    fd.MFP_INTENTION_SHIFT_ID AS mfp_shift,
+                    fd.TFP_TYPE_ID AS tfp_type,
+                    fd.TFP_STATUS_ID AS tfp_status,
+                    fd.MFP_INTENTION_USE_ID AS mfp_intention_use, 
+                    fd.REASON_INTENDING_USE_ID AS reason_use
                FROM rpfp.couples apc
           LEFT JOIN rpfp.individual ic
                  ON ic.COUPLES_ID = apc.COUPLES_ID
           LEFT JOIN rpfp.rpfp_class rc
                  ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
+          LEFT JOIN rpfp.fp_details fd
+                 ON fd.COUPLES_ID = apc.COUPLES_ID
               WHERE ic.COUPLES_ID = couplesid
-                AND (   rc.DB_USER_ID = name_user
-                    OR (   is_not_encoder
-                        AND user_location = (rc.BARANGAY_ID DIV POWER( 10, multiplier ))
-                        )
-                    )
            GROUP BY apc.COUPLES_ID
             ;
-
-        CALL encoder_get_couple_fp_details(couplesid);
         END;
     END IF;
 END$$
@@ -1954,7 +1958,7 @@ ELSE
     END IF;
 END$$
 
-CREATE DEFINER=root@localhost PROCEDURE encoder_check_couples_details(
+CREATE DEFINER=root@localhost PROCEDURE encoder_check_couples_details (
     IN firstname VARCHAR(50),
     IN lastname VARCHAR(50),
     IN extname VARCHAR(50),
@@ -1994,7 +1998,7 @@ DECLARE check_details INT;
     SELECT check_details;
 END$$
 
-CREATE DEFINER=root@localhost PROCEDURE check_couples_details(
+CREATE DEFINER=root@localhost PROCEDURE check_couples_details (
     IN firstname_h VARCHAR(50),
     IN lastname_h VARCHAR(50),
     IN extname_h VARCHAR(50),
@@ -2036,6 +2040,7 @@ DECLARE check_details INT;
       			full_data.w_sex AS w_sex
         FROM rpfp.couples couples
    LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = couples.RPFP_CLASS_ID 
+   LEFT JOIN rpfp.lib_psgc_locations lp ON lp.REGION_CODE = user_location
    LEFT JOIN rpfp.individual husband ON husband.COUPLES_ID = couples.COUPLES_ID AND husband.SEX = 1
    LEFT JOIN (
        SELECT wic.COUPLES_ID AS w_couplesid,
@@ -2054,11 +2059,6 @@ DECLARE check_details INT;
          AND full_data.w_last = lastname_w
          AND full_data.w_first = firstname_w
          AND full_data.w_bday = birthdate_w
-         AND (   rc.DB_USER_ID = name_user
-             OR (   is_not_encoder
-                AND user_location = (rc.BARANGAY_ID DIV POWER( 10, multiplier ))
-                )
-             )
     ;
 END$$
 
@@ -2479,6 +2479,7 @@ CREATE DEFINER=root@localhost PROCEDURE search_data (
     IN mfp_used INT,
     IN tfp_used INT,
     IN intention_status INT,
+    IN intention_use INT,
     IN search_status INT,
     IN status_active INT,
     IN username VARCHAR(50),
@@ -2487,6 +2488,19 @@ CREATE DEFINER=root@localhost PROCEDURE search_data (
     )   READS SQL DATA
 proc_exit_point :
 BEGIN
+    DECLARE type_class_range INT;
+    DECLARE search_child_from INT;
+    DECLARE search_child_to INT;
+    DECLARE search_mfp_from INT;
+    DECLARE search_mfp_to INT;
+    DECLARE search_tfp_from INT;
+    DECLARE search_tfp_to INT;
+    DECLARE search_intention_from INT;
+    DECLARE search_intention_to INT;
+    DECLARE search_intentionfp_from INT;
+    DECLARE search_intentionfp_to INT;
+
+    DECLARE location_code INT;
     /** 
     SEARCH_STATUS
         0 - all data
@@ -2497,27 +2511,42 @@ BEGIN
     */
     DECLARE name_user VARCHAR(50);
     DECLARE db_user_name VARCHAR(50);
+    DECLARE user_scope INT;
+    DECLARE user_location INT;
+    DECLARE multiplier INT;
+    DECLARE is_not_encoder INT(1);
     DECLARE read_offset INT;
-    DECLARE type_class_range INT;
-
-    CALL rpfp.lib_extract_user_name( username, name_user, db_user_name );
+    
+    CALL rpfp.lib_extract_user_name( USER(), name_user, db_user_name );
+    SET user_scope := rpfp.profile_get_scope( name_user );
+    SET multiplier := rpfp.lib_get_multiplier( user_scope );
+    SET user_location := rpfp.profile_get_location( name_user, user_scope );
+    SET is_not_encoder := NOT IFNULL(rpfp.profile_check_if_encoder(), FALSE);
 
     IF (IFNULL( search_status, NULL ) = NULL ) THEN
         SET search_status = 0;
     END IF;
 
-    IF (IFNULL( loc_province, NULL ) = NULL ) THEN
-        SET loc_province = '';
-    END IF;
-
-    IF (IFNULL( loc_municipality, NULL ) = NULL ) THEN
-        SET loc_municipality = '';
-    END IF;
-
     IF (IFNULL( loc_barangay, NULL ) = NULL ) THEN
-        SET loc_barangay = '';
+
+        IF (IFNULL( loc_municipality, NULL ) = NULL ) THEN
+                
+            IF (IFNULL( loc_province, NULL ) = NULL ) THEN
+                SET location_code = user_location * POWER(10, 7);
+            ELSE
+                SET location_code = loc_province * POWER(10, 5);
+            END IF;
+
+        ELSE
+            SET location_code = loc_municipality * POWER(10, 3);
+        END IF;
+
+    ELSE
+        SET location_code = loc_barangay;
     END IF;
 
+
+    
     IF (IFNULL( type_class, NULL ) = NULL ) THEN
         SET type_class = 1;
         SET type_class_range = 7;
@@ -2529,6 +2558,32 @@ BEGIN
 
     IF (IFNULL( search_age_to, NULL ) = NULL) THEN
         SET search_age_to = 200;
+    END IF;
+
+    IF (IFNULL( no_child, NULL ) = NULL) THEN
+        SET search_child_from = 0;
+        SET search_child_to = 200;
+    END IF;
+
+    IF (IFNULL( mfp_used, NULL ) = NULL) THEN
+        SET search_mfp_from = 1;
+        SET search_mfp_to = 12;
+    END IF;
+
+    IF (IFNULL( tfp_used, NULL ) = NULL) THEN
+        SET search_tfp_from = 1;
+        SET search_tfp_to = 6;
+    END IF;
+
+    IF (IFNULL( intention_status, NULL ) = NULL) THEN
+        SET search_intention_from = 1;
+        SET search_intention_to = 6;
+            
+        IF (IFNULL( intention_status, NULL ) = NULL) THEN
+            SET search_intentionfp_from = 1;
+            SET search_intentionfp_to = 12;
+        END IF;
+
     END IF;
 
     IF (IFNULL( status_active, NULL ) = NULL ) THEN
@@ -2553,12 +2608,12 @@ BEGIN
                 AND rc.DB_USER_ID = name_user
         ) THEN
             SELECT NULL AS rpfpclass,
-                    NULL AS typeclass,
-                    NULL AS others_specify,
-                    NULL AS city,
-                    NULL AS barangay,
-                    NULL AS class_no,
-                    NULL AS date_conduct
+                   NULL AS typeclass,
+                   NULL AS others_specify,
+                   NULL AS city,
+                   NULL AS barangay,
+                   NULL AS class_no,
+                   NULL AS date_conduct
             ;
         ELSE
             IF (IFNULL( page_no, 0) = 0) THEN
@@ -2571,18 +2626,19 @@ BEGIN
             END IF;
 
             SET read_offset := (page_no - 1) * items_per_page;
-            SELECT rc.RPFP_CLASS_ID AS rpfpclass,
+         SELECT rc.RPFP_CLASS_ID AS rpfpclass,
                 rc.TYPE_CLASS_ID AS typeclass,
                 rc.OTHERS_SPECIFY AS others_specify,
                 lp.LOCATION_DESCRIPTION AS barangay,
                 rc.CLASS_NUMBER AS class_no,
                 rc.DATE_CONDUCTED AS date_conduct
-            FROM rpfp.rpfp_class rc 
+           FROM rpfp.rpfp_class rc 
         LEFT JOIN rpfp.couples apc ON apc.RPFP_CLASS_ID = rc.RPFP_CLASS_ID
         LEFT JOIN rpfp.individual ic ON ic.COUPLES_ID = apc.COUPLES_ID
         LEFT JOIN rpfp.fp_details fd ON fd.COUPLES_ID = ic.COUPLES_ID
         LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID 
             WHERE rc.CLASS_NUMBER LIKE CONCAT('%',class_number,'%')
+            AND lp.PSGC_CODE = location_code
             AND rc.TYPE_CLASS_ID >= type_class
             AND rc.TYPE_CLASS_ID <= type_class_range
             AND rc.DB_USER_ID = username
@@ -2597,6 +2653,16 @@ BEGIN
            )
            AND ic.AGE >= search_age_from
            AND ic.AGE <= search_age_to
+           AND apc.NO_CHILDREN >= search_child_from
+           AND apc.NO_CHILDREN <= search_child_to
+           AND fd.MFP_METHOD_USED_ID >= search_mfp_from
+           AND fd.MFP_METHOD_USED_ID <= search_mfp_to
+           AND fd.TFP_TYPE_ID >= search_tfp_from
+           AND fd.TFP_TYPE_ID <= search_tfp_to
+           AND fd.TFP_STATUS_ID >= search_intention_from
+           AND fd.TFP_STATUS_ID <= search_intention_to
+           AND fd.MFP_INTENTION_USE_ID >= search_intentionfp_from
+           AND fd.MFP_INTENTION_USE_ID <= search_intentionfp_to
         GROUP BY rc.CLASS_NUMBER
         ORDER BY rc.DATE_CONDUCTED DESC
             LIMIT read_offset, items_per_page
