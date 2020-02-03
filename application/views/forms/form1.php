@@ -637,24 +637,9 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 					                        <input type="text" name="age1[<?=$i?>]" maxlength="2" class="text-center getAge1" style="width: 50%;" readonly value="<?= HtmlHelper::firstEntry_BirthAge($couple->FirstEntry->Age, $couple->SecondEntry->Age) ?>" />
 
 					                        <div class="duplicateBtn" hidden>
-						                        <button data-placement="right" data-toggle="popover" data-container="body" data-placement="left" data-html="true" title="Possible Duplicate in">
-						                        	<i class="fa fa-exclamation-circle" style="color: #e2919f;"></i>
+						                        <button data-placement="right" data-toggle="popover" data-container="body" data-placement="left" data-html="true">
+						                        	<i class="fa fa-exclamation-circle dupIcon" style="color: #e2919f;"></i>
 						                        </button>					                        	
-					                        </div>
-
-					                        <style>
-					                        	
-					                        </style>
-
-					                        <div id="popover-content" class="hide">
-				                        		<p>
-													<u>
-														<b class="couple-status"></b>
-													</u>
-												</p>
-												<p>Husband: <span class="fill-husband"></span></p>
-												<p>Wife: <span class="fill-wife"></span></p>
-												<p class="button-fill">Autofill data</p>
 					                        </div>
 										</div>								
 									</td>
@@ -665,7 +650,7 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 				                            	($couple->Address_St != 'N/A' ? $couple->Address_St : ''),
 				                                "text",
 				                                "house_no_st[".$i."]",
-				                                "padding-l10",
+				                                "padding-l10 add_st",
 				                                "House No. & Street",
 				                                ""
 				                            );
@@ -676,7 +661,7 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 				                            	($couple->Address_Brgy != 'N/A' ? $couple->Address_Brgy : ''),
 				                                "text",
 				                                "brgy[".$i."]",
-				                                "padding-l10",
+				                                "padding-l10 add_brgy",
 				                                "Brgy",
 				                                ""
 				                            );
@@ -687,7 +672,7 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 				                            	($couple->Address_City != 'N/A' ? $couple->Address_City : ''),
 				                                "text",
 				                                "city[".$i."]",
-				                                "padding-l10",
+				                                "padding-l10 add_city",
 				                                "City / Municipality",
 				                                ""
 				                            );
@@ -698,7 +683,7 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 				                            	($couple->Address_HH_No != 'N/A' ? $couple->Address_HH_No : ''),
 				                                "text",
 				                                "household_id[".$i."]",
-				                                "padding-l10",
+				                                "padding-l10 hh_no",
 				                                "Household ID No.",
 				                                ""
 				                            );
@@ -1172,6 +1157,19 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 				</table>
 			</div>
 		</form>
+	</div>
+	<div id="orig">
+		<div class="popover-content hide">
+			<p>
+				Husband: 
+				<span class="fill-husband"></span>
+			</p>
+			<p>
+				Wife:
+				<span class="fill-wife"></span>
+				<p class="auto-fill-data">Autofill data</p>
+			</p>
+		</div>
 	</div>
 </div>
 

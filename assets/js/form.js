@@ -96,17 +96,58 @@ function getIntentionUse()
 	}
 }
 
-function tooltip()
+function click_click_click(id, couplesId)
 {
-	$("[data-toggle=popover]").on('click', function(event) {
-		event.preventDefault();
-	}).popover({
-	    html: true,
-		content: function() {
-	        return $('#popover-content').html();
-	    }
+	$('#'+ id +' .auto-fill-data').click(function(){
+		$.ajax({
+			type : 'POST',
+			cache : true,
+			url : base_url + 'forms/getDuplicateDetails',
+			data : {
+				'couplesId' : couplesId
+			}
+		}).done(function(result){
+			$('[aria-describedby='+ id + ']').popover('hide');
+
+			$('[aria-describedby='+ id + ']').closest('tr').find('.add_st').val(result.Address_No_St);
+			$('[aria-describedby='+ id + ']').closest('tr').find('.add_brgy').val(result.Address_Barangay);
+			$('[aria-describedby='+ id + ']').closest('tr').find('.add_city').val(result.Address_City);
+			$('[aria-describedby='+ id + ']').closest('tr').find('.hh_no').val(result.Household_No);
+			$('[aria-describedby='+ id + ']').closest('tr').find('.noChildren').val(result.Number_Child);
+		});
 	});
 }
+
+function tooltip(couplesId, status, husband, wife)
+{
+	$("[data-toggle=popover]").unbind('click');
+	$("[data-toggle=popover]").bind('click', function(event) {
+ 		event.preventDefault();
+
+		var new_content = '<p>' +
+								'<u>' +
+									'<b class="couple-status"></b>' +
+								'</u>' +
+							'</p>' +
+							'<p>Husband: <span class="fill-husband">'+ husband +'</span></p>' +
+							'<p>Wife: <span class="fill-wife">'+ wife +'</span></p> <br>' +
+							'<p class="button-fill auto-fill-data">Autofill data</p>';
+
+		$('body').popover({
+			container: 'body',
+			selector: '[data-toggle=popover]',
+		    html: true,
+		    title: 'Possible Duplicate in ' + status,
+			content: new_content
+		});
+ 	});
+
+ 	$(document).on("click", "button[aria-describedby]" , function() {
+        var id = $(this).attr('aria-describedby');
+        click_click_click(id, couplesId);
+    });
+}
+
 
 function sexValidation()
 {
@@ -1020,11 +1061,7 @@ function autoGetData(fname1, lname1, extname1, sex1, bday1, fname2, lname2, extn
 			$('.tr1' + index + ' td #popover-content').find('.fill-husband').text(result.Husband);
 			$('.tr1' + index + ' td #popover-content').find('.fill-wife').text(result.Wife);
 
-			// $('.tr1' + index + ' td .button-fill').click(function(){
-			// 	console.log('hhe');
-			// });
-
-			// $('.tr1' + index + ' td #popover-content').find('.couple-status').text(status);
+			tooltip(result.CouplesId, status, result.Husband, result.Wife);
 		} else {
 
 			$('.tr1' + index + ' td:nth-child(1)').removeClass('has-duplicate');
