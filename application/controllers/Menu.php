@@ -12,6 +12,7 @@ class Menu extends CI_Controller
         }
 
         $this->load->model('ProfileModel');
+        $this->load->library('couple_list/ApproveClass');
     }
 
     public function index()
@@ -271,7 +272,22 @@ class Menu extends CI_Controller
 
     public function approvedClassSearch()
     {
-        echo '<pre>';
-        print_r($_POST);
+        $aSearch = new ApproveClass();
+
+        $aSearch->RpfpClass = '123';
+        $aSearch->TypeClass = $this->input->post('type_of_class');
+        $aSearch->OthersSpecify = '';
+        $aSearch->Province = $this->input->post('province_hidden');
+        $aSearch->Municipality = $this->input->post('muni_hidden');
+        $aSearch->Barangay = $this->input->post('brgy_hidden');
+        $aSearch->CouplesEncoded = '';
+        $aSearch->ClassNo = $this->input->post('classno_search');
+        $aSearch->DateConduct = '';
+        $aSearch->LastName = '';
+        $aSearch->FirstName = '';
+
+        $this->output
+            ->set_content_type('application/json')
+            ->set_output(json_encode($aSearch));
     }
 }

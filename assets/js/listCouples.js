@@ -98,7 +98,7 @@ function nonFpUser()
 function searchNow()
 {
 	$('.search_now').click(function(e){
-		e.preventDefault();
+		e.preventDefault(); 
 		
 		var search = $('#search_form').serialize();
 
@@ -107,7 +107,7 @@ function searchNow()
 			data: search,
 			url: base_url + '/menu/approvedClassSearch'
 		}).done(function(result){
-			alert(result);
+			console.log(result);
 		});
 		
 	})
