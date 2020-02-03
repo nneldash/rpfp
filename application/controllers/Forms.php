@@ -464,4 +464,24 @@ class Forms extends CI_Controller
             ->set_content_type('application/json')
             ->set_output(json_encode($data));
     }
+
+    public function getDuplicateDetails()
+    {
+        $this->load->model('FormModel');
+        $data = $this->FormModel->getDuplicateDetails();
+
+        $data = [
+                    'CouplesId' => $data->CouplesId,
+                    'Address_No_St' => $data->Address_No_St,
+                    'Address_Barangay' => $data->Address_Barangay,
+                    'Address_City' => $data->Address_City,
+                    'Household_No' => $data->Household_No,
+                    'Number_Child' => $data->Number_Child,
+                    'Status_Active' => $data->Status_Active
+                ];
+
+        $this->output
+            ->set_content_type('application/json')
+            ->set_output(json_encode($data));
+    }
 }

@@ -17,66 +17,158 @@ if (empty($title)) {
         padding-bottom: 0!important;
         padding-top: 7px!important;
     }
+    td {
+        padding: 0!important;
+        border: none!important;
+    }
 </style>
 
 <br>
-<form id="search_form">
-    <p><b>LOCATION:</b></p>
-    <p class="dropdownLoc">
-        Province: <select class="selectpicker" id="provinceList" data-live-search="true" title="" style="width: 30%">
+<div class="container-fluid">
+    <div class="row">        
+        <div class="col-md-12">    
+            <form class="form-horizontal">
+                <div class="col-md-6 table-responsive">
+                    <table class="table nowrap dt-responsive table-condensed" cellspacing="0">
+                        <tr>
+                            <td><label>LOCATION:</label></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td style="width: 10%"><label>Province:</label></td>
+                            <td><input type="text" name="province_search"></p></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td><label>City/Municipality:</label></td>
+                            <td><input type="text" name="municipality_search"></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td><label>Barangay:</label></td>
+                            <td><input type="text" name="barangay_search"></p></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td style=""><label>Class Number:</label></td>
+                            <td><input type="text" name="classno_search"></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td><label>Date Conducted:</label></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td><label>To:</label> </td>
+                            <td><input type="date" name="dateto_search"></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td><label>From:</label></td>
+                            <td><input type="date" name="datefrom_search"></td>
+                        </tr>
+                        
+                    </table>
+                </div>
+                <div class="col-md-6">
+                    <table class="table">
+                        <tr>
+                            <td style="width: 6%;"><label>Name:</label></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td style="width: 10%"><label>Province:</label></td>
+                            <td><input type="text" name="province_search"></p></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td><label>City/Municipality:</label></td>
+                            <td><input type="text" name="municipality_search"></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td><label>Barangay:</label></td>
+                            <td><input type="text" name="barangay_search"></p></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td style=""><label>Class Number:</label></td>
+                            <td><input type="text" name="classno_search"></td>
+                        </tr>
+                        <tr>
+                            <td><label>Date Conducted:</label></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td><label>To:</label> <input type="date" name="dateto_search"></td>
+                            <td><label>From:</label> <input type="date" name="datefrom_search"></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td><label>From:</label></td>
+                            <td><input type="date" name="datefrom_search"></td>
+                        </tr>
+                        
+                    </table>
+                </div>
+                 <br>
+                
+                
+                
+                
+                <br>
 
-        </select>
-        <input type="hidden" readonly name="province_hidden" value="" style="width: 15%">
-    </p>
-    <p>
-        City/Municipality: <select class="selectpicker" id="muniList" data-live-search="true" title="" style="width: 30%">
-    
-        </select>
-        <input type="hidden" readonly name="muni_hidden" value="" style="width: 15%">
-    </p>
-    <p>
-        Barangay: <select class="selectpicker" id="brgyList" data-live-search="true" title="" style="width: 30%">
+                <p><b>LOCATION:</b></p>
+                <p>Province: <input type="text" name="province_search" style="width: 30%"></p>
+                <p>City/Municipality: <input type="text" name="municipality_search" style="width: 30%"></p>
+                <p>Barangay: <input type="text" name="barangay_search" style="width: 30%"></p>
+                <br>
+                <p>
+                    Class Number: <input type="text" name="classno_search" style="width: 30%">
+                    To: <input type="date" name="dateto_search" style="width: 15%">
+                    From: <input type="date" name="datefrom_search" style="width: 15%">
+                </p>
+                <p>
+                    Type of Class: <select style="width: 15%">
+                        <option></option>
+                        <option>4Ps</option>
+                        <option>Profile</option>
+                        <option>FBOs</option>
+                        <option>PMC</option>
+                        <option>Usapan</option>
+                        <option>House to House</option>
+                        <option>Others</option>
+                    </select>
+                </p>
+                <br>
+                <p>Name: <input type="text" name="name_search" style="width: 30%"></p>
+                <p>
+                    Age: <input type="number" name="agefrom_search" max="200" style="width: 5%"> To: <input type="number" name="agefrom_search" maxlen="200" style="width: 5%">
+                </p>
+                <br>
+                <p>
+                    FP Type: <select name="fptype_search" style="width: 15%" class="fp_type">
+                        <option value=""></option>
+                        <option value="fp_user">FP User</option>
+                        <option value="non_fp_user">Non-FP User</option>
+                    </select>
+                </p>
+                <p class="for_fp_user"></p>
+                <p class="non_fp_intention_status"></p>
+                <br>
+                <p><input type="submit" name="search" value="Search" style="width: 10%"></p>
+            </form>   
+        </div>
+    </div>    
+</div>
 
-        </select>
-        <input type="hidden" readonly name="brgy_hidden" value="" style="width: 15%">
-    </p>
-    <br>
-    <p>
-        Class Number: <input type="text" name="classno_search" style="width: 30%">
-        To: <input type="date" name="dateto_search" style="width: 15%">
-        From: <input type="date" name="datefrom_search" style="width: 15%">
-    </p>
-    <p>
-        Type of Class: <select name="type_of_class" style="width: 15%">
-            <option value=""></option>
-            <option value="4ps">4Ps</option>
-            <option value="profile">Profile</option>
-            <option value="fbo">FBOs</option>
-            <option value="pmc">PMC</option>
-            <option value="usapan">Usapan</option>
-            <option value="house_to_house">House to House</option>
-            <option value="others">Others</option>
-        </select>
-    </p>
-    <br>
-    <p>Name: <input type="text" name="name_search" style="width: 30%"></p>
-    <p>
-        Age: <input type="number" name="agefrom_search" max="200" style="width: 5%"> To: <input type="number" name="ageto_search" maxlen="200" style="width: 5%">
-    </p>
-    <p>Number of Children: <input type="number" name="no_children_search" style="width: 5%"></p>
-    <br>
-    <p>
-        FP Type: <select name="fptype_search" style="width: 15%" class="fp_type">
-            <option value=""></option>
-            <option value="fp_user">FP User</option>
-            <option value="non_fp_user">Non-FP User</option>
-        </select>
-    </p>
-    <p class="for_fp_user"></p>
-    <p class="non_fp_intention_status"></p>
-    <br>
-    <p><input type="submit" name="search" class="search_now" value="Search" style="width: 10%"></p>
-</form>   
 <table id="datatable-responsive" class="table table-condensed table-striped table-hover table-bordered dt-responsive nowrap" cellspacing="0" width="100%">
     <thead>
         <tr>

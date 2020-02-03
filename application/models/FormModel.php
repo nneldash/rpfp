@@ -465,4 +465,24 @@ class FormModel extends BaseModel
             array($h_fname, $h_lname, $h_extname, $h_bday, $w_fname, $w_lname, $w_bday)
         );
     }
+
+    public function getDuplicateDetails()
+    {
+        $couplesId = $this->input->post('couplesId');
+
+        return $this->fromDbGetSpecific(
+            'DuplicateCoupleClass',
+            array(
+                'CouplesId' => 'couplesid',
+                'Address_No_St' => 'address_no_st',
+                'Address_Barangay' => 'address_barangay',
+                'Address_City' => 'address_city',
+                'Household_No' => 'household_no',
+                'Number_Child' => 'number_child',
+                'Status_Active' => 'status_active'
+            ),
+            'encoder_get_duplicate_details',
+            array($couplesId)
+        );
+    }
 }
