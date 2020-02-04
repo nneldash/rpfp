@@ -477,7 +477,14 @@ class Forms extends CI_Controller
                     'Address_City' => $data->Address_City,
                     'Household_No' => $data->Household_No,
                     'Number_Child' => $data->Number_Child,
-                    'Status_Active' => $data->Status_Active
+                    'Status_Active' => $data->Status_Active,
+                    'Fp_Details_Id' => $data->Fp_Details_Id,
+                    'Mfp_Used' => $data->Mfp_Used,
+                    'Mfp_Shift' => $data->Mfp_Shift,
+                    'Tfp_Type' => $data->Tfp_Type,
+                    'Tfp_Status' => $data->Tfp_Status,
+                    'Mfp_Intention_Use' => $data->Mfp_Intention_Use,
+                    'Reason_Use' => $data->Reason_Use
                 ];
 
         $this->output

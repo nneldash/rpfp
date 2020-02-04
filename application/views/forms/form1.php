@@ -637,7 +637,7 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 					                        <input type="text" name="age1[<?=$i?>]" maxlength="2" class="text-center getAge1" style="width: 50%;" readonly value="<?= HtmlHelper::firstEntry_BirthAge($couple->FirstEntry->Age, $couple->SecondEntry->Age) ?>" />
 
 					                        <div class="duplicateBtn" hidden>
-						                        <button data-placement="right" data-toggle="popover" data-container="body" data-placement="left" data-html="true">
+						                        <button data-placement="right" data-toggle="popover<?= $i; ?>" data-container="body" data-placement="left" data-html="true">
 						                        	<i class="fa fa-exclamation-circle dupIcon" style="color: #e2919f;"></i>
 						                        </button>					                        	
 					                        </div>
@@ -1157,19 +1157,6 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 				</table>
 			</div>
 		</form>
-	</div>
-	<div id="orig">
-		<div class="popover-content hide">
-			<p>
-				Husband: 
-				<span class="fill-husband"></span>
-			</p>
-			<p>
-				Wife:
-				<span class="fill-wife"></span>
-				<p class="auto-fill-data">Autofill data</p>
-			</p>
-		</div>
 	</div>
 </div>
 
