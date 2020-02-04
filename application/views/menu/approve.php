@@ -20,9 +20,18 @@ if (empty($title)) {
 </style>
 
 <br>
+<<<<<<< HEAD
 <form class="form-horizontal form-label-left" id="search_form"> 
     <div class="col-md-12">
         <div class="col-md-6">
+=======
+<a class="searchDropdown text-right" data-toggle="collapse" data-parent="#accordion" href="#searchCouple">
+    Hide/Show Search
+</a>
+<form class="form-horizontal form-label-left"> 
+    <div class="col-md-12 collapse in" id="searchCouple">
+        <div class="col-md-6 col-xs-12">
+>>>>>>> 27b4bdefd0a4f320971ed8aafc1971ad89de3acb
             <div class="x_title">
                 <h3>Class</h3>
                 <div class="clearfix"></div>
@@ -32,6 +41,7 @@ if (empty($title)) {
                     <label>Location</label>
                 </div> -->
                 <div class="form-group">
+<<<<<<< HEAD
                     <label class="control-label col-md-3">Province</label>
                     <div class="col-md-7">
                         <select class="selectpicker" id="provinceList" data-live-search="true" title="">
@@ -56,30 +66,48 @@ if (empty($title)) {
 
                         </select>
                         <input type="hidden" readonly name="barangay_search" value="">
+=======
+                    <label class="control-label col-md-3 col-xs-12">Province</label>
+                    <div class="col-md-7 col-xs-12">
+                        <input type="text" name="province_search">
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="control-label col-md-3">Class Number</label>
-                    <div class="col-md-7">
+                    <label class="control-label col-md-3 col-xs-12">City/Municipality</label>
+                    <div class="col-md-7 col-xs-12">
+                        <input type="text" name="municipality_search">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-3 col-xs-12">Barangay</label>
+                    <div class="col-md-7 col-xs-12">
+                        <input type="text" name="barangay_search">
+>>>>>>> 27b4bdefd0a4f320971ed8aafc1971ad89de3acb
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-3 col-xs-12">Class Number</label>
+                    <div class="col-md-7 col-xs-12">
                         <input type="text" name="classno_search">
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="control-label col-md-3">Date Conducted</label>
+                    <label class="control-label col-md-3 col-xs-12">Date Conducted</label>
                 </div>
                 <div class="form-group">
-                    <label class="control-label col-md-3">From</label>
-                    <div class="col-md-7">
+                    <label class="control-label col-md-3 col-xs-12">From</label>
+                    <div class="col-md-7 col-xs-12">
                         <input type="date" name="datefrom_search">
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="control-label col-md-3">To</label>
-                    <div class="col-md-7">
+                    <label class="control-label col-md-3 col-xs-12">To</label>
+                    <div class="col-md-7 col-xs-12">
                         <input type="date" name="dateto_search">
                     </div>
                 </div>
                 <div class="form-group">
+<<<<<<< HEAD
                     <label class="control-label col-md-3">Type of Class</label>
                     <div class="col-md-7">
                         <select class="form-control" name="typeclass_search">
@@ -91,27 +119,41 @@ if (empty($title)) {
                             <option value="usapan">Usapan</option>
                             <option value="house_to_house">House to House</option>
                             <option value="others">Others</option>
+=======
+                    <label class="control-label col-md-3 col-xs-12">Type of Class</label>
+                    <div class="col-md-7 col-xs-12">
+                        <select class="form-control">
+                            <option></option>
+                            <option>4Ps</option>
+                            <option>Profile</option>
+                            <option>FBOs</option>
+                            <option>PMC</option>
+                            <option>Usapan</option>
+                            <option>House to House</option>
+                            <option>Others</option>
+>>>>>>> 27b4bdefd0a4f320971ed8aafc1971ad89de3acb
                         </select>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-6 col-xs-12">
             <div class="x_title">
                 <h3>Couples</h3>
                 <div class="clearfix"></div>
             </div>
             <div class="row">
                 <div class="form-group">
-                    <label class="control-label col-md-3">Name</label>
-                    <div class="col-md-7">
+                    <label class="control-label col-md-3 col-xs-12">Name</label>
+                    <div class="col-md-7 col-xs-12">
                         <input type="text" name="name_search"></p>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="control-label col-md-3">Age</label>
+                    <label class="control-label col-md-3 col-xs-12">Age</label>
                 </div>
                 <div class="form-group">
+<<<<<<< HEAD
                     <label class="control-label col-md-3">From</label>
                     <div class="col-md-7">
                         <input type="text" name="agefrom_search" class="numbers_only" maxlength="2">
@@ -127,6 +169,23 @@ if (empty($title)) {
                     <label class="control-label col-md-3">Number of Children</label>
                     <div class="col-md-7">
                         <input type="text" name="no_children_search" class="numbers_only" maxlength="3">
+=======
+                    <label class="control-label col-md-3 col-xs-12">From</label>
+                    <div class="col-md-7 col-xs-12">
+                        <input type="number" name="agefrom_search" max="200">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-3 col-xs-12">To</label>
+                    <div class="col-md-7 col-xs-12">
+                        <input type="number" name="agefrom_search" maxlen="200">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-3 col-xs-12">Number of Children</label>
+                    <div class="col-md-7 col-xs-12">
+                        <input type="number" name="no_children_search" max="200">
+>>>>>>> 27b4bdefd0a4f320971ed8aafc1971ad89de3acb
                     </div>
                 </div>
             </div>
@@ -136,8 +195,8 @@ if (empty($title)) {
             </div>
             <div class="row">
                 <div class="form-group">
-                    <label class="control-label col-md-3">FP Type</label>
-                    <div class="col-md-7">
+                    <label class="control-label col-md-3 col-xs-12">FP Type</label>
+                    <div class="col-md-7 col-xs-12">
                         <select name="fptype_search" class="form-control fp_type">
                             <option value=""></option>
                             <option value="fp_user">FP User</option>
@@ -153,6 +212,7 @@ if (empty($title)) {
                 </div>
             </div>
         </div>
+<<<<<<< HEAD
     </div>
     <div class="col-md-4 col-md-offset-4 text-center">
         <br>
@@ -204,6 +264,59 @@ if (empty($title)) {
         </tbody>
     </table>
 </div>
+=======
+        <div class="col-md-4 col-md-offset-4 col-xs-12 text-center">
+            <br>
+            <input class="btn btn-primary" type="submit" name="search" value="Search">
+        </div>
+        <br><br>
+    </div>
+</form>
+
+<hr>
+<table id="datatable-responsive" class="table table-condensed table-striped table-hover table-bordered dt-responsive nowrap" cellspacing="0" width="100%">
+    <thead>
+        <tr>
+            <th>Class #</th>
+            <th>Type Class</th>
+            <th>Province</th>
+            <th>Municipality / City</th>
+            <th>Barangay</th>
+            <th>Number of Couples</th>
+            <th>Date Conducted</th>
+            <th>Encoded By</th>
+            <th style="width: 10%;">Action</th>
+        </tr>
+    </thead>
+    <tbody>         
+        <?php foreach ($approve as $approved) : ?>
+            <?php if ($approved->ClassNo != 'N/A') { ?>
+                <tr>
+					<td><?= $approved->ClassNo; ?></td>
+                    <td><?= $approved->TypeClass; ?></td>
+                    <td><?= $approved->Province; ?></td>
+                    <td><?= $approved->Municipality; ?></td>
+                    <td><?= $approved->Barangay; ?></td>
+                    <td><?= $approved->CouplesEncoded; ?></td>
+                    <td><?= date('F d, Y', strtotime($approved->DateConduct)); ?></td>
+                    <td><?= ucfirst($approved->FirstName) .' '. ucfirst($approved->LastName); ?></td>
+                    <td class="text-center">
+                        <a href="<?= base_url('forms?rpfpId='. $approved->RpfpClass.'&status=0'); ?>" target="_blank">
+                            <button class="btn btn-primary" data-toggle="tooltip" data-placement="left" title="Edit">
+                                <i class="fa fa-edit"></i>
+                            </button>
+                        </a>			
+                    </td>
+                </tr>
+            <?php } else { ?>
+                <tr>
+                    <td class="text-center" colspan="5">No result(s) found.</td>
+                </tr>
+            <?php } ?>
+        <?php endforeach; ?>
+    </tbody>
+</table>
+>>>>>>> 27b4bdefd0a4f320971ed8aafc1971ad89de3acb
 
 <script>
     loadJs(base_url + 'NewAssets/bootstrapSelectJs');

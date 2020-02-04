@@ -18,6 +18,7 @@ class FormModel extends BaseModel
         $this->CI->load->iface('common/TraditionalStatuses');
 
         $this->CI->load->library('couple_list/DuplicateCoupleClass');
+        $this->CI->load->library('couple_list/DuplicateCoupleDetailsClass');
         $this->CI->load->library('accomplishment/AccomplishmentClass');
         $this->CI->load->library('accomplishment/lists/ReportAccomplishment');
     }
@@ -438,7 +439,7 @@ class FormModel extends BaseModel
     {
         $h_fname    = $this->input->post('h_fname');
         $h_lname    = $this->input->post('h_lname');
-        $h_extname  = $this->input->post('h_extname');
+        $h_ext      = $this->input->post('h_ext');
         $h_bday     = $this->input->post('h_bday');
         $w_fname    = $this->input->post('w_fname');
         $w_lname    = $this->input->post('w_lname');
@@ -462,16 +463,16 @@ class FormModel extends BaseModel
                 'W_Sex' => 'w_sex'
             ),
             'check_couples_details',
-            array($h_fname, $h_lname, $h_extname, $h_bday, $w_fname, $w_lname, $w_bday)
+            array($h_fname, $h_lname, $h_ext, $h_bday, $w_fname, $w_lname, $w_bday)
         );
     }
 
-    public function getDuplicateDetails()
+    public function getDuplicateDetails() : DuplicateCoupleDetailsInterface
     {
         $couplesId = $this->input->post('couplesId');
 
         return $this->fromDbGetSpecific(
-            'DuplicateCoupleClass',
+            'DuplicateCoupleDetailsClass',
             array(
                 'CouplesId' => 'couplesid',
                 'Address_No_St' => 'address_no_st',
@@ -479,7 +480,14 @@ class FormModel extends BaseModel
                 'Address_City' => 'address_city',
                 'Household_No' => 'household_no',
                 'Number_Child' => 'number_child',
-                'Status_Active' => 'status_active'
+                'Status_Active' => 'status_active',
+                'Fp_Details_Id' => 'fpdetailsid',
+                'Mfp_Used' => 'mfp_used',
+                'Mfp_Shift' => 'mfp_shift',
+                'Tfp_Type' => 'tfp_type',
+                'Tfp_Status' => 'tfp_status',
+                'Mfp_Intention_Use' => 'mfp_intention_use',
+                'Reason_Use' => 'reason_use'
             ),
             'encoder_get_duplicate_details',
             array($couplesId)

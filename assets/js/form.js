@@ -57,7 +57,7 @@ $(function() {
 	typeValidation();
 	statusValidation();
 	reasonValidation();
-	tooltip();
+	// tooltip();
 
 	Inputmask().mask(".birthAge");	
 
@@ -109,43 +109,75 @@ function click_click_click(id, couplesId)
 		}).done(function(result){
 			$('[aria-describedby='+ id + ']').popover('hide');
 
-			$('[aria-describedby='+ id + ']').closest('tr').find('.add_st').val(result.Address_No_St);
-			$('[aria-describedby='+ id + ']').closest('tr').find('.add_brgy').val(result.Address_Barangay);
-			$('[aria-describedby='+ id + ']').closest('tr').find('.add_city').val(result.Address_City);
-			$('[aria-describedby='+ id + ']').closest('tr').find('.hh_no').val(result.Household_No);
-			$('[aria-describedby='+ id + ']').closest('tr').find('.noChildren').val(result.Number_Child);
+			if(result.Address_No_St != 'N/A') {
+				$('[aria-describedby='+ id + ']').closest('tr').find('.add_st').val(result.Address_No_St);
+			}
+
+			if(result.Address_Barangay != 'N/A') {
+				$('[aria-describedby='+ id + ']').closest('tr').find('.add_brgy').val(result.Address_Barangay);
+			}
+
+			if(result.Address_City != 'N/A') {
+				$('[aria-describedby='+ id + ']').closest('tr').find('.add_city').val(result.Address_City);
+			}
+
+			if(result.Household_No != 'N/A') {
+				$('[aria-describedby='+ id + ']').closest('tr').find('.hh_no').val(result.Household_No);
+			}
+
+			if(result.Number_Child != 'N/A') {
+				$('[aria-describedby='+ id + ']').closest('tr').find('.noChildren').val(result.Number_Child);
+			}
+
+			if(result.Mfp_Used != 'N/A') {
+				$('[aria-describedby='+ id + ']').closest('tr').find('.method8').val(result.Mfp_Used);
+			}
+
+			if(result.Mfp_Shift != 'N/A') {
+				$('[aria-describedby='+ id + ']').closest('tr').find('.method9').val(result.Mfp_Shift);
+			}
+
+			if(result.Tfp_Type != 'N/A') {
+				$('[aria-describedby='+ id + ']').closest('tr').find('.typeFp').val(result.Tfp_Type);
+			}
+
+			if(result.Tfp_Status != 'N/A') {
+				$('[aria-describedby='+ id + ']').closest('tr').find('.status-trad').val(result.Tfp_Status);
+			}
+
+			if(result.Mfp_Intention_Use != 'N/A') {
+				$('[aria-describedby='+ id + ']').closest('tr').find('.intention-use').val(result.Mfp_Intention_Use);
+			}
+
+			if(result.Reason_Use != 'N/A') {
+				$('[aria-describedby='+ id + ']').closest('tr').find('.reasonFp').val(result.Reason_Use);
+			}
 		});
 	});
 }
 
-function tooltip(couplesId, status, husband, wife)
+function tooltip(couplesId, status, husband, wife, index)
 {
-	$("[data-toggle=popover]").unbind('click');
-	$("[data-toggle=popover]").bind('click', function(event) {
+	$("[data-toggle=popover"+index+"]").unbind('click');
+	$("[data-toggle=popover"+index+"]").bind('click', function(event) {
  		event.preventDefault();
 
-		var new_content = '<p>' +
-								'<u>' +
-									'<b class="couple-status"></b>' +
-								'</u>' +
-							'</p>' +
-							'<p>Husband: <span class="fill-husband">'+ husband +'</span></p>' +
+		var new_content =   '<p>Husband: <span class="fill-husband">'+ husband +'</span></p>' +
 							'<p>Wife: <span class="fill-wife">'+ wife +'</span></p> <br>' +
 							'<p class="button-fill auto-fill-data">Autofill data</p>';
 
-		$('body').popover({
+		$("[data-toggle=popover"+index+"]").popover({
 			container: 'body',
-			selector: '[data-toggle=popover]',
 		    html: true,
 		    title: 'Possible Duplicate in ' + status,
 			content: new_content
 		});
  	});
 
- 	$(document).on("click", "button[aria-describedby]" , function() {
-        var id = $(this).attr('aria-describedby');
-        click_click_click(id, couplesId);
-    });
+ 	$(document).on("click", "button[aria-describedby]", function() {
+		var id = $(this).attr('aria-describedby');
+		click_click_click(id, couplesId);
+	});
 }
 
 
@@ -337,6 +369,24 @@ function noChildrenValidation()
 function methodValidation()
 {
 	$('.method8').keyup(function(event){
+		var val = $(this).val();
+	    if (val > 12 || val == 0) {
+	    	$(this).val('');
+	    	event.preventDefault();
+			return false;
+	    }
+	});
+
+	$('.method9').keyup(function(event){
+		var val = $(this).val();
+	    if (val > 12 || val == 0) {
+	    	$(this).val('');
+	    	event.preventDefault();
+			return false;
+	    }
+	});
+
+	$('.method8').keydown(function(event){
 		if(!(event.keyCode == 48 ||
 			event.keyCode == 49  || 
 			event.keyCode == 50  ||
@@ -361,14 +411,6 @@ function methodValidation()
 			event.keyCode == 9)) 
 		{
 			event.preventDefault();
-			return false;
-	    }
-
-	    var val = $(this).val();
-
-	    if (val > 12) {
-	    	$(this).val('');
-	    	event.preventDefault();
 			return false;
 	    }
 
@@ -378,7 +420,7 @@ function methodValidation()
 	    }
 	});
 
-	$('.method9').keyup(function(event){
+	$('.method9').keydown(function(event){
 		if(!(event.keyCode == 48 ||
 			event.keyCode == 49  || 
 			event.keyCode == 50  ||
@@ -403,16 +445,8 @@ function methodValidation()
 			event.keyCode == 9)) 
 		{
 			event.preventDefault();
-			return false;
-	    }
-
-	    var val = $(this).val();
-
-	    if (val > 12) {
-	    	$(this).val('');
-	    	event.preventDefault();
-			return false;
-	    }
+			return false;	    	
+	    }	
 
 	    if(!$(this).prop('required')) {
 	    	$(this).closest('tr').find('.require-this').attr('required', 'required');
@@ -474,30 +508,47 @@ function statusValidation()
 	    	$(this).closest('tr').find('input[name="intention_use['+index+']"]').removeAttr('disabled', 'disabled');
 	    	intentionStatusValidation(index);
 	    } else {
+	    	$(this).closest('tr').find('.intention-use').val('');
 	    	$(this).closest('tr').find('.intention-use').removeAttr('required', 'required');
 	    	$(this).closest('tr').find('.intention-required').attr('hidden', 'hidden');
 	    	$(this).closest('tr').find('input[name="intention_use['+index+']"]').attr('disabled', 'disabled');
-	    }    
-
+	    }
 	});
 }
 
 function intentionStatusValidation()
 {
+	$('.intention-use').keyup(function(event){
+		var val = $(this).val();
+	    if (val > 12 || val == 0) {
+	    	$(this).val('');
+	    	event.preventDefault();
+			return false;
+	    }
+	});
+
 	$('.intention-use').keydown(function(event){
-		if(!(event.keyCode == 49 || 
+		if(!(event.keyCode == 48 ||
+			event.keyCode == 49  || 
 			event.keyCode == 50  ||
 			event.keyCode == 51  ||
 			event.keyCode == 52  ||
 			event.keyCode == 53  ||
 			event.keyCode == 54  ||
+			event.keyCode == 55  ||
+			event.keyCode == 56  ||
+			event.keyCode == 57  ||
+			event.keyCode == 96  ||
 			event.keyCode == 97  || 
 			event.keyCode == 98  ||
 			event.keyCode == 99  ||
 			event.keyCode == 100 ||
 			event.keyCode == 101 ||
 			event.keyCode == 102 ||
-			event.keyCode == 8 	 || 
+			event.keyCode == 103 ||
+			event.keyCode == 104 ||
+			event.keyCode == 105 ||
+			event.keyCode == 8   || 
 			event.keyCode == 9)) 
 		{
 			event.preventDefault();
@@ -763,6 +814,11 @@ function getDataDuplicate()
 		var index = $(this).closest('tr').find('.loopIndex1').val();
 
 		autoGetData(fname1, lname1, extname1, sex1, bday1, fname2, lname2, extname2, sex2, bday2, index);
+
+		if(!$(this).prop('required')) {
+	    	$(this).closest('tr').find('.require-this').attr('required', 'required');
+	    	$(this).closest('tr').find('.required').removeAttr('hidden', 'hidden');
+	    }
 	});
 
 	$('.bday1').keyup(function(){
@@ -803,6 +859,11 @@ function getDataDuplicate()
 		var index = $(this).closest('tr').find('.loopIndex1').val();
 
 		autoGetData(fname1, lname1, extname1, sex1, bday1, fname2, lname2, extname2, sex2, bday2, index);
+
+		if(!$(this).prop('required')) {
+	    	$(this).closest('tr').find('.require-this').attr('required', 'required');
+	    	$(this).closest('tr').find('.required').removeAttr('hidden', 'hidden');
+	    }
 	});
 
 	$('.fname2').keyup(function(){
@@ -835,6 +896,11 @@ function getDataDuplicate()
 		var index = $(this).closest('tr').find('.loopIndex2').val();
 
 		autoGetData(fname1, lname1, extname1, sex1, bday1, fname2, lname2, extname2, sex2, bday2, index);
+
+		if(!$(this).prop('required')) {
+	    	$(this).closest('tr').find('.require-this').attr('required', 'required');
+	    	$(this).closest('tr').find('.required').removeAttr('hidden', 'hidden');
+	    }
 	});
 
 	$('.lname2').keyup(function(){
@@ -867,6 +933,11 @@ function getDataDuplicate()
 		var index = $(this).closest('tr').find('.loopIndex2').val();
 
 		autoGetData(fname1, lname1, extname1, sex1, bday1, fname2, lname2, extname2, sex2, bday2, index);
+
+		if(!$(this).prop('required')) {
+	    	$(this).closest('tr').find('.require-this').attr('required', 'required');
+	    	$(this).closest('tr').find('.required').removeAttr('hidden', 'hidden');
+	    }
 	});
 
 	$('.extname2').keyup(function(){
@@ -931,6 +1002,11 @@ function getDataDuplicate()
 		var index = $(this).closest('tr').find('.loopIndex2').val();
 
 		autoGetData(fname1, lname1, extname1, sex1, bday1, fname2, lname2, extname2, sex2, bday2, index);
+
+		if(!$(this).prop('required')) {
+	    	$(this).closest('tr').find('.require-this').attr('required', 'required');
+	    	$(this).closest('tr').find('.required').removeAttr('hidden', 'hidden');
+	    }
 	});
 
 	$('.bday2').keyup(function(){
@@ -972,6 +1048,11 @@ function getDataDuplicate()
 		var index = $(this).closest('tr').find('.loopIndex2').val();
 
 		autoGetData(fname1, lname1, extname1, sex1, bday1, fname2, lname2, extname2, sex2, bday2, index);
+
+		if(!$(this).prop('required')) {
+	    	$(this).closest('tr').find('.require-this').attr('required', 'required');
+	    	$(this).closest('tr').find('.required').removeAttr('hidden', 'hidden');
+	    }
 	});
 }
 
@@ -1012,17 +1093,14 @@ function autoGetData(fname1, lname1, extname1, sex1, bday1, fname2, lname2, extn
 				'w_bday'	: w_bday
 			}
 	}).done(function(result){
-		console.log(result);
-		if (result.ActiveStatus === 2) {
+		if (result.ActiveStatus === '2') {
 			status = 'Pending';
-		} else if (result.ActiveStatus === 0) {
+		} else if (result.ActiveStatus === '0') {
 			status = 'Approve';
 		} else {
 			status;
 		}
 
-		$('.tr1' + index + ' td #popover-content').find('.couple-status').text(status); // remove before push
-		
 		if (result.CheckCount >= 1) {
 			$('.tr1' + index + ' td:nth-child(1)').addClass('has-duplicate');
 			$('.tr2' + index + ' td:nth-child(1)').addClass('has-duplicate');
@@ -1061,7 +1139,7 @@ function autoGetData(fname1, lname1, extname1, sex1, bday1, fname2, lname2, extn
 			$('.tr1' + index + ' td #popover-content').find('.fill-husband').text(result.Husband);
 			$('.tr1' + index + ' td #popover-content').find('.fill-wife').text(result.Wife);
 
-			tooltip(result.CouplesId, status, result.Husband, result.Wife);
+			tooltip(result.CouplesId, status, result.Husband, result.Wife, index);
 		} else {
 
 			$('.tr1' + index + ' td:nth-child(1)').removeClass('has-duplicate');
