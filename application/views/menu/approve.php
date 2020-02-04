@@ -123,36 +123,36 @@ if (empty($title)) {
                         <input type="text" name="no_children_search" maxlength="3">
                     </div>
                 </div>
-            </div>
-            <div class="x_title">
-                <h3>FP Details</h3>
-                <div class="clearfix"></div>
-            </div>
-            <div class="row">
-                <div class="form-group">
-                    <label class="control-label col-md-3 col-xs-12">FP Type</label>
-                    <div class="col-md-7 col-xs-12">
-                        <select name="fptype_search" class="form-control fp_type">
-                            <option value=""></option>
-                            <option value="fp_user">FP User</option>
-                            <option value="non_fp_user">Non-FP User</option>
-                        </select>
+                <div class="x_title">
+                    <h3>FP Details</h3>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <label class="control-label col-md-3 col-xs-12">FP Type</label>
+                        <div class="col-md-7 col-xs-12">
+                            <select name="fptype_search" class="form-control fp_type">
+                                <option value=""></option>
+                                <option value="fp_user">FP User</option>
+                                <option value="non_fp_user">Non-FP User</option>
+                            </select>
+                        </div>
                     </div>
-                </div>
-                <div class="form-group">
-                    <p class="for_fp_user"></p>
-                </div>
-                <div class="form-group">
-                    <p class="non_fp_intention_status"></p>
+                    <div class="form-group">
+                        <p class="for_fp_user"></p>
+                    </div>
+                    <div class="form-group">
+                        <p class="non_fp_intention_status"></p>
+                    </div>
                 </div>
             </div>
         </div>
+        <div class="col-md-4 col-md-offset-4 col-xs-12 text-center">
+            <br>
+            <input class="btn btn-primary search_now" type="submit" name="search" value="Search">
+        </div>
+        <br><br>
     </div>
-    <div class="col-md-4 col-md-offset-4 col-xs-12 text-center">
-        <br>
-        <input class="btn btn-primary search_now" type="submit" name="search" value="Search">
-    </div>
-    <br><br>
 </form>
 
 <hr>
