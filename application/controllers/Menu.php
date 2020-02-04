@@ -274,17 +274,17 @@ class Menu extends CI_Controller
     {
         $aSearch = new ApproveClass();
 
-        $aSearch->RpfpClass = '123';
-        $aSearch->TypeClass = $this->input->post('type_of_class');
+        $aSearch->RpfpClass = '7';
+        $aSearch->TypeClass = $this->input->post('typeclass_search');
         $aSearch->OthersSpecify = '';
-        $aSearch->Province = $this->input->post('province_hidden');
-        $aSearch->Municipality = $this->input->post('muni_hidden');
-        $aSearch->Barangay = $this->input->post('brgy_hidden');
+        $aSearch->Province = $this->input->post('province_search');
+        $aSearch->Municipality = $this->input->post('municipality_search');
+        $aSearch->Barangay = $this->input->post('barangay_search');
         $aSearch->CouplesEncoded = '';
         $aSearch->ClassNo = $this->input->post('classno_search');
-        $aSearch->DateConduct = '';
-        $aSearch->LastName = '';
-        $aSearch->FirstName = '';
+        $aSearch->DateConduct = $this->input->post('dateto_search');
+        $aSearch->LastName = $this->input->post('name_search');
+        $aSearch->FirstName = $this->input->post('name_search');
 
         $this->output
             ->set_content_type('application/json')
