@@ -20,18 +20,15 @@ if (empty($title)) {
 </style>
 
 <br>
-<<<<<<< HEAD
 <form class="form-horizontal form-label-left" id="search_form"> 
     <div class="col-md-12">
         <div class="col-md-6">
-=======
 <a class="searchDropdown text-right" data-toggle="collapse" data-parent="#accordion" href="#searchCouple">
     Hide/Show Search
 </a>
 <form class="form-horizontal form-label-left"> 
     <div class="col-md-12 collapse in" id="searchCouple">
         <div class="col-md-6 col-xs-12">
->>>>>>> 27b4bdefd0a4f320971ed8aafc1971ad89de3acb
             <div class="x_title">
                 <h3>Class</h3>
                 <div class="clearfix"></div>
@@ -41,7 +38,6 @@ if (empty($title)) {
                     <label>Location</label>
                 </div> -->
                 <div class="form-group">
-<<<<<<< HEAD
                     <label class="control-label col-md-3">Province</label>
                     <div class="col-md-7">
                         <select class="selectpicker" id="provinceList" data-live-search="true" title="">
@@ -66,7 +62,6 @@ if (empty($title)) {
 
                         </select>
                         <input type="hidden" readonly name="barangay_search" value="">
-=======
                     <label class="control-label col-md-3 col-xs-12">Province</label>
                     <div class="col-md-7 col-xs-12">
                         <input type="text" name="province_search">
@@ -82,7 +77,6 @@ if (empty($title)) {
                     <label class="control-label col-md-3 col-xs-12">Barangay</label>
                     <div class="col-md-7 col-xs-12">
                         <input type="text" name="barangay_search">
->>>>>>> 27b4bdefd0a4f320971ed8aafc1971ad89de3acb
                     </div>
                 </div>
                 <div class="form-group">
@@ -107,7 +101,6 @@ if (empty($title)) {
                     </div>
                 </div>
                 <div class="form-group">
-<<<<<<< HEAD
                     <label class="control-label col-md-3">Type of Class</label>
                     <div class="col-md-7">
                         <select class="form-control" name="typeclass_search">
@@ -119,7 +112,6 @@ if (empty($title)) {
                             <option value="usapan">Usapan</option>
                             <option value="house_to_house">House to House</option>
                             <option value="others">Others</option>
-=======
                     <label class="control-label col-md-3 col-xs-12">Type of Class</label>
                     <div class="col-md-7 col-xs-12">
                         <select class="form-control">
@@ -131,7 +123,6 @@ if (empty($title)) {
                             <option>Usapan</option>
                             <option>House to House</option>
                             <option>Others</option>
->>>>>>> 27b4bdefd0a4f320971ed8aafc1971ad89de3acb
                         </select>
                     </div>
                 </div>
@@ -153,7 +144,6 @@ if (empty($title)) {
                     <label class="control-label col-md-3 col-xs-12">Age</label>
                 </div>
                 <div class="form-group">
-<<<<<<< HEAD
                     <label class="control-label col-md-3">From</label>
                     <div class="col-md-7">
                         <input type="text" name="agefrom_search" class="numbers_only" maxlength="2">
@@ -169,7 +159,6 @@ if (empty($title)) {
                     <label class="control-label col-md-3">Number of Children</label>
                     <div class="col-md-7">
                         <input type="text" name="no_children_search" class="numbers_only" maxlength="3">
-=======
                     <label class="control-label col-md-3 col-xs-12">From</label>
                     <div class="col-md-7 col-xs-12">
                         <input type="number" name="agefrom_search" max="200">
@@ -185,7 +174,6 @@ if (empty($title)) {
                     <label class="control-label col-md-3 col-xs-12">Number of Children</label>
                     <div class="col-md-7 col-xs-12">
                         <input type="number" name="no_children_search" max="200">
->>>>>>> 27b4bdefd0a4f320971ed8aafc1971ad89de3acb
                     </div>
                 </div>
             </div>
@@ -212,7 +200,6 @@ if (empty($title)) {
                 </div>
             </div>
         </div>
-<<<<<<< HEAD
     </div>
     <div class="col-md-4 col-md-offset-4 text-center">
         <br>
@@ -264,7 +251,6 @@ if (empty($title)) {
         </tbody>
     </table>
 </div>
-=======
         <div class="col-md-4 col-md-offset-4 col-xs-12 text-center">
             <br>
             <input class="btn btn-primary" type="submit" name="search" value="Search">
@@ -316,7 +302,6 @@ if (empty($title)) {
         <?php endforeach; ?>
     </tbody>
 </table>
->>>>>>> 27b4bdefd0a4f320971ed8aafc1971ad89de3acb
 
 <script>
     loadJs(base_url + 'NewAssets/bootstrapSelectJs');
