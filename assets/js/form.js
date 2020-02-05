@@ -57,7 +57,6 @@ $(function() {
 	typeValidation();
 	statusValidation();
 	reasonValidation();
-	// tooltip();
 
 	Inputmask().mask(".birthAge");	
 
@@ -457,6 +456,28 @@ function methodValidation()
 
 function typeValidation()
 {
+	$('.typeFp').keypress(function(event){
+		var type = $(this).val();
+		var gender1 = $(this).closest('tr').find('.gender1').val();
+		var gender2 = $(this).closest('tr').next('tr').find('.gender2').val();
+		var age1 = $(this).closest('tr').find('.getAge1').val();
+		var age2 = $(this).closest('tr').next('tr').find('.getAge2').val();
+		var status = $(this).closest('tr').find('.status-trad').val();
+
+		gender1 = gender1.toUpperCase();
+		gender2 = gender2.toUpperCase();
+		
+		if (gender1 === 'F') {
+			var index = $(this).closest('tr').find('.loopIndex1').val();
+			UnmetNeedCriteria(index, age1, type, status);
+		} else if(gender2 === 'F') {
+			var index = $(this).closest('tr').find('.loopIndex2').val();
+			UnmetNeedCriteria(index, age2, type, status);
+		} else {
+			return false;
+		}
+	});
+
 	$('.typeFp').keydown(function(event){
 		if(!(event.keyCode == 49 || 
 			event.keyCode == 50  ||
@@ -486,6 +507,29 @@ function typeValidation()
 
 function statusValidation()
 {
+	$('.status-trad').keypress(function(event){
+		var status = $(this).val();
+		var gender1 = $(this).closest('tr').find('.gender1').val();
+		var gender2 = $(this).closest('tr').next('tr').find('.gender2').val();
+		var age1 = $(this).closest('tr').find('.getAge1').val();
+		var age2 = $(this).closest('tr').next('tr').find('.getAge2').val();
+		var type = $(this).closest('tr').find('.typeFp').val();
+
+
+		gender1 = gender1.toUpperCase();
+		gender2 = gender2.toUpperCase();
+		
+		if (gender1 === 'F') {
+			var index = $(this).closest('tr').find('.loopIndex1').val();
+			UnmetNeedCriteria(index, age1, type, status);
+		} else if(gender2 === 'F') {
+			var index = $(this).closest('tr').find('.loopIndex2').val();
+			UnmetNeedCriteria(index, age2, type, status);
+		} else {
+			return false;
+		}
+	});
+
 	$('.status-trad').keydown(function(event){
 		if(!(event.keyCode == 65 || 
 			event.keyCode == 66  ||
@@ -676,6 +720,18 @@ function getBrgys(muniId)
 	});
 }
 
+function UnmetNeedCriteria(index, age, type, status)
+{
+	if (age >= 15 && age <= 49 && type >= 1 && type <= 5 && status != 'C') {
+		$('.tr1' + index + ' .criteria').find('.label-danger').removeClass('none');
+	} else if (age >= 15 && age <= 49 && type === 6 && status === 'A') {
+		$('.tr1' + index + ' .criteria').find('.label-danger').removeClass('none');
+	} else {
+		$('.tr1' + index + ' .criteria').find('.label-danger').addClass('none');
+		return false;
+	}
+}
+
 function getDataDuplicate()
 {
 	$('.fname1').keyup(function(){
@@ -813,6 +869,14 @@ function getDataDuplicate()
 
 		var index = $(this).closest('tr').find('.loopIndex1').val();
 
+		var age = $(this).closest('tr').find('.getAge1').val();
+		var type = $(this).closest('tr').find('.typeFp').val();
+		var status = $(this).closest('tr').find('.status-trad').val();
+
+		if(sex1 == 'F') {
+			UnmetNeedCriteria(index, age, type, status);
+		}
+
 		autoGetData(fname1, lname1, extname1, sex1, bday1, fname2, lname2, extname2, sex2, bday2, index);
 
 		if(!$(this).prop('required')) {
@@ -857,6 +921,13 @@ function getDataDuplicate()
 		var bday2 = year2 + '-' + month2 + '-' + day2;
 
 		var index = $(this).closest('tr').find('.loopIndex1').val();
+
+		var type = $(this).closest('tr').find('.typeFp').val();
+		var status = $(this).closest('tr').find('.status-trad').val();
+
+		if(sex1 == 'F') {
+			UnmetNeedCriteria(index, age1, type, status);
+		}
 
 		autoGetData(fname1, lname1, extname1, sex1, bday1, fname2, lname2, extname2, sex2, bday2, index);
 
@@ -1001,6 +1072,14 @@ function getDataDuplicate()
 
 		var index = $(this).closest('tr').find('.loopIndex2').val();
 
+		var age = $(this).closest('tr').find('.getAge1').val();
+		var type = $(this).closest('tr').find('.typeFp').val();
+		var status = $(this).closest('tr').find('.status-trad').val();
+
+		if(sex2 == 'F') {
+			UnmetNeedCriteria(index, age, type, status);
+		}
+
 		autoGetData(fname1, lname1, extname1, sex1, bday1, fname2, lname2, extname2, sex2, bday2, index);
 
 		if(!$(this).prop('required')) {
@@ -1046,6 +1125,13 @@ function getDataDuplicate()
 		var bday1 = year1 + '-' + month1 + '-' + day1;
 		
 		var index = $(this).closest('tr').find('.loopIndex2').val();
+
+		var type = $(this).closest('tr').find('.typeFp').val();
+		var status = $(this).closest('tr').find('.status-trad').val();
+
+		if(sex2 == 'F') {
+			UnmetNeedCriteria(index, age2, type, status);
+		}
 
 		autoGetData(fname1, lname1, extname1, sex1, bday1, fname2, lname2, extname2, sex2, bday2, index);
 

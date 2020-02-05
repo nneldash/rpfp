@@ -44,21 +44,7 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 		input, textarea {
 			border-bottom: 1px solid #a7bfc1;
 		}
-
-		.loading ~ div div {
-			z-index: -1!important;
-		}
-
-		.loading {
-			position: fixed;
-			background-color: rgba(35,35,60,.5);
-			top: 0;
-			bottom: 0;
-			left: 0;
-			right: 0;
-			z-index: 999!important;
-		}
-
+		
 		#loading-text {
 			background-image: url('assets/images/Vanilla-1s-280px.gif');
 			background-repeat: no-repeat;
@@ -505,8 +491,13 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 											</td> 
 										<?php endif; ?>
 									<?php endif; ?>
-									<td class="text-center" style="border-left: none" rowspan="2">
+									<td class="text-center criteria" style="border-left: none" rowspan="2">
 										<p class="small"><?= $i + 1; ?></p>
+										<span class="label label-danger none">Unmet Need</span>
+										<span class="label label-success none" hidden>Serviced</span>
+										<span class="label label-warning none" hidden>Undecided</span>
+										<span class="label label-age none" hidden>50+ and 8 below</span>
+										<span class="label label-intention none" hidden>Intention to Shift</span>
 									</td>
 									
 									<td class="small">
