@@ -39,7 +39,7 @@ if (empty($title)) {
                     <label class="control-label col-md-3 col-xs-12">Province</label>
                     <div class="col-md-7 col-xs-12">
                         <select class="selectpicker" id="provinceList" data-live-search="true" title="">
-
+                        
                         </select>
                         <input type="hidden" readonly name="province_search" value="">
                     </div>
@@ -47,8 +47,8 @@ if (empty($title)) {
                 <div class="form-group">
                     <label class="control-label col-md-3 col-xs-12">City/Municipality</label>
                     <div class="col-md-7 col-xs-12">
-                        <select class="selectpicker" id="muniList" data-live-search="true" title="" >
-                        
+                        <select class="selectpicker" id="muniList" data-live-search="true" title="">
+
                         </select>
                         <input type="hidden" readonly name="municipality_search" value="">
                     </div>
@@ -70,16 +70,15 @@ if (empty($title)) {
                 </div>
                 <div class="form-group">
                     <label class="control-label col-md-3 col-xs-12">Date Conducted</label>
-                </div>
-                <div class="form-group">
-                    <label class="control-label col-md-3 col-xs-12">From</label>
-                    <div class="col-md-7 col-xs-12">
+                    <label class="control-label col-md-2 col-xs-12">From</label>
+                    <div class="col-md-5 col-xs-12">
                         <input type="date" name="datefrom_search">
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="control-label col-md-3 col-xs-12">To</label>
-                    <div class="col-md-7 col-xs-12">
+                    <label class="control-label col-md-3 col-xs-12"></label>
+                    <label class="control-label col-md-2 col-xs-12">To</label>
+                    <div class="col-md-5 col-xs-12">
                         <input type="date" name="dateto_search">
                     </div>
                 </div>
@@ -109,20 +108,20 @@ if (empty($title)) {
                 <div class="form-group">
                     <label class="control-label col-md-3 col-xs-12">Name</label>
                     <div class="col-md-7 col-xs-12">
-                        <input type="text" name="name_search"></p>
+                        <input type="text" name="name_search">
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="control-label col-md-3 col-xs-12">Age</label>
-                </div>
-                    <label class="control-label col-md-3 col-xs-12">From</label>
-                    <div class="col-md-7 col-xs-12">
+                    <label class="control-label col-md-2 col-xs-12">From</label>
+                    <div class="col-md-5 col-xs-12">
                         <input type="text" name="agefrom_search" maxlength="3">
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="control-label col-md-3 col-xs-12">To</label>
-                    <div class="col-md-7 col-xs-12">
+                    <label class="control-label col-md-3 col-xs-12"></label>
+                    <label class="control-label col-md-2 col-xs-12">To</label>
+                    <div class="col-md-5 col-xs-12">
                         <input type="text" name="ageto_search" maxlength="3">
                     </div>
                 </div>
