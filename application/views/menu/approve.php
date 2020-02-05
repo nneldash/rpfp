@@ -38,19 +38,28 @@ if (empty($title)) {
                 <div class="form-group">
                     <label class="control-label col-md-3 col-xs-12">Province</label>
                     <div class="col-md-7 col-xs-12">
-                        <input type="text" name="province_search">
+                        <select class="selectpicker" id="provinceList" data-live-search="true" title="">
+
+                        </select>
+                        <input type="hidden" readonly name="province_search" value="">
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="control-label col-md-3 col-xs-12">City/Municipality</label>
                     <div class="col-md-7 col-xs-12">
-                        <input type="text" name="municipality_search">
+                        <select class="selectpicker" id="muniList" data-live-search="true" title="" >
+                        
+                        </select>
+                        <input type="hidden" readonly name="municipality_search" value="">
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="control-label col-md-3 col-xs-12">Barangay</label>
                     <div class="col-md-7 col-xs-12">
-                        <input type="text" name="barangay_search">
+                        <select class="selectpicker" id="brgyList" data-live-search="true" title="">
+                        
+                        </select>
+                        <input type="hidden" readonly name="barangay_search" value="">
                     </div>
                 </div>
                 <div class="form-group">
