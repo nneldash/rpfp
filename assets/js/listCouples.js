@@ -45,18 +45,18 @@ function fpType()
                 					'<div class="col-md-7 col-xs-12">' +
                 						'<select name="fpuser_search" class="form-control fp_user">' +
 											'<option value=""></option>' +
-											'<option value="condom">Condom</option>' +
-											'<option value="iud">IUD</option>' +
-											'<option value="pills">Pills</option>' +
-											'<option value="injectible">Injectible</option>' +
-											'<option value="vasectomy">Vasectomy</option>' +
-											'<option value="ligation">Ligation</option>' +
-											'<option value="implant">Implant</option>' +
-											'<option value="cmm">CMM</option>' +
-											'<option value="bbt">BBT</option>' +
-											'<option value="stm">STM</option>' +
-											'<option value="sdm">SDM</option>' +
-											'<option value="lam">LAM</option>' +
+											'<option value="1">Condom</option>' +
+											'<option value="2">IUD</option>' +
+											'<option value="3">Pills</option>' +
+											'<option value="4">Injectible</option>' +
+											'<option value="5">Vasectomy</option>' +
+											'<option value="6">Ligation</option>' +
+											'<option value="7">Implant</option>' +
+											'<option value="8">CMM</option>' +
+											'<option value="9">BBT</option>' +
+											'<option value="10">STM</option>' +
+											'<option value="11">SDM</option>' +
+											'<option value="12">LAM</option>' +
 										'</select>' +
 									'</div>');
 		} else if (fpType == 'non_fp_user') {
@@ -92,10 +92,10 @@ function nonFpUser()
 											'<div class="col-md-7 col-xs-12">' +
 												'<select name="intention_status_search" class="form-control intention_status">' +
 													'<option value=""></option>' +
-													'<option value="with_intention">With Intention</option>' +
-													'<option value="undecided">Undecided</option>' +
-													'<option value="currently_pregnant">Currently Pregnant</option>' +
-													'<option value="no_intention">No Intention</option>' +
+													'<option value="1">With Intention</option>' +
+													'<option value="2">Undecided</option>' +
+													'<option value="3">Currently Pregnant</option>' +
+													'<option value="4">No Intention</option>' +
 												'</select>' +
 											'</div>');
 	} else {
@@ -131,14 +131,14 @@ function searchNow()
 			data: search,
 			url: base_url + '/menu/approvedClassSearch'
 		}).done(function(result){
-			// console.log(result);
-			$('.table-search-results').html(tableResults());
+			console.log(result);
+			$('.table-search-results').html(tableResults(result));
 		});
 		
 	})
 }
 
-function tableResults()
+function tableResults(result)
 {
 	return '<table id="datatable-responsive" class="table table-condensed table-striped table-hover table-bordered dt-responsive nowrap" cellspacing="0" width="100%">' +
 				'<thead>' +
@@ -156,7 +156,7 @@ function tableResults()
 			'</thead>' +
 			'<tbody>' +
 				'<tr>' +
-					'<td>RPFP-TAC-2019-00002</td>' +
+					'<td>'+ result.xXxClassNo.davalue +'</td>' +
 					'<td>4Ps</td>' +
 					'<td>LEYTE</td>' +
 					'<td>CITY OF TACLOBAN (Capital)</td>' +

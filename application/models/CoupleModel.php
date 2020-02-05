@@ -141,4 +141,9 @@ class CoupleModel extends BaseModel
             )
         );
     }
+
+    public function getSearchValues(SearchApproveInterface $data)
+    {
+        return $data;
+    }
 }

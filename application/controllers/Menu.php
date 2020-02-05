@@ -12,7 +12,7 @@ class Menu extends CI_Controller
         }
 
         $this->load->model('ProfileModel');
-        $this->load->library('couple_list/ApproveClass');
+        $this->load->library('couple_list/SearchApproveClass');
     }
 
     public function index()
@@ -272,22 +272,27 @@ class Menu extends CI_Controller
 
     public function approvedClassSearch()
     {
-        $aSearch = new ApproveClass();
+        $searchApprove = new SearchApproveClass();
 
-        $aSearch->RpfpClass = '7';
-        $aSearch->TypeClass = $this->input->post('typeclass_search');
-        $aSearch->OthersSpecify = '';
-        $aSearch->Province = $this->input->post('province_search');
-        $aSearch->Municipality = $this->input->post('municipality_search');
-        $aSearch->Barangay = $this->input->post('barangay_search');
-        $aSearch->CouplesEncoded = '';
-        $aSearch->ClassNo = $this->input->post('classno_search');
-        $aSearch->DateConduct = $this->input->post('dateto_search');
-        $aSearch->LastName = $this->input->post('name_search');
-        $aSearch->FirstName = $this->input->post('name_search');
+        $searchApprove->LocationCode = $this->input->post('province_search');
+        $searchApprove->ClassNo = $this->input->post('classno_search');
+        $searchApprove->DateConductedFrom = $this->input->post('datefrom_search');
+        $searchApprove->DateConductedTo = $this->input->post('dateto_search');
+        $searchApprove->TypeOfClass = $this->input->post('typeclass_search');
+        $searchApprove->Name = $this->input->post('name_search');
+        $searchApprove->AgeFrom = $this->input->post('agefrom_search');
+        $searchApprove->AgeTo = $this->input->post('ageto_search');
+        $searchApprove->NoOfChildren = $this->input->post('no_children_search');
+        $searchApprove->FpType = $this->input->post('fptype_search');
+        $searchApprove->FpUser = $this->input->post('fpuser_search');
+        $searchApprove->NonFpUser = $this->input->post('nonfpuser_search');
+        $searchApprove->IntentionStatus = $this->input->post('intention_status_search');
+        
+        
+        $ret_val = $this->CoupleModel->getSearchValues($searchApprove);
 
         $this->output
             ->set_content_type('application/json')
-            ->set_output(json_encode($aSearch));
+            ->set_output(json_encode($ret_val));
     }
 }
