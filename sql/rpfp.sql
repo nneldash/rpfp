@@ -1787,7 +1787,7 @@ BEGIN
                  barangayid,
                  class_no,
                  dateconducted,
-                 USER()
+                 name_user
              )
         ;
 

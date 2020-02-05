@@ -1272,7 +1272,8 @@ function saveForm1()
 			if(result.is_save == true) {
 				Toast.fire({
 					type: 'success',
-					title: 'Form 1 successfully saved!'
+					title: 'Form 1 successfully saved!',
+					message: result.traditionalFp
 				});
 			} else {
 				Toast.fire({

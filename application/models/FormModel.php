@@ -21,38 +21,51 @@ class FormModel extends BaseModel
         $this->CI->load->library('couple_list/DuplicateCoupleDetailsClass');
         $this->CI->load->library('accomplishment/AccomplishmentClass');
         $this->CI->load->library('accomplishment/lists/ReportAccomplishment');
+
+        $this->CI->load->library('common/Errors');
+
     }
 
-    public function saveForm1(FormInterface $form)
+    public function saveForm1(FormInterface $form) : ErrorInterface
     {
-        $error = BLANK;
-        $class_id = $this->saveSeminar($form->Seminar);
+        $class = $this->saveSeminar($form->Seminar);
 
-        if (empty($class_id)) {
-            $error = 'error0';
-        } elseif ($class_id == 'INVALID LOCATION') {
-            $error = 'error1';
-        } elseif ($class_id == 'INVALID ROLE') {
-            $error = 'error2';
-        } elseif ($class_id == 'SAVE SUCCESSFUL') {
-            $class_id = $form->Seminar->ClassId;
-        } else {
-            $class_id = explode(" ", $class_id);
-            $class_id = $class_id[2];
-        }
-
-        if (empty($error)) {
-            $couple = $this->saveCouple($class_id, $form->ListCouple);
+        if (empty($class->Code)) {
+            $class->Message = 'CLASS IS SUCCESSFULLY SAVED';
+            $couples = $this->saveCoupleData($class->ReturnValue, $form->ListCouple);
         }
         
-        if (!empty($couple)) {
-           $error = 'error3';
+        if (!empty($couples->Code)) {
+           $class = $couples;
         }
 
-       return $error;
+       return $class;
     }
 
-    public function saveSeminar(SeminarInterface $data)
+    private static function extractCode($code) : ErrorInterface
+    {
+        $ret_val = new Errors();
+        $ret_val->Code = ErrorInterface::NO_ERROR;
+        if (empty($code)) {
+            $ret_val->Code = ErrorInterface::DATABASE_ERROR;
+            $ret_val->Description = 'error0';
+        } elseif ($code == 'INVALID LOCATION') {
+            $ret_val->Code = ErrorInterface::INVALID_PARAMETER;
+            $ret_val->Description = 'error1';
+        } elseif ($code == 'INVALID ROLE') {
+            $ret_val->Code = ErrorInterface::INVALID_ROLE;
+            $ret_val->Description = 'error2';
+        } elseif ($code == 'UPDATE SUCCESSFUL') {
+            $ret_val->ReturnValue = $code;
+        } else {
+            $new_code = explode(" ", $code);
+            $ret_val->ReturnValue = $new_code[2];
+        }
+
+        return $ret_val;
+    }
+
+    private function saveSeminar(SeminarInterface $data) : ErrorInterface
     {
         $method = "encoder_save_class";
 
@@ -65,98 +78,129 @@ class FormModel extends BaseModel
             $data->DateConducted == N_A ? BLANK : $data->DateConducted
         ];
         
-        return $this->saveToDb($method, $params);
+        $class_id = $this->saveToDb($method, $params);
+        $ret_val = $this->extractCode($class_id);
+        
+        return $ret_val;
     }
 
-    private function saveCouple(int $class_id, ListCoupleInterface $listCouple)
+    private function saveCoupleFPDetails(
+        int $couple_id,
+        ModernFpUserInterface $modern,
+        TraditionalFpUserInterface $traditional
+    ) : ErrorInterface
     {
-        $errors = BLANK;
-        foreach ($listCouple as $current_couple) {
-            $couple = CoupleClass::getFromVariable($current_couple);
-            $method = "encoder_save_couple";
-            $params1 = [
-                $couple->Id == N_A ? BLANK : $couple->Id,
-                $class_id == 0 ? BLANK : $class_id,
+        $errors = new Errors();
 
-                $couple->Address_St == N_A ? BLANK : $couple->Address_St,
-                $couple->Address_Brgy == N_A ? BLANK : $couple->Address_Brgy,
-                $couple->Address_City == N_A ? BLANK : $couple->Address_City,
-                $couple->Address_HH_No == N_A ? BLANK : $couple->Address_HH_No,
-                $couple->NumberOfChildren == N_A ? BLANK : $couple->NumberOfChildren
-            ];
+        $method3 = 'encoder_save_fp_details';
+        $params3 = [
+            $modern->Id == N_A ? BLANK : $modern->Id,
+            $couple_id == 0 ? BLANK : $couple_id,
+            $modern->MethodUsed == N_A ? BLANK : $modern->MethodUsed,
+            $modern->IntentionToShift == N_A ? BLANK : $modern->IntentionToShift,
 
-            $couple_id = $this->saveToDb($method, $params1);
-            if (empty($couple_id)) {
-                $errors = "DB ERROR SAVE COUPLE";
-                break;
-            } elseif ($couple_id == "CANNOT SAVE RECORD WITH GIVEN PARAMETERS") {
-                $errors = "INVALID PARAMETERS";
-                break;
-            } elseif ($couple_id == "UPDATE SUCCESS!") {
-                $couple_id = $couple->Id;
-            } else {
-                $couple_id = explode(" ", $couple_id);
-                $couple_id = $couple_id[2];
-            }
+            $traditional->Type == N_A ? BLANK : $traditional->Type,
+            $traditional->Status == N_A ? BLANK : $traditional->Status,
+            $traditional->IntentionUse == N_A ? BLANK : $traditional->IntentionUse,
+            $traditional->ReasonForUse == N_A ? BLANK : $traditional->ReasonForUse
+        ];
 
-            $husband = $couple->Husband();
-            $wife = $couple->Wife();
-
-            $method2 = 'encoder_save_individual';
-
-            $params2 = [
-                $couple_id == 0 ? BLANK : $couple_id,
-                $husband->Id == N_A ? BLANK : $husband->Id,
-                $husband->Name->Surname == N_A ? BLANK : $husband->Name->Surname,
-                $husband->Name->Firstname == N_A ? BLANK : $husband->Name->Firstname,
-                $husband->Name->Middlename == N_A ? BLANK : $husband->Name->Middlename,
-                $husband->Name->Extname == N_A ? BLANK : $husband->Name->Extname,
-                $husband->Age == N_A ? BLANK : $husband->Age,
-                $husband->Birthdate == N_A ? BLANK : $husband->Birthdate->format('Y-m-d'),
-                $husband->CivilStatus == N_A ? BLANK : $husband->CivilStatus,
-                $husband->HighestEducation == N_A ? BLANK : $husband->HighestEducation,
-                $husband->Attendee == N_A ? BLANK : $husband->Attendee,
-
-                $wife->Id == N_A ? BLANK : $wife->Id,
-                $wife->Name->Surname == N_A ? BLANK : $wife->Name->Surname,
-                $wife->Name->Firstname == N_A ? BLANK : $wife->Name->Firstname,
-                $wife->Name->Middlename == N_A ? BLANK : $wife->Name->Middlename,
-                $wife->Age == N_A ? BLANK : $wife->Age,
-                $wife->Birthdate == N_A ? BLANK : $wife->Birthdate->format('Y-m-d'),
-                $wife->CivilStatus == N_A ? BLANK : $wife->CivilStatus,
-                $wife->HighestEducation == N_A ? BLANK : $wife->HighestEducation,
-                $wife->Attendee == N_A ? BLANK : $wife->Attendee
-            ];
-            $indiv = $this->saveToDb($method2, $params2);
-            if (empty($indiv)) {
-                $errors = "DB ERROR INDIVIDUALS";
-                break;
-            }
-
-            // $modern = $couple->ModernFp;
-            // $traditional = $couple->TraditionalFp;
-
-            // $method3 = 'encoder_save_fp_details';
-
-            // $params3 = [
-            //     $modern->Id == N_A ? BLANK : $modern->Id,
-            //     $couple_id == 0 ? BLANK : $couple_id,
-            //     $modern->MethodUsed == N_A ? BLANK : $modern->MethodUsed,
-            //     $modern->IntentionToShift == N_A ? BLANK : $modern->IntentionToShift,
-
-            //     $traditional->Type == N_A ? BLANK : $traditional->Type,
-            //     $traditional->Status == N_A ? BLANK : $traditional->Status,
-            //     $traditional->ReasonForUse == N_A ? BLANK : $traditional->ReasonForUse
-            // ];
-
-            // $fp_details = $this->saveToDb($method3, $params3);
-            // if (empty($indiv)) {
-            //     $errors = "DB ERROR FP DETAILS";
-            //     break;
-            // }
+        $saved = $this->saveToDb($method3, $params3);
+        $errors->Message = $saved;
+        if (empty($saved)) {
+            $errors->Code = ErrorInterface::DATABASE_ERROR;
+            $errors->Message = "DB ERROR FP DETAILS";
         }
+
         return $errors;
     }
+
+    private function saveHusbandAndWife(int $couple_id, CoupleInterface $couple) : ErrorInterface
+    {
+        $errors = new Errors();
+
+        $husband = $couple->Husband();
+        $wife = $couple->Wife();
+        $couple_id = $errors->ReturnValue;
+
+        $method2 = 'encoder_save_individual';
+
+        $params2 = [
+            $couple_id == 0 ? BLANK : $couple_id,
+            $husband->Id == N_A ? BLANK : $husband->Id,
+            $husband->Name->Surname == N_A ? BLANK : $husband->Name->Surname,
+            $husband->Name->Firstname == N_A ? BLANK : $husband->Name->Firstname,
+            $husband->Name->Middlename == N_A ? BLANK : $husband->Name->Middlename,
+            $husband->Name->Extname == N_A ? BLANK : $husband->Name->Extname,
+            $husband->Age == N_A ? BLANK : $husband->Age,
+            $husband->Birthdate == N_A ? BLANK : $husband->Birthdate->format('Y-m-d'),
+            $husband->CivilStatus == N_A ? BLANK : $husband->CivilStatus,
+            $husband->HighestEducation == N_A ? BLANK : $husband->HighestEducation,
+            $husband->Attendee == N_A ? BLANK : $husband->Attendee,
+
+            $wife->Id == N_A ? BLANK : $wife->Id,
+            $wife->Name->Surname == N_A ? BLANK : $wife->Name->Surname,
+            $wife->Name->Firstname == N_A ? BLANK : $wife->Name->Firstname,
+            $wife->Name->Middlename == N_A ? BLANK : $wife->Name->Middlename,
+            $wife->Age == N_A ? BLANK : $wife->Age,
+            $wife->Birthdate == N_A ? BLANK : $wife->Birthdate->format('Y-m-d'),
+            $wife->CivilStatus == N_A ? BLANK : $wife->CivilStatus,
+            $wife->HighestEducation == N_A ? BLANK : $wife->HighestEducation,
+            $wife->Attendee == N_A ? BLANK : $wife->Attendee
+        ];
+        $result = $this->saveToDb($method2, $params2);
+        if (empty($result)) {
+            $errors->Code = ErrorInterface::INVALID_RETURN_VALUE;
+            $errors->Description = "DB ERROR INDIVIDUALS";
+            $errors->Message = "DB ERROR INDIVIDUALS";
+        }
+
+        return $errors;
+    }
+
+    private  function saveCoupleCommonDetails(int $class_id, CoupleInterface $couple) : ErrorInterface
+    {
+        $method = "encoder_save_couple";
+        $params1 = [
+            $couple->Id == N_A ? BLANK : $couple->Id,
+            $class_id == 0 ? BLANK : $class_id,
+
+            $couple->Address_St == N_A ? BLANK : $couple->Address_St,
+            $couple->Address_Brgy == N_A ? BLANK : $couple->Address_Brgy,
+            $couple->Address_City == N_A ? BLANK : $couple->Address_City,
+            $couple->Address_HH_No == N_A ? BLANK : $couple->Address_HH_No,
+            $couple->NumberOfChildren == N_A ? BLANK : $couple->NumberOfChildren
+        ];
+
+        $couple_id = $this->saveToDb($method, $params1);
+        return $this->extractCode($couple_id);
+    }
+
+    private function saveCoupleData(int $class_id, ListCoupleInterface $listCouple) : ErrorInterface
+    {
+        $saved = new Errors();
+        foreach ($listCouple as $couple) {
+            $couple = CoupleClass::getFromVariable($couple);
+            $saved = $this->saveCoupleCommonDetails($class_id, $couple);
+            if (!empty($saved->Code)) {
+                return $saved;
+                break;
+            }
+        
+            $couple_id = $saved->ReturnValue;
+            $saved = $this->saveHusbandAndWife($couple_id, $couple);
+            if (!empty($saved->Code)) {
+                return $saved;
+                break;
+            }
+
+            $saved = $this->saveCoupleFPDetails($couple_id, $couple->ModernFp, $couple->TraditionalFp);
+
+        }
+        return $saved;
+    }
+
+    /** end save form 1 */
 
     public function saveServiceSlip(int $couple_id, ServiceSlipInterface $data)
     {

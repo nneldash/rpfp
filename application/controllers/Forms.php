@@ -87,10 +87,9 @@ class Forms extends CI_Controller
         $form1->Seminar = $this->getInputFromSeminar();
         $form1->ListCouple = $this->getInputFromListCouples();
         $errors = $this->FormModel->saveForm1($form1);
-        if (!empty($errors)) {
+        $data = ['is_save' => true, 'message' => "SUCCESS!!!"];
+        if (!empty($errors->code)) {
             $data = ['is_save' => false, 'message' => $errors];
-        } else {
-            $data = ['is_save' => true, 'message' => "SUCCESS!!!"];
         }
 
         $this->output
