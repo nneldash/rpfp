@@ -191,7 +191,7 @@ function liveSearch()
 
 	$('#muniList').on('changed.bs.select', function (e, clickedIndex, isSelected, previousValue) {
 		var muniId = $(e.target.options[clickedIndex]).val();
-		$($('#search_form input[name="muni_search"]')[0]).val(muniId);
+		$($('#search_form input[name="municipality_search"]')[0]).val(muniId);
 
 		$('#brgyList').find('option').remove();
 		$('#brgyList').selectpicker('refresh');
@@ -200,7 +200,7 @@ function liveSearch()
 
 	$('#brgyList').on('changed.bs.select', function (e, clickedIndex, isSelected, previousValue) {
 		var brgy_id = $(e.target.options[clickedIndex]).val();
-		$($('#search_form input[name="brgy_search"]')[0]).val(brgy_id);
+		$($('#search_form input[name="barangay_search"]')[0]).val(brgy_id);
 	});
 }
 
