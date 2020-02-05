@@ -41,8 +41,8 @@ function fpType()
 			$('.intention_status').prop('disabled', true);
 			$('.for_fp_user').show();
 			$('.fp_user').prop('disabled', false);
-			$('.for_fp_user').html('<label class="control-label col-md-3">FP User</label>' +
-                					'<div class="col-md-7">' +
+			$('.for_fp_user').html('<label class="control-label col-md-3 col-xs-12">FP User</label>' +
+                					'<div class="col-md-7 col-xs-12">' +
                 						'<select name="fpuser_search" class="form-control fp_user">' +
 											'<option value=""></option>' +
 											'<option value="condom">Condom</option>' +
@@ -61,8 +61,8 @@ function fpType()
 									'</div>');
 		} else if (fpType == 'non_fp_user') {
 			$('.for_fp_user').show();
-			$('.for_fp_user').html('<label class="control-label col-md-3">Non FP User</label>' +
-									'<div class="col-md-7">' +
+			$('.for_fp_user').html('<label class="control-label col-md-3 col-xs-12">Non FP User</label>' +
+									'<div class="col-md-7 col-xs-12">' +
 										'<select name="nonfpuser_search" class="form-control non_fp" onChange="nonFpUser();">' +
 											'<option value=""></option>' +
 											'<option value="non_modern_fp">Non Modern FP Method</option>' +
@@ -88,8 +88,8 @@ function nonFpUser()
 	if (nonFp == 'intention_status') {
 		$('.non_fp_intention_status').show();
 		$('.intention_status').prop('disabled', false);
-		$('.non_fp_intention_status').html('<label class="control-label col-md-3">Intention Status</label>' +
-											'<div class="col-md-7">' +
+		$('.non_fp_intention_status').html('<label class="control-label col-md-3 col-xs-12">Intention Status</label>' +
+											'<div class="col-md-7 col-xs-12">' +
 												'<select name="intention_status_search" class="form-control intention_status">' +
 													'<option value=""></option>' +
 													'<option value="with_intention">With Intention</option>' +
@@ -140,7 +140,7 @@ function searchNow()
 
 function tableResults()
 {
-	return '<table id="datatable-responsive" class="table table-condensed table-striped table-hover 											table-bordered dt-responsive nowrap" cellspacing="0" width="100%">' +
+	return '<table id="datatable-responsive" class="table table-condensed table-striped table-hover table-bordered dt-responsive nowrap" cellspacing="0" width="100%">' +
 				'<thead>' +
 				'<tr>' +
 					'<th>Class #</th>' +
