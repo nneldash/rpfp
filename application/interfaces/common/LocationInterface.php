@@ -2,19 +2,19 @@
 defined('BASEPATH') or exit('No direct script access allowed');
 $CI =& get_instance();
 $CI->load->iface('base/BaseInterface');
-$CI->load->iface('common/PSGCInterface');
+$CI->load->iface('common/CodeInterface');
 
 abstract class LocationInterface extends BaseInterface
 {
-    /** @var PSGCInterface */
+    /** @var CodeInterface */
     public $Region;
 
-    /** @var PSGCInterface */
+    /** @var CodeInterface */
     public $Province;
 
-    /** @var PSGCInterface */
+    /** @var CodeInterface */
     public $City;
     
-    /** @var PSGCInterface */
+    /** @var CodeInterface */
     public $Barangay;
 }
