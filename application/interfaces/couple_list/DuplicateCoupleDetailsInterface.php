@@ -12,4 +12,11 @@ abstract class DuplicateCoupleDetailsInterface extends BaseInterface
     public $Household_No;
     public $Number_Child;
     public $Status_Active;
+    public $Fp_Details_Id;
+    public $Mfp_Used;
+    public $Mfp_Shift;
+    public $Tfp_Type;
+    public $Tfp_Status;
+    public $Mfp_Intention_Use;
+    public $Reason_Use;
 }
