@@ -87,13 +87,13 @@ if (empty($title)) {
                     <div class="col-md-7 col-xs-12">
                         <select class="form-control" name="typeclass_search">
                             <option value=""></option>
-                            <option value="4ps">4Ps</option>
-                            <option value="profile">Profile</option>
-                            <option value="fbo">FBOs</option>
-                            <option value="pmc">PMC</option>
-                            <option value="usapan">Usapan</option>
-                            <option value="house_to_house">House to House</option>
-                            <option value="others">Others</option>
+                            <option value="1">4Ps</option>
+                            <option value="2">FBOs</option>
+                            <option value="3">PMC</option>
+                            <option value="4">Usapan</option>
+                            <option value="5">House to House</option>
+                            <option value="6">Profile</option>
+                            <option value="7">Others</option>
                         </select>
                     </div>
                 </div>
