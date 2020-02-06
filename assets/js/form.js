@@ -1389,7 +1389,8 @@ $(document).ready(function(){
 	$.each($('#paged_form textarea, #paged_form input[type="text"]'), function() {
 		all_input += $(this).val();
 	});
-	if (($('#new_form').val() != undefined) || all_input == "") {
+	
+	if (($('#new_form').val() != undefined) || (all_input == "") || ($('#edit_existing').val() != undefined)) {
 		reset_page_storage();
 	}
 	var current = current_page();

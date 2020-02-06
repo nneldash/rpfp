@@ -51,9 +51,9 @@ class Forms extends CI_Controller
         $isRegionalDataManager = $profile->isRegionalDataManager();
         $isFocalPerson = $profile->isFocal();
 
-        $is_new = BLANK;
+        $new_form = BLANK;
         if (isset($_SESSION[IS_NEW])) {
-            $is_new = IS_NEW;
+            $new_form = IS_NEW;
         }
         unset($_SESSION[IS_NEW]);
 
@@ -65,7 +65,8 @@ class Forms extends CI_Controller
                 'isEncoder' => $isEncoder,
                 'isRegionalDataManager' => $isRegionalDataManager,
                 'isFocalPerson' => $isFocalPerson,
-                'is_new' => $is_new
+                'new_form' => $new_form,
+                'edit_existing' => ($form1->Seminar->ClassId == N_A ? BLANK : "edit_existing")
             )
         );
         $this->load->view('includes/footer');
