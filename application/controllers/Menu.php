@@ -12,6 +12,7 @@ class Menu extends CI_Controller
         }
 
         $this->load->model('ProfileModel');
+        $this->load->model('CoupleModel');
         $this->load->library('couple_list/SearchApproveClass');
     }
 

@@ -141,16 +141,19 @@ if (empty($title)) {
                         <div class="col-md-7 col-xs-12">
                             <select name="fptype_search" class="form-control fp_type">
                                 <option value=""></option>
-                                <option value="fp_user">FP User</option>
+                                <option value="modernfp_user">FP User</option>
                                 <option value="non_fp_user">Non-FP User</option>
                             </select>
                         </div>
                     </div>
                     <div class="form-group">
-                        <p class="for_fp_user"></p>
+                        <p class="for_modernfp_user"></p>
                     </div>
                     <div class="form-group">
                         <p class="non_fp_intention_status"></p>
+                    </div>
+                    <div class="form-group">
+                        <p class="with_intention"></p>
                     </div>
                 </div>
             </div>

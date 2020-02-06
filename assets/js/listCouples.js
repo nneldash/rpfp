@@ -31,19 +31,21 @@ function listCoupleModal()
 
 function fpType()
 {
-	$('.for_fp_user').hide();
+	$('.for_modernfp_user').hide();
 
 	$('.fp_type').change(function(){
 		var fpType = $('select[name="fptype_search"]').val();
 
-		if (fpType == 'fp_user') {
+		if (fpType == 'modernfp_user') {
 			$('.non_fp_intention_status').hide();
 			$('.intention_status').prop('disabled', true);
-			$('.for_fp_user').show();
-			$('.fp_user').prop('disabled', false);
-			$('.for_fp_user').html('<label class="control-label col-md-3 col-xs-12">FP User</label>' +
+			$('.for_modernfp_user').show();
+			$('.modernfp_user').prop('disabled', false);
+			$('.with_intention').hide();
+			$('.intention_to_use').prop('disabled', true)
+			$('.for_modernfp_user').html('<label class="control-label col-md-3 col-xs-12">Modern FP</label>' +
                 					'<div class="col-md-7 col-xs-12">' +
-                						'<select name="fpuser_search" class="form-control fp_user">' +
+                						'<select name="modernfp_search" class="form-control modernfp_user">' +
 											'<option value=""></option>' +
 											'<option value="1">Condom</option>' +
 											'<option value="2">IUD</option>' +
@@ -60,20 +62,39 @@ function fpType()
 										'</select>' +
 									'</div>');
 		} else if (fpType == 'non_fp_user') {
-			$('.for_fp_user').show();
-			$('.for_fp_user').html('<label class="control-label col-md-3 col-xs-12">Non FP User</label>' +
+			$('.for_modernfp_user').show();
+			$('.for_modernfp_user').html('<label class="control-label col-md-3 col-xs-12">Non Modern FP</label>' +
 									'<div class="col-md-7 col-xs-12">' +
-										'<select name="nonfpuser_search" class="form-control non_fp" onChange="nonFpUser();">' +
+										'<select name="nonmodern_search" class="form-control non_fp">' +
 											'<option value=""></option>' +
-											'<option value="non_modern_fp">Non Modern FP Method</option>' +
-											'<option value="intention_status">Intention Status</option>' +
+											'<option value="1">Withdrawal</option>' +
+											'<option value="2">Rhythm</option>' +
+											'<option value="3">Calendar</option>' +
+											'<option value="4">Abstinence</option>' +
+											'<option value="5">Herbal</option>' +
+											'<option value="6">No Method</option>' +
 										'</select>' +
 									'</div>');
+
+			$('.non_fp_intention_status').show();
+			$('.intention_status').prop('disabled', false);
+			$('.non_fp_intention_status').html('<label class="control-label col-md-3 col-xs-12">Intention Status</label>' +
+												'<div class="col-md-7 col-xs-12">' +
+													'<select name="intention_status_search" class="form-control intention_status" onChange="intentionToUse();">' +
+														'<option value=""></option>' +
+														'<option value="1">With Intention</option>' +
+														'<option value="2">Undecided</option>' +
+														'<option value="3">Currently Pregnant</option>' +
+														'<option value="4">No Intention</option>' +
+													'</select>' +
+													'</div>');						
 		} else {
-			$('.for_fp_user').hide();
-			$('.fp_user').prop('disabled', true);
+			$('.for_modernfp_user').hide();
+			$('.modernfp_user').prop('disabled', true);
 			$('.non_fp_intention_status').hide();
 			$('.intention_status').prop('disabled', true);
+			$('.with_intention').hide();
+			$('.intention_to_use').prop('disabled', true);
 		}
 
 	});
@@ -81,26 +102,34 @@ function fpType()
 
 }
 
-function nonFpUser()
+function intentionToUse()
 {
-	var nonFp = $('select[name="nonfpuser_search"]').val();
-	
-	if (nonFp == 'intention_status') {
-		$('.non_fp_intention_status').show();
-		$('.intention_status').prop('disabled', false);
-		$('.non_fp_intention_status').html('<label class="control-label col-md-3 col-xs-12">Intention Status</label>' +
-											'<div class="col-md-7 col-xs-12">' +
-												'<select name="intention_status_search" class="form-control intention_status">' +
-													'<option value=""></option>' +
-													'<option value="1">With Intention</option>' +
-													'<option value="2">Undecided</option>' +
-													'<option value="3">Currently Pregnant</option>' +
-													'<option value="4">No Intention</option>' +
-												'</select>' +
-											'</div>');
+	var withIntention = $('select[name="intention_status_search"]').val();
+
+	if (withIntention == 1) {
+		$('.with_intention').show();
+		$('.intention_to_use').prop('disabled', false);
+		$('.with_intention').html('<label class="control-label col-md-3 col-xs-12">Intention To Use</label>' +
+									'<div class="col-md-7 col-xs-12">' +
+										'<select name="intention_to_use_search" class="form-control intention_to_use">' +
+											'<option value=""></option>' +
+											'<option value="1">Condom</option>' +
+											'<option value="2">IUD</option>' +
+											'<option value="3">Pills</option>' +
+											'<option value="4">Injectible</option>' +
+											'<option value="5">Vasectomy</option>' +
+											'<option value="6">Ligation</option>' +
+											'<option value="7">Implant</option>' +
+											'<option value="8">CMM</option>' +
+											'<option value="9">BBT</option>' +
+											'<option value="10">STM</option>' +
+											'<option value="11">SDM</option>' +
+											'<option value="12">LAM</option>' +
+										'</select>' +
+									'</div>');
 	} else {
-		$('.non_fp_intention_status').hide();
-		$('.intention_status').prop('disabled', true);
+		$('.with_intention').hide();
+		$('.intention_to_use').prop('disabled', true);
 	}
 }
 
