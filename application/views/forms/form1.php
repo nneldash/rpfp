@@ -60,7 +60,8 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 	</style>
 <?php } ?>
 
-<?= !empty($is_new) ? '<div class="hidden" id="is_new"></div>' : BLANK ?>
+<?= !empty($new_form) ? '<div class="hidden" id="new_form"></div>' : BLANK ?>
+<?= !empty($edit_existing) ? '<div class="hidden" id="edit_existing"></div>' : BLANK ?>
 <div class="loading" id="loading-wrapper" >
 	<div id="loading-text" role="status"></div>
 </div>
