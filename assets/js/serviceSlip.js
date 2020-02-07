@@ -6,7 +6,7 @@ $(function() {
 	  var coupleId = $('input[name="couple_id"]').val();
 
 	  if (coupleId == 0) {
-		$('#service_slip input').attr('disabled', 'disabled');
+		$('#service_slip input:not(.saveServiceSlip)').attr('disabled', 'disabled');
 	  } else {
 		$('#service_slip input').removeAttr('disabled');
 	  }
@@ -110,6 +110,7 @@ function saveServiceSlip()
 		});
 		
 		var formData = $('#service_slip').serialize();
+		var coupleId = $('input[name="couple_id"]').val();
 
 		$.ajax({
 			type: 'POST',
@@ -125,6 +126,11 @@ function saveServiceSlip()
 				Toast.fire({
 					type: 'warning',
 					title: 'Data Already Exist.'
+				});
+			} else if (coupleId == 0) {
+				Toast.fire({
+					type: 'warning',
+					title: 'Save the Form 1 before providing\nFP Service details.'
 				});
 			} else {
 				Toast.fire({
