@@ -456,28 +456,6 @@ function methodValidation()
 
 function typeValidation()
 {
-	$('.typeFp').keypress(function(event){
-		var type = $(this).val();
-		var gender1 = $(this).closest('tr').find('.gender1').val();
-		var gender2 = $(this).closest('tr').next('tr').find('.gender2').val();
-		var age1 = $(this).closest('tr').find('.getAge1').val();
-		var age2 = $(this).closest('tr').next('tr').find('.getAge2').val();
-		var status = $(this).closest('tr').find('.status-trad').val();
-
-		gender1 = gender1.toUpperCase();
-		gender2 = gender2.toUpperCase();
-		
-		if (gender1 === 'F') {
-			var index = $(this).closest('tr').find('.loopIndex1').val();
-			UnmetNeedCriteria(index, age1, type, status);
-		} else if(gender2 === 'F') {
-			var index = $(this).closest('tr').find('.loopIndex2').val();
-			UnmetNeedCriteria(index, age2, type, status);
-		} else {
-			return false;
-		}
-	});
-
 	$('.typeFp').keydown(function(event){
 		if(!(event.keyCode == 49 || 
 			event.keyCode == 50  ||
@@ -498,6 +476,20 @@ function typeValidation()
 			return false;
 	    }
 
+	    var type = $(this).val();
+	    var gender1 = $(this).closest('tr').find('.gender1').val();
+	    var gender2 = $(this).closest('tr').next('tr').find('.gender2').val();
+	    var age1 = $(this).closest('tr').find('.getAge1').val();
+	    var age2 = $(this).closest('tr').next('tr').find('.getAge2').val();
+	    var status = $(this).closest('tr').find('.status-trad').val();
+	    var index1 = $(this).closest('tr').find('.loopIndex1').val();
+	    var index2 = $(this).closest('tr').find('.loopIndex2').val();
+
+	    gender1 = gender1.toUpperCase();
+	    gender2 = gender2.toUpperCase();
+
+	    criteria(index1, index2, gender1, gender2, age1, age2, type, status);
+
 	    if(!$(this).prop('required')) {
 	    	$(this).closest('tr').find('.require-this').attr('required', 'required');
 	    	$(this).closest('tr').find('.required').removeAttr('hidden', 'hidden');
@@ -507,29 +499,6 @@ function typeValidation()
 
 function statusValidation()
 {
-	$('.status-trad').keypress(function(event){
-		var status = $(this).val();
-		var gender1 = $(this).closest('tr').find('.gender1').val();
-		var gender2 = $(this).closest('tr').next('tr').find('.gender2').val();
-		var age1 = $(this).closest('tr').find('.getAge1').val();
-		var age2 = $(this).closest('tr').next('tr').find('.getAge2').val();
-		var type = $(this).closest('tr').find('.typeFp').val();
-
-
-		gender1 = gender1.toUpperCase();
-		gender2 = gender2.toUpperCase();
-		
-		if (gender1 === 'F') {
-			var index = $(this).closest('tr').find('.loopIndex1').val();
-			UnmetNeedCriteria(index, age1, type, status);
-		} else if(gender2 === 'F') {
-			var index = $(this).closest('tr').find('.loopIndex2').val();
-			UnmetNeedCriteria(index, age2, type, status);
-		} else {
-			return false;
-		}
-	});
-
 	$('.status-trad').keydown(function(event){
 		if(!(event.keyCode == 65 || 
 			event.keyCode == 66  ||
@@ -541,6 +510,20 @@ function statusValidation()
 			event.preventDefault();
 			return false;
 	    }
+
+	    var status = $(this).val();
+		var gender1 = $(this).closest('tr').find('.gender1').val();
+		var gender2 = $(this).closest('tr').next('tr').find('.gender2').val();
+		var age1 = $(this).closest('tr').find('.getAge1').val();
+		var age2 = $(this).closest('tr').next('tr').find('.getAge2').val();
+		var type = $(this).closest('tr').find('.typeFp').val();
+		var index1 = $(this).closest('tr').find('.loopIndex1').val();
+	    var index2 = $(this).closest('tr').find('.loopIndex2').val();
+
+		gender1 = gender1.toUpperCase();
+		gender2 = gender2.toUpperCase();
+		
+		criteria(index1, index2, gender1, gender2, age1, age2, type, status);
 		
 		var index = $(this).closest('tr').find('input[class="slipIndex"]').val();
 	    var val = $(this).val();
@@ -558,6 +541,17 @@ function statusValidation()
 	    	$(this).closest('tr').find('input[name="intention_use['+index+']"]').attr('disabled', 'disabled');
 	    }
 	});
+}
+
+function criteria(index1, index2, gender1, gender2, age1, age2, type, status)
+{
+	if (gender1 === 'F') {		
+		UnmetNeedCriteria(index1, age1, type, status);
+	} else if(gender2 === 'F') {		
+		UnmetNeedCriteria(index2, age2, type, status);
+	} else {
+		return false;
+	}
 }
 
 function intentionStatusValidation()
@@ -722,10 +716,15 @@ function getBrgys(muniId)
 
 function UnmetNeedCriteria(index, age, type, status)
 {
-	if (age >= 15 && age <= 49 && type >= 1 && type <= 5 && status != 'C') {
-		$('.tr1' + index + ' .criteria').find('.label-danger').removeClass('none');
-	} else if (age >= 15 && age <= 49 && type === 6 && status === 'A') {
-		$('.tr1' + index + ' .criteria').find('.label-danger').removeClass('none');
+	if (status != 'C') {
+		if (age >= 15 && age <= 49 && type >= 1 && type <= 5) {
+			$('.tr1' + index + ' .criteria').find('.label-danger').removeClass('none');
+		} else if (age >= 15 && age <= 49 && type == 6 && status == 'A') {
+			$('.tr1' + index + ' .criteria').find('.label-danger').removeClass('none');
+		} else {
+			$('.tr1' + index + ' .criteria').find('.label-danger').addClass('none');
+			return false;
+		}
 	} else {
 		$('.tr1' + index + ' .criteria').find('.label-danger').addClass('none');
 		return false;
