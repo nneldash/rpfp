@@ -596,7 +596,7 @@ textarea::placeholder {
 [ Loading ]*/
 .loading {
 	position: fixed;
-	z-index: 999;
+	z-index: 99999;
 	height: 5em;
 	width: 5em;
 	overflow: visible;
