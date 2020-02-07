@@ -275,19 +275,21 @@ class Menu extends CI_Controller
     {
         $searchApprove = new SearchApproveClass();
 
-        $searchApprove->LocationCode = $this->input->post('province_search');
+        $searchApprove->ProvinceCode = $this->input->post('province_search');
+        $searchApprove->MunicipalityCode = $this->input->post('municipality_search');
+        $searchApprove->BarangayCode = $this->input->post('barangay_search');
         $searchApprove->ClassNo = $this->input->post('classno_search');
         $searchApprove->DateConductedFrom = $this->input->post('datefrom_search');
         $searchApprove->DateConductedTo = $this->input->post('dateto_search');
         $searchApprove->TypeOfClass = $this->input->post('typeclass_search');
-        $searchApprove->Name = $this->input->post('name_search');
+        $searchApprove->CoupleName = $this->input->post('name_search');
         $searchApprove->AgeFrom = $this->input->post('agefrom_search');
         $searchApprove->AgeTo = $this->input->post('ageto_search');
         $searchApprove->NoOfChildren = $this->input->post('no_children_search');
-        $searchApprove->FpType = $this->input->post('fptype_search');
-        $searchApprove->FpUser = $this->input->post('fpuser_search');
-        $searchApprove->NonFpUser = $this->input->post('nonfpuser_search');
+        $searchApprove->ModernFpUser = $this->input->post('modernfp_search');
+        $searchApprove->NonModernFpUser = $this->input->post('nonmodern_search');
         $searchApprove->IntentionStatus = $this->input->post('intention_status_search');
+        $searchApprove->IntentionToUse = $this->input->post('intention_to_use_search');
         
         
         $ret_val = $this->CoupleModel->getSearchValues($searchApprove);

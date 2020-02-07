@@ -5,17 +5,19 @@ $CI->load->iface('base/BaseInterface');
 
 abstract class SearchApproveInterface extends BaseInterface
 {
-    public $LocationCode;
+    public $ProvinceCode;
+    public $MunicipalityCode;
+    public $BarangayCode;
     public $ClassNo;
     public $DateConductedFrom;
     public $DateConductedTo;
     public $TypeOfClass;
-    public $Name;
+    public $CoupleName;
     public $AgeFrom;
     public $AgeTo;
     public $NoOfChildren;
-    public $FpType;
-    public $FpUser;
-    public $NonFpUser;
+    public $ModernFpUser;
+    public $NonModernFpUser;
     public $IntentionStatus;
+    public $IntentionToUse;
 }

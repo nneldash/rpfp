@@ -9,6 +9,7 @@ class CoupleModel extends BaseModel
         parent::__construct();
         $this->CI->load->library('couple_list/PendingClass');
         $this->CI->load->library('couple_list/ApproveClass');
+        $this->CI->load->library('couple_list/SearchApproveClass');
         $this->CI->load->library('couple_list/lists/ListPendingCouple');
         $this->CI->load->library('couple_list/lists/ListApproveCouple');
         $this->CI->load->library('dashboard/PercentageYearClass');
@@ -142,8 +143,57 @@ class CoupleModel extends BaseModel
         );
     }
 
-    public function getSearchValues(SearchApproveInterface $data)
+    public function getSearchValues($data) : ApproveInterface
     {
-        return $data;
+        $search_status = 0;
+        $status_active = 0;
+        $page_no = 1;
+        $items_per_page = 10;
+
+        $result = $this->fromDbGetSpecific(
+            'ApproveClass',
+            array(
+                'RpfpClass' => 'rpfpclass',
+                'TypeClass' => 'typeclass',
+                'OthersSpecify' => 'others_specify',
+                'Province' => 'province_name',
+                'Municipality' => 'municipality_name',
+                'Barangay' => 'barangay',
+                'ClassNo' => 'class_no',
+                'DateConduct' => 'date_conduct',
+                'LastName' => 'lastname',
+                'FirstName' => 'firstname'
+            ),
+            'search_data',
+            array(
+                $data->ProvinceCode,
+                $data->MunicipalityCode,
+                $data->BarangayCode,
+                $data->ClassNo,
+                $data->DateConductedFrom,
+                $data->DateConductedTo,
+                $data->TypeOfClass,
+                $data->CoupleName,
+                $data->AgeFrom,
+                $data->AgeTo,
+                $data->NoOfChildren,
+                $data->ModernFpUser,
+                $data->NonModernFpUser,
+                $data->IntentionStatus,
+                $data->IntentionToUse,
+                $search_status,
+                $status_active,
+                $page_no,
+                $items_per_page
+            )
+        );
+
+        if (empty($result)) {
+            $newData = new ApproveClass();
+            return $newData;
+        } else {
+            return $result;
+        }
+        
     }
 }

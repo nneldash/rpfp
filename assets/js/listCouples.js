@@ -161,7 +161,7 @@ function searchNow()
 			url: base_url + '/menu/approvedClassSearch'
 		}).done(function(result){
 			console.log(result);
-			$('.table-search-results').html(tableResults(result));
+			// $('.table-search-results').html(tableResults(result));
 		});
 		
 	})
@@ -184,17 +184,17 @@ function tableResults(result)
 				'</tr>'+
 			'</thead>' +
 			'<tbody>' +
-				'<tr>' +
+				'<tr >' +
 					'<td>'+ result.xXxClassNo.davalue +'</td>' +
-					'<td>4Ps</td>' +
-					'<td>LEYTE</td>' +
-					'<td>CITY OF TACLOBAN (Capital)</td>' +
-					'<td>Barangay 92 (Apitong)	</td>' +
+					'<td>'+ result.xXxTypeClass.davalue +'</td>' +
+					'<td>'+ result.xXxProvince.davalue +'</td>' +
+					'<td>'+ result.xXxMunicipality.davalue +'</td>' +
+					'<td>'+ result.xXxBarangay.davalue +'</td>' +
 					'<td>10</td>' +
-					'<td>February 11, 2019</td>' +
-					'<td>Rowel Reyes</td>' +
+					'<td>'+ result.xXxDateConduct.davalue +'</td>' +
+					'<td>'+ result.xXxFirstName.davalue +' '+ result.xXxLastName.davalue +'</td>' +
 					'<td class="text-center">' +
-						'<a href="'+ base_url +'forms?rpfpId=7&status=0" target="_blank">' +
+						'<a href="'+ base_url +'forms?rpfpId='+ result.xXxRpfpClass.davalue +'&status=0" target="_blank">' +
 							'<button class="btn btn-primary" data-toggle="tooltip" data-placement="left" title="Edit">' +
 								'<i class="fa fa-edit"></i>' +
 							'</button>' +
