@@ -13,4 +13,12 @@ class Errors extends ErrorInterface
         $this->Message = BLANK;
         $this->ReturnValue = 0;
     }
+
+    public static function getFromVariable($variable) : ErrorInterface
+    {
+        if ($variable instanceof ErrorInterface) {
+            return $variable;
+        }
+        return new Errors();
+    }
 }

@@ -1352,7 +1352,7 @@ function saveForm1()
 			timer: 3000
 		});
 		
-		fill_memory_from_page(current_page());
+		save_page(current_page());
 		var formData = {};
 		/** iterate all inputs/textarea */
 		$.each( $('#form_validation input, #form_validation textarea'), function(key, value) {
@@ -1365,19 +1365,11 @@ function saveForm1()
 			data: formData,
 			url: base_url + '/forms/saveForm1'
 		}).done(function(result){
-			//$('body').html(result);
-			if(result.is_save == true) {
-				Toast.fire({
-					type: 'success',
-					title: 'Form 1 successfully saved!',
-					message: result.traditionalFp
-				});
-			} else {
-				Toast.fire({
-					type: 'error',
-					title: 'An error occurred.'
-				});
-			}
+			Toast.fire({
+				type: (result.is_save == true) ? 'success' : 'error',
+				title: 'Form 1 save status',
+				message: result.message == undefined ? "There was an error saving Form 1" : result.message
+			});
 		});
 
 		return false;
@@ -1396,19 +1388,14 @@ function checkBox()
 
 
 $(document).ready(function(){
-	var all_input="";
-	$.each($('#paged_form textarea, #paged_form input[type="text"]'), function() {
-		all_input += $(this).val();
-	});
-	
-	if (($('#new_form').val() != undefined) || (all_input == "") || ($('#edit_existing').val() != undefined)) {
+	if (($('#new_form').val() != undefined) || ($('#edit_existing').val() != undefined)) {
 		reset_page_storage();
 	}
 	var current = current_page();
 	var total_pages = num_pages();
 
 	if (current > 0) {
-		fill_page_from_memory(current);
+		get_page(current);
 		if (total_pages < current) {
 			num_pages(total_pages = current);			
 		}
@@ -1416,7 +1403,7 @@ $(document).ready(function(){
 		current = 1;
 		total_pages = 1;
 	}
-	update_pages(current, total_pages);
+	update_page_numbering(current, total_pages);
 
 	$('.next').click(function() {
 		/** load variables from browser storage */
@@ -1424,7 +1411,7 @@ $(document).ready(function(){
 		var total_pages = num_pages();
 
 		/** save current page  */
-		fill_memory_from_page(current);
+		save_page(current);
 
 		if (++current > total_pages) {
 			num_pages(total_pages = current);
@@ -1432,16 +1419,16 @@ $(document).ready(function(){
 
 		/** erase contents of form (couples data only) */
 		clear_form();
-		fill_page_from_memory(current);
+		get_page(current);
 		current_page(current);
-		update_pages(current, total_pages);
+		update_page_numbering(current, total_pages);
 	});
 
 	$('.previous').click(function() {
 		var current = current_page();
 
 		/** save current page */
-		fill_memory_from_page(current);
+		save_page(current);
 
 		if (--current < 1) {
 			current = 1;
@@ -1449,11 +1436,11 @@ $(document).ready(function(){
 
 		/** erase contents of form (couples data only) */
 		clear_form();
-		fill_page_from_memory(current);
+		get_page(current);
 		current_page(current);
 		
 		var total_pages = num_pages();
-		update_pages(current, total_pages);
+		update_page_numbering(current, total_pages);
 	});
 
 	$('input[type=checkbox] + span').click(function(){
@@ -1485,10 +1472,11 @@ function reset_page_storage() {
 	current_page(1);
 	num_pages(1);
 	$.each(Object.keys(localStorage), function(key, value) {
-		 if (value.search('items_page_') == 0) {
-			 localStorage.removeItem(value);
-		 }
+		if ((value.search('items_page_') == 0) || (value.search('rpfp_seminar') == 0))  {
+			localStorage.removeItem(value);
+		}
 	});
+	
 }
 
 function clear_form() {
@@ -1500,7 +1488,43 @@ function clear_form() {
 	
 }
 
-function fill_memory_from_page(page_num) {
+function save_seminar() {
+	var data_array = {};
+	$.each( $('#rpfpClass input, #rpfpClass textarea'), function(key, value) {
+		var item = $(value);
+		var item_value = item.val();
+		if (item.prop('type') == 'radio') {
+			item_value = $('#rpfpClass input[name="' + item.prop('name') + '"]:checked').val();
+		}
+		data_array[item.prop('name')] = item_value;
+	});
+
+	/** convert to jason */
+	data_json = JSON.stringify(data_array);
+
+	/** save to local storage */
+	localStorage.setItem('rpfp_seminar', data_json);
+}
+
+function get_seminar() {
+	/** convert json data to array */
+	var array_data = $.parseJSON(localStorage.getItem('rpfp_seminar'));
+
+	/** load page if not empty*/
+	if (array_data != null) {
+	/** iterate and save to all inputs/textarea */
+		$.each(array_data, function(key, value) {
+			if (key.indexOf('type_of_class') == 0) {
+				$($('#rpfpClass input[name="' + key + '"][value="' + value + '"]')[0]).prop('checked', true);
+			} else {
+				$($('#rpfpClass input[name="' + key + '"], #rpfpClass textarea[name="' + key + '"]')[0]).val(value);
+			}
+		});
+	}	
+}
+
+function save_page(page_num) {
+	save_seminar();
 	var data_array = {};
 
 	/** iterate all inputs/textarea */
@@ -1515,7 +1539,8 @@ function fill_memory_from_page(page_num) {
 	localStorage.setItem('items_page_' + page_num, data_json);
 }
 
-function fill_page_from_memory(page_num) {
+function get_page(page_num) {
+	get_seminar();
 	/** convert json data to array */
 	var array_data = $.parseJSON(localStorage.getItem('items_page_' + page_num));
 
@@ -1525,20 +1550,22 @@ function fill_page_from_memory(page_num) {
 		$.each(array_data, function(key, value) {
 			if (key.indexOf('attendee') == 0) {
 				$($('#paged_form input[name="' + key + '"]')[0]).prop('checked', value=='attended');
+			} else {
+				$($('#paged_form input[name="' + key + '"], #paged_form textarea[name="' + key + '"]')[0]).val(value);
 			}
-			$($('#paged_form input[name="' + key + '"], #paged_form textarea[name="' + key + '"]')[0]).val(value);
 		});
 	}
 }
 
-function update_pages(page_num, total_pages) {
+function update_page_numbering(page_num, total_pages) {
 	$("#pager").html("Page " + page_num + " of " + total_pages);
 }
 
 $(document).ready(function() {
 	$('#new_form_1').click(function() {
 		if (confirm('Changes will be LOST!!!, proceed to NEW FORM?')) {
-			window.location.href = base_url + "/Forms/new";
+			// window.location.href = base_url + "/Forms/new";
+			reset_page_storage()
 		}
 	});
 });

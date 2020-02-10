@@ -3,6 +3,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 class Forms extends CI_Controller
 {
+    private const IS_NEW = 'is_new';
+
     public function __construct()
     {
         parent::__construct();
@@ -52,10 +54,10 @@ class Forms extends CI_Controller
         $isFocalPerson = $profile->isFocal();
 
         $new_form = BLANK;
-        if (isset($_SESSION[IS_NEW])) {
-            $new_form = IS_NEW;
+        if (isset($_SESSION[self::IS_NEW])) {
+            $new_form = self::IS_NEW;
         }
-        unset($_SESSION[IS_NEW]);
+        unset($_SESSION[self::IS_NEW]);
 
         $this->load->view('includes/header', $header);
         $this->load->view('forms/form1', 
@@ -77,7 +79,7 @@ class Forms extends CI_Controller
 
     public function new()
     {
-        $_SESSION[IS_NEW] = IS_NEW;
+        $_SESSION[self::IS_NEW] = self::IS_NEW;
         redirect('Forms');
     }
 
@@ -85,13 +87,17 @@ class Forms extends CI_Controller
     {
         $form1 = new FormClass();
 
+        $num_entries = $this->input->post('num_items');
         $form1->Seminar = $this->getInputFromSeminar();
-        $form1->ListCouple = $this->getInputFromListCouples();
+        $form1->ListCouple = $this->getInputFromListCouples($num_entries);
         $errors = $this->FormModel->saveForm1($form1);
-        $data = ['is_save' => true, 'message' => "SUCCESS!!!"];
-        if (!empty($errors->code)) {
-            $data = ['is_save' => false, 'message' => $errors];
-        }
+        $errors = Errors::getFromVariable($errors);
+        $data = [
+            'is_save' => empty($errors->Code),
+            'message' => $errors->Message,
+            'description' => $errors->Description,
+            'value' => intval($errors->ReturnValue)
+        ];
 
         $this->output
             ->set_content_type('application/json')
@@ -112,15 +118,11 @@ class Forms extends CI_Controller
         return $seminar;
     }
 
-    private function getInputFromListCouples() : ListCoupleInterface
+    private function getInputFromListCouples(int $entries = 10) : ListCoupleInterface
     {
         $listCouple = new ListCoupleClass();
         
-        for ($i = 0; $i < 10; $i++) {
-            // if (!$this->input->post('firstname1')[$i] && !$this->input->post('firstname2')[$i]) {
-            //     break;
-            // }
-
+        for ($i = 0; $i < $entries; $i++) {
             $couple = new CoupleClass();
 
             $couple->FirstEntry = $this->getIndividual(1, $i);
@@ -165,7 +167,7 @@ class Forms extends CI_Controller
         $individual->Name->Extname      = (empty($this->input->post('extname' . $entry_num)[$index]) ? BLANK : $this->input->post('extname' . $entry_num)[$index]);
 
         $temp_sex = strtoupper($this->input->post('sex' . $entry_num)[$index]);
-        $individual->Sex = (!in_array($temp_sex, Sexes::UI_Enumerate()) ? 0 :  ($temp_sex == Sexes::UI_FEMALE ? Sexes::FEMALE : Sexes::MALE));
+        $individual->Sex = (!array_key_exists($temp_sex, Sexes::UI_Enumerate()) ? 0 :  ($temp_sex == Sexes::UI_FEMALE ? Sexes::FEMALE : Sexes::MALE));
         $individual->CivilStatus = $this->input->post('civil_status' . $entry_num)[$index];
         $individual->Birthdate = DateTime::createFromFormat('n-j-Y', $this->input->post('bday' . $entry_num)[$index]);
         $individual->Age = $this->input->post('age' . $entry_num)[$index];

@@ -32,7 +32,8 @@ class FormModel extends BaseModel
 
         if (empty($class->Code)) {
             $class->Message = 'CLASS IS SUCCESSFULLY SAVED';
-            $couples = $this->saveCoupleData($class->ReturnValue, $form->ListCouple);
+            $class->Description = 'class is saved/updated successfully';
+            $couples = $this->saveCoupleData(intval($class->ReturnValue), $form->ListCouple);
         }
         
         if (!empty($couples->Code)) {
@@ -121,8 +122,6 @@ class FormModel extends BaseModel
 
         $husband = $couple->Husband();
         $wife = $couple->Wife();
-        $couple_id = $errors->ReturnValue;
-
         $method2 = 'encoder_save_individual';
 
         $params2 = [
@@ -183,14 +182,12 @@ class FormModel extends BaseModel
             $couple = CoupleClass::getFromVariable($couple);
             $saved = $this->saveCoupleCommonDetails($class_id, $couple);
             if (!empty($saved->Code)) {
-                return $saved;
                 break;
             }
         
-            $couple_id = $saved->ReturnValue;
+            $couple_id = intval($saved->ReturnValue);
             $saved = $this->saveHusbandAndWife($couple_id, $couple);
             if (!empty($saved->Code)) {
-                return $saved;
                 break;
             }
 
