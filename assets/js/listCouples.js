@@ -160,8 +160,7 @@ function searchNow()
 			data: search,
 			url: base_url + '/menu/approvedClassSearch'
 		}).done(function(result){
-			console.log(result);
-			// $('.table-search-results').html(tableResults(result));
+			$('.table-search-results').html(tableResults(result));
 		});
 		
 	})
@@ -169,7 +168,8 @@ function searchNow()
 
 function tableResults(result)
 {
-	return '<table id="datatable-responsive" class="table table-condensed table-striped table-hover table-bordered dt-responsive nowrap" cellspacing="0" width="100%">' +
+	if (result.xXxRpfpClass.davalue == '') {
+		return '<table id="datatable-responsive" class="table table-condensed table-striped table-hover table-bordered dt-responsive nowrap" cellspacing="0" width="100%">' +
 				'<thead>' +
 				'<tr>' +
 					'<th>Class #</th>' +
@@ -203,6 +203,29 @@ function tableResults(result)
 				'</tr>' +
 			'</tbody>' +
 			'</table>';
+	} else {
+		return '<table id="datatable-responsive" class="table table-condensed table-striped table-hover table-bordered dt-responsive nowrap" cellspacing="0" width="100%">' +
+				'<thead>' +
+				'<tr>' +
+					'<th>Class #</th>' +
+					'<th>Type Class</th>' +
+					'<th>Province</th>' +
+					'<th>Municipality / City</th>' +
+					'<th>Barangay</th>' +
+					'<th>Number of Couples</th>' +
+					'<th>Date Conducted</th>' +
+					'<th>Encoded By</th>' +
+					'<th style="width: 10%;">Action</th>' +
+				'</tr>'+
+			'</thead>' +
+			'<tbody>' +
+				'<tr >' +
+					'<td class="text-center" colspan="9">No result(s) found.</td>' +
+				'</tr>' +
+			'</tbody>' +
+			'</table>';
+	}
+	
 }
 
 function liveSearch()
@@ -326,4 +349,14 @@ function getBrgys(muniId)
 
 		$('#brgyList').selectpicker('render').selectpicker('refresh');
 	});
+}
+
+function removeSearch()
+{
+	$('#datatable-responsive').DataTable( {
+        "paging":   	false,
+        "ordering": 	false,
+		"info":     	false,
+		"searching":	false
+    } );
 }

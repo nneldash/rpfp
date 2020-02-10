@@ -216,6 +216,7 @@ if (empty($title)) {
     loadJs(base_url + 'NewAssets/bootstrapSelectJs');
     loadJs(base_url + 'NewAssets/templateJs', function() {
         loadJs(base_url + 'assets/js/listCouples.js', function(){
+            removeSearch();
             listCoupleModal();
             liveSearch();
             getProvinces();
