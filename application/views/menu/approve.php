@@ -72,14 +72,14 @@ if (empty($title)) {
                     <label class="control-label col-md-3 col-xs-12">Date Conducted</label>
                     <label class="control-label col-md-2 col-xs-12">From</label>
                     <div class="col-md-5 col-xs-12">
-                        <input type="date" name="datefrom_search">
+                        <input type="date" max="9999-12-31" name="datefrom_search">
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="control-label col-md-3 col-xs-12"></label>
                     <label class="control-label col-md-2 col-xs-12">To</label>
                     <div class="col-md-5 col-xs-12">
-                        <input type="date" name="dateto_search">
+                        <input type="date" max="9999-12-31" name="dateto_search">
                     </div>
                 </div>
                 <div class="form-group">

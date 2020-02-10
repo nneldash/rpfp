@@ -9,8 +9,8 @@ function genAccomp()
 
 	$('.genAccompSubmit').click(function() {
 		$('.genAccompSubmit').attr('hidden', true);
-		$('.loading').removeAttr('hidden', false);
-		$('.loading').removeAttr('disabled', false);
+		$('.loading-accomp').removeAttr('hidden', false);
+		$('.loading-accomp').removeAttr('disabled', false);
 		
 		const Toast = Swal.mixin({
 			toast: true,

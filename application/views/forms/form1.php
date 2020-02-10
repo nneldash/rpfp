@@ -123,7 +123,7 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 							<td class="border-1 padding-0 back-eee" style="border-left: none">
 								<?php if (!$is_pdf) : ?>
 									<label class="cont border-t1">
-										<input id="4ps" type="radio" name="type_of_class" value="1" 
+										<input id="4ps" type="radio" required name="type_of_class" value="1" 
 											<?= $form1->Seminar->TypeOfClass->Type == '4Ps' ? 'checked' : '' ?>
 										/>
 										<span class="checkmark"></span>
@@ -294,7 +294,7 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 							</td>
 							<td class="border-0">
 								<span class="small">
-									<input type="date" name="date_conducted" value="<?= ($form1->Seminar->DateConducted != 'N/A' ? $form1->Seminar->DateConducted : ''); ?>" class="padding-l10 underline width-70" required />
+									<input type="date" name="date_conducted" value="<?= ($form1->Seminar->DateConducted != 'N/A' ? $form1->Seminar->DateConducted : ''); ?>" class="padding-l10 underline width-70" required max="9999-12-31" />
 			                    </span>
 							</td>
 							

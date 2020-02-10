@@ -57,6 +57,8 @@ $(function() {
 	typeValidation();
 	statusValidation();
 	reasonValidation();
+	typeUnmet();
+	statusUnmet();
 
 	Inputmask().mask(".birthAge");	
 
@@ -206,6 +208,11 @@ function sexValidation()
 		{
 			event.preventDefault();
 			return false;
+	    }
+
+	    if(!$(this).prop('required')) {
+	    	$(this).closest('tr').find('.require-this').attr('required', 'required');
+	    	$(this).closest('tr').find('.required').removeAttr('hidden', 'hidden');
 	    }
 
 	    if(!$(this).prop('required')) {
@@ -476,24 +483,48 @@ function typeValidation()
 			return false;
 	    }
 
-	    var type = $(this).val();
+	    if(!$(this).prop('required')) {
+	    	$(this).closest('tr').find('.require-this').attr('required', 'required');
+	    	$(this).closest('tr').find('.required').removeAttr('hidden', 'hidden');
+	    }
+	});
+}
+
+function statusUnmet()
+{
+	$('.status-trad').keyup(function(){
+		var status 	= $(this).val();
+		var gender1 = $(this).closest('tr').find('.gender1').val();
+		var gender2 = $(this).closest('tr').next('tr').find('.gender2').val();
+		var age1 	= $(this).closest('tr').find('.getAge1').val();
+		var age2 	= $(this).closest('tr').next('tr').find('.getAge2').val();
+		var type 	= $(this).closest('tr').find('.typeFp').val();
+		var index1 	= $(this).closest('tr').find('.loopIndex1').val();
+	    var index2 	= $(this).closest('tr').next('tr').find('.loopIndex2').val();
+
+		gender1 = gender1.toUpperCase();
+		gender2 = gender2.toUpperCase();
+		
+		criteria(index1, index2, gender1, gender2, age1, age2, type, status);
+	});
+}
+
+function typeUnmet()
+{
+	$('.typeFp').keyup(function(){
+		var type 	= $(this).val();
 	    var gender1 = $(this).closest('tr').find('.gender1').val();
 	    var gender2 = $(this).closest('tr').next('tr').find('.gender2').val();
-	    var age1 = $(this).closest('tr').find('.getAge1').val();
-	    var age2 = $(this).closest('tr').next('tr').find('.getAge2').val();
-	    var status = $(this).closest('tr').find('.status-trad').val();
-	    var index1 = $(this).closest('tr').find('.loopIndex1').val();
-	    var index2 = $(this).closest('tr').find('.loopIndex2').val();
+	    var age1 	= $(this).closest('tr').find('.getAge1').val();
+	    var age2 	= $(this).closest('tr').next('tr').find('.getAge2').val();
+	    var status 	= $(this).closest('tr').find('.status-trad').val();
+	    var index1 	= $(this).closest('tr').find('.loopIndex1').val();
+	    var index2 	= $(this).closest('tr').next('tr').find('.loopIndex2').val();
 
 	    gender1 = gender1.toUpperCase();
 	    gender2 = gender2.toUpperCase();
 
 	    criteria(index1, index2, gender1, gender2, age1, age2, type, status);
-
-	    if(!$(this).prop('required')) {
-	    	$(this).closest('tr').find('.require-this').attr('required', 'required');
-	    	$(this).closest('tr').find('.required').removeAttr('hidden', 'hidden');
-	    }
 	});
 }
 
@@ -509,21 +540,7 @@ function statusValidation()
 		{
 			event.preventDefault();
 			return false;
-	    }
-
-	    var status = $(this).val();
-		var gender1 = $(this).closest('tr').find('.gender1').val();
-		var gender2 = $(this).closest('tr').next('tr').find('.gender2').val();
-		var age1 = $(this).closest('tr').find('.getAge1').val();
-		var age2 = $(this).closest('tr').next('tr').find('.getAge2').val();
-		var type = $(this).closest('tr').find('.typeFp').val();
-		var index1 = $(this).closest('tr').find('.loopIndex1').val();
-	    var index2 = $(this).closest('tr').find('.loopIndex2').val();
-
-		gender1 = gender1.toUpperCase();
-		gender2 = gender2.toUpperCase();
-		
-		criteria(index1, index2, gender1, gender2, age1, age2, type, status);
+	    }	    
 		
 		var index = $(this).closest('tr').find('input[class="slipIndex"]').val();
 	    var val = $(this).val();
@@ -541,17 +558,6 @@ function statusValidation()
 	    	$(this).closest('tr').find('input[name="intention_use['+index+']"]').attr('disabled', 'disabled');
 	    }
 	});
-}
-
-function criteria(index1, index2, gender1, gender2, age1, age2, type, status)
-{
-	if (gender1 === 'F') {		
-		UnmetNeedCriteria(index1, age1, type, status);
-	} else if(gender2 === 'F') {		
-		UnmetNeedCriteria(index2, age2, type, status);
-	} else {
-		return false;
-	}
 }
 
 function intentionStatusValidation()
@@ -714,6 +720,22 @@ function getBrgys(muniId)
 	});
 }
 
+function criteria(index1, index2, gender1, gender2, age1, age2, type, status)
+{
+	var status = status.toUpperCase();
+	if (status != '') {
+		if (gender1 === 'F') {
+			UnmetNeedCriteria(index1, age1, type, status);
+		} else if(gender2 === 'F') {
+			UnmetNeedCriteria(index2, age2, type, status);
+		} else {
+			return false;
+		}
+	} else {
+		console.log('empty');
+	}
+}
+
 function UnmetNeedCriteria(index, age, type, status)
 {
 	if (status != 'C') {
@@ -723,11 +745,9 @@ function UnmetNeedCriteria(index, age, type, status)
 			$('.tr1' + index + ' .criteria').find('.label-danger').removeClass('none');
 		} else {
 			$('.tr1' + index + ' .criteria').find('.label-danger').addClass('none');
-			return false;
 		}
 	} else {
 		$('.tr1' + index + ' .criteria').find('.label-danger').addClass('none');
-		return false;
 	}
 }
 
@@ -868,14 +888,12 @@ function getDataDuplicate()
 
 		var index = $(this).closest('tr').find('.loopIndex1').val();
 
-		var age = $(this).closest('tr').find('.getAge1').val();
-		var type = $(this).closest('tr').find('.typeFp').val();
-		var status = $(this).closest('tr').find('.status-trad').val();
+		var age1 	= $(this).closest('tr').find('.getAge1').val();
+		var age2 	= $(this).closest('tr').next('tr').find('.getAge2').val();
+		var type 	= $(this).closest('tr').find('.typeFp').val();
+		var status 	= $(this).closest('tr').find('.status-trad').val();
 
-		if(sex1 == 'F') {
-			UnmetNeedCriteria(index, age, type, status);
-		}
-
+		criteria(index, index, sex1, sex2, age1, age2, type, status);
 		autoGetData(fname1, lname1, extname1, sex1, bday1, fname2, lname2, extname2, sex2, bday2, index);
 
 		if(!$(this).prop('required')) {
@@ -921,13 +939,11 @@ function getDataDuplicate()
 
 		var index = $(this).closest('tr').find('.loopIndex1').val();
 
-		var type = $(this).closest('tr').find('.typeFp').val();
-		var status = $(this).closest('tr').find('.status-trad').val();
+		var age2 	= $(this).closest('tr').next('tr').find('.getAge2').val();
+		var type 	= $(this).closest('tr').find('.typeFp').val();
+		var status 	= $(this).closest('tr').find('.status-trad').val();
 
-		if(sex1 == 'F') {
-			UnmetNeedCriteria(index, age1, type, status);
-		}
-
+		criteria(index, index, sex1, sex2, age1, age2, type, status);
 		autoGetData(fname1, lname1, extname1, sex1, bday1, fname2, lname2, extname2, sex2, bday2, index);
 
 		if(!$(this).prop('required')) {
@@ -1071,14 +1087,12 @@ function getDataDuplicate()
 
 		var index = $(this).closest('tr').find('.loopIndex2').val();
 
-		var age = $(this).closest('tr').find('.getAge1').val();
-		var type = $(this).closest('tr').find('.typeFp').val();
-		var status = $(this).closest('tr').find('.status-trad').val();
+		var age1 	= $(this).closest('tr').prev('tr').find('.getAge1').val();
+		var age2 	= $(this).closest('tr').find('.getAge2').val();
+		var type 	= $(this).closest('tr').prev('tr').find('.typeFp').val();
+		var status 	= $(this).closest('tr').prev('tr').find('.status-trad').val();
 
-		if(sex2 == 'F') {
-			UnmetNeedCriteria(index, age, type, status);
-		}
-
+		criteria(index, index, sex1, sex2, age1, age2, type, status);
 		autoGetData(fname1, lname1, extname1, sex1, bday1, fname2, lname2, extname2, sex2, bday2, index);
 
 		if(!$(this).prop('required')) {
@@ -1125,13 +1139,11 @@ function getDataDuplicate()
 		
 		var index = $(this).closest('tr').find('.loopIndex2').val();
 
-		var type = $(this).closest('tr').find('.typeFp').val();
-		var status = $(this).closest('tr').find('.status-trad').val();
+		var age1 	= $(this).closest('tr').prev('tr').find('.getAge2').val();
+		var type 	= $(this).closest('tr').find('.typeFp').val();
+		var status 	= $(this).closest('tr').find('.status-trad').val();
 
-		if(sex2 == 'F') {
-			UnmetNeedCriteria(index, age2, type, status);
-		}
-
+		criteria(index, index, sex1, sex2, age1, age2, type, status);
 		autoGetData(fname1, lname1, extname1, sex1, bday1, fname2, lname2, extname2, sex2, bday2, index);
 
 		if(!$(this).prop('required')) {
