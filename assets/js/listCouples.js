@@ -82,10 +82,10 @@ function fpType()
 												'<div class="col-md-7 col-xs-12">' +
 													'<select name="intention_status_search" class="form-control intention_status" onChange="intentionToUse();">' +
 														'<option value=""></option>' +
-														'<option value="1">With Intention</option>' +
-														'<option value="2">Undecided</option>' +
-														'<option value="3">Currently Pregnant</option>' +
-														'<option value="4">No Intention</option>' +
+														'<option value="A">With Intention</option>' +
+														'<option value="B">Undecided</option>' +
+														'<option value="C">Currently Pregnant</option>' +
+														'<option value="D">No Intention</option>' +
 													'</select>' +
 													'</div>');						
 		} else {
@@ -106,7 +106,7 @@ function intentionToUse()
 {
 	var withIntention = $('select[name="intention_status_search"]').val();
 
-	if (withIntention == 1) {
+	if (withIntention == 'A') {
 		$('.with_intention').show();
 		$('.intention_to_use').prop('disabled', false);
 		$('.with_intention').html('<label class="control-label col-md-3 col-xs-12">Intention To Use</label>' +
@@ -160,6 +160,7 @@ function searchNow()
 			data: search,
 			url: base_url + '/menu/approvedClassSearch'
 		}).done(function(result){
+			console.log(result);
 			$('.table-search-results').html(tableResults(result));
 		});
 		
