@@ -7375,6 +7375,7 @@ GRANT EXECUTE ON PROCEDURE rpfp.get_report_accomplishment_details TO 'encoder';
 GRANT EXECUTE ON PROCEDURE rpfp.encoder_get_couples_with_fp_details TO 'encoder';
 GRANT EXECUTE ON PROCEDURE rpfp.process_accomplishment TO 'encoder';
 GRANT EXECUTE ON PROCEDURE rpfp.check_couples_details TO 'encoder';
+GRANT EXECUTE ON PROCEDURE rpfp.encoder_get_duplicate_details TO 'encoder';
 
 GRANT EXECUTE ON PROCEDURE rpfp.rdm_approve_couples TO 'regional_data_manager';
 GRANT EXECUTE ON PROCEDURE rpfp.rdm_save_target TO 'regional_data_manager';

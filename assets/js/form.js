@@ -159,8 +159,8 @@ function click_click_click(id, couplesId)
 
 function tooltip(couplesId, status, husband, wife, index)
 {
-	$("[data-toggle=popover"+index+"]").unbind('click');
-	$("[data-toggle=popover"+index+"]").bind('click', function(event) {
+	$("[data-toggle=popover"+index+"]").unbind('mousedown');
+	$("[data-toggle=popover"+index+"]").bind('mousedown', function(event) {
  		event.preventDefault();
 
 		var new_content =   '<p>Husband: <span class="fill-husband">'+ husband +'</span></p>' +
@@ -173,12 +173,13 @@ function tooltip(couplesId, status, husband, wife, index)
 		    title: 'Possible Duplicate in ' + status,
 			content: new_content
 		});
+	 	
+	 	$(this).on("click", function() {
+			var id = $(this).attr('aria-describedby');
+			click_click_click(id, couplesId);
+		});
  	});
 
- 	$(document).on("click", "button[aria-describedby]", function() {
-		var id = $(this).attr('aria-describedby');
-		click_click_click(id, couplesId);
-	});
 }
 
 
@@ -722,8 +723,10 @@ function getBrgys(muniId)
 
 function criteria(index1, index2, gender1, gender2, age1, age2, type, status)
 {
-	var status = status.toUpperCase();
-	if (status != '') {
+	if(status === '' || status === undefined) {
+		console.log('');
+	} else {
+		var status = status.toUpperCase();
 		if (gender1 === 'F') {
 			UnmetNeedCriteria(index1, age1, type, status);
 		} else if(gender2 === 'F') {
@@ -731,8 +734,6 @@ function criteria(index1, index2, gender1, gender2, age1, age2, type, status)
 		} else {
 			return false;
 		}
-	} else {
-		console.log('empty');
 	}
 }
 
