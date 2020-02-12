@@ -1,8 +1,8 @@
-var base_url = window.location.origin + '/rpfp';
+var base_url = window.location.origin + '/rpfp/';
 var XLSX = XLSX;
 var XW = {
 	msg: 'xlsx',
-	worker: base_url + '/node_modules/xlsx/xlsxworker.js'
+	worker: base_url + 'node_modules/xlsx/xlsxworker.js'
 };
 
 var global_wb;

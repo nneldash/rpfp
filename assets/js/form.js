@@ -59,6 +59,7 @@ $(function() {
 	reasonValidation();
 	typeUnmet();
 	statusUnmet();
+	importChanges();
 
 	Inputmask().mask(".birthAge");	
 
@@ -79,6 +80,54 @@ $(function() {
 	setTimeout(getIntentionUse, 2000);
 });
 
+function importChanges()
+{
+	$('#importModal').on('hidden.bs.modal', function (e) {
+		for(var i = 0; i <= 9; i ++) {
+			var fname1 = $('.tr1' + i + ' textarea[name="firstname1[' + i +']"]').val();
+			var lname1= $('.tr1' + i + ' textarea[name="lastname1[' + i +']"]').val();
+			var extname1 = $('.tr1' + i + ' input[name="extname1[' + i +']"]').val();
+			var sex1 = $('.tr1' + i + ' input[name="sex1[' + i +']"]').val();
+			var bday1 = $('.tr1' + i + ' input[name="bday1[' + i +']"]').val();
+			var age1 = $('.tr1' + i + ' input[name="age1[' + i +']"]').val();
+
+			var fname2 = $('.tr2' + i + ' textarea[name="firstname2[' + i +']"]').val();
+			var lname2= $('.tr2' + i + ' textarea[name="lastname2[' + i +']"]').val();
+			var extname2 = $('.tr2' + i + ' input[name="extname2[' + i +']"]').val();
+			var sex2 = $('.tr2' + i + ' input[name="sex2[' + i +']"]').val();
+			var bday2 = $('.tr2' + i + ' input[name="bday2[' + i +']"]').val();
+			var age2 = $('.tr2' + i + ' input[name="age2[' + i +']"]').val();
+
+			var type = $('.tr1' + i + ' input[name="type[' + i +']"]').val();
+			var status = $('.tr1' + i + ' input[name="status[' + i +']"]').val();
+
+			var dateArr1 = bday1.split('-');
+			var month1 = $.trim(dateArr1[0]);
+			var day1 = $.trim(dateArr1[1]);
+			var year1 = $.trim(dateArr1[2]);
+			var bday1 = year1 + '-' + month1 + '-' + day1;
+
+			var dateArr2 = bday2.split('-');
+			var month2 = $.trim(dateArr2[0]);
+			var day2 = $.trim(dateArr2[1]);
+			var year2 = $.trim(dateArr2[2]);
+			var bday2 = year2 + '-' + month2 + '-' + day2;
+
+			if (fname1 != '') {
+				if(!$('.tr1' + i + ' textarea[name="firstname1[' + i +']"]').prop('required')) {
+			    	$('.tr1' + i).find('td .require-this').attr('required', 'required');
+			    	$('.tr1' + i).find('td .required').removeAttr('hidden', 'hidden');
+			    	$('.tr2' + i).find('td .require-this').attr('required', 'required');
+			    	$('.tr2' + i).find('td .required').removeAttr('hidden', 'hidden');
+			    }
+			}
+
+			autoGetData(fname1, lname1, extname1, sex1, bday1, fname2, lname2, extname2, sex2, bday2, i);
+			criteria(i, i, sex1, sex2, age1, age2, type, status);
+		}
+	});
+}
+
 function getIntentionUse() 
 {
 	for(var i = 0; i <= 9 ; i ++) {
@@ -97,7 +146,7 @@ function getIntentionUse()
 	}
 }
 
-function click_click_click(id, couplesId)
+function click_click_click(index, id, couplesId)
 {
 	$('#'+ id +' .auto-fill-data').click(function(){
 		$.ajax({
@@ -108,6 +157,13 @@ function click_click_click(id, couplesId)
 				'couplesId' : couplesId
 			}
 		}).done(function(result){
+			var age1 = $('[aria-describedby='+ id + ']').closest('tr').find('.getAge1').val();
+			var sex1 = $('[aria-describedby='+ id + ']').closest('tr').find('.gender1').val();
+			var age2 = $('[aria-describedby='+ id + ']').closest('tr').next('tr').find('.getAge2').val();
+			var sex2 = $('[aria-describedby='+ id + ']').closest('tr').next('tr').find('.gender2').val();
+
+			criteria(index, index, sex1, sex2, age1, age2, result.Tfp_Type, result.Tfp_Status);
+
 			$('[aria-describedby='+ id + ']').popover('hide');
 
 			if(result.Address_No_St != 'N/A') {
@@ -176,12 +232,11 @@ function tooltip(couplesId, status, husband, wife, index)
 	 	
 	 	$(this).on("click", function() {
 			var id = $(this).attr('aria-describedby');
-			click_click_click(id, couplesId);
+			click_click_click(index, id, couplesId);
 		});
  	});
 
 }
-
 
 function sexValidation()
 {
@@ -724,8 +779,10 @@ function getBrgys(muniId)
 function criteria(index1, index2, gender1, gender2, age1, age2, type, status)
 {
 	if(status === '' || status === undefined) {
-		console.log('');
+		return false;
 	} else {
+		var gender1 = gender1.toUpperCase();
+		var gender2 = gender2.toUpperCase();
 		var status = status.toUpperCase();
 		if (gender1 === 'F') {
 			UnmetNeedCriteria(index1, age1, type, status);

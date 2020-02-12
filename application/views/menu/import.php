@@ -15,6 +15,11 @@
 <div id="out" hidden></div>
 <div id="htmlout" hidden></div>
 
+<style>
+    .waiting {
+        cursor: wait!important;
+    }
+</style>
 <script>
     loadJs(base_url + '/NewAssets/cpExcel', function() {
         loadJs(base_url + '/NewAssets/shimJs', function() {
@@ -28,7 +33,9 @@
 
     $('#xlf').attr('disabled', true);	
 	var xlf = $('#xlf').attr('disabled', true);
+    xlf.addClass('waiting');
 	setTimeout(function(){
 	    xlf.attr('disabled', false);
+        xlf.removeClass('waiting');
 	}, 3000);
 </script>
