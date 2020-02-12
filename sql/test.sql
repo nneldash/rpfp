@@ -182,7 +182,7 @@ INSERT INTO rpfp.`individual`
             `CIVIL_ID`,
             `EDUC_BCKGRND_ID`,
             `IS_ATTENDEE`)
-     VALUES (1, 1, 'Simon',        'Anna Margarette',  '', '', 35,       2,        '1984-02-07', 1, 8, 1 ),
+     VALUES (1, 1, 'Simon',        'Anna Margarette',  '', '', 36,       2,        '1984-02-07', 1, 8, 1 ),
             (2, 1, 'Simon',        'Carl Edward',      '', '', 38,       1,        '1981-09-09', 1, 8, 1 ),
             (3, 2, 'Alcantara',    'Gusion',           '', '', 30,       1,        '1989-01-07', 1, 7, 1 ),
             (4, 2, 'Alcantara',    'Gueneverre',       '', '', 30,       2,        '1989-12-09', 1, 6, 1 ),

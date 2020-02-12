@@ -2834,107 +2834,602 @@ BEGIN
              LIMIT read_offset, items_per_page
             ; 
         END IF;
-    ELSE
-        IF search_status = 1 THEN
-        CALL rpfp.get_class_list_unmet(
-         location_code_from,
-         location_code_to,
-         class_number,
-         search_date_from,
-         search_date_to,
-         type_class,
-         couples_name,
-         search_age_from,
-         search_age_to,
-         no_child,
-         mfp_used,
-         tfp_used,
-         intention_status,
-         intention_use,
-         search_status,
-         status_active,
-         name_user,
-         page_no,
-         items_per_page
-        );
-        END IF;
-
-        IF search_status = 2 THEN
-        CALL rpfp.get_class_list_served_unmet(
-         location_code_from,
-         location_code_to,
-         class_number,
-         search_date_from,
-         search_date_to,
-         type_class,
-         couples_name,
-         search_age_from,
-         search_age_to,
-         no_child,
-         mfp_used,
-         tfp_used,
-         intention_status,
-         intention_use,
-         search_status,
-         status_active,
-         name_user,
-         page_no,
-         items_per_page
-        );
-        END IF;
-        
-        IF search_status = 3 THEN
-        CALL rpfp.get_class_list_shifters(
-         location_code_from,
-         location_code_to,
-         class_number,
-         search_date_from,
-         search_date_to,
-         type_class,
-         couples_name,
-         search_age_from,
-         search_age_to,
-         no_child,
-         mfp_used,
-         tfp_used,
-         intention_status,
-         intention_use,
-         search_status,
-         status_active,
-         name_user,
-         page_no,
-         items_per_page
-        );
-        END IF;
-        
-        IF search_status = 4 THEN
-        CALL rpfp.get_class_list_served_shifters(
-         location_code_from,
-         location_code_to,
-         class_number,
-         search_date_from,
-         search_date_to,
-         type_class,
-         couples_name,
-         search_age_from,
-         search_age_to,
-         no_child,
-         mfp_used,
-         tfp_used,
-         intention_status,
-         intention_use,
-         search_status,
-         status_active,
-         name_user,
-         page_no,
-         items_per_page
-        );
-        END IF;
+        LEAVE proc_exit_point;
     END IF;
     
-    SELECT user_location;
-    SELECT location_code_from;
-    SELECT location_code_to;
+    IF search_status = 1 THEN    
+        IF tfp_used > 0 THEN
+            CALL rpfp.get_class_list_unmet(
+            location_code_from,
+            location_code_to,
+            class_number,
+            search_date_from,
+            search_date_to,
+            type_class,
+            couples_name,
+            search_age_from,
+            search_age_to,
+            no_child,
+            mfp_used,
+            tfp_used,
+            intention_status,
+            intention_use,
+            search_status,
+            status_active,
+            name_user,
+            page_no,
+            items_per_page
+            );
+            LEAVE proc_exit_point;
+        END IF;
+        
+        IF mfp_used > 0 THEN
+            CALL rpfp.get_class_list_unmet(
+            location_code_from,
+            location_code_to,
+            class_number,
+            search_date_from,
+            search_date_to,
+            type_class,
+            couples_name,
+            search_age_from,
+            search_age_to,
+            no_child,
+            mfp_used,
+            tfp_used,
+            intention_status,
+            intention_use,
+            search_status,
+            status_active,
+            name_user,
+            page_no,
+            items_per_page
+            );
+            LEAVE proc_exit_point;
+        END IF;
+        
+        IF (IFNULL( type_class, 0 ) = 0 ) THEN
+            SET type_class = 1;
+            SET type_class_range = 7;
+        ELSE
+            SET type_class_range = type_class;
+        END IF;
+
+        IF NOT EXISTS (
+            SELECT rc.RPFP_CLASS_ID
+            FROM rpfp.RPFP_CLASS rc
+        LEFT JOIN rpfp.couples apc
+                ON apc.RPFP_CLASS_ID = rc.RPFP_CLASS_ID
+            WHERE apc.IS_ACTIVE = status_active
+              AND (   rc.DB_USER_ID = name_user
+                   OR (   is_not_encoder
+                      AND user_location = (rc.BARANGAY_ID DIV POWER( 10, multiplier ))
+                    )
+                )
+        ) THEN
+                SELECT NULL AS rpfpclass,
+                        NULL AS typeclass,
+                        NULL AS others_specify,
+                        NULL AS province_name,
+                        NULL AS municipality_name,
+                        NULL AS barangay,
+                        NULL AS class_no,
+                        NULL AS no_couples,
+                        NULL AS date_conduct,
+                        NULL AS lastname,
+                        NULL AS firstname
+                ;
+        ELSE
+            IF (IFNULL( page_no, 0) = 0) THEN
+                /** DEFAULT PAGE NO. */
+            SET page_no := 1;
+            END IF;
+            IF (IFNULL( items_per_page, 0) = 0) THEN
+                /** DEFAULT COUNT PER PAGE*/
+            SET items_per_page := 10;
+            END IF;
+
+            SET read_offset := (page_no - 1) * items_per_page;
+            SELECT rc.RPFP_CLASS_ID AS rpfpclass,
+                   rc.TYPE_CLASS_ID AS typeclass,
+                   rc.OTHERS_SPECIFY AS others_specify,
+                   prov.LOCATION_DESCRIPTION AS province_name,
+                   city.LOCATION_DESCRIPTION AS municipality_name,
+                   lp.LOCATION_DESCRIPTION AS barangay,
+                   rc.CLASS_NUMBER AS class_no,
+                   COUNT(apc.COUPLES_ID) AS couples_encoded,
+                   rc.DATE_CONDUCTED AS date_conduct,
+                   up.LAST_NAME AS lastname,
+                   up.FIRST_NAME AS firstname
+              FROM rpfp.rpfp_class rc 
+         LEFT JOIN rpfp.couples apc ON apc.RPFP_CLASS_ID = rc.RPFP_CLASS_ID
+         LEFT JOIN rpfp.individual ic ON ic.COUPLES_ID = apc.COUPLES_ID
+         LEFT JOIN rpfp.fp_details fd ON fd.COUPLES_ID = ic.COUPLES_ID
+         LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
+         LEFT JOIN rpfp.lib_psgc_locations city ON city.PSGC_CODE = (lp.MUNICIPALITY_CODE * POWER( 10, 3 ))
+         LEFT JOIN rpfp.lib_psgc_locations prov ON prov.PSGC_CODE = (lp.PROVINCE_CODE * POWER( 10, 5 ))
+         LEFT JOIN rpfp.user_profile up ON up.DB_USER_ID = rc.DB_USER_ID
+             WHERE rc.CLASS_NUMBER LIKE CONCAT('%',class_number,'%')
+               AND lp.PSGC_CODE >= location_code_from
+               AND lp.PSGC_CODE <= location_code_to
+               AND (
+                        rc.TYPE_CLASS_ID >= type_class
+                    AND rc.TYPE_CLASS_ID <= type_class_range
+                )
+               AND (
+                        rc.DATE_CONDUCTED >= search_date_from
+                    AND rc.DATE_CONDUCTED <= search_date_to
+                )
+               AND apc.IS_ACTIVE = status_active
+               AND (   rc.DB_USER_ID = name_user
+                   OR (   is_not_encoder
+                      AND user_location = (rc.BARANGAY_ID DIV POWER( 10, multiplier ))
+                    )
+                )
+               AND (
+                        ic.FNAME LIKE CONCAT('%',couples_name,'%')
+                     OR ic.LNAME LIKE CONCAT('%',couples_name,'%')
+                )
+               AND ic.AGE >= search_age_from
+               AND ic.AGE <= search_age_to
+               AND apc.NO_CHILDREN >= search_child_from
+               AND apc.NO_CHILDREN <= search_child_to
+               AND (   
+                       fd.TFP_TYPE_ID <= 5
+                    OR fd.TFP_STATUS_ID = 'A'
+                )
+          GROUP BY rc.RPFP_CLASS_ID
+          ORDER BY rc.DATE_CONDUCTED DESC
+             LIMIT read_offset, items_per_page
+            ; 
+        END IF;
+        LEAVE proc_exit_point;
+    END IF;
+
+    IF search_status = 2 THEN
+        IF tfp_used > 0 THEN
+            CALL rpfp.get_class_list_served_unmet(
+            location_code_from,
+            location_code_to,
+            class_number,
+            search_date_from,
+            search_date_to,
+            type_class,
+            couples_name,
+            search_age_from,
+            search_age_to,
+            no_child,
+            mfp_used,
+            tfp_used,
+            intention_status,
+            intention_use,
+            search_status,
+            status_active,
+            name_user,
+            page_no,
+            items_per_page
+            );
+            LEAVE proc_exit_point;
+        END IF;
+        
+        IF mfp_used > 0 THEN
+            CALL rpfp.get_class_list_served_unmet(
+            location_code_from,
+            location_code_to,
+            class_number,
+            search_date_from,
+            search_date_to,
+            type_class,
+            couples_name,
+            search_age_from,
+            search_age_to,
+            no_child,
+            mfp_used,
+            tfp_used,
+            intention_status,
+            intention_use,
+            search_status,
+            status_active,
+            name_user,
+            page_no,
+            items_per_page
+            );
+            LEAVE proc_exit_point;
+        END IF;
+        
+        IF (IFNULL( type_class, 0 ) = 0 ) THEN
+            SET type_class = 1;
+            SET type_class_range = 7;
+        ELSE
+            SET type_class_range = type_class;
+        END IF;
+
+        IF NOT EXISTS (
+            SELECT rc.RPFP_CLASS_ID
+            FROM rpfp.RPFP_CLASS rc
+        LEFT JOIN rpfp.couples apc
+                ON apc.RPFP_CLASS_ID = rc.RPFP_CLASS_ID
+            WHERE apc.IS_ACTIVE = status_active
+              AND (   rc.DB_USER_ID = name_user
+                   OR (   is_not_encoder
+                      AND user_location = (rc.BARANGAY_ID DIV POWER( 10, multiplier ))
+                    )
+                )
+        ) THEN
+                 SELECT NULL AS rpfpclass,
+                        NULL AS typeclass,
+                        NULL AS others_specify,
+                        NULL AS province_name,
+                        NULL AS municipality_name,
+                        NULL AS barangay,
+                        NULL AS class_no,
+                        NULL AS no_couples,
+                        NULL AS date_conduct,
+                        NULL AS lastname,
+                        NULL AS firstname
+                ;
+        ELSE
+            IF (IFNULL( page_no, 0) = 0) THEN
+                /** DEFAULT PAGE NO. */
+            SET page_no := 1;
+            END IF;
+            IF (IFNULL( items_per_page, 0) = 0) THEN
+                /** DEFAULT COUNT PER PAGE*/
+            SET items_per_page := 10;
+            END IF;
+
+            SET read_offset := (page_no - 1) * items_per_page;
+            SELECT rc.RPFP_CLASS_ID AS rpfpclass,
+                   rc.TYPE_CLASS_ID AS typeclass,
+                   rc.OTHERS_SPECIFY AS others_specify,
+                   prov.LOCATION_DESCRIPTION AS province_name,
+                   city.LOCATION_DESCRIPTION AS municipality_name,
+                   lp.LOCATION_DESCRIPTION AS barangay,
+                   rc.CLASS_NUMBER AS class_no,
+                   COUNT(apc.COUPLES_ID) AS couples_encoded,
+                   rc.DATE_CONDUCTED AS date_conduct,
+                   up.LAST_NAME AS lastname,
+                   up.FIRST_NAME AS firstname
+              FROM rpfp.rpfp_class rc 
+         LEFT JOIN rpfp.couples apc ON apc.RPFP_CLASS_ID = rc.RPFP_CLASS_ID
+         LEFT JOIN rpfp.individual ic ON ic.COUPLES_ID = apc.COUPLES_ID
+         LEFT JOIN rpfp.fp_details fd ON fd.COUPLES_ID = ic.COUPLES_ID
+         LEFT JOIN rpfp.fp_service fs ON fs.COUPLES_ID = apc.COUPLES_ID
+         LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
+         LEFT JOIN rpfp.lib_psgc_locations city ON city.PSGC_CODE = (lp.MUNICIPALITY_CODE * POWER( 10, 3 ))
+         LEFT JOIN rpfp.lib_psgc_locations prov ON prov.PSGC_CODE = (lp.PROVINCE_CODE * POWER( 10, 5 ))
+         LEFT JOIN rpfp.user_profile up ON up.DB_USER_ID = rc.DB_USER_ID
+             WHERE rc.CLASS_NUMBER LIKE CONCAT('%',class_number,'%')
+               AND lp.PSGC_CODE >= location_code_from
+               AND lp.PSGC_CODE <= location_code_to
+               AND (
+                        rc.TYPE_CLASS_ID >= type_class
+                    AND rc.TYPE_CLASS_ID <= type_class_range
+                )
+               AND (
+                        rc.DATE_CONDUCTED >= search_date_from
+                    AND rc.DATE_CONDUCTED <= search_date_to
+                )
+               AND apc.IS_ACTIVE = status_active
+               AND (   rc.DB_USER_ID = name_user
+                   OR (   is_not_encoder
+                      AND user_location = (rc.BARANGAY_ID DIV POWER( 10, multiplier ))
+                    )
+                )
+               AND (
+                        ic.FNAME LIKE CONCAT('%',couples_name,'%')
+                     OR ic.LNAME LIKE CONCAT('%',couples_name,'%')
+                )
+               AND ic.AGE >= search_age_from
+               AND ic.AGE <= search_age_to
+               AND apc.NO_CHILDREN >= search_child_from
+               AND apc.NO_CHILDREN <= search_child_to
+               AND fs.IS_PROVIDED_SERVICE = 1
+               AND (   
+                        fd.TFP_TYPE_ID <= 5
+                     OR fd.TFP_STATUS_ID = 'A'
+                )
+          GROUP BY rc.RPFP_CLASS_ID
+          ORDER BY rc.DATE_CONDUCTED DESC
+             LIMIT read_offset, items_per_page
+            ; 
+        END IF;
+        LEAVE proc_exit_point;
+    END IF;
+        
+    IF search_status = 3 THEN
+        IF tfp_used > 0 THEN
+            CALL rpfp.get_class_list_shifters(
+            location_code_from,
+            location_code_to,
+            class_number,
+            search_date_from,
+            search_date_to,
+            type_class,
+            couples_name,
+            search_age_from,
+            search_age_to,
+            no_child,
+            mfp_used,
+            tfp_used,
+            intention_status,
+            intention_use,
+            search_status,
+            status_active,
+            name_user,
+            page_no,
+            items_per_page
+            );
+            LEAVE proc_exit_point;
+        END IF;
+        
+        IF mfp_used > 0 THEN
+            CALL rpfp.get_class_list_shifters(
+            location_code_from,
+            location_code_to,
+            class_number,
+            search_date_from,
+            search_date_to,
+            type_class,
+            couples_name,
+            search_age_from,
+            search_age_to,
+            no_child,
+            mfp_used,
+            tfp_used,
+            intention_status,
+            intention_use,
+            search_status,
+            status_active,
+            name_user,
+            page_no,
+            items_per_page
+            );
+            LEAVE proc_exit_point;
+        END IF;
+        
+        IF (IFNULL( type_class, 0 ) = 0 ) THEN
+            SET type_class = 1;
+            SET type_class_range = 7;
+        ELSE
+            SET type_class_range = type_class;
+        END IF;
+
+        IF NOT EXISTS (
+            SELECT rc.RPFP_CLASS_ID
+            FROM rpfp.RPFP_CLASS rc
+        LEFT JOIN rpfp.couples apc
+                ON apc.RPFP_CLASS_ID = rc.RPFP_CLASS_ID
+            WHERE apc.IS_ACTIVE = status_active
+              AND (   rc.DB_USER_ID = name_user
+                   OR (   is_not_encoder
+                      AND user_location = (rc.BARANGAY_ID DIV POWER( 10, multiplier ))
+                    )
+                )
+        ) THEN
+                SELECT NULL AS rpfpclass,
+                        NULL AS typeclass,
+                        NULL AS others_specify,
+                        NULL AS province_name,
+                        NULL AS municipality_name,
+                        NULL AS barangay,
+                        NULL AS class_no,
+                        NULL AS no_couples,
+                        NULL AS date_conduct,
+                        NULL AS lastname,
+                        NULL AS firstname
+                ;
+        ELSE
+            IF (IFNULL( page_no, 0) = 0) THEN
+                /** DEFAULT PAGE NO. */
+            SET page_no := 1;
+            END IF;
+            IF (IFNULL( items_per_page, 0) = 0) THEN
+                /** DEFAULT COUNT PER PAGE*/
+            SET items_per_page := 10;
+            END IF;
+
+            SET read_offset := (page_no - 1) * items_per_page;
+            SELECT rc.RPFP_CLASS_ID AS rpfpclass,
+                   rc.TYPE_CLASS_ID AS typeclass,
+                   rc.OTHERS_SPECIFY AS others_specify,
+                   prov.LOCATION_DESCRIPTION AS province_name,
+                   city.LOCATION_DESCRIPTION AS municipality_name,
+                   lp.LOCATION_DESCRIPTION AS barangay,
+                   rc.CLASS_NUMBER AS class_no,
+                   COUNT(apc.COUPLES_ID) AS couples_encoded,
+                   rc.DATE_CONDUCTED AS date_conduct,
+                   up.LAST_NAME AS lastname,
+                   up.FIRST_NAME AS firstname
+              FROM rpfp.rpfp_class rc 
+         LEFT JOIN rpfp.couples apc ON apc.RPFP_CLASS_ID = rc.RPFP_CLASS_ID
+         LEFT JOIN rpfp.individual ic ON ic.COUPLES_ID = apc.COUPLES_ID
+         LEFT JOIN rpfp.fp_details fd ON fd.COUPLES_ID = ic.COUPLES_ID
+         LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
+         LEFT JOIN rpfp.lib_psgc_locations city ON city.PSGC_CODE = (lp.MUNICIPALITY_CODE * POWER( 10, 3 ))
+         LEFT JOIN rpfp.lib_psgc_locations prov ON prov.PSGC_CODE = (lp.PROVINCE_CODE * POWER( 10, 5 ))
+         LEFT JOIN rpfp.user_profile up ON up.DB_USER_ID = rc.DB_USER_ID
+             WHERE rc.CLASS_NUMBER LIKE CONCAT('%',class_number,'%')
+               AND lp.PSGC_CODE >= location_code_from
+               AND lp.PSGC_CODE <= location_code_to
+               AND (
+                        rc.TYPE_CLASS_ID >= type_class
+                    AND rc.TYPE_CLASS_ID <= type_class_range
+                )
+               AND (
+                        rc.DATE_CONDUCTED >= search_date_from
+                    AND rc.DATE_CONDUCTED <= search_date_to
+                )
+               AND apc.IS_ACTIVE = status_active
+               AND (   rc.DB_USER_ID = name_user
+                   OR (   is_not_encoder
+                      AND user_location = (rc.BARANGAY_ID DIV POWER( 10, multiplier ))
+                    )
+                )
+               AND (
+                        ic.FNAME LIKE CONCAT('%',couples_name,'%')
+                     OR ic.LNAME LIKE CONCAT('%',couples_name,'%')
+                )
+               AND ic.AGE >= search_age_from
+               AND ic.AGE <= search_age_to
+               AND apc.NO_CHILDREN >= search_child_from
+               AND apc.NO_CHILDREN <= search_child_to
+               AND fd.MFP_INTENTION_SHIFT_ID >= 1
+          GROUP BY rc.RPFP_CLASS_ID
+          ORDER BY rc.DATE_CONDUCTED DESC
+             LIMIT read_offset, items_per_page
+            ; 
+        END IF;
+        LEAVE proc_exit_point;
+    END IF;
+        
+    IF search_status = 4 THEN
+        IF tfp_used > 0 THEN
+            CALL rpfp.get_class_list_served_shifters(
+            location_code_from,
+            location_code_to,
+            class_number,
+            search_date_from,
+            search_date_to,
+            type_class,
+            couples_name,
+            search_age_from,
+            search_age_to,
+            no_child,
+            mfp_used,
+            tfp_used,
+            intention_status,
+            intention_use,
+            search_status,
+            status_active,
+            name_user,
+            page_no,
+            items_per_page
+            );
+            LEAVE proc_exit_point;
+        END IF;
+        
+        IF mfp_used > 0 THEN
+            CALL rpfp.get_class_list_served_shifters(
+            location_code_from,
+            location_code_to,
+            class_number,
+            search_date_from,
+            search_date_to,
+            type_class,
+            couples_name,
+            search_age_from,
+            search_age_to,
+            no_child,
+            mfp_used,
+            tfp_used,
+            intention_status,
+            intention_use,
+            search_status,
+            status_active,
+            name_user,
+            page_no,
+            items_per_page
+            );
+            LEAVE proc_exit_point;
+        END IF;
+        
+        IF (IFNULL( type_class, 0 ) = 0 ) THEN
+            SET type_class = 1;
+            SET type_class_range = 7;
+        ELSE
+            SET type_class_range = type_class;
+        END IF;
+
+        IF NOT EXISTS (
+            SELECT rc.RPFP_CLASS_ID
+            FROM rpfp.RPFP_CLASS rc
+        LEFT JOIN rpfp.couples apc
+                ON apc.RPFP_CLASS_ID = rc.RPFP_CLASS_ID
+            WHERE apc.IS_ACTIVE = status_active
+              AND (   rc.DB_USER_ID = name_user
+                   OR (   is_not_encoder
+                      AND user_location = (rc.BARANGAY_ID DIV POWER( 10, multiplier ))
+                    )
+                )
+        ) THEN
+                SELECT NULL AS rpfpclass,
+                        NULL AS typeclass,
+                        NULL AS others_specify,
+                        NULL AS province_name,
+                        NULL AS municipality_name,
+                        NULL AS barangay,
+                        NULL AS class_no,
+                        NULL AS no_couples,
+                        NULL AS date_conduct,
+                        NULL AS lastname,
+                        NULL AS firstname
+                ;
+        ELSE
+            IF (IFNULL( page_no, 0) = 0) THEN
+                /** DEFAULT PAGE NO. */
+            SET page_no := 1;
+            END IF;
+            IF (IFNULL( items_per_page, 0) = 0) THEN
+                /** DEFAULT COUNT PER PAGE*/
+            SET items_per_page := 10;
+            END IF;
+
+            SET read_offset := (page_no - 1) * items_per_page;
+            SELECT rc.RPFP_CLASS_ID AS rpfpclass,
+                   rc.TYPE_CLASS_ID AS typeclass,
+                   rc.OTHERS_SPECIFY AS others_specify,
+                   prov.LOCATION_DESCRIPTION AS province_name,
+                   city.LOCATION_DESCRIPTION AS municipality_name,
+                   lp.LOCATION_DESCRIPTION AS barangay,
+                   rc.CLASS_NUMBER AS class_no,
+                   COUNT(apc.COUPLES_ID) AS couples_encoded,
+                   rc.DATE_CONDUCTED AS date_conduct,
+                   up.LAST_NAME AS lastname,
+                   up.FIRST_NAME AS firstname
+              FROM rpfp.rpfp_class rc 
+         LEFT JOIN rpfp.couples apc ON apc.RPFP_CLASS_ID = rc.RPFP_CLASS_ID
+         LEFT JOIN rpfp.individual ic ON ic.COUPLES_ID = apc.COUPLES_ID
+         LEFT JOIN rpfp.fp_details fd ON fd.COUPLES_ID = ic.COUPLES_ID
+         LEFT JOIN rpfp.fp_service fs ON fs.COUPLES_ID = apc.COUPLES_ID
+         LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
+         LEFT JOIN rpfp.lib_psgc_locations city ON city.PSGC_CODE = (lp.MUNICIPALITY_CODE * POWER( 10, 3 ))
+         LEFT JOIN rpfp.lib_psgc_locations prov ON prov.PSGC_CODE = (lp.PROVINCE_CODE * POWER( 10, 5 ))
+         LEFT JOIN rpfp.user_profile up ON up.DB_USER_ID = rc.DB_USER_ID
+             WHERE rc.CLASS_NUMBER LIKE CONCAT('%',class_number,'%')
+               AND lp.PSGC_CODE >= location_code_from
+               AND lp.PSGC_CODE <= location_code_to
+               AND (
+                        rc.TYPE_CLASS_ID >= type_class
+                    AND rc.TYPE_CLASS_ID <= type_class_range
+                )
+               AND (
+                        rc.DATE_CONDUCTED >= search_date_from
+                    AND rc.DATE_CONDUCTED <= search_date_to
+                )
+               AND apc.IS_ACTIVE = status_active
+               AND (   rc.DB_USER_ID = name_user
+                   OR (   is_not_encoder
+                      AND user_location = (rc.BARANGAY_ID DIV POWER( 10, multiplier ))
+                    )
+                )
+               AND (
+                        ic.FNAME LIKE CONCAT('%',couples_name,'%')
+                     OR ic.LNAME LIKE CONCAT('%',couples_name,'%')
+                )
+               AND ic.AGE >= search_age_from
+               AND ic.AGE <= search_age_to
+               AND apc.NO_CHILDREN >= search_child_from
+               AND apc.NO_CHILDREN <= search_child_to
+               AND fs.IS_PROVIDED_SERVICE = 1
+               AND fd.MFP_INTENTION_SHIFT_ID >= 1
+          GROUP BY rc.RPFP_CLASS_ID
+          ORDER BY rc.DATE_CONDUCTED DESC
+             LIMIT read_offset, items_per_page
+            ; 
+        END IF;
+        LEAVE proc_exit_point;
+    END IF;
 END$$
 
 CREATE DEFINER=root@localhost PROCEDURE search_advance_approved (
@@ -3606,157 +4101,6 @@ ELSE
 END IF;
 END$$
 
-CREATE DEFINER=root@localhost PROCEDURE get_class_list_fp_user (
-    IN location_code_from INT,
-    IN location_code_to INT,
-    IN class_number VARCHAR(100),
-    IN search_date_from DATE,
-    IN search_date_to DATE,
-    IN type_class INT,
-    IN couples_name VARCHAR(100),
-    IN search_age_from INT,
-    IN search_age_to INT,
-    IN no_child INT,
-    IN mfp_used INT,
-    IN tfp_used INT,
-    IN intention_status VARCHAR(50),
-    IN intention_use INT,
-    IN search_status INT,
-    IN status_active INT,
-    IN username VARCHAR(50),
-    IN page_no INT,
-    IN items_per_page INT
-    )   READS SQL DATA
-BEGIN
-    DECLARE type_class_range INT;
-    DECLARE search_child_from INT;
-    DECLARE search_child_to INT;
-    DECLARE search_mfp_from INT;
-    DECLARE search_mfp_to INT;
-    DECLARE search_tfp_from INT;
-    DECLARE search_tfp_to INT;
-    DECLARE search_intention_from INT;
-    DECLARE search_intention_to INT;
-    DECLARE search_intentionfp_from INT;
-    DECLARE search_intentionfp_to INT;
-    /** 
-    SEARCH STATUS
-        1 - unmet need
-        2 - served unmet need
-        3 - shifters
-        4 - served shifters
-    */
-    DECLARE name_user VARCHAR(50);
-    DECLARE db_user_name VARCHAR(50);
-    DECLARE read_offset INT;
-    DECLARE user_scope INT;
-    DECLARE user_location INT;
-    DECLARE multiplier INT;
-    DECLARE is_not_encoder INT(1);
-    
-    CALL rpfp.lib_extract_user_name( USER(), name_user, db_user_name );
-    SET user_scope := rpfp.profile_get_scope( name_user );
-    SET multiplier := rpfp.lib_get_multiplier( user_scope );
-    SET user_location := rpfp.profile_get_location( name_user, user_scope );
-    SET is_not_encoder := NOT IFNULL(rpfp.profile_check_if_encoder(), FALSE);
-
-    IF (IFNULL( type_class, 0 ) = 0 ) THEN
-        SET type_class = 1;
-        SET type_class_range = 7;
-    ELSE
-        SET type_class_range = type_class;
-    END IF;
-
-    IF (IFNULL( no_child, 0 ) = 0) THEN
-        SET search_child_from = 0;
-        SET search_child_to = 200;
-    END IF;
-   
-    IF NOT EXISTS (
-         SELECT rc.RPFP_CLASS_ID
-           FROM rpfp.RPFP_CLASS rc
-      LEFT JOIN rpfp.couples apc
-             ON apc.RPFP_CLASS_ID = rc.RPFP_CLASS_ID
-          WHERE apc.IS_ACTIVE = status_active
-            AND rc.DB_USER_ID = name_user
-    ) THEN
-            SELECT NULL AS rpfpclass,
-                    NULL AS typeclass,
-                    NULL AS others_specify,
-                    NULL AS barangay,
-                    NULL AS class_no,
-                    NULL AS date_conduct
-            ;
-    ELSE
-        IF (IFNULL( page_no, 0) = 0) THEN
-            /** DEFAULT PAGE NO. */
-        SET page_no := 1;
-        END IF;
-        IF (IFNULL( items_per_page, 0) = 0) THEN
-            /** DEFAULT COUNT PER PAGE*/
-        SET items_per_page := 10;
-        END IF;
-
-        SET read_offset := (page_no - 1) * items_per_page;
-        SELECT rpfpclass,
-               typeclass,
-               others_specify,
-               barangay,
-               class_no,
-               date_conduct
-        FROM (            
-                 SELECT rc.RPFP_CLASS_ID AS rpfpclass,
-                        rc.TYPE_CLASS_ID AS typeclass,
-                        rc.OTHERS_SPECIFY AS others_specify,
-                        lp.LOCATION_DESCRIPTION AS barangay,
-                        rc.CLASS_NUMBER AS class_no,
-                        rc.DATE_CONDUCTED AS date_conduct
-                   FROM rpfp.rpfp_class rc 
-              LEFT JOIN rpfp.couples apc ON apc.RPFP_CLASS_ID = rc.RPFP_CLASS_ID
-              LEFT JOIN rpfp.individual ic ON ic.COUPLES_ID = apc.COUPLES_ID
-              LEFT JOIN rpfp.fp_details fd ON fd.COUPLES_ID = ic.COUPLES_ID
-              LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID 
-                  WHERE rc.CLASS_NUMBER LIKE CONCAT('%',class_number,'%')
-                    AND lp.PSGC_CODE >= location_code_from
-                    AND lp.PSGC_CODE >= location_code_to
-                   AND (
-                        rc.TYPE_CLASS_ID >= type_class
-                        AND rc.TYPE_CLASS_ID <= type_class_range
-                        )
-                    AND rc.DB_USER_ID = username
-                    AND (
-                        rc.DATE_CONDUCTED >= search_date_from
-                        AND rc.DATE_CONDUCTED <= search_date_to
-                        )
-                    AND apc.IS_ACTIVE = status_active
-       UNION SELECT rc.RPFP_CLASS_ID AS rpfpclass,
-                    rc.TYPE_CLASS_ID AS typeclass,
-                    rc.OTHERS_SPECIFY AS others_specify,
-                    lp.LOCATION_DESCRIPTION AS barangay,
-                    rc.CLASS_NUMBER AS class_no,
-                    rc.DATE_CONDUCTED AS date_conduct
-               FROM rpfp.rpfp_class rc 
-          LEFT JOIN rpfp.couples apc ON apc.RPFP_CLASS_ID = rc.RPFP_CLASS_ID
-          LEFT JOIN rpfp.individual ic ON ic.COUPLES_ID = apc.COUPLES_ID
-          LEFT JOIN rpfp.fp_details fd ON fd.COUPLES_ID = ic.COUPLES_ID
-          LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID 
-              WHERE (
-                        ic.FNAME LIKE CONCAT('%',couples_name,'%')
-                     OR ic.LNAME LIKE CONCAT('%',couples_name,'%')
-                    )
-                    AND ic.AGE >= search_age_from
-                    AND ic.AGE <= search_age_to
-                    AND apc.NO_CHILDREN >= search_child_from
-                    AND apc.NO_CHILDREN <= search_child_to
-                    AND fd.MFP_METHOD_USED_ID = mfp_used 
-                ) da_union
-       GROUP BY da_union.class_no
-       ORDER BY da_union.date_conduct DESC
-          LIMIT read_offset, items_per_page
-        ; 
-    END IF;
-END$$
-
 CREATE DEFINER=root@localhost PROCEDURE get_class_list_unmet (
     IN location_code_from INT,
     IN location_code_to INT,
@@ -3778,6 +4122,7 @@ CREATE DEFINER=root@localhost PROCEDURE get_class_list_unmet (
     IN page_no INT,
     IN items_per_page INT
     )   READS SQL DATA
+    proc_exit_point :
 BEGIN
     DECLARE type_class_range INT;
     DECLARE search_child_from INT;
@@ -3822,7 +4167,7 @@ BEGIN
         SET search_child_from = 0;
         SET search_child_to = 200;
     END IF;
-
+    
     IF search_age_from < 15 THEN
         SET search_age_from = 15;
     END IF;
@@ -3830,77 +4175,290 @@ BEGIN
     IF search_age_to > 49 THEN
         SET search_age_to = 49;
     END IF;
-    
-        IF NOT EXISTS (
-            SELECT rc.RPFP_CLASS_ID
-            FROM rpfp.RPFP_CLASS rc
-        LEFT JOIN rpfp.couples apc
-                ON apc.RPFP_CLASS_ID = rc.RPFP_CLASS_ID
-            WHERE apc.IS_ACTIVE = status_active
-                AND rc.DB_USER_ID = name_user
-        ) THEN
-            SELECT NULL AS rpfpclass,
-                   NULL AS typeclass,
-                   NULL AS others_specify,
-                   NULL AS city,
-                   NULL AS barangay,
-                   NULL AS class_no,
-                   NULL AS date_conduct
-            ;
-        ELSE
-            IF (IFNULL( page_no, 0) = 0) THEN
-                /** DEFAULT PAGE NO. */
-                SET page_no := 1;
-            END IF;
-            IF (IFNULL( items_per_page, 0) = 0) THEN
-                /** DEFAULT COUNT PER PAGE*/
-                SET items_per_page := 10;
-            END IF;
-
-            SET read_offset := (page_no - 1) * items_per_page;
-         SELECT rc.RPFP_CLASS_ID AS rpfpclass,
-                rc.TYPE_CLASS_ID AS typeclass,
-                rc.OTHERS_SPECIFY AS others_specify,
-                lp.LOCATION_DESCRIPTION AS barangay,
-                rc.CLASS_NUMBER AS class_no,
-                rc.DATE_CONDUCTED AS date_conduct
-           FROM rpfp.rpfp_class rc 
-        LEFT JOIN rpfp.couples apc ON apc.RPFP_CLASS_ID = rc.RPFP_CLASS_ID
-        LEFT JOIN rpfp.individual ic ON ic.COUPLES_ID = apc.COUPLES_ID
-        LEFT JOIN rpfp.fp_details fd ON fd.COUPLES_ID = ic.COUPLES_ID
-        LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID 
-            WHERE rc.CLASS_NUMBER LIKE CONCAT('%',class_number,'%')
-            AND lp.PSGC_CODE >= location_code_from
-            AND lp.PSGC_CODE >= location_code_to
-            AND (
-                    rc.TYPE_CLASS_ID >= type_class
-                AND rc.TYPE_CLASS_ID <= type_class_range
-            )
-            AND rc.DB_USER_ID = username
-            AND (
-                rc.DATE_CONDUCTED >= search_date_from
-            AND rc.DATE_CONDUCTED <= search_date_to
-            )
-            AND apc.IS_ACTIVE = status_active
-            AND (
-               ic.FNAME LIKE CONCAT('%',couples_name,'%')
-            OR ic.LNAME LIKE CONCAT('%',couples_name,'%')
-            )
-            AND ic.AGE >= search_age_from
-            AND ic.AGE <= search_age_to
-            AND apc.NO_CHILDREN >= search_child_from
-            AND apc.NO_CHILDREN <= search_child_to
-            AND (   fd.TFP_TYPE_ID <= 5
-                OR fd.TFP_STATUS_ID = 1
+        
+IF ( IFNULL( tfp_used, 0 ) = 0 ) THEN
+    IF NOT EXISTS (
+         SELECT rc.RPFP_CLASS_ID
+           FROM rpfp.RPFP_CLASS rc
+      LEFT JOIN rpfp.couples apc
+             ON apc.RPFP_CLASS_ID = rc.RPFP_CLASS_ID
+          WHERE apc.IS_ACTIVE = status_active
+            AND (   rc.DB_USER_ID = name_user
+                OR (   is_not_encoder
+                    AND user_location = (rc.BARANGAY_ID DIV POWER( 10, multiplier ))
                 )
-                            AND fd.MFP_METHOD_USED_ID = mfp_used
-                            AND fd.TFP_TYPE_ID = tfp_used
-                            AND fd.MFP_INTENTION_USE_ID = intention_use
-        GROUP BY rc.CLASS_NUMBER
-        ORDER BY rc.DATE_CONDUCTED DESC
-            LIMIT read_offset, items_per_page
-        ; 
+            )
+    ) THEN
+                 SELECT NULL AS rpfpclass,
+                        NULL AS typeclass,
+                        NULL AS others_specify,
+                        NULL AS province_name,
+                        NULL AS municipality_name,
+                        NULL AS barangay,
+                        NULL AS class_no,
+                        NULL AS no_couples,
+                        NULL AS date_conduct,
+                        NULL AS lastname,
+                        NULL AS firstname
+            ;
+    ELSE
+        IF (IFNULL( page_no, 0) = 0) THEN
+            /** DEFAULT PAGE NO. */
+        SET page_no := 1;
         END IF;
+        IF (IFNULL( items_per_page, 0) = 0) THEN
+            /** DEFAULT COUNT PER PAGE*/
+        SET items_per_page := 10;
+        END IF;
+
+        SET read_offset := (page_no - 1) * items_per_page;
+            SELECT rc.RPFP_CLASS_ID AS rpfpclass,
+                   rc.TYPE_CLASS_ID AS typeclass,
+                   rc.OTHERS_SPECIFY AS others_specify,
+                   prov.LOCATION_DESCRIPTION AS province_name,
+                   city.LOCATION_DESCRIPTION AS municipality_name,
+                   lp.LOCATION_DESCRIPTION AS barangay,
+                   rc.CLASS_NUMBER AS class_no,
+                   COUNT(apc.COUPLES_ID) AS couples_encoded,
+                   rc.DATE_CONDUCTED AS date_conduct,
+                   up.LAST_NAME AS lastname,
+                   up.FIRST_NAME AS firstname
+              FROM rpfp.rpfp_class rc 
+         LEFT JOIN rpfp.couples apc ON apc.RPFP_CLASS_ID = rc.RPFP_CLASS_ID
+         LEFT JOIN rpfp.individual ic ON ic.COUPLES_ID = apc.COUPLES_ID
+         LEFT JOIN rpfp.fp_details fd ON fd.COUPLES_ID = ic.COUPLES_ID
+         LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
+         LEFT JOIN rpfp.lib_psgc_locations city ON city.PSGC_CODE = (lp.MUNICIPALITY_CODE * POWER( 10, 3 ))
+         LEFT JOIN rpfp.lib_psgc_locations prov ON prov.PSGC_CODE = (lp.PROVINCE_CODE * POWER( 10, 5 ))
+         LEFT JOIN rpfp.user_profile up ON up.DB_USER_ID = rc.DB_USER_ID
+             WHERE rc.CLASS_NUMBER LIKE CONCAT('%',class_number,'%')
+               AND lp.PSGC_CODE >= location_code_from
+               AND lp.PSGC_CODE <= location_code_to
+               AND (
+                        rc.TYPE_CLASS_ID >= type_class
+                    AND rc.TYPE_CLASS_ID <= type_class_range
+                )
+               AND (
+                        rc.DATE_CONDUCTED >= search_date_from
+                    AND rc.DATE_CONDUCTED <= search_date_to
+                )
+               AND apc.IS_ACTIVE = status_active
+               AND (   rc.DB_USER_ID = name_user
+                   OR (   is_not_encoder
+                      AND user_location = (rc.BARANGAY_ID DIV POWER( 10, multiplier ))
+                    )
+                )
+               AND (
+                        ic.FNAME LIKE CONCAT('%',couples_name,'%')
+                     OR ic.LNAME LIKE CONCAT('%',couples_name,'%')
+                )
+               AND ic.AGE >= search_age_from
+               AND ic.AGE <= search_age_to
+               AND apc.NO_CHILDREN >= search_child_from
+               AND apc.NO_CHILDREN <= search_child_to
+            AND (   
+                   fd.TFP_TYPE_ID <= 5
+                OR fd.TFP_STATUS_ID = 'A'
+                )
+               AND fd.MFP_METHOD_USED_ID = mfp_used
+          GROUP BY rc.RPFP_CLASS_ID
+          ORDER BY rc.DATE_CONDUCTED DESC
+             LIMIT read_offset, items_per_page
+        ; 
+    END IF;
+    LEAVE proc_exit_point;
+END IF;
+
+IF intention_status = 'A' THEN
+    IF NOT EXISTS (
+         SELECT rc.RPFP_CLASS_ID
+           FROM rpfp.RPFP_CLASS rc
+      LEFT JOIN rpfp.couples apc
+             ON apc.RPFP_CLASS_ID = rc.RPFP_CLASS_ID
+          WHERE apc.IS_ACTIVE = status_active
+            AND rc.DB_USER_ID = name_user
+    ) THEN
+                 SELECT NULL AS rpfpclass,
+                        NULL AS typeclass,
+                        NULL AS others_specify,
+                        NULL AS province_name,
+                        NULL AS municipality_name,
+                        NULL AS barangay,
+                        NULL AS class_no,
+                        NULL AS no_couples,
+                        NULL AS date_conduct,
+                        NULL AS lastname,
+                        NULL AS firstname
+            ;
+    ELSE
+        IF (IFNULL( intention_use, 0 ) = 0) THEN
+            SET search_intention_from = intention_use;
+            SET search_intention_to = intention_use;
+        ELSE
+            SET search_intention_from = '1';
+            SET search_intention_to = '12';
+        END IF;
+
+        IF (IFNULL( page_no, 0) = 0) THEN
+            /** DEFAULT PAGE NO. */
+        SET page_no := 1;
+        END IF;
+        IF (IFNULL( items_per_page, 0) = 0) THEN
+            /** DEFAULT COUNT PER PAGE*/
+        SET items_per_page := 10;
+        END IF;
+
+        SET read_offset := (page_no - 1) * items_per_page;
+            SELECT rc.RPFP_CLASS_ID AS rpfpclass,
+                   rc.TYPE_CLASS_ID AS typeclass,
+                   rc.OTHERS_SPECIFY AS others_specify,
+                   prov.LOCATION_DESCRIPTION AS province_name,
+                   city.LOCATION_DESCRIPTION AS municipality_name,
+                   lp.LOCATION_DESCRIPTION AS barangay,
+                   rc.CLASS_NUMBER AS class_no,
+                   COUNT(apc.COUPLES_ID) AS couples_encoded,
+                   rc.DATE_CONDUCTED AS date_conduct,
+                   up.LAST_NAME AS lastname,
+                   up.FIRST_NAME AS firstname
+              FROM rpfp.rpfp_class rc 
+         LEFT JOIN rpfp.couples apc ON apc.RPFP_CLASS_ID = rc.RPFP_CLASS_ID
+         LEFT JOIN rpfp.individual ic ON ic.COUPLES_ID = apc.COUPLES_ID
+         LEFT JOIN rpfp.fp_details fd ON fd.COUPLES_ID = ic.COUPLES_ID
+         LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
+         LEFT JOIN rpfp.lib_psgc_locations city ON city.PSGC_CODE = (lp.MUNICIPALITY_CODE * POWER( 10, 3 ))
+         LEFT JOIN rpfp.lib_psgc_locations prov ON prov.PSGC_CODE = (lp.PROVINCE_CODE * POWER( 10, 5 ))
+         LEFT JOIN rpfp.user_profile up ON up.DB_USER_ID = rc.DB_USER_ID
+             WHERE rc.CLASS_NUMBER LIKE CONCAT('%',class_number,'%')
+               AND lp.PSGC_CODE >= location_code_from
+               AND lp.PSGC_CODE <= location_code_to
+               AND (
+                        rc.TYPE_CLASS_ID >= type_class
+                    AND rc.TYPE_CLASS_ID <= type_class_range
+                )
+               AND (
+                        rc.DATE_CONDUCTED >= search_date_from
+                    AND rc.DATE_CONDUCTED <= search_date_to
+                )
+               AND apc.IS_ACTIVE = status_active
+               AND (   rc.DB_USER_ID = name_user
+                    OR (   is_not_encoder
+                        AND user_location = (rc.BARANGAY_ID DIV POWER( 10, multiplier ))
+                    )
+                )
+               AND (
+                        ic.FNAME LIKE CONCAT('%',couples_name,'%')
+                    OR ic.LNAME LIKE CONCAT('%',couples_name,'%')
+                )
+               AND ic.AGE >= search_age_from
+               AND ic.AGE <= search_age_to
+               AND apc.NO_CHILDREN >= search_child_from
+               AND apc.NO_CHILDREN <= search_child_to
+               AND (   
+                       fd.TFP_TYPE_ID <= 5
+                    OR fd.TFP_STATUS_ID = 'A'
+                )
+               AND fd.TFP_TYPE_ID = tfp_used
+               AND fd.TFP_STATUS_ID = 'A'
+               AND fd.MFP_INTENTION_USE_ID >= search_intentionfp_from
+               AND fd.MFP_INTENTION_USE_ID <= search_intentionfp_to
+          GROUP BY rc.RPFP_CLASS_ID
+          ORDER BY rc.DATE_CONDUCTED DESC
+             LIMIT read_offset, items_per_page
+        ; 
+    END IF;
+ELSE
+    IF NOT EXISTS (
+         SELECT rc.RPFP_CLASS_ID
+           FROM rpfp.RPFP_CLASS rc
+      LEFT JOIN rpfp.couples apc
+             ON apc.RPFP_CLASS_ID = rc.RPFP_CLASS_ID
+          WHERE apc.IS_ACTIVE = status_active
+            AND (   rc.DB_USER_ID = name_user
+                OR (   is_not_encoder
+                    AND user_location = (rc.BARANGAY_ID DIV POWER( 10, multiplier ))
+                )
+            )
+    ) THEN
+                 SELECT NULL AS rpfpclass,
+                        NULL AS typeclass,
+                        NULL AS others_specify,
+                        NULL AS province_name,
+                        NULL AS municipality_name,
+                        NULL AS barangay,
+                        NULL AS class_no,
+                        NULL AS no_couples,
+                        NULL AS date_conduct,
+                        NULL AS lastname,
+                        NULL AS firstname
+            ;
+    ELSE    
+        IF (IFNULL( page_no, 0) = 0) THEN
+            /** DEFAULT PAGE NO. */
+        SET page_no := 1;
+        END IF;
+        IF (IFNULL( items_per_page, 0) = 0) THEN
+            /** DEFAULT COUNT PER PAGE*/
+        SET items_per_page := 10;
+        END IF;
+
+        SET read_offset := (page_no - 1) * items_per_page;
+        
+            SELECT rc.RPFP_CLASS_ID AS rpfpclass,
+                   rc.TYPE_CLASS_ID AS typeclass,
+                   rc.OTHERS_SPECIFY AS others_specify,
+                   prov.LOCATION_DESCRIPTION AS province_name,
+                   city.LOCATION_DESCRIPTION AS municipality_name,
+                   lp.LOCATION_DESCRIPTION AS barangay,
+                   rc.CLASS_NUMBER AS class_no,
+                   COUNT(apc.COUPLES_ID) AS couples_encoded,
+                   rc.DATE_CONDUCTED AS date_conduct,
+                   up.LAST_NAME AS lastname,
+                   up.FIRST_NAME AS firstname
+              FROM rpfp.rpfp_class rc 
+         LEFT JOIN rpfp.couples apc ON apc.RPFP_CLASS_ID = rc.RPFP_CLASS_ID
+         LEFT JOIN rpfp.individual ic ON ic.COUPLES_ID = apc.COUPLES_ID
+         LEFT JOIN rpfp.fp_details fd ON fd.COUPLES_ID = ic.COUPLES_ID
+         LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
+         LEFT JOIN rpfp.lib_psgc_locations city ON city.PSGC_CODE = (lp.MUNICIPALITY_CODE * POWER( 10, 3 ))
+         LEFT JOIN rpfp.lib_psgc_locations prov ON prov.PSGC_CODE = (lp.PROVINCE_CODE * POWER( 10, 5 ))
+         LEFT JOIN rpfp.user_profile up ON up.DB_USER_ID = rc.DB_USER_ID
+             WHERE rc.CLASS_NUMBER LIKE CONCAT('%',class_number,'%')
+               AND lp.PSGC_CODE >= location_code_from
+               AND lp.PSGC_CODE <= location_code_to
+               AND (
+                        rc.TYPE_CLASS_ID >= type_class
+                    AND rc.TYPE_CLASS_ID <= type_class_range
+                )
+               AND (
+                        rc.DATE_CONDUCTED >= search_date_from
+                    AND rc.DATE_CONDUCTED <= search_date_to
+                )
+               AND apc.IS_ACTIVE = status_active
+               AND (   rc.DB_USER_ID = name_user
+                    OR (   is_not_encoder
+                        AND user_location = (rc.BARANGAY_ID DIV POWER( 10, multiplier ))
+                        )
+                    )
+               AND (
+                       ic.FNAME LIKE CONCAT('%',couples_name,'%')
+                    OR ic.LNAME LIKE CONCAT('%',couples_name,'%')
+                )
+               AND ic.AGE >= search_age_from
+               AND ic.AGE <= search_age_to
+               AND apc.NO_CHILDREN >= search_child_from
+               AND apc.NO_CHILDREN <= search_child_to
+               AND (   
+                       fd.TFP_TYPE_ID <= 5
+                    OR fd.TFP_STATUS_ID = 'A'
+                )
+               AND fd.TFP_TYPE_ID = tfp_used
+               AND fd.TFP_STATUS_ID LIKE CONCAT('%',intention_status,'%')
+          GROUP BY rc.RPFP_CLASS_ID
+          ORDER BY rc.DATE_CONDUCTED DESC
+             LIMIT read_offset, items_per_page
+        ; 
+    END IF;
+END IF;
 END$$
 
 CREATE DEFINER=root@localhost PROCEDURE get_class_list_served_unmet (
@@ -3924,6 +4482,7 @@ CREATE DEFINER=root@localhost PROCEDURE get_class_list_served_unmet (
     IN page_no INT,
     IN items_per_page INT
     )   READS SQL DATA
+    proc_exit_point :
 BEGIN
     DECLARE type_class_range INT;
     DECLARE search_child_from INT;
@@ -3964,6 +4523,11 @@ BEGIN
         SET type_class_range = type_class;
     END IF;
 
+    IF (IFNULL( no_child, 0 ) = 0) THEN
+        SET search_child_from = 0;
+        SET search_child_to = 200;
+    END IF;
+
     IF search_age_from < 15 THEN
         SET search_age_from = 15;
     END IF;
@@ -3972,79 +4536,295 @@ BEGIN
         SET search_age_to = 49;
     END IF;
     
-    IF (IFNULL( no_child, 0 ) = 0) THEN
-        SET search_child_from = 0;
-        SET search_child_to = 200;
-    END IF;
-
-        IF NOT EXISTS (
-            SELECT rc.RPFP_CLASS_ID
-            FROM rpfp.RPFP_CLASS rc
-        LEFT JOIN rpfp.couples apc
-                ON apc.RPFP_CLASS_ID = rc.RPFP_CLASS_ID
-            WHERE apc.IS_ACTIVE = status_active
-                AND rc.DB_USER_ID = name_user
-        ) THEN
-            SELECT NULL AS rpfpclass,
-                   NULL AS typeclass,
-                   NULL AS others_specify,
-                   NULL AS city,
-                   NULL AS barangay,
-                   NULL AS class_no,
-                   NULL AS date_conduct
+IF ( IFNULL( tfp_used, 0 ) = 0 ) THEN
+    IF NOT EXISTS (
+         SELECT rc.RPFP_CLASS_ID
+           FROM rpfp.RPFP_CLASS rc
+      LEFT JOIN rpfp.couples apc
+             ON apc.RPFP_CLASS_ID = rc.RPFP_CLASS_ID
+          WHERE apc.IS_ACTIVE = status_active
+            AND (   rc.DB_USER_ID = name_user
+                OR (   is_not_encoder
+                    AND user_location = (rc.BARANGAY_ID DIV POWER( 10, multiplier ))
+                )
+            )
+    ) THEN
+                 SELECT NULL AS rpfpclass,
+                        NULL AS typeclass,
+                        NULL AS others_specify,
+                        NULL AS province_name,
+                        NULL AS municipality_name,
+                        NULL AS barangay,
+                        NULL AS class_no,
+                        NULL AS no_couples,
+                        NULL AS date_conduct,
+                        NULL AS lastname,
+                        NULL AS firstname
             ;
-        ELSE
-            IF (IFNULL( page_no, 0) = 0) THEN
-                /** DEFAULT PAGE NO. */
-                SET page_no := 1;
-            END IF;
-            IF (IFNULL( items_per_page, 0) = 0) THEN
-                /** DEFAULT COUNT PER PAGE*/
-                SET items_per_page := 10;
-            END IF;
-
-            SET read_offset := (page_no - 1) * items_per_page;
-         SELECT rc.RPFP_CLASS_ID AS rpfpclass,
-                rc.TYPE_CLASS_ID AS typeclass,
-                rc.OTHERS_SPECIFY AS others_specify,
-                lp.LOCATION_DESCRIPTION AS barangay,
-                rc.CLASS_NUMBER AS class_no,
-                rc.DATE_CONDUCTED AS date_conduct
-           FROM rpfp.rpfp_class rc 
-        LEFT JOIN rpfp.couples apc ON apc.RPFP_CLASS_ID = rc.RPFP_CLASS_ID
-        LEFT JOIN rpfp.individual ic ON ic.COUPLES_ID = apc.COUPLES_ID
-          LEFT JOIN rpfp.fp_service fs ON fs.COUPLES_ID = apc.COUPLES_ID
-          LEFT JOIN rpfp.fp_details fd ON fd.COUPLES_ID = apc.COUPLES_ID
-        LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID 
-            WHERE rc.CLASS_NUMBER LIKE CONCAT('%',class_number,'%')
-            AND lp.PSGC_CODE >= location_code_from
-            AND lp.PSGC_CODE >= location_code_to
-            AND (
-                    rc.TYPE_CLASS_ID >= type_class
-                AND rc.TYPE_CLASS_ID <= type_class_range
-            )
-            AND rc.DB_USER_ID = username
-            AND (
-                rc.DATE_CONDUCTED >= search_date_from
-            AND rc.DATE_CONDUCTED <= search_date_to
-            )
-            AND apc.IS_ACTIVE = status_active
-            AND (
-               ic.FNAME LIKE CONCAT('%',couples_name,'%')
-            OR ic.LNAME LIKE CONCAT('%',couples_name,'%')
-            )
-            AND ic.AGE >= search_age_from
-            AND ic.AGE <= search_age_to
-            AND apc.NO_CHILDREN >= search_child_from
-            AND apc.NO_CHILDREN <= search_child_to
-            AND fs.IS_PROVIDED_SERVICE = 1
-            AND fd.TFP_TYPE_ID <= 5
-            AND fd.TFP_STATUS_ID = 1
-        GROUP BY rc.CLASS_NUMBER
-        ORDER BY rc.DATE_CONDUCTED DESC
-            LIMIT read_offset, items_per_page
-        ; 
+    ELSE
+        IF (IFNULL( page_no, 0) = 0) THEN
+            /** DEFAULT PAGE NO. */
+        SET page_no := 1;
         END IF;
+        IF (IFNULL( items_per_page, 0) = 0) THEN
+            /** DEFAULT COUNT PER PAGE*/
+        SET items_per_page := 10;
+        END IF;
+
+        SET read_offset := (page_no - 1) * items_per_page;
+            SELECT rc.RPFP_CLASS_ID AS rpfpclass,
+                   rc.TYPE_CLASS_ID AS typeclass,
+                   rc.OTHERS_SPECIFY AS others_specify,
+                   prov.LOCATION_DESCRIPTION AS province_name,
+                   city.LOCATION_DESCRIPTION AS municipality_name,
+                   lp.LOCATION_DESCRIPTION AS barangay,
+                   rc.CLASS_NUMBER AS class_no,
+                   COUNT(apc.COUPLES_ID) AS couples_encoded,
+                   rc.DATE_CONDUCTED AS date_conduct,
+                   up.LAST_NAME AS lastname,
+                   up.FIRST_NAME AS firstname
+              FROM rpfp.rpfp_class rc 
+         LEFT JOIN rpfp.couples apc ON apc.RPFP_CLASS_ID = rc.RPFP_CLASS_ID
+         LEFT JOIN rpfp.individual ic ON ic.COUPLES_ID = apc.COUPLES_ID
+         LEFT JOIN rpfp.fp_details fd ON fd.COUPLES_ID = ic.COUPLES_ID
+          LEFT JOIN rpfp.fp_service fs ON fs.COUPLES_ID = apc.COUPLES_ID
+         LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
+         LEFT JOIN rpfp.lib_psgc_locations city ON city.PSGC_CODE = (lp.MUNICIPALITY_CODE * POWER( 10, 3 ))
+         LEFT JOIN rpfp.lib_psgc_locations prov ON prov.PSGC_CODE = (lp.PROVINCE_CODE * POWER( 10, 5 ))
+         LEFT JOIN rpfp.user_profile up ON up.DB_USER_ID = rc.DB_USER_ID
+             WHERE rc.CLASS_NUMBER LIKE CONCAT('%',class_number,'%')
+               AND lp.PSGC_CODE >= location_code_from
+               AND lp.PSGC_CODE <= location_code_to
+               AND (
+                        rc.TYPE_CLASS_ID >= type_class
+                    AND rc.TYPE_CLASS_ID <= type_class_range
+                )
+               AND (
+                        rc.DATE_CONDUCTED >= search_date_from
+                    AND rc.DATE_CONDUCTED <= search_date_to
+                )
+               AND apc.IS_ACTIVE = status_active
+               AND (   rc.DB_USER_ID = name_user
+                   OR (   is_not_encoder
+                      AND user_location = (rc.BARANGAY_ID DIV POWER( 10, multiplier ))
+                    )
+                )
+               AND (
+                        ic.FNAME LIKE CONCAT('%',couples_name,'%')
+                     OR ic.LNAME LIKE CONCAT('%',couples_name,'%')
+                )
+               AND ic.AGE >= search_age_from
+               AND ic.AGE <= search_age_to
+               AND apc.NO_CHILDREN >= search_child_from
+               AND apc.NO_CHILDREN <= search_child_to
+               AND fs.IS_PROVIDED_SERVICE = 1
+               AND (   
+                        fd.TFP_TYPE_ID <= 5
+                     OR fd.TFP_STATUS_ID = 'A'
+                )
+               AND fd.MFP_METHOD_USED_ID = mfp_used
+          GROUP BY rc.RPFP_CLASS_ID
+          ORDER BY rc.DATE_CONDUCTED DESC
+             LIMIT read_offset, items_per_page
+        ; 
+    END IF;
+    LEAVE proc_exit_point;
+END IF;
+
+IF intention_status = 'A' THEN
+    IF NOT EXISTS (
+         SELECT rc.RPFP_CLASS_ID
+           FROM rpfp.RPFP_CLASS rc
+      LEFT JOIN rpfp.couples apc
+             ON apc.RPFP_CLASS_ID = rc.RPFP_CLASS_ID
+          WHERE apc.IS_ACTIVE = status_active
+            AND rc.DB_USER_ID = name_user
+    ) THEN
+                 SELECT NULL AS rpfpclass,
+                        NULL AS typeclass,
+                        NULL AS others_specify,
+                        NULL AS province_name,
+                        NULL AS municipality_name,
+                        NULL AS barangay,
+                        NULL AS class_no,
+                        NULL AS no_couples,
+                        NULL AS date_conduct,
+                        NULL AS lastname,
+                        NULL AS firstname
+            ;
+    ELSE
+        IF (IFNULL( intention_use, 0 ) = 0) THEN
+            SET search_intention_from = intention_use;
+            SET search_intention_to = intention_use;
+        ELSE
+            SET search_intention_from = '1';
+            SET search_intention_to = '12';
+        END IF;
+
+        IF (IFNULL( page_no, 0) = 0) THEN
+            /** DEFAULT PAGE NO. */
+        SET page_no := 1;
+        END IF;
+        IF (IFNULL( items_per_page, 0) = 0) THEN
+            /** DEFAULT COUNT PER PAGE*/
+        SET items_per_page := 10;
+        END IF;
+
+        SET read_offset := (page_no - 1) * items_per_page;
+            SELECT rc.RPFP_CLASS_ID AS rpfpclass,
+                   rc.TYPE_CLASS_ID AS typeclass,
+                   rc.OTHERS_SPECIFY AS others_specify,
+                   prov.LOCATION_DESCRIPTION AS province_name,
+                   city.LOCATION_DESCRIPTION AS municipality_name,
+                   lp.LOCATION_DESCRIPTION AS barangay,
+                   rc.CLASS_NUMBER AS class_no,
+                   COUNT(apc.COUPLES_ID) AS couples_encoded,
+                   rc.DATE_CONDUCTED AS date_conduct,
+                   up.LAST_NAME AS lastname,
+                   up.FIRST_NAME AS firstname
+              FROM rpfp.rpfp_class rc 
+         LEFT JOIN rpfp.couples apc ON apc.RPFP_CLASS_ID = rc.RPFP_CLASS_ID
+         LEFT JOIN rpfp.individual ic ON ic.COUPLES_ID = apc.COUPLES_ID
+         LEFT JOIN rpfp.fp_details fd ON fd.COUPLES_ID = ic.COUPLES_ID
+          LEFT JOIN rpfp.fp_service fs ON fs.COUPLES_ID = apc.COUPLES_ID
+         LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
+         LEFT JOIN rpfp.lib_psgc_locations city ON city.PSGC_CODE = (lp.MUNICIPALITY_CODE * POWER( 10, 3 ))
+         LEFT JOIN rpfp.lib_psgc_locations prov ON prov.PSGC_CODE = (lp.PROVINCE_CODE * POWER( 10, 5 ))
+         LEFT JOIN rpfp.user_profile up ON up.DB_USER_ID = rc.DB_USER_ID
+             WHERE rc.CLASS_NUMBER LIKE CONCAT('%',class_number,'%')
+               AND lp.PSGC_CODE >= location_code_from
+               AND lp.PSGC_CODE <= location_code_to
+               AND (
+                        rc.TYPE_CLASS_ID >= type_class
+                    AND rc.TYPE_CLASS_ID <= type_class_range
+                )
+               AND (
+                        rc.DATE_CONDUCTED >= search_date_from
+                    AND rc.DATE_CONDUCTED <= search_date_to
+                )
+               AND apc.IS_ACTIVE = status_active
+               AND (   rc.DB_USER_ID = name_user
+                    OR (   is_not_encoder
+                        AND user_location = (rc.BARANGAY_ID DIV POWER( 10, multiplier ))
+                    )
+                )
+               AND (
+                        ic.FNAME LIKE CONCAT('%',couples_name,'%')
+                    OR ic.LNAME LIKE CONCAT('%',couples_name,'%')
+                )
+               AND ic.AGE >= search_age_from
+               AND ic.AGE <= search_age_to
+               AND apc.NO_CHILDREN >= search_child_from
+               AND apc.NO_CHILDREN <= search_child_to
+               AND fs.IS_PROVIDED_SERVICE = 1
+               AND (   
+                        fd.TFP_TYPE_ID <= 5
+                     OR fd.TFP_STATUS_ID = 'A'
+                )
+               AND fd.TFP_TYPE_ID = tfp_used
+               AND fd.TFP_STATUS_ID = 'A'
+               AND fd.MFP_INTENTION_USE_ID >= search_intentionfp_from
+               AND fd.MFP_INTENTION_USE_ID <= search_intentionfp_to
+          GROUP BY rc.RPFP_CLASS_ID
+          ORDER BY rc.DATE_CONDUCTED DESC
+             LIMIT read_offset, items_per_page
+        ; 
+    END IF;
+ELSE
+    IF NOT EXISTS (
+         SELECT rc.RPFP_CLASS_ID
+           FROM rpfp.RPFP_CLASS rc
+      LEFT JOIN rpfp.couples apc
+             ON apc.RPFP_CLASS_ID = rc.RPFP_CLASS_ID
+          WHERE apc.IS_ACTIVE = status_active
+            AND (   rc.DB_USER_ID = name_user
+                OR (   is_not_encoder
+                    AND user_location = (rc.BARANGAY_ID DIV POWER( 10, multiplier ))
+                )
+            )
+    ) THEN
+                 SELECT NULL AS rpfpclass,
+                        NULL AS typeclass,
+                        NULL AS others_specify,
+                        NULL AS province_name,
+                        NULL AS municipality_name,
+                        NULL AS barangay,
+                        NULL AS class_no,
+                        NULL AS no_couples,
+                        NULL AS date_conduct,
+                        NULL AS lastname,
+                        NULL AS firstname
+            ;
+    ELSE    
+        IF (IFNULL( page_no, 0) = 0) THEN
+            /** DEFAULT PAGE NO. */
+        SET page_no := 1;
+        END IF;
+        IF (IFNULL( items_per_page, 0) = 0) THEN
+            /** DEFAULT COUNT PER PAGE*/
+        SET items_per_page := 10;
+        END IF;
+
+        SET read_offset := (page_no - 1) * items_per_page;
+        
+            SELECT rc.RPFP_CLASS_ID AS rpfpclass,
+                   rc.TYPE_CLASS_ID AS typeclass,
+                   rc.OTHERS_SPECIFY AS others_specify,
+                   prov.LOCATION_DESCRIPTION AS province_name,
+                   city.LOCATION_DESCRIPTION AS municipality_name,
+                   lp.LOCATION_DESCRIPTION AS barangay,
+                   rc.CLASS_NUMBER AS class_no,
+                   COUNT(apc.COUPLES_ID) AS couples_encoded,
+                   rc.DATE_CONDUCTED AS date_conduct,
+                   up.LAST_NAME AS lastname,
+                   up.FIRST_NAME AS firstname
+              FROM rpfp.rpfp_class rc 
+         LEFT JOIN rpfp.couples apc ON apc.RPFP_CLASS_ID = rc.RPFP_CLASS_ID
+         LEFT JOIN rpfp.individual ic ON ic.COUPLES_ID = apc.COUPLES_ID
+         LEFT JOIN rpfp.fp_details fd ON fd.COUPLES_ID = ic.COUPLES_ID
+          LEFT JOIN rpfp.fp_service fs ON fs.COUPLES_ID = apc.COUPLES_ID
+         LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
+         LEFT JOIN rpfp.lib_psgc_locations city ON city.PSGC_CODE = (lp.MUNICIPALITY_CODE * POWER( 10, 3 ))
+         LEFT JOIN rpfp.lib_psgc_locations prov ON prov.PSGC_CODE = (lp.PROVINCE_CODE * POWER( 10, 5 ))
+         LEFT JOIN rpfp.user_profile up ON up.DB_USER_ID = rc.DB_USER_ID
+             WHERE rc.CLASS_NUMBER LIKE CONCAT('%',class_number,'%')
+               AND lp.PSGC_CODE >= location_code_from
+               AND lp.PSGC_CODE <= location_code_to
+               AND (
+                        rc.TYPE_CLASS_ID >= type_class
+                    AND rc.TYPE_CLASS_ID <= type_class_range
+                )
+               AND (
+                        rc.DATE_CONDUCTED >= search_date_from
+                    AND rc.DATE_CONDUCTED <= search_date_to
+                )
+               AND apc.IS_ACTIVE = status_active
+               AND (   rc.DB_USER_ID = name_user
+                    OR (   is_not_encoder
+                        AND user_location = (rc.BARANGAY_ID DIV POWER( 10, multiplier ))
+                        )
+                    )
+               AND (
+                        ic.FNAME LIKE CONCAT('%',couples_name,'%')
+                    OR ic.LNAME LIKE CONCAT('%',couples_name,'%')
+                )
+               AND ic.AGE >= search_age_from
+               AND ic.AGE <= search_age_to
+               AND apc.NO_CHILDREN >= search_child_from
+               AND apc.NO_CHILDREN <= search_child_to
+               AND fs.IS_PROVIDED_SERVICE = 1
+               AND (   
+                        fd.TFP_TYPE_ID <= 5
+                     OR fd.TFP_STATUS_ID = 'A'
+                )
+               AND fd.TFP_TYPE_ID = tfp_used
+               AND fd.TFP_STATUS_ID LIKE CONCAT('%',intention_status,'%')
+          GROUP BY rc.RPFP_CLASS_ID
+          ORDER BY rc.DATE_CONDUCTED DESC
+             LIMIT read_offset, items_per_page
+        ; 
+    END IF;
+END IF;
 END$$
 
 CREATE DEFINER=root@localhost PROCEDURE get_class_list_shifters (
@@ -4068,6 +4848,7 @@ CREATE DEFINER=root@localhost PROCEDURE get_class_list_shifters (
     IN page_no INT,
     IN items_per_page INT
     )   READS SQL DATA
+    proc_exit_point :
 BEGIN
     DECLARE type_class_range INT;
     DECLARE search_child_from INT;
@@ -4113,71 +4894,280 @@ BEGIN
         SET search_child_to = 200;
     END IF;
 
-        IF NOT EXISTS (
-            SELECT rc.RPFP_CLASS_ID
-            FROM rpfp.RPFP_CLASS rc
-        LEFT JOIN rpfp.couples apc
-                ON apc.RPFP_CLASS_ID = rc.RPFP_CLASS_ID
-            WHERE apc.IS_ACTIVE = status_active
-                AND rc.DB_USER_ID = name_user
-        ) THEN
-            SELECT NULL AS rpfpclass,
-                   NULL AS typeclass,
-                   NULL AS others_specify,
-                   NULL AS city,
-                   NULL AS barangay,
-                   NULL AS class_no,
-                   NULL AS date_conduct
+IF ( IFNULL( tfp_used, 0 ) = 0 ) THEN
+    IF NOT EXISTS (
+         SELECT rc.RPFP_CLASS_ID
+           FROM rpfp.RPFP_CLASS rc
+      LEFT JOIN rpfp.couples apc
+             ON apc.RPFP_CLASS_ID = rc.RPFP_CLASS_ID
+          WHERE apc.IS_ACTIVE = status_active
+            AND (   rc.DB_USER_ID = name_user
+                OR (   is_not_encoder
+                    AND user_location = (rc.BARANGAY_ID DIV POWER( 10, multiplier ))
+                )
+            )
+    ) THEN
+                 SELECT NULL AS rpfpclass,
+                        NULL AS typeclass,
+                        NULL AS others_specify,
+                        NULL AS province_name,
+                        NULL AS municipality_name,
+                        NULL AS barangay,
+                        NULL AS class_no,
+                        NULL AS no_couples,
+                        NULL AS date_conduct,
+                        NULL AS lastname,
+                        NULL AS firstname
             ;
-        ELSE
-            IF (IFNULL( page_no, 0) = 0) THEN
-                /** DEFAULT PAGE NO. */
-                SET page_no := 1;
-            END IF;
-            IF (IFNULL( items_per_page, 0) = 0) THEN
-                /** DEFAULT COUNT PER PAGE*/
-                SET items_per_page := 10;
-            END IF;
-
-            SET read_offset := (page_no - 1) * items_per_page;
-         SELECT rc.RPFP_CLASS_ID AS rpfpclass,
-                rc.TYPE_CLASS_ID AS typeclass,
-                rc.OTHERS_SPECIFY AS others_specify,
-                lp.LOCATION_DESCRIPTION AS barangay,
-                rc.CLASS_NUMBER AS class_no,
-                rc.DATE_CONDUCTED AS date_conduct
-           FROM rpfp.rpfp_class rc 
-        LEFT JOIN rpfp.couples apc ON apc.RPFP_CLASS_ID = rc.RPFP_CLASS_ID
-        LEFT JOIN rpfp.individual ic ON ic.COUPLES_ID = apc.COUPLES_ID
-        LEFT JOIN rpfp.fp_details fd ON fd.COUPLES_ID = ic.COUPLES_ID
-        LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID 
-            WHERE rc.CLASS_NUMBER LIKE CONCAT('%',class_number,'%')
-            AND lp.PSGC_CODE >= location_code_from
-            AND lp.PSGC_CODE >= location_code_to
-            AND (
-                    rc.TYPE_CLASS_ID >= type_class
-                AND rc.TYPE_CLASS_ID <= type_class_range
-            )
-            AND rc.DB_USER_ID = username
-            AND (
-                rc.DATE_CONDUCTED >= search_date_from
-            AND rc.DATE_CONDUCTED <= search_date_to
-            )
-            AND apc.IS_ACTIVE = status_active
-            AND (
-               ic.FNAME LIKE CONCAT('%',couples_name,'%')
-            OR ic.LNAME LIKE CONCAT('%',couples_name,'%')
-            )
-            AND ic.AGE >= search_age_from
-            AND ic.AGE <= search_age_to
-            AND apc.NO_CHILDREN >= search_child_from
-            AND apc.NO_CHILDREN <= search_child_to
-            AND fd.MFP_INTENTION_SHIFT_ID >= 1
-        GROUP BY rc.CLASS_NUMBER
-        ORDER BY rc.DATE_CONDUCTED DESC
-            LIMIT read_offset, items_per_page
-        ; 
+    ELSE
+        IF (IFNULL( page_no, 0) = 0) THEN
+            /** DEFAULT PAGE NO. */
+        SET page_no := 1;
         END IF;
+        IF (IFNULL( items_per_page, 0) = 0) THEN
+            /** DEFAULT COUNT PER PAGE*/
+        SET items_per_page := 10;
+        END IF;
+
+        SET read_offset := (page_no - 1) * items_per_page;
+            SELECT rc.RPFP_CLASS_ID AS rpfpclass,
+                   rc.TYPE_CLASS_ID AS typeclass,
+                   rc.OTHERS_SPECIFY AS others_specify,
+                   prov.LOCATION_DESCRIPTION AS province_name,
+                   city.LOCATION_DESCRIPTION AS municipality_name,
+                   lp.LOCATION_DESCRIPTION AS barangay,
+                   rc.CLASS_NUMBER AS class_no,
+                   COUNT(apc.COUPLES_ID) AS couples_encoded,
+                   rc.DATE_CONDUCTED AS date_conduct,
+                   up.LAST_NAME AS lastname,
+                   up.FIRST_NAME AS firstname
+              FROM rpfp.rpfp_class rc 
+         LEFT JOIN rpfp.couples apc ON apc.RPFP_CLASS_ID = rc.RPFP_CLASS_ID
+         LEFT JOIN rpfp.individual ic ON ic.COUPLES_ID = apc.COUPLES_ID
+         LEFT JOIN rpfp.fp_details fd ON fd.COUPLES_ID = ic.COUPLES_ID
+         LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
+         LEFT JOIN rpfp.lib_psgc_locations city ON city.PSGC_CODE = (lp.MUNICIPALITY_CODE * POWER( 10, 3 ))
+         LEFT JOIN rpfp.lib_psgc_locations prov ON prov.PSGC_CODE = (lp.PROVINCE_CODE * POWER( 10, 5 ))
+         LEFT JOIN rpfp.user_profile up ON up.DB_USER_ID = rc.DB_USER_ID
+             WHERE rc.CLASS_NUMBER LIKE CONCAT('%',class_number,'%')
+               AND lp.PSGC_CODE >= location_code_from
+               AND lp.PSGC_CODE <= location_code_to
+               AND (
+                        rc.TYPE_CLASS_ID >= type_class
+                    AND rc.TYPE_CLASS_ID <= type_class_range
+                )
+               AND (
+                        rc.DATE_CONDUCTED >= search_date_from
+                    AND rc.DATE_CONDUCTED <= search_date_to
+                )
+               AND apc.IS_ACTIVE = status_active
+               AND (   rc.DB_USER_ID = name_user
+                   OR (   is_not_encoder
+                      AND user_location = (rc.BARANGAY_ID DIV POWER( 10, multiplier ))
+                    )
+                )
+               AND (
+                        ic.FNAME LIKE CONCAT('%',couples_name,'%')
+                     OR ic.LNAME LIKE CONCAT('%',couples_name,'%')
+                )
+               AND ic.AGE >= search_age_from
+               AND ic.AGE <= search_age_to
+               AND apc.NO_CHILDREN >= search_child_from
+               AND apc.NO_CHILDREN <= search_child_to
+               AND fd.MFP_INTENTION_SHIFT_ID >= 1
+               AND fd.MFP_METHOD_USED_ID = mfp_used
+          GROUP BY rc.RPFP_CLASS_ID
+          ORDER BY rc.DATE_CONDUCTED DESC
+             LIMIT read_offset, items_per_page
+        ; 
+    END IF;
+    LEAVE proc_exit_point;
+END IF;
+
+IF intention_status = 'A' THEN
+    IF NOT EXISTS (
+         SELECT rc.RPFP_CLASS_ID
+           FROM rpfp.RPFP_CLASS rc
+      LEFT JOIN rpfp.couples apc
+             ON apc.RPFP_CLASS_ID = rc.RPFP_CLASS_ID
+          WHERE apc.IS_ACTIVE = status_active
+            AND rc.DB_USER_ID = name_user
+    ) THEN
+                 SELECT NULL AS rpfpclass,
+                        NULL AS typeclass,
+                        NULL AS others_specify,
+                        NULL AS province_name,
+                        NULL AS municipality_name,
+                        NULL AS barangay,
+                        NULL AS class_no,
+                        NULL AS no_couples,
+                        NULL AS date_conduct,
+                        NULL AS lastname,
+                        NULL AS firstname
+            ;
+    ELSE
+        IF (IFNULL( intention_use, 0 ) = 0) THEN
+            SET search_intention_from = intention_use;
+            SET search_intention_to = intention_use;
+        ELSE
+            SET search_intention_from = '1';
+            SET search_intention_to = '12';
+        END IF;
+
+        IF (IFNULL( page_no, 0) = 0) THEN
+            /** DEFAULT PAGE NO. */
+        SET page_no := 1;
+        END IF;
+        IF (IFNULL( items_per_page, 0) = 0) THEN
+            /** DEFAULT COUNT PER PAGE*/
+        SET items_per_page := 10;
+        END IF;
+
+        SET read_offset := (page_no - 1) * items_per_page;
+            SELECT rc.RPFP_CLASS_ID AS rpfpclass,
+                   rc.TYPE_CLASS_ID AS typeclass,
+                   rc.OTHERS_SPECIFY AS others_specify,
+                   prov.LOCATION_DESCRIPTION AS province_name,
+                   city.LOCATION_DESCRIPTION AS municipality_name,
+                   lp.LOCATION_DESCRIPTION AS barangay,
+                   rc.CLASS_NUMBER AS class_no,
+                   COUNT(apc.COUPLES_ID) AS couples_encoded,
+                   rc.DATE_CONDUCTED AS date_conduct,
+                   up.LAST_NAME AS lastname,
+                   up.FIRST_NAME AS firstname
+              FROM rpfp.rpfp_class rc 
+         LEFT JOIN rpfp.couples apc ON apc.RPFP_CLASS_ID = rc.RPFP_CLASS_ID
+         LEFT JOIN rpfp.individual ic ON ic.COUPLES_ID = apc.COUPLES_ID
+         LEFT JOIN rpfp.fp_details fd ON fd.COUPLES_ID = ic.COUPLES_ID
+         LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
+         LEFT JOIN rpfp.lib_psgc_locations city ON city.PSGC_CODE = (lp.MUNICIPALITY_CODE * POWER( 10, 3 ))
+         LEFT JOIN rpfp.lib_psgc_locations prov ON prov.PSGC_CODE = (lp.PROVINCE_CODE * POWER( 10, 5 ))
+         LEFT JOIN rpfp.user_profile up ON up.DB_USER_ID = rc.DB_USER_ID
+             WHERE rc.CLASS_NUMBER LIKE CONCAT('%',class_number,'%')
+               AND lp.PSGC_CODE >= location_code_from
+               AND lp.PSGC_CODE <= location_code_to
+               AND (
+                        rc.TYPE_CLASS_ID >= type_class
+                    AND rc.TYPE_CLASS_ID <= type_class_range
+                )
+               AND (
+                        rc.DATE_CONDUCTED >= search_date_from
+                    AND rc.DATE_CONDUCTED <= search_date_to
+                )
+               AND apc.IS_ACTIVE = status_active
+               AND (   rc.DB_USER_ID = name_user
+                    OR (   is_not_encoder
+                        AND user_location = (rc.BARANGAY_ID DIV POWER( 10, multiplier ))
+                    )
+                )
+               AND (
+                        ic.FNAME LIKE CONCAT('%',couples_name,'%')
+                    OR ic.LNAME LIKE CONCAT('%',couples_name,'%')
+                )
+               AND ic.AGE >= search_age_from
+               AND ic.AGE <= search_age_to
+               AND apc.NO_CHILDREN >= search_child_from
+               AND apc.NO_CHILDREN <= search_child_to
+               AND fd.MFP_INTENTION_SHIFT_ID >= 1
+               AND fd.TFP_TYPE_ID = tfp_used
+               AND fd.TFP_STATUS_ID = 'A'
+               AND fd.MFP_INTENTION_USE_ID >= search_intentionfp_from
+               AND fd.MFP_INTENTION_USE_ID <= search_intentionfp_to
+          GROUP BY rc.RPFP_CLASS_ID
+          ORDER BY rc.DATE_CONDUCTED DESC
+             LIMIT read_offset, items_per_page
+        ; 
+    END IF;
+ELSE
+    IF NOT EXISTS (
+         SELECT rc.RPFP_CLASS_ID
+           FROM rpfp.RPFP_CLASS rc
+      LEFT JOIN rpfp.couples apc
+             ON apc.RPFP_CLASS_ID = rc.RPFP_CLASS_ID
+          WHERE apc.IS_ACTIVE = status_active
+            AND (   rc.DB_USER_ID = name_user
+                OR (   is_not_encoder
+                    AND user_location = (rc.BARANGAY_ID DIV POWER( 10, multiplier ))
+                )
+            )
+    ) THEN
+                 SELECT NULL AS rpfpclass,
+                        NULL AS typeclass,
+                        NULL AS others_specify,
+                        NULL AS province_name,
+                        NULL AS municipality_name,
+                        NULL AS barangay,
+                        NULL AS class_no,
+                        NULL AS no_couples,
+                        NULL AS date_conduct,
+                        NULL AS lastname,
+                        NULL AS firstname
+            ;
+    ELSE    
+        IF (IFNULL( page_no, 0) = 0) THEN
+            /** DEFAULT PAGE NO. */
+        SET page_no := 1;
+        END IF;
+        IF (IFNULL( items_per_page, 0) = 0) THEN
+            /** DEFAULT COUNT PER PAGE*/
+        SET items_per_page := 10;
+        END IF;
+
+        SET read_offset := (page_no - 1) * items_per_page;
+        
+            SELECT rc.RPFP_CLASS_ID AS rpfpclass,
+                   rc.TYPE_CLASS_ID AS typeclass,
+                   rc.OTHERS_SPECIFY AS others_specify,
+                   prov.LOCATION_DESCRIPTION AS province_name,
+                   city.LOCATION_DESCRIPTION AS municipality_name,
+                   lp.LOCATION_DESCRIPTION AS barangay,
+                   rc.CLASS_NUMBER AS class_no,
+                   COUNT(apc.COUPLES_ID) AS couples_encoded,
+                   rc.DATE_CONDUCTED AS date_conduct,
+                   up.LAST_NAME AS lastname,
+                   up.FIRST_NAME AS firstname
+              FROM rpfp.rpfp_class rc 
+         LEFT JOIN rpfp.couples apc ON apc.RPFP_CLASS_ID = rc.RPFP_CLASS_ID
+         LEFT JOIN rpfp.individual ic ON ic.COUPLES_ID = apc.COUPLES_ID
+         LEFT JOIN rpfp.fp_details fd ON fd.COUPLES_ID = ic.COUPLES_ID
+         LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
+         LEFT JOIN rpfp.lib_psgc_locations city ON city.PSGC_CODE = (lp.MUNICIPALITY_CODE * POWER( 10, 3 ))
+         LEFT JOIN rpfp.lib_psgc_locations prov ON prov.PSGC_CODE = (lp.PROVINCE_CODE * POWER( 10, 5 ))
+         LEFT JOIN rpfp.user_profile up ON up.DB_USER_ID = rc.DB_USER_ID
+             WHERE rc.CLASS_NUMBER LIKE CONCAT('%',class_number,'%')
+               AND lp.PSGC_CODE >= location_code_from
+               AND lp.PSGC_CODE <= location_code_to
+               AND (
+                        rc.TYPE_CLASS_ID >= type_class
+                    AND rc.TYPE_CLASS_ID <= type_class_range
+                )
+               AND (
+                        rc.DATE_CONDUCTED >= search_date_from
+                    AND rc.DATE_CONDUCTED <= search_date_to
+                )
+               AND apc.IS_ACTIVE = status_active
+               AND (   rc.DB_USER_ID = name_user
+                    OR (   is_not_encoder
+                        AND user_location = (rc.BARANGAY_ID DIV POWER( 10, multiplier ))
+                        )
+                    )
+               AND (
+                        ic.FNAME LIKE CONCAT('%',couples_name,'%')
+                    OR ic.LNAME LIKE CONCAT('%',couples_name,'%')
+                )
+               AND ic.AGE >= search_age_from
+               AND ic.AGE <= search_age_to
+               AND apc.NO_CHILDREN >= search_child_from
+               AND apc.NO_CHILDREN <= search_child_to
+               AND fd.MFP_INTENTION_SHIFT_ID >= 1
+               AND fd.TFP_TYPE_ID = tfp_used
+               AND fd.TFP_STATUS_ID LIKE CONCAT('%',intention_status,'%')
+          GROUP BY rc.RPFP_CLASS_ID
+          ORDER BY rc.DATE_CONDUCTED DESC
+             LIMIT read_offset, items_per_page
+        ; 
+    END IF;
+END IF;
 END$$
 
 CREATE DEFINER=root@localhost PROCEDURE get_class_list_served_shifters (
@@ -4201,6 +5191,7 @@ CREATE DEFINER=root@localhost PROCEDURE get_class_list_served_shifters (
     IN page_no INT,
     IN items_per_page INT
     )   READS SQL DATA
+    proc_exit_point :
 BEGIN
     DECLARE type_class_range INT;
     DECLARE search_child_from INT;
@@ -4246,72 +5237,283 @@ BEGIN
         SET search_child_to = 200;
     END IF;
 
-        IF NOT EXISTS (
-            SELECT rc.RPFP_CLASS_ID
-            FROM rpfp.RPFP_CLASS rc
-        LEFT JOIN rpfp.couples apc
-                ON apc.RPFP_CLASS_ID = rc.RPFP_CLASS_ID
-            WHERE apc.IS_ACTIVE = status_active
-                AND rc.DB_USER_ID = name_user
-        ) THEN
-            SELECT NULL AS rpfpclass,
-                   NULL AS typeclass,
-                   NULL AS others_specify,
-                   NULL AS city,
-                   NULL AS barangay,
-                   NULL AS class_no,
-                   NULL AS date_conduct
+IF ( IFNULL( tfp_used, 0 ) = 0 ) THEN
+    IF NOT EXISTS (
+         SELECT rc.RPFP_CLASS_ID
+           FROM rpfp.RPFP_CLASS rc
+      LEFT JOIN rpfp.couples apc
+             ON apc.RPFP_CLASS_ID = rc.RPFP_CLASS_ID
+          WHERE apc.IS_ACTIVE = status_active
+            AND (   rc.DB_USER_ID = name_user
+                OR (   is_not_encoder
+                    AND user_location = (rc.BARANGAY_ID DIV POWER( 10, multiplier ))
+                )
+            )
+    ) THEN
+                 SELECT NULL AS rpfpclass,
+                        NULL AS typeclass,
+                        NULL AS others_specify,
+                        NULL AS province_name,
+                        NULL AS municipality_name,
+                        NULL AS barangay,
+                        NULL AS class_no,
+                        NULL AS no_couples,
+                        NULL AS date_conduct,
+                        NULL AS lastname,
+                        NULL AS firstname
             ;
-        ELSE
-            IF (IFNULL( page_no, 0) = 0) THEN
-                /** DEFAULT PAGE NO. */
-                SET page_no := 1;
-            END IF;
-            IF (IFNULL( items_per_page, 0) = 0) THEN
-                /** DEFAULT COUNT PER PAGE*/
-                SET items_per_page := 10;
-            END IF;
-
-            SET read_offset := (page_no - 1) * items_per_page;
-         SELECT rc.RPFP_CLASS_ID AS rpfpclass,
-                rc.TYPE_CLASS_ID AS typeclass,
-                rc.OTHERS_SPECIFY AS others_specify,
-                lp.LOCATION_DESCRIPTION AS barangay,
-                rc.CLASS_NUMBER AS class_no,
-                rc.DATE_CONDUCTED AS date_conduct
-           FROM rpfp.rpfp_class rc 
-        LEFT JOIN rpfp.couples apc ON apc.RPFP_CLASS_ID = rc.RPFP_CLASS_ID
-        LEFT JOIN rpfp.individual ic ON ic.COUPLES_ID = apc.COUPLES_ID
-        LEFT JOIN rpfp.fp_details fd ON fd.COUPLES_ID = ic.COUPLES_ID
-        LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID 
-            WHERE rc.CLASS_NUMBER LIKE CONCAT('%',class_number,'%')
-            AND lp.PSGC_CODE >= location_code_from
-            AND lp.PSGC_CODE >= location_code_to
-            AND (
-                    rc.TYPE_CLASS_ID >= type_class
-                AND rc.TYPE_CLASS_ID <= type_class_range
-            )
-            AND rc.DB_USER_ID = username
-            AND (
-                rc.DATE_CONDUCTED >= search_date_from
-            AND rc.DATE_CONDUCTED <= search_date_to
-            )
-            AND apc.IS_ACTIVE = status_active
-            AND (
-               ic.FNAME LIKE CONCAT('%',couples_name,'%')
-            OR ic.LNAME LIKE CONCAT('%',couples_name,'%')
-            )
-            AND ic.AGE >= search_age_from
-            AND ic.AGE <= search_age_to
-            AND apc.NO_CHILDREN >= search_child_from
-            AND apc.NO_CHILDREN <= search_child_to
-            AND fs.IS_PROVIDED_SERVICE = 1
-            AND fd.MFP_INTENTION_SHIFT_ID >= 1
-        GROUP BY rc.CLASS_NUMBER
-        ORDER BY rc.DATE_CONDUCTED DESC
-            LIMIT read_offset, items_per_page
-        ; 
+    ELSE
+        IF (IFNULL( page_no, 0) = 0) THEN
+            /** DEFAULT PAGE NO. */
+        SET page_no := 1;
         END IF;
+        IF (IFNULL( items_per_page, 0) = 0) THEN
+            /** DEFAULT COUNT PER PAGE*/
+        SET items_per_page := 10;
+        END IF;
+
+        SET read_offset := (page_no - 1) * items_per_page;
+            SELECT rc.RPFP_CLASS_ID AS rpfpclass,
+                   rc.TYPE_CLASS_ID AS typeclass,
+                   rc.OTHERS_SPECIFY AS others_specify,
+                   prov.LOCATION_DESCRIPTION AS province_name,
+                   city.LOCATION_DESCRIPTION AS municipality_name,
+                   lp.LOCATION_DESCRIPTION AS barangay,
+                   rc.CLASS_NUMBER AS class_no,
+                   COUNT(apc.COUPLES_ID) AS couples_encoded,
+                   rc.DATE_CONDUCTED AS date_conduct,
+                   up.LAST_NAME AS lastname,
+                   up.FIRST_NAME AS firstname
+              FROM rpfp.rpfp_class rc 
+         LEFT JOIN rpfp.couples apc ON apc.RPFP_CLASS_ID = rc.RPFP_CLASS_ID
+         LEFT JOIN rpfp.individual ic ON ic.COUPLES_ID = apc.COUPLES_ID
+         LEFT JOIN rpfp.fp_details fd ON fd.COUPLES_ID = ic.COUPLES_ID
+          LEFT JOIN rpfp.fp_service fs ON fs.COUPLES_ID = apc.COUPLES_ID
+         LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
+         LEFT JOIN rpfp.lib_psgc_locations city ON city.PSGC_CODE = (lp.MUNICIPALITY_CODE * POWER( 10, 3 ))
+         LEFT JOIN rpfp.lib_psgc_locations prov ON prov.PSGC_CODE = (lp.PROVINCE_CODE * POWER( 10, 5 ))
+         LEFT JOIN rpfp.user_profile up ON up.DB_USER_ID = rc.DB_USER_ID
+             WHERE rc.CLASS_NUMBER LIKE CONCAT('%',class_number,'%')
+               AND lp.PSGC_CODE >= location_code_from
+               AND lp.PSGC_CODE <= location_code_to
+               AND (
+                        rc.TYPE_CLASS_ID >= type_class
+                    AND rc.TYPE_CLASS_ID <= type_class_range
+                )
+               AND (
+                        rc.DATE_CONDUCTED >= search_date_from
+                    AND rc.DATE_CONDUCTED <= search_date_to
+                )
+               AND apc.IS_ACTIVE = status_active
+               AND (   rc.DB_USER_ID = name_user
+                   OR (   is_not_encoder
+                      AND user_location = (rc.BARANGAY_ID DIV POWER( 10, multiplier ))
+                    )
+                )
+               AND (
+                        ic.FNAME LIKE CONCAT('%',couples_name,'%')
+                     OR ic.LNAME LIKE CONCAT('%',couples_name,'%')
+                )
+               AND ic.AGE >= search_age_from
+               AND ic.AGE <= search_age_to
+               AND apc.NO_CHILDREN >= search_child_from
+               AND apc.NO_CHILDREN <= search_child_to
+               AND fd.MFP_INTENTION_SHIFT_ID >= 1
+               AND fd.MFP_METHOD_USED_ID = mfp_used
+          GROUP BY rc.RPFP_CLASS_ID
+          ORDER BY rc.DATE_CONDUCTED DESC
+             LIMIT read_offset, items_per_page
+        ; 
+    END IF;
+    LEAVE proc_exit_point;
+END IF;
+
+IF intention_status = 'A' THEN
+    IF NOT EXISTS (
+         SELECT rc.RPFP_CLASS_ID
+           FROM rpfp.RPFP_CLASS rc
+      LEFT JOIN rpfp.couples apc
+             ON apc.RPFP_CLASS_ID = rc.RPFP_CLASS_ID
+          WHERE apc.IS_ACTIVE = status_active
+            AND rc.DB_USER_ID = name_user
+    ) THEN
+                 SELECT NULL AS rpfpclass,
+                        NULL AS typeclass,
+                        NULL AS others_specify,
+                        NULL AS province_name,
+                        NULL AS municipality_name,
+                        NULL AS barangay,
+                        NULL AS class_no,
+                        NULL AS no_couples,
+                        NULL AS date_conduct,
+                        NULL AS lastname,
+                        NULL AS firstname
+            ;
+    ELSE
+        IF (IFNULL( intention_use, 0 ) = 0) THEN
+            SET search_intention_from = intention_use;
+            SET search_intention_to = intention_use;
+        ELSE
+            SET search_intention_from = '1';
+            SET search_intention_to = '12';
+        END IF;
+
+        IF (IFNULL( page_no, 0) = 0) THEN
+            /** DEFAULT PAGE NO. */
+        SET page_no := 1;
+        END IF;
+        IF (IFNULL( items_per_page, 0) = 0) THEN
+            /** DEFAULT COUNT PER PAGE*/
+        SET items_per_page := 10;
+        END IF;
+
+        SET read_offset := (page_no - 1) * items_per_page;
+            SELECT rc.RPFP_CLASS_ID AS rpfpclass,
+                   rc.TYPE_CLASS_ID AS typeclass,
+                   rc.OTHERS_SPECIFY AS others_specify,
+                   prov.LOCATION_DESCRIPTION AS province_name,
+                   city.LOCATION_DESCRIPTION AS municipality_name,
+                   lp.LOCATION_DESCRIPTION AS barangay,
+                   rc.CLASS_NUMBER AS class_no,
+                   COUNT(apc.COUPLES_ID) AS couples_encoded,
+                   rc.DATE_CONDUCTED AS date_conduct,
+                   up.LAST_NAME AS lastname,
+                   up.FIRST_NAME AS firstname
+              FROM rpfp.rpfp_class rc 
+         LEFT JOIN rpfp.couples apc ON apc.RPFP_CLASS_ID = rc.RPFP_CLASS_ID
+         LEFT JOIN rpfp.individual ic ON ic.COUPLES_ID = apc.COUPLES_ID
+         LEFT JOIN rpfp.fp_details fd ON fd.COUPLES_ID = ic.COUPLES_ID
+          LEFT JOIN rpfp.fp_service fs ON fs.COUPLES_ID = apc.COUPLES_ID
+         LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
+         LEFT JOIN rpfp.lib_psgc_locations city ON city.PSGC_CODE = (lp.MUNICIPALITY_CODE * POWER( 10, 3 ))
+         LEFT JOIN rpfp.lib_psgc_locations prov ON prov.PSGC_CODE = (lp.PROVINCE_CODE * POWER( 10, 5 ))
+         LEFT JOIN rpfp.user_profile up ON up.DB_USER_ID = rc.DB_USER_ID
+             WHERE rc.CLASS_NUMBER LIKE CONCAT('%',class_number,'%')
+               AND lp.PSGC_CODE >= location_code_from
+               AND lp.PSGC_CODE <= location_code_to
+               AND (
+                        rc.TYPE_CLASS_ID >= type_class
+                    AND rc.TYPE_CLASS_ID <= type_class_range
+                )
+               AND (
+                        rc.DATE_CONDUCTED >= search_date_from
+                    AND rc.DATE_CONDUCTED <= search_date_to
+                )
+               AND apc.IS_ACTIVE = status_active
+               AND (   rc.DB_USER_ID = name_user
+                    OR (   is_not_encoder
+                        AND user_location = (rc.BARANGAY_ID DIV POWER( 10, multiplier ))
+                    )
+                )
+               AND (
+                        ic.FNAME LIKE CONCAT('%',couples_name,'%')
+                    OR ic.LNAME LIKE CONCAT('%',couples_name,'%')
+                )
+               AND ic.AGE >= search_age_from
+               AND ic.AGE <= search_age_to
+               AND apc.NO_CHILDREN >= search_child_from
+               AND apc.NO_CHILDREN <= search_child_to
+               AND fd.MFP_INTENTION_SHIFT_ID >= 1
+               AND fd.TFP_TYPE_ID = tfp_used
+               AND fd.TFP_STATUS_ID = 'A'
+               AND fd.MFP_INTENTION_USE_ID >= search_intentionfp_from
+               AND fd.MFP_INTENTION_USE_ID <= search_intentionfp_to
+          GROUP BY rc.RPFP_CLASS_ID
+          ORDER BY rc.DATE_CONDUCTED DESC
+             LIMIT read_offset, items_per_page
+        ; 
+    END IF;
+ELSE
+    IF NOT EXISTS (
+         SELECT rc.RPFP_CLASS_ID
+           FROM rpfp.RPFP_CLASS rc
+      LEFT JOIN rpfp.couples apc
+             ON apc.RPFP_CLASS_ID = rc.RPFP_CLASS_ID
+          WHERE apc.IS_ACTIVE = status_active
+            AND (   rc.DB_USER_ID = name_user
+                OR (   is_not_encoder
+                    AND user_location = (rc.BARANGAY_ID DIV POWER( 10, multiplier ))
+                )
+            )
+    ) THEN
+                 SELECT NULL AS rpfpclass,
+                        NULL AS typeclass,
+                        NULL AS others_specify,
+                        NULL AS province_name,
+                        NULL AS municipality_name,
+                        NULL AS barangay,
+                        NULL AS class_no,
+                        NULL AS no_couples,
+                        NULL AS date_conduct,
+                        NULL AS lastname,
+                        NULL AS firstname
+            ;
+    ELSE    
+        IF (IFNULL( page_no, 0) = 0) THEN
+            /** DEFAULT PAGE NO. */
+        SET page_no := 1;
+        END IF;
+        IF (IFNULL( items_per_page, 0) = 0) THEN
+            /** DEFAULT COUNT PER PAGE*/
+        SET items_per_page := 10;
+        END IF;
+
+        SET read_offset := (page_no - 1) * items_per_page;
+        
+            SELECT rc.RPFP_CLASS_ID AS rpfpclass,
+                   rc.TYPE_CLASS_ID AS typeclass,
+                   rc.OTHERS_SPECIFY AS others_specify,
+                   prov.LOCATION_DESCRIPTION AS province_name,
+                   city.LOCATION_DESCRIPTION AS municipality_name,
+                   lp.LOCATION_DESCRIPTION AS barangay,
+                   rc.CLASS_NUMBER AS class_no,
+                   COUNT(apc.COUPLES_ID) AS couples_encoded,
+                   rc.DATE_CONDUCTED AS date_conduct,
+                   up.LAST_NAME AS lastname,
+                   up.FIRST_NAME AS firstname
+              FROM rpfp.rpfp_class rc 
+         LEFT JOIN rpfp.couples apc ON apc.RPFP_CLASS_ID = rc.RPFP_CLASS_ID
+         LEFT JOIN rpfp.individual ic ON ic.COUPLES_ID = apc.COUPLES_ID
+         LEFT JOIN rpfp.fp_details fd ON fd.COUPLES_ID = ic.COUPLES_ID
+          LEFT JOIN rpfp.fp_service fs ON fs.COUPLES_ID = apc.COUPLES_ID
+         LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
+         LEFT JOIN rpfp.lib_psgc_locations city ON city.PSGC_CODE = (lp.MUNICIPALITY_CODE * POWER( 10, 3 ))
+         LEFT JOIN rpfp.lib_psgc_locations prov ON prov.PSGC_CODE = (lp.PROVINCE_CODE * POWER( 10, 5 ))
+         LEFT JOIN rpfp.user_profile up ON up.DB_USER_ID = rc.DB_USER_ID
+             WHERE rc.CLASS_NUMBER LIKE CONCAT('%',class_number,'%')
+               AND lp.PSGC_CODE >= location_code_from
+               AND lp.PSGC_CODE <= location_code_to
+               AND (
+                        rc.TYPE_CLASS_ID >= type_class
+                    AND rc.TYPE_CLASS_ID <= type_class_range
+                )
+               AND (
+                        rc.DATE_CONDUCTED >= search_date_from
+                    AND rc.DATE_CONDUCTED <= search_date_to
+                )
+               AND apc.IS_ACTIVE = status_active
+               AND (   rc.DB_USER_ID = name_user
+                    OR (   is_not_encoder
+                        AND user_location = (rc.BARANGAY_ID DIV POWER( 10, multiplier ))
+                        )
+                    )
+               AND (
+                        ic.FNAME LIKE CONCAT('%',couples_name,'%')
+                    OR ic.LNAME LIKE CONCAT('%',couples_name,'%')
+                )
+               AND ic.AGE >= search_age_from
+               AND ic.AGE <= search_age_to
+               AND apc.NO_CHILDREN >= search_child_from
+               AND apc.NO_CHILDREN <= search_child_to
+               AND fd.MFP_INTENTION_SHIFT_ID >= 1
+               AND fd.TFP_TYPE_ID = tfp_used
+               AND fd.TFP_STATUS_ID LIKE CONCAT('%',intention_status,'%')
+          GROUP BY rc.RPFP_CLASS_ID
+          ORDER BY rc.DATE_CONDUCTED DESC
+             LIMIT read_offset, items_per_page
+        ; 
+    END IF;
+END IF;
 END$$
 /** END SEARCH COUPLES */
 
