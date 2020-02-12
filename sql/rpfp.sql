@@ -1324,9 +1324,34 @@ BEGIN
 END$$
 
 CREATE DEFINER=root@localhost PROCEDURE encoder_get_couples_list(
-    IN class_num VARCHAR(50)
+    IN class_num VARCHAR(50),
+    IN couples_name VARCHAR(100),
+    IN search_age_from INT,
+    IN search_age_to INT,
+    IN no_child INT,
+    IN mfp_used INT,
+    IN tfp_used INT,
+    IN intention_status VARCHAR(10),
+    IN intention_use INT,
+    IN search_status INT
     )   READS SQL DATA
+proc_exit_point :
 BEGIN
+    DECLARE type_class_range INT;
+    DECLARE search_child_from INT;
+    DECLARE search_child_to INT;
+    DECLARE search_mfp_from INT;
+    DECLARE search_mfp_to INT;
+    DECLARE search_tfp_from INT;
+    DECLARE search_tfp_to INT;
+    DECLARE search_intention_from INT;
+    DECLARE search_intention_to INT;
+    DECLARE search_intentionfp_from INT;
+    DECLARE search_intentionfp_to INT;
+
+    DECLARE location_code_from INT;
+    DECLARE location_code_to INT;
+
     DECLARE name_user VARCHAR(50);
     DECLARE db_user_name VARCHAR(50);
     DECLARE user_scope INT;
@@ -1340,6 +1365,12 @@ BEGIN
     SET user_location := rpfp.profile_get_location( name_user, user_scope );
     SET is_not_encoder := NOT IFNULL(rpfp.profile_check_if_encoder(), FALSE);
 
+    IF (IFNULL( no_child, NULL ) = NULL) THEN
+        SET search_child_from = 0;
+        SET search_child_to = 200;
+    END IF;
+   
+    IF ( IFNULL(search_status, NULL ) = NULL ) THEN
     IF NOT EXISTS (
          SELECT apc.RPFP_CLASS_ID
            FROM rpfp.couples apc
@@ -1383,6 +1414,61 @@ BEGIN
                 )
        ORDER BY apc.COUPLES_ID ASC
         ;
+    END IF;
+    ELSE
+    
+    IF NOT EXISTS (
+         SELECT apc.RPFP_CLASS_ID
+           FROM rpfp.couples apc
+      LEFT JOIN rpfp.rpfp_class rc
+             ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
+          WHERE rc.CLASS_NUMBER = class_num
+            AND (   rc.DB_USER_ID = name_user
+                OR (   is_not_encoder
+                    AND user_location = (rc.BARANGAY_ID DIV POWER( 10, multiplier ))
+                    )
+                )
+    ) THEN
+         SELECT NULL AS class_no,
+                NULL AS couplesid,
+                NULL AS isactive,
+                NULL AS date_encode,
+                NULL AS lastname,
+                NULL AS firstname,
+                NULL AS middle,
+                NULL AS ext_name
+        ;
+    ELSE
+         SELECT rc.CLASS_NUMBER AS class_no,
+                apc.COUPLES_ID AS couplesid,
+                apc.IS_ACTIVE AS isactive,
+                apc.DATE_ENCODED AS date_encode,
+                ic.LNAME AS lastname,
+                ic.FNAME AS firstname,
+                ic.MNAME AS middle,
+                ic.EXT_NAME AS ext_name
+           FROM rpfp.couples apc
+      LEFT JOIN rpfp.rpfp_class rc
+             ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
+      LEFT JOIN rpfp.individual ic
+             ON ic.COUPLES_ID = apc.COUPLES_ID
+          WHERE rc.CLASS_NUMBER = class_num
+            AND (   rc.DB_USER_ID = name_user
+                OR (   is_not_encoder
+                    AND user_location = (rc.BARANGAY_ID DIV POWER( 10, multiplier ))
+                    )
+                )
+            AND (
+                    ic.FNAME LIKE CONCAT('%',couples_name,'%')
+                 OR ic.LNAME LIKE CONCAT('%',couples_name,'%')
+            )
+            AND ic.AGE >= search_age_from
+            AND ic.AGE <= search_age_to
+            AND apc.NO_CHILDREN >= search_child_from
+            AND apc.NO_CHILDREN <= search_child_to
+       ORDER BY apc.COUPLES_ID ASC
+        ;
+    END IF;
     END IF;
 END$$
 
@@ -2072,43 +2158,67 @@ ELSE
 END$$
 
 CREATE DEFINER=root@localhost PROCEDURE encoder_check_couples_details (
-    IN firstname VARCHAR(50),
-    IN lastname VARCHAR(50),
-    IN extname VARCHAR(50),
-    IN birthdate DATE,
-    IN sex INT
+    IN firstname_h VARCHAR(50),
+    IN lastname_h VARCHAR(50),
+    IN extname_h VARCHAR(50),
+    IN birthdate_h DATE,
+    IN firstname_w VARCHAR(50),
+    IN lastname_w VARCHAR(50),
+    IN birthdate_w DATE
     )   READS SQL DATA
 proc_exit_point :
 BEGIN
 DECLARE check_details INT;
 
-    IF ( IFNULL( sex, 0 ) = 0 )  THEN
-        SELECT "CANNOT SEARCH RECORD WITH GIVEN PARAMETERS" AS check_details;
-        LEAVE proc_exit_point;
-    END IF;
-
-    IF sex = 1 THEN
-      SELECT COUNT(*) 
-        INTO check_details
-        FROM rpfp.individual ic 
-       WHERE ic.FNAME = firstname
-         AND ic.LNAME = lastname
-         AND ic.EXT_NAME = extname
-         AND ic.BDATE = birthdate
-         AND ic.SEX = 1
+    DECLARE name_user VARCHAR(50);
+    DECLARE db_user_name VARCHAR(50);
+    DECLARE read_offset INT;
+    DECLARE user_scope INT;
+    DECLARE user_location INT;
+    DECLARE multiplier INT;
+    DECLARE is_not_encoder INT(1);
+    
+    CALL rpfp.lib_extract_user_name( USER(), name_user, db_user_name );
+    SET user_scope := rpfp.profile_get_scope( name_user );
+    SET multiplier := rpfp.lib_get_multiplier( user_scope );
+    SET user_location := rpfp.profile_get_location( name_user, user_scope );
+    SET is_not_encoder := NOT IFNULL(rpfp.profile_check_if_encoder(), FALSE);
+    
+      SELECT 	COUNT(couples.COUPLES_ID) AS check_details,
+                couples.COUPLES_ID AS couplesid,
+                couples.IS_ACTIVE AS active_status,
+      			husband.LNAME AS h_last,
+      			husband.FNAME AS h_first,
+      			husband.EXT_NAME AS h_ext,
+      			husband.BDATE AS h_bday,
+      			husband.SEX AS h_sex,
+                full_data.w_couplesid AS w_couplesid,
+      			full_data.w_last AS w_last,
+      			full_data.w_first AS w_first,
+      			full_data.w_bday AS w_bday,
+      			full_data.w_sex AS w_sex
+        FROM rpfp.couples couples
+   LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = couples.RPFP_CLASS_ID 
+   LEFT JOIN rpfp.lib_psgc_locations lp ON lp.REGION_CODE = user_location
+   LEFT JOIN rpfp.individual husband ON husband.COUPLES_ID = couples.COUPLES_ID AND husband.SEX = 1
+   LEFT JOIN (
+       SELECT wic.COUPLES_ID AS w_couplesid,
+      		  wife.LNAME AS w_last,
+      		  wife.FNAME AS w_first,
+      		  wife.BDATE AS w_bday,
+      		  wife.SEX AS w_sex
+         FROM rpfp.couples wic
+    LEFT JOIN rpfp.individual wife ON wife.COUPLES_ID = wic.COUPLES_ID AND wife.SEX = 2
+              ) full_data
+           ON full_data.w_couplesid = couples.COUPLES_ID
+       WHERE husband.LNAME = lastname_h
+         AND husband.FNAME = firstname_h
+         AND husband.EXT_NAME = extname_h
+         AND husband.BDATE = birthdate_h
+         AND full_data.w_last = lastname_w
+         AND full_data.w_first = firstname_w
+         AND full_data.w_bday = birthdate_w
     ;
-    ELSE
-      SELECT COUNT(*) 
-        INTO check_details
-        FROM rpfp.individual ic 
-       WHERE ic.FNAME = firstname
-         AND ic.LNAME = lastname
-         AND ic.BDATE = birthdate
-         AND ic.SEX = 2
-    ;
-    END IF;
-
-    SELECT check_details;
 END$$
 
 CREATE DEFINER=root@localhost PROCEDURE check_couples_details (
@@ -2662,15 +2772,15 @@ BEGIN
     END IF;
 
 
-    IF (IFNULL( search_age_from, 0 ) = 0) THEN
+    IF (IFNULL( search_age_from, NULL ) = NULL) THEN
         SET search_age_from = 0;
     END IF;
 
-    IF (IFNULL( search_age_to, 0 ) = 0) THEN
+    IF (IFNULL( search_age_to, NULL ) = NULL) THEN
         SET search_age_to = 200;
     END IF;
 
-    IF (IFNULL( no_child, 0 ) = 0) THEN
+    IF (IFNULL( no_child, NULL ) = NULL) THEN
         SET search_child_from = 0;
         SET search_child_to = 200;
     END IF;
