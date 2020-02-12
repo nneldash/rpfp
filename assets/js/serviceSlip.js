@@ -3,13 +3,28 @@ $(function() {
 	  checkbox();
 	  saveServiceSlip();
 
-	  var coupleId = $('input[name="couple_id"]').val();
+	  $(document).ready(function(){
+		var coupleId = $('input[name="couple_id"]').val();
 
-	  if (coupleId == 0) {
-		$('#service_slip input:not(.saveServiceSlip)').attr('disabled', 'disabled');
-	  } else {
-		$('#service_slip input').removeAttr('disabled');
-	  }
+		if (coupleId == 0) {
+			$('#service_slip input:not(.saveServiceSlip)').attr('disabled', 'disabled');
+
+			const Toast = Swal.mixin({
+				toast: true,
+				position: 'top-end',
+				showConfirmButton: false,
+				timer: 3000
+			});
+			Toast.fire({
+				type: 'warning',
+				title: 'Save Form 1 before providing\nFP Service details.'
+			});
+			
+		} else {
+			$('#service_slip input').removeAttr('disabled');
+		}
+	  });
+	  
 });
 
 function checkbox()
@@ -130,7 +145,7 @@ function saveServiceSlip()
 			} else if (coupleId == 0) {
 				Toast.fire({
 					type: 'warning',
-					title: 'Save the Form 1 before providing\nFP Service details.'
+					title: 'Save Form 1 before providing\nFP Service details.'
 				});
 			} else {
 				Toast.fire({
