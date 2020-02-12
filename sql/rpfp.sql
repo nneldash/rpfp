@@ -2158,67 +2158,43 @@ ELSE
 END$$
 
 CREATE DEFINER=root@localhost PROCEDURE encoder_check_couples_details (
-    IN firstname_h VARCHAR(50),
-    IN lastname_h VARCHAR(50),
-    IN extname_h VARCHAR(50),
-    IN birthdate_h DATE,
-    IN firstname_w VARCHAR(50),
-    IN lastname_w VARCHAR(50),
-    IN birthdate_w DATE
+    IN firstname VARCHAR(50),
+    IN lastname VARCHAR(50),
+    IN extname VARCHAR(50),
+    IN birthdate DATE,
+    IN sex INT
     )   READS SQL DATA
 proc_exit_point :
 BEGIN
 DECLARE check_details INT;
 
-    DECLARE name_user VARCHAR(50);
-    DECLARE db_user_name VARCHAR(50);
-    DECLARE read_offset INT;
-    DECLARE user_scope INT;
-    DECLARE user_location INT;
-    DECLARE multiplier INT;
-    DECLARE is_not_encoder INT(1);
-    
-    CALL rpfp.lib_extract_user_name( USER(), name_user, db_user_name );
-    SET user_scope := rpfp.profile_get_scope( name_user );
-    SET multiplier := rpfp.lib_get_multiplier( user_scope );
-    SET user_location := rpfp.profile_get_location( name_user, user_scope );
-    SET is_not_encoder := NOT IFNULL(rpfp.profile_check_if_encoder(), FALSE);
-    
-      SELECT 	COUNT(couples.COUPLES_ID) AS check_details,
-                couples.COUPLES_ID AS couplesid,
-                couples.IS_ACTIVE AS active_status,
-      			husband.LNAME AS h_last,
-      			husband.FNAME AS h_first,
-      			husband.EXT_NAME AS h_ext,
-      			husband.BDATE AS h_bday,
-      			husband.SEX AS h_sex,
-                full_data.w_couplesid AS w_couplesid,
-      			full_data.w_last AS w_last,
-      			full_data.w_first AS w_first,
-      			full_data.w_bday AS w_bday,
-      			full_data.w_sex AS w_sex
-        FROM rpfp.couples couples
-   LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = couples.RPFP_CLASS_ID 
-   LEFT JOIN rpfp.lib_psgc_locations lp ON lp.REGION_CODE = user_location
-   LEFT JOIN rpfp.individual husband ON husband.COUPLES_ID = couples.COUPLES_ID AND husband.SEX = 1
-   LEFT JOIN (
-       SELECT wic.COUPLES_ID AS w_couplesid,
-      		  wife.LNAME AS w_last,
-      		  wife.FNAME AS w_first,
-      		  wife.BDATE AS w_bday,
-      		  wife.SEX AS w_sex
-         FROM rpfp.couples wic
-    LEFT JOIN rpfp.individual wife ON wife.COUPLES_ID = wic.COUPLES_ID AND wife.SEX = 2
-              ) full_data
-           ON full_data.w_couplesid = couples.COUPLES_ID
-       WHERE husband.LNAME = lastname_h
-         AND husband.FNAME = firstname_h
-         AND husband.EXT_NAME = extname_h
-         AND husband.BDATE = birthdate_h
-         AND full_data.w_last = lastname_w
-         AND full_data.w_first = firstname_w
-         AND full_data.w_bday = birthdate_w
+    IF ( IFNULL( sex, 0 ) = 0 )  THEN
+        SELECT "CANNOT SEARCH RECORD WITH GIVEN PARAMETERS" AS check_details;
+        LEAVE proc_exit_point;
+    END IF;
+
+    IF sex = 1 THEN
+      SELECT COUNT(*) 
+        INTO check_details
+        FROM rpfp.individual ic 
+       WHERE ic.FNAME = firstname
+         AND ic.LNAME = lastname
+         AND ic.EXT_NAME = extname
+         AND ic.BDATE = birthdate
+         AND ic.SEX = 1
     ;
+    ELSE
+      SELECT COUNT(*) 
+        INTO check_details
+        FROM rpfp.individual ic 
+       WHERE ic.FNAME = firstname
+         AND ic.LNAME = lastname
+         AND ic.BDATE = birthdate
+         AND ic.SEX = 2
+    ;
+    END IF;
+
+    SELECT check_details;
 END$$
 
 CREATE DEFINER=root@localhost PROCEDURE check_couples_details (
@@ -2750,7 +2726,7 @@ BEGIN
     SET is_not_encoder := NOT IFNULL(rpfp.profile_check_if_encoder(), FALSE);
 
     IF (IFNULL( search_status, 0 ) = 0 ) THEN
-        SET search_status = 0;
+        SET search_status = 1;
     END IF;
 
     IF (IFNULL( loc_province, 0 ) = 0 ) THEN
@@ -2802,7 +2778,7 @@ BEGIN
         SET search_child_to = 200;
     END IF;
    
-    IF search_status = 0 THEN
+    IF search_status = 1 THEN
         IF tfp_used > 0 THEN
             CALL rpfp.get_class_list_all(
             location_code_from,
@@ -2947,7 +2923,7 @@ BEGIN
         LEAVE proc_exit_point;
     END IF;
     
-    IF search_status = 1 THEN    
+    IF search_status = 2 THEN    
         IF tfp_used > 0 THEN
             CALL rpfp.get_class_list_unmet(
             location_code_from,
@@ -3096,7 +3072,7 @@ BEGIN
         LEAVE proc_exit_point;
     END IF;
 
-    IF search_status = 2 THEN
+    IF search_status = 3 THEN
         IF tfp_used > 0 THEN
             CALL rpfp.get_class_list_served_unmet(
             location_code_from,
@@ -3247,7 +3223,7 @@ BEGIN
         LEAVE proc_exit_point;
     END IF;
         
-    IF search_status = 3 THEN
+    IF search_status = 4 THEN
         IF tfp_used > 0 THEN
             CALL rpfp.get_class_list_shifters(
             location_code_from,
@@ -3393,7 +3369,7 @@ BEGIN
         LEAVE proc_exit_point;
     END IF;
         
-    IF search_status = 4 THEN
+    IF search_status = 5 THEN
         IF tfp_used > 0 THEN
             CALL rpfp.get_class_list_served_shifters(
             location_code_from,
