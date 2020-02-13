@@ -60,6 +60,7 @@ $(function() {
 	typeUnmet();
 	statusUnmet();
 	importChanges();
+	afterLoadValidation();
 
 	Inputmask().mask(".birthAge");	
 
@@ -79,6 +80,56 @@ $(function() {
 
 	setTimeout(getIntentionUse, 2000);
 });
+
+function afterLoadValidation()
+{
+	for(var i = 0; i <= 9; i ++) {
+		var fname1 = $('.tr1' + i + ' textarea[name="firstname1[' + i +']"]').val();
+		var lname1= $('.tr1' + i + ' textarea[name="lastname1[' + i +']"]').val();
+		var extname1 = $('.tr1' + i + ' input[name="extname1[' + i +']"]').val();
+		var sex1 = $('.tr1' + i + ' input[name="sex1[' + i +']"]').val();
+		var bday1 = $('.tr1' + i + ' input[name="bday1[' + i +']"]').val();
+		var age1 = $('.tr1' + i + ' input[name="age1[' + i +']"]').val();
+
+		var fname2 = $('.tr2' + i + ' textarea[name="firstname2[' + i +']"]').val();
+		var lname2= $('.tr2' + i + ' textarea[name="lastname2[' + i +']"]').val();
+		var extname2 = $('.tr2' + i + ' input[name="extname2[' + i +']"]').val();
+		var sex2 = $('.tr2' + i + ' input[name="sex2[' + i +']"]').val();
+		var bday2 = $('.tr2' + i + ' input[name="bday2[' + i +']"]').val();
+		var age2 = $('.tr2' + i + ' input[name="age2[' + i +']"]').val();
+
+		var type = $('.tr1' + i + ' input[name="type[' + i +']"]').val();
+		var status = $('.tr1' + i + ' input[name="status[' + i +']"]').val();
+
+		var dateArr1 = bday1.split('-');
+		var month1 = $.trim(dateArr1[0]);
+		var day1 = $.trim(dateArr1[1]);
+		var year1 = $.trim(dateArr1[2]);
+		var bday1 = year1 + '-' + month1 + '-' + day1;
+
+		var dateArr2 = bday2.split('-');
+		var month2 = $.trim(dateArr2[0]);
+		var day2 = $.trim(dateArr2[1]);
+		var year2 = $.trim(dateArr2[2]);
+		var bday2 = year2 + '-' + month2 + '-' + day2;
+
+		if (fname1 != '') {
+			if(!$('.tr1' + i + ' textarea[name="firstname1[' + i +']"]').prop('required')) {
+		    	$('.tr1' + i).find('td .require-this').attr('required', 'required');
+		    	$('.tr1' + i).find('td .required').removeAttr('hidden', 'hidden');
+		    }
+		}
+
+		if (fname2 != '') {
+			if(!$('.tr2' + i + ' textarea[name="firstname2[' + i +']"]').prop('required')) {
+		    	$('.tr2' + i).find('td .require-this').attr('required', 'required');
+		    	$('.tr2' + i).find('td .required').removeAttr('hidden', 'hidden');
+		    }
+		}
+		autoGetData(fname1, lname1, extname1, sex1, bday1, fname2, lname2, extname2, sex2, bday2, i);
+		criteria(i, i, sex1, sex2, age1, age2, type, status);
+	}
+}
 
 function importChanges()
 {
@@ -117,10 +168,15 @@ function importChanges()
 				if(!$('.tr1' + i + ' textarea[name="firstname1[' + i +']"]').prop('required')) {
 			    	$('.tr1' + i).find('td .require-this').attr('required', 'required');
 			    	$('.tr1' + i).find('td .required').removeAttr('hidden', 'hidden');
-			    	$('.tr2' + i).find('td .require-this').attr('required', 'required');
-			    	$('.tr2' + i).find('td .required').removeAttr('hidden', 'hidden');
 			    }
 			}
+
+			if (fname2 != '') {
+				if(!$('.tr2' + i + ' textarea[name="firstname2[' + i +']"]').prop('required')) {
+ 			    	$('.tr2' + i).find('td .require-this').attr('required', 'required');
+ 			    	$('.tr2' + i).find('td .required').removeAttr('hidden', 'hidden');
+ 			    }
+ 			}
 
 			autoGetData(fname1, lname1, extname1, sex1, bday1, fname2, lname2, extname2, sex2, bday2, i);
 			criteria(i, i, sex1, sex2, age1, age2, type, status);
@@ -148,7 +204,8 @@ function getIntentionUse()
 
 function click_click_click(index, id, couplesId)
 {
-	$('#'+ id +' .auto-fill-data').click(function(){
+	$('#'+ id +' .auto-fill-data').click(function(event){
+		event.preventDefault();
 		$.ajax({
 			type : 'POST',
 			cache : true,
@@ -230,7 +287,8 @@ function tooltip(couplesId, status, husband, wife, index)
 			content: new_content
 		});
 	 	
-	 	$(this).on("click", function() {
+	 	$(this).on("click", function(event) {
+	 		event.preventDefault();
 			var id = $(this).attr('aria-describedby');
 			click_click_click(index, id, couplesId);
 		});

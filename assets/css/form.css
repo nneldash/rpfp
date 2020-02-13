@@ -479,7 +479,7 @@ a:hover {
 /*------------------------------------------------------------------
 [ Duplicate Couple CSS ]*/
 .has-duplicate {
-	background: lightblue;
+	background: lightblue!important;
 }
 .highlight,
 .highlight > td > input {
