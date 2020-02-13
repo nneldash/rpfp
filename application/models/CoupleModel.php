@@ -143,13 +143,14 @@ class CoupleModel extends BaseModel
         );
     }
 
-    public function getSearchValues($data) : ApproveInterface
+    public function getSearchValues($data) : ListApproveCoupleInterface
     {
         $status_active = 0;
         $page_no = 1;
         $items_per_page = 10;
 
-        $result = $this->fromDbGetSpecific(
+        $result = $this->fromDbGetList(
+            'ListApproveCouple',
             'ApproveClass',
             array(
                 'RpfpClass' => 'rpfpclass',
@@ -187,12 +188,13 @@ class CoupleModel extends BaseModel
             )
         );
 
-        if (empty($result)) {
-            $newData = new ApproveClass();
-            return $newData;
-        } else {
-            return $result;
+        $listApprove = new ListApproveCouple();
+
+        foreach($result as $searchResults) {
+            $listApprove->append($searchResults);
         }
+
+        return $listApprove;
         
     }
 }
