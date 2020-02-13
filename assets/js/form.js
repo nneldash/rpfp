@@ -1617,6 +1617,7 @@ function get_page(page_num) {
 
 function update_page_numbering(page_num, total_pages) {
 	$("#pager").html("Page " + page_num + " of " + total_pages);
+	$("#num_items").val("10");
 }
 
 $(document).ready(function() {

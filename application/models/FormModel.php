@@ -56,7 +56,7 @@ class FormModel extends BaseModel
         } elseif ($code == 'INVALID ROLE') {
             $ret_val->Code = ErrorInterface::INVALID_ROLE;
             $ret_val->Description = 'error2';
-        } elseif ($code == 'UPDATE SUCCESSFUL') {
+        } elseif ($code == 'SAVE SUCCESSFUL') {
             $ret_val->ReturnValue = $code;
         } else {
             $new_code = explode(" ", $code);
