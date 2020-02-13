@@ -290,6 +290,7 @@ class Menu extends CI_Controller
         $searchApprove->NonModernFpUser = $this->input->post('nonmodern_search');
         $searchApprove->IntentionStatus = $this->input->post('intention_status_search');
         $searchApprove->IntentionToUse = $this->input->post('intention_to_use_search');
+        $searchApprove->SearchStatus = $this->input->post('fpstatus_search');
         
         
         $ret_val = $this->CoupleModel->getSearchValues($searchApprove);

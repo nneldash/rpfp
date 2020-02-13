@@ -147,6 +147,18 @@ if (empty($title)) {
                         </div>
                     </div>
                     <div class="form-group">
+                        <label class="control-label col-md-3 col-xs-12">FP Status</label>
+                        <div class="col-md-7 col-xs-12">
+                            <select name="fpstatus_search" class="form-control">
+                                <option value="1"></option>
+                                <option value="2">Unmet Need</option>
+                                <option value="3">Served Unmet Needd</option>
+                                <option value="4">Shifters</option>
+                                <option value="5">Served Shifters</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
                         <p class="for_modernfp_user"></p>
                     </div>
                     <div class="form-group">
@@ -155,6 +167,7 @@ if (empty($title)) {
                     <div class="form-group">
                         <p class="with_intention"></p>
                     </div>
+                    
                 </div>
             </div>
         </div>

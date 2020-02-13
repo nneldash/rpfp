@@ -20,4 +20,5 @@ abstract class SearchApproveInterface extends BaseInterface
     public $NonModernFpUser;
     public $IntentionStatus;
     public $IntentionToUse;
+    public $SearchStatus;
 }

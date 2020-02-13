@@ -145,7 +145,6 @@ class CoupleModel extends BaseModel
 
     public function getSearchValues($data) : ApproveInterface
     {
-        $search_status = 0;
         $status_active = 0;
         $page_no = 1;
         $items_per_page = 10;
@@ -181,7 +180,7 @@ class CoupleModel extends BaseModel
                 $data->NonModernFpUser,
                 $data->IntentionStatus,
                 $data->IntentionToUse,
-                $search_status,
+                $data->SearchStatus,
                 $status_active,
                 $page_no,
                 $items_per_page
