@@ -1111,26 +1111,26 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 					<tr>
 						<td class="border-0 padding-l20"></td>
 						<td class="border-0">
-							<input type="text" style="border-bottom: 1px solid black; width: 75%" name="prepared_by" />
+							<input type="text" class="text-center" style="border-bottom: 1px solid black; width: 75%" name="prepared_by" />
 						</td>
 						<td class="border-0">
-							<input type="text" style="border-bottom: 1px solid black; width: 75%" name="reviewed_by" />
+							<input type="text" class="text-center" style="border-bottom: 1px solid black; width: 75%" name="reviewed_by" />
 						</td>
 						<td class="border-0">
-							<input type="text" style="border-bottom: 1px solid black; width: 75%" name="approved_by" />
+							<input type="text" class="text-center" style="border-bottom: 1px solid black; width: 75%" name="approved_by" />
 						</td>
 						<td class="border-0"></td>
 					</tr>
 					<tr>
 						<td class="border-0 padding-l20"></td>
 						<td class="border-0 padding-l20">
-							<p class="small">Name/Signature of RPM Team Member/s</p>
+							<p style="width: 75%" class="text-center small">Name/Signature of RPM Team Member/s</p>
 						</td>
 						<td class="border-0 padding-l60">
-							<p class="small">Name & Signature</p>
+							<p style="width: 75%" class="text-center small">Name & Signature</p>
 						</td>
 						<td class="border-0">
-							<p class="small">Name & Signature of Provincial/City Population Officer</p>
+							<p style="width: 75%" class="text-center small">Name & Signature of Provincial/City Population Officer</p>
 						</td>
 						<td class="border-0"></td>
 					</tr>

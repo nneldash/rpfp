@@ -2,7 +2,7 @@ var base_url = window.location.origin + '/rpfp/';
 var XLSX = XLSX;
 var XW = {
 	msg: 'xlsx',
-	worker: base_url + 'node_modules/xlsx/xlsxworker.js'
+	worker: base_url + 'assets/js/xlsxworker.js'
 };
 
 var global_wb;
@@ -86,18 +86,22 @@ var process_wb = (function() {
 	    }
 
 	    $('input[name=class_no]').val(array[112]);
-	    $('input[name=province]').val(array[128]);
-	    $('input[name=barangay]').val(array[145]);
+
+	    var barangay = array[145];
+	    getFullLocation(barangay);
 
 	    var date_conducted = array[161].split('-');
 	    var month = new Date(date_conducted[1]);
 
 	    var month = month.getMonth();
 
-	    date_conducted = date_conducted[2] + '-' + month + '-' + date_conducted[0];
+	    date_conducted = date_conducted[2] + '-' + date_conducted[1] + '-' + date_conducted[0];
+	    console.log(date_conducted);
 
 	    $('input[name=date_conducted]').val(date_conducted);
-
+	    $('input[name=prepared_by]').val(array[790]);
+	    $('input[name=reviewed_by]').val(array[795]);
+	    $('input[name=approved_by]').val(array[801]);
 
 	    var i;
 	    var inc = 38;
@@ -128,9 +132,6 @@ var process_wb = (function() {
 
 			var addHHN = addHHN[1].split(' ');
 
-			// console.log(fname1);
-			// console.log(address);
-
 			$('textarea[name="firstname1['+ i +']"').val(fname1[1]);
 			$('textarea[name="middlename1['+ i +']"').val(array[a+1]);
 			$('textarea[name="lastname1['+ i +']"').val(array[a+2]);
@@ -141,7 +142,7 @@ var process_wb = (function() {
 		    $('input[name="bday1['+ i +']"').val(bday1);
 		    $('input[name="age1['+ i +']"').val(age1);
 
-		    $('input[name="house_no['+ i +']"').val(address[0]);
+		    $('input[name="house_no_st['+ i +']"').val(address[0]);
 		    $('input[name="brgy['+ i +']"').val(address[1]);
 		    $('input[name="city['+ i +']"').val(address[2]);
 		    $('input[name="household_id['+ i +']"').val(addHHN[1]);
@@ -156,9 +157,9 @@ var process_wb = (function() {
 		    $('input[name="reason['+ i +']"').val(array[a+15]);
 
 	    	if(array[a+16] !== '') {
-	    		$('input[name="type['+ i +']"').prop('checked', true);
+	    		$('input[name="attendee1['+ i +']"').prop('checked', true);
 	    	} else {
-	    		$('input[name="type['+ i +']"').prop('checked', false);
+	    		$('input[name="attendee1['+ i +']"').prop('checked', false);
 	    	}
 
 	    	$('textarea[name="firstname2['+ i +']"').val(fname2[1]);
@@ -171,11 +172,12 @@ var process_wb = (function() {
 		    $('input[name="bday2['+ i +']"').val(bday2);
 		    $('input[name="age2['+ i +']"').val(age2);
 		    $('input[name="educ2['+ i +']"').val(array[b+9]);
+		    $('input[name="intention_use['+ i +']"').val(array[b+14]);
 
 	    	if(array[b+16] !== '') {
-	    		$('input[name="type2['+ i +']"').prop('checked', true);
+	    		$('input[name="attendee2['+ i +']"').prop('checked', true);
 	    	} else {
-	    		$('input[name="type2['+ i +']"').prop('checked', false);
+	    		$('input[name="attendee2['+ i +']"').prop('checked', false);
 	    	}
 
 	    	var a = a + inc;
@@ -290,4 +292,20 @@ function progressHandler(event) {
 	var percent = (event.loaded / event.total) * 100;
 	_("progressBar").value = Math.round(percent);
 	_("status").innerHTML = Math.round(percent) + "% uploaded... please wait";
+}
+
+function getFullLocation(barangay)
+{
+	$.ajax({
+		type: 'POST',
+		cache: true,
+		url: base_url + 'location/getFullLocation',
+		data: {
+			'barangay' : barangay
+		}
+	}).done(function(result) {
+		$('input[name="province"]').val(result.ProvinceCode);
+		$('input[name="city"]').val(result.CityCode);
+		$('input[name="barangay"]').val(result.BarangayCode);
+	});
 }
