@@ -166,35 +166,34 @@ class CoupleModel extends BaseModel
             ),
             'search_data',
             array(
-                $data->ProvinceCode,
-                $data->MunicipalityCode,
-                $data->BarangayCode,
-                $data->ClassNo,
-                $data->DateConductedFrom,
-                $data->DateConductedTo,
-                $data->TypeOfClass,
-                $data->CoupleName,
-                $data->AgeFrom,
-                $data->AgeTo,
-                $data->NoOfChildren,
-                $data->ModernFpUser,
-                $data->NonModernFpUser,
-                $data->IntentionStatus,
-                $data->IntentionToUse,
-                $data->SearchStatus,
+                $data->ProvinceCode == N_A ? BLANK : $data->ProvinceCode,
+                $data->MunicipalityCode == N_A ? BLANK : $data->MunicipalityCode,
+                $data->BarangayCode == N_A ? BLANK : $data->BarangayCode,
+                $data->ClassNo == N_A ? BLANK : $data->ClassNo,
+                $data->DateConductedFrom == N_A ? BLANK : $data->DateConductedFrom,
+                $data->DateConductedTo == N_A ? BLANK : $data->DateConductedTo,
+                $data->TypeOfClass == N_A ? BLANK : $data->TypeOfClass,
+                $data->CoupleName == N_A ? BLANK : $data->CoupleName,
+                $data->AgeFrom == N_A ? BLANK : $data->AgeFrom,
+                $data->AgeTo == N_A ? BLANK : $data->AgeTo,
+                $data->NoOfChildren == N_A ? BLANK : $data->NoOfChildren,
+                $data->ModernFpUser == N_A ? BLANK : $data->ModernFpUser,
+                $data->NonModernFpUser == N_A ? BLANK : $data->NonModernFpUser,
+                $data->IntentionStatus == N_A ? BLANK : $data->IntentionStatus,
+                $data->IntentionToUse == N_A ? BLANK : $data->IntentionToUse,
+                $data->SearchStatus == N_A ? BLANK : $data->SearchStatus,
                 $status_active,
                 $page_no,
                 $items_per_page
             )
         );
-
+        
         $listApprove = new ListApproveCouple();
 
-        foreach($result as $searchResults) {
-            $listApprove->append($searchResults);
-        }
-
-        return $listApprove;
+        foreach ($result as $item) {
+            $listApprove->append($item);
+        } 
         
+        return $listApprove;
     }
-}
+} 

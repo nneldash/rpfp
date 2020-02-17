@@ -1333,6 +1333,7 @@ CREATE DEFINER=root@localhost PROCEDURE encoder_get_couples_list(
     IN tfp_used INT,
     IN intention_status VARCHAR(10),
     IN intention_use INT,
+    IN status_active INT,
     IN search_status INT
     )   READS SQL DATA
 proc_exit_point :
@@ -1365,12 +1366,24 @@ BEGIN
     SET user_location := rpfp.profile_get_location( name_user, user_scope );
     SET is_not_encoder := NOT IFNULL(rpfp.profile_check_if_encoder(), FALSE);
 
-    IF (IFNULL( no_child, NULL ) = NULL) THEN
+    IF (IFNULL( status_active, 0 ) = 0 ) THEN
+        SET status_active = 0;
+    END IF;
+
+    IF (IFNULL( search_age_from, 0 ) = 0) THEN
+        SET search_age_from = 0;
+    END IF;
+
+    IF (IFNULL( search_age_to, 0 ) = 0) THEN
+        SET search_age_to = 200;
+    END IF;
+
+    IF (IFNULL( no_child, 0 ) = 0) THEN
         SET search_child_from = 0;
         SET search_child_to = 200;
     END IF;
    
-    IF ( IFNULL(search_status, NULL ) = NULL ) THEN
+    IF ( IFNULL(search_status, 0 ) = 0 ) THEN
     IF NOT EXISTS (
          SELECT apc.RPFP_CLASS_ID
            FROM rpfp.couples apc
@@ -1415,7 +1428,42 @@ BEGIN
        ORDER BY apc.COUPLES_ID ASC
         ;
     END IF;
-    ELSE
+    END IF;
+    
+    IF search_status = 1 THEN
+        IF tfp_used > 0 THEN
+            CALL rpfp.get_couples_list_all(
+            class_num,
+            couples_name,
+            search_age_from,
+            search_age_to,
+            no_child,
+            mfp_used,
+            tfp_used,
+            intention_status,
+            intention_use,
+            search_status,
+            status_active
+            );
+            LEAVE proc_exit_point;
+        END IF;
+        
+        IF mfp_used > 0 THEN
+            CALL rpfp.get_couples_list_all(
+            class_num,
+            couples_name,
+            search_age_from,
+            search_age_to,
+            no_child,
+            mfp_used,
+            tfp_used,
+            intention_status,
+            intention_use,
+            search_status,
+            status_active
+            );
+            LEAVE proc_exit_point;
+        END IF;
     
     IF NOT EXISTS (
          SELECT apc.RPFP_CLASS_ID
@@ -1470,6 +1518,1603 @@ BEGIN
         ;
     END IF;
     END IF;
+
+    IF search_status = 2 THEN    
+        IF tfp_used > 0 THEN
+            CALL rpfp.get_couples_list_unmet(
+            class_num,
+            couples_name,
+            search_age_from,
+            search_age_to,
+            no_child,
+            mfp_used,
+            tfp_used,
+            intention_status,
+            intention_use,
+            search_status,
+            status_active
+            );
+            LEAVE proc_exit_point;
+        END IF;
+        
+        IF mfp_used > 0 THEN
+            CALL rpfp.get_couples_list_unmet(
+            class_num,
+            couples_name,
+            search_age_from,
+            search_age_to,
+            no_child,
+            mfp_used,
+            tfp_used,
+            intention_status,
+            intention_use,
+            search_status,
+            status_active
+            );
+            LEAVE proc_exit_point;
+        END IF;
+        
+        IF NOT EXISTS (
+            SELECT rc.RPFP_CLASS_ID
+            FROM rpfp.RPFP_CLASS rc
+        LEFT JOIN rpfp.couples apc
+                ON apc.RPFP_CLASS_ID = rc.RPFP_CLASS_ID
+            WHERE apc.IS_ACTIVE = status_active
+              AND (   rc.DB_USER_ID = name_user
+                   OR (   is_not_encoder
+                      AND user_location = (rc.BARANGAY_ID DIV POWER( 10, multiplier ))
+                    )
+                )
+        ) THEN
+         SELECT NULL AS class_no,
+                NULL AS couplesid,
+                NULL AS isactive,
+                NULL AS date_encode,
+                NULL AS lastname,
+                NULL AS firstname,
+                NULL AS middle,
+                NULL AS ext_name
+        ;
+    ELSE
+         SELECT rc.CLASS_NUMBER AS class_no,
+                apc.COUPLES_ID AS couplesid,
+                apc.IS_ACTIVE AS isactive,
+                apc.DATE_ENCODED AS date_encode,
+                ic.LNAME AS lastname,
+                ic.FNAME AS firstname,
+                ic.MNAME AS middle,
+                ic.EXT_NAME AS ext_name
+              FROM rpfp.rpfp_class rc 
+         LEFT JOIN rpfp.couples apc ON apc.RPFP_CLASS_ID = rc.RPFP_CLASS_ID
+         LEFT JOIN rpfp.individual ic ON ic.COUPLES_ID = apc.COUPLES_ID
+         LEFT JOIN rpfp.fp_details fd ON fd.COUPLES_ID = ic.COUPLES_ID
+         LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
+         LEFT JOIN rpfp.lib_psgc_locations city ON city.PSGC_CODE = (lp.MUNICIPALITY_CODE * POWER( 10, 3 ))
+         LEFT JOIN rpfp.lib_psgc_locations prov ON prov.PSGC_CODE = (lp.PROVINCE_CODE * POWER( 10, 5 ))
+         LEFT JOIN rpfp.user_profile up ON up.DB_USER_ID = rc.DB_USER_ID
+             WHERE rc.CLASS_NUMBER = class_num
+               AND apc.IS_ACTIVE = status_active
+               AND (   rc.DB_USER_ID = name_user
+                   OR (   is_not_encoder
+                      AND user_location = (rc.BARANGAY_ID DIV POWER( 10, multiplier ))
+                    )
+                )
+               AND (
+                        ic.FNAME LIKE CONCAT('%',couples_name,'%')
+                     OR ic.LNAME LIKE CONCAT('%',couples_name,'%')
+                )
+               AND ic.AGE >= search_age_from
+               AND ic.AGE <= search_age_to
+               AND apc.NO_CHILDREN >= search_child_from
+               AND apc.NO_CHILDREN <= search_child_to
+               AND (   
+                       fd.TFP_TYPE_ID <= 5
+                    OR fd.TFP_STATUS_ID = 'A'
+                )
+       ORDER BY apc.COUPLES_ID ASC
+            ; 
+        END IF;
+        LEAVE proc_exit_point;
+    END IF;
+
+    IF search_status = 3 THEN
+        IF tfp_used > 0 THEN
+            CALL rpfp.get_couples_list_served_unmet(
+            class_num,
+            couples_name,
+            search_age_from,
+            search_age_to,
+            no_child,
+            mfp_used,
+            tfp_used,
+            intention_status,
+            intention_use,
+            search_status,
+            status_active
+            );
+            LEAVE proc_exit_point;
+        END IF;
+        
+        IF mfp_used > 0 THEN
+            CALL rpfp.get_couples_list_served_unmet(
+            class_num,
+            couples_name,
+            search_age_from,
+            search_age_to,
+            no_child,
+            mfp_used,
+            tfp_used,
+            intention_status,
+            intention_use,
+            search_status,
+            status_active
+            );
+            LEAVE proc_exit_point;
+        END IF;
+        
+        IF NOT EXISTS (
+            SELECT rc.RPFP_CLASS_ID
+            FROM rpfp.RPFP_CLASS rc
+        LEFT JOIN rpfp.couples apc
+                ON apc.RPFP_CLASS_ID = rc.RPFP_CLASS_ID
+            WHERE apc.IS_ACTIVE = status_active
+              AND (   rc.DB_USER_ID = name_user
+                   OR (   is_not_encoder
+                      AND user_location = (rc.BARANGAY_ID DIV POWER( 10, multiplier ))
+                    )
+                )
+        ) THEN
+         SELECT NULL AS class_no,
+                NULL AS couplesid,
+                NULL AS isactive,
+                NULL AS date_encode,
+                NULL AS lastname,
+                NULL AS firstname,
+                NULL AS middle,
+                NULL AS ext_name
+        ;
+    ELSE
+         SELECT rc.CLASS_NUMBER AS class_no,
+                apc.COUPLES_ID AS couplesid,
+                apc.IS_ACTIVE AS isactive,
+                apc.DATE_ENCODED AS date_encode,
+                ic.LNAME AS lastname,
+                ic.FNAME AS firstname,
+                ic.MNAME AS middle,
+                ic.EXT_NAME AS ext_name
+              FROM rpfp.rpfp_class rc 
+         LEFT JOIN rpfp.couples apc ON apc.RPFP_CLASS_ID = rc.RPFP_CLASS_ID
+         LEFT JOIN rpfp.individual ic ON ic.COUPLES_ID = apc.COUPLES_ID
+         LEFT JOIN rpfp.fp_details fd ON fd.COUPLES_ID = ic.COUPLES_ID
+         LEFT JOIN rpfp.fp_service fs ON fs.COUPLES_ID = apc.COUPLES_ID
+         LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
+         LEFT JOIN rpfp.lib_psgc_locations city ON city.PSGC_CODE = (lp.MUNICIPALITY_CODE * POWER( 10, 3 ))
+         LEFT JOIN rpfp.lib_psgc_locations prov ON prov.PSGC_CODE = (lp.PROVINCE_CODE * POWER( 10, 5 ))
+         LEFT JOIN rpfp.user_profile up ON up.DB_USER_ID = rc.DB_USER_ID
+             WHERE rc.CLASS_NUMBER = class_num
+               AND apc.IS_ACTIVE = status_active
+               AND (   rc.DB_USER_ID = name_user
+                   OR (   is_not_encoder
+                      AND user_location = (rc.BARANGAY_ID DIV POWER( 10, multiplier ))
+                    )
+                )
+               AND (
+                        ic.FNAME LIKE CONCAT('%',couples_name,'%')
+                     OR ic.LNAME LIKE CONCAT('%',couples_name,'%')
+                )
+               AND ic.AGE >= search_age_from
+               AND ic.AGE <= search_age_to
+               AND apc.NO_CHILDREN >= search_child_from
+               AND apc.NO_CHILDREN <= search_child_to
+               AND fs.IS_PROVIDED_SERVICE = 1
+               AND (   
+                        fd.TFP_TYPE_ID <= 5
+                     OR fd.TFP_STATUS_ID = 'A'
+                )
+       ORDER BY apc.COUPLES_ID ASC
+            ; 
+        END IF;
+        LEAVE proc_exit_point;
+    END IF;
+        
+    IF search_status = 4 THEN
+        IF tfp_used > 0 THEN
+            CALL rpfp.get_couples_list_shifters(
+            class_num,
+            couples_name,
+            search_age_from,
+            search_age_to,
+            no_child,
+            mfp_used,
+            tfp_used,
+            intention_status,
+            intention_use,
+            search_status,
+            status_active
+            );
+            LEAVE proc_exit_point;
+        END IF;
+        
+        IF mfp_used > 0 THEN
+            CALL rpfp.get_couples_list_shifters(
+            class_num,
+            couples_name,
+            search_age_from,
+            search_age_to,
+            no_child,
+            mfp_used,
+            tfp_used,
+            intention_status,
+            intention_use,
+            search_status,
+            status_active
+            );
+            LEAVE proc_exit_point;
+        END IF;
+        
+        IF NOT EXISTS (
+            SELECT rc.RPFP_CLASS_ID
+            FROM rpfp.RPFP_CLASS rc
+        LEFT JOIN rpfp.couples apc
+                ON apc.RPFP_CLASS_ID = rc.RPFP_CLASS_ID
+            WHERE apc.IS_ACTIVE = status_active
+              AND (   rc.DB_USER_ID = name_user
+                   OR (   is_not_encoder
+                      AND user_location = (rc.BARANGAY_ID DIV POWER( 10, multiplier ))
+                    )
+                )
+        ) THEN
+         SELECT NULL AS class_no,
+                NULL AS couplesid,
+                NULL AS isactive,
+                NULL AS date_encode,
+                NULL AS lastname,
+                NULL AS firstname,
+                NULL AS middle,
+                NULL AS ext_name
+        ;
+    ELSE
+         SELECT rc.CLASS_NUMBER AS class_no,
+                apc.COUPLES_ID AS couplesid,
+                apc.IS_ACTIVE AS isactive,
+                apc.DATE_ENCODED AS date_encode,
+                ic.LNAME AS lastname,
+                ic.FNAME AS firstname,
+                ic.MNAME AS middle,
+                ic.EXT_NAME AS ext_name
+              FROM rpfp.rpfp_class rc 
+         LEFT JOIN rpfp.couples apc ON apc.RPFP_CLASS_ID = rc.RPFP_CLASS_ID
+         LEFT JOIN rpfp.individual ic ON ic.COUPLES_ID = apc.COUPLES_ID
+         LEFT JOIN rpfp.fp_details fd ON fd.COUPLES_ID = ic.COUPLES_ID
+         LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
+         LEFT JOIN rpfp.lib_psgc_locations city ON city.PSGC_CODE = (lp.MUNICIPALITY_CODE * POWER( 10, 3 ))
+         LEFT JOIN rpfp.lib_psgc_locations prov ON prov.PSGC_CODE = (lp.PROVINCE_CODE * POWER( 10, 5 ))
+         LEFT JOIN rpfp.user_profile up ON up.DB_USER_ID = rc.DB_USER_ID
+             WHERE rc.CLASS_NUMBER = class_num
+               AND apc.IS_ACTIVE = status_active
+               AND (   rc.DB_USER_ID = name_user
+                   OR (   is_not_encoder
+                      AND user_location = (rc.BARANGAY_ID DIV POWER( 10, multiplier ))
+                    )
+                )
+               AND (
+                        ic.FNAME LIKE CONCAT('%',couples_name,'%')
+                     OR ic.LNAME LIKE CONCAT('%',couples_name,'%')
+                )
+               AND ic.AGE >= search_age_from
+               AND ic.AGE <= search_age_to
+               AND apc.NO_CHILDREN >= search_child_from
+               AND apc.NO_CHILDREN <= search_child_to
+               AND fd.MFP_INTENTION_SHIFT_ID >= 1
+       ORDER BY apc.COUPLES_ID ASC
+            ; 
+        END IF;
+        LEAVE proc_exit_point;
+    END IF;
+        
+    IF search_status = 5 THEN
+        IF tfp_used > 0 THEN
+            CALL rpfp.get_couples_list_served_shifters(
+            class_num,
+            couples_name,
+            search_age_from,
+            search_age_to,
+            no_child,
+            mfp_used,
+            tfp_used,
+            intention_status,
+            intention_use,
+            search_status,
+            status_active
+            );
+            LEAVE proc_exit_point;
+        END IF;
+        
+        IF mfp_used > 0 THEN
+            CALL rpfp.get_couples_list_served_shifters(
+            class_num,
+            couples_name,
+            search_age_from,
+            search_age_to,
+            no_child,
+            mfp_used,
+            tfp_used,
+            intention_status,
+            intention_use,
+            search_status,
+            status_active
+            );
+            LEAVE proc_exit_point;
+        END IF;
+        
+        IF NOT EXISTS (
+            SELECT rc.RPFP_CLASS_ID
+            FROM rpfp.RPFP_CLASS rc
+        LEFT JOIN rpfp.couples apc
+                ON apc.RPFP_CLASS_ID = rc.RPFP_CLASS_ID
+            WHERE apc.IS_ACTIVE = status_active
+              AND (   rc.DB_USER_ID = name_user
+                   OR (   is_not_encoder
+                      AND user_location = (rc.BARANGAY_ID DIV POWER( 10, multiplier ))
+                    )
+                )
+        ) THEN
+         SELECT NULL AS class_no,
+                NULL AS couplesid,
+                NULL AS isactive,
+                NULL AS date_encode,
+                NULL AS lastname,
+                NULL AS firstname,
+                NULL AS middle,
+                NULL AS ext_name
+        ;
+    ELSE
+         SELECT rc.CLASS_NUMBER AS class_no,
+                apc.COUPLES_ID AS couplesid,
+                apc.IS_ACTIVE AS isactive,
+                apc.DATE_ENCODED AS date_encode,
+                ic.LNAME AS lastname,
+                ic.FNAME AS firstname,
+                ic.MNAME AS middle,
+                ic.EXT_NAME AS ext_name
+              FROM rpfp.rpfp_class rc 
+         LEFT JOIN rpfp.couples apc ON apc.RPFP_CLASS_ID = rc.RPFP_CLASS_ID
+         LEFT JOIN rpfp.individual ic ON ic.COUPLES_ID = apc.COUPLES_ID
+         LEFT JOIN rpfp.fp_details fd ON fd.COUPLES_ID = ic.COUPLES_ID
+         LEFT JOIN rpfp.fp_service fs ON fs.COUPLES_ID = apc.COUPLES_ID
+             WHERE rc.CLASS_NUMBER = class_num
+               AND apc.IS_ACTIVE = status_active
+               AND (   rc.DB_USER_ID = name_user
+                   OR (   is_not_encoder
+                      AND user_location = (rc.BARANGAY_ID DIV POWER( 10, multiplier ))
+                    )
+                )
+               AND (
+                        ic.FNAME LIKE CONCAT('%',couples_name,'%')
+                     OR ic.LNAME LIKE CONCAT('%',couples_name,'%')
+                )
+               AND ic.AGE >= search_age_from
+               AND ic.AGE <= search_age_to
+               AND apc.NO_CHILDREN >= search_child_from
+               AND apc.NO_CHILDREN <= search_child_to
+               AND fs.IS_PROVIDED_SERVICE = 1
+               AND fd.MFP_INTENTION_SHIFT_ID >= 1
+       ORDER BY apc.COUPLES_ID ASC
+            ; 
+        END IF;
+        LEAVE proc_exit_point;
+    END IF;
+END$$
+
+CREATE DEFINER=root@localhost PROCEDURE get_couples_list_all (
+    IN class_num VARCHAR(50),
+    IN couples_name VARCHAR(100),
+    IN search_age_from INT,
+    IN search_age_to INT,
+    IN no_child INT,
+    IN mfp_used INT,
+    IN tfp_used INT,
+    IN intention_status VARCHAR(10),
+    IN intention_use INT,
+    IN status_active INT,
+    IN search_status INT
+    )   READS SQL DATA
+proc_exit_point :
+BEGIN
+    DECLARE type_class_range INT;
+    DECLARE search_child_from INT;
+    DECLARE search_child_to INT;
+    DECLARE search_mfp_from INT;
+    DECLARE search_mfp_to INT;
+    DECLARE search_tfp_from INT;
+    DECLARE search_tfp_to INT;
+    DECLARE search_intention_from INT;
+    DECLARE search_intention_to INT;
+    DECLARE search_intentionfp_from INT;
+    DECLARE search_intentionfp_to INT;
+    /** 
+    SEARCH STATUS
+        1 - unmet need
+        2 - served unmet need
+        3 - shifters
+        4 - served shifters
+    */
+    DECLARE name_user VARCHAR(50);
+    DECLARE db_user_name VARCHAR(50);
+    DECLARE read_offset INT;
+    DECLARE user_scope INT;
+    DECLARE user_location INT;
+    DECLARE multiplier INT;
+    DECLARE is_not_encoder INT(1);
+    
+    CALL rpfp.lib_extract_user_name( USER(), name_user, db_user_name );
+    SET user_scope := rpfp.profile_get_scope( name_user );
+    SET multiplier := rpfp.lib_get_multiplier( user_scope );
+    SET user_location := rpfp.profile_get_location( name_user, user_scope );
+    SET is_not_encoder := NOT IFNULL(rpfp.profile_check_if_encoder(), FALSE);
+
+    IF (IFNULL( no_child, 0 ) = 0) THEN
+        SET search_child_from = 0;
+        SET search_child_to = 200;
+    END IF;
+
+IF ( IFNULL( tfp_used, 0 ) = 0 ) THEN
+    IF NOT EXISTS (
+         SELECT rc.RPFP_CLASS_ID
+           FROM rpfp.RPFP_CLASS rc
+      LEFT JOIN rpfp.couples apc
+             ON apc.RPFP_CLASS_ID = rc.RPFP_CLASS_ID
+          WHERE apc.IS_ACTIVE = status_active
+            AND (   rc.DB_USER_ID = name_user
+                OR (   is_not_encoder
+                    AND user_location = (rc.BARANGAY_ID DIV POWER( 10, multiplier ))
+                )
+            )
+    ) THEN
+         SELECT NULL AS class_no,
+                NULL AS couplesid,
+                NULL AS isactive,
+                NULL AS date_encode,
+                NULL AS lastname,
+                NULL AS firstname,
+                NULL AS middle,
+                NULL AS ext_name
+        ;
+    ELSE
+         SELECT rc.CLASS_NUMBER AS class_no,
+                apc.COUPLES_ID AS couplesid,
+                apc.IS_ACTIVE AS isactive,
+                apc.DATE_ENCODED AS date_encode,
+                ic.LNAME AS lastname,
+                ic.FNAME AS firstname,
+                ic.MNAME AS middle,
+                ic.EXT_NAME AS ext_name
+           FROM rpfp.couples apc
+      LEFT JOIN rpfp.rpfp_class rc
+             ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
+         LEFT JOIN rpfp.individual ic ON ic.COUPLES_ID = apc.COUPLES_ID
+         LEFT JOIN rpfp.fp_details fd ON fd.COUPLES_ID = apc.COUPLES_ID
+             WHERE rc.CLASS_NUMBER = class_num
+               AND apc.IS_ACTIVE = status_active
+               AND (   rc.DB_USER_ID = name_user
+                   OR (   is_not_encoder
+                      AND user_location = (rc.BARANGAY_ID DIV POWER( 10, multiplier ))
+                    )
+                )
+               AND (
+                        ic.FNAME LIKE CONCAT('%',couples_name,'%')
+                     OR ic.LNAME LIKE CONCAT('%',couples_name,'%')
+                )
+               AND ic.AGE >= search_age_from
+               AND ic.AGE <= search_age_to
+               AND apc.NO_CHILDREN >= search_child_from
+               AND apc.NO_CHILDREN <= search_child_to
+               AND fd.MFP_METHOD_USED_ID = mfp_used
+       ORDER BY apc.COUPLES_ID ASC
+        ; 
+    END IF;
+    LEAVE proc_exit_point;
+END IF;
+
+IF intention_status = 'A' THEN
+    IF NOT EXISTS (
+         SELECT rc.RPFP_CLASS_ID
+           FROM rpfp.RPFP_CLASS rc
+      LEFT JOIN rpfp.couples apc
+             ON apc.RPFP_CLASS_ID = rc.RPFP_CLASS_ID
+          WHERE apc.IS_ACTIVE = status_active
+            AND rc.DB_USER_ID = name_user
+    ) THEN
+         SELECT NULL AS class_no,
+                NULL AS couplesid,
+                NULL AS isactive,
+                NULL AS date_encode,
+                NULL AS lastname,
+                NULL AS firstname,
+                NULL AS middle,
+                NULL AS ext_name
+        ;
+    ELSE
+        IF (IFNULL( intention_use, 0 ) = 0) THEN
+            SET search_intention_from = intention_use;
+            SET search_intention_to = intention_use;
+        ELSE
+            SET search_intention_from = '1';
+            SET search_intention_to = '12';
+        END IF;
+
+         SELECT rc.CLASS_NUMBER AS class_no,
+                apc.COUPLES_ID AS couplesid,
+                apc.IS_ACTIVE AS isactive,
+                apc.DATE_ENCODED AS date_encode,
+                ic.LNAME AS lastname,
+                ic.FNAME AS firstname,
+                ic.MNAME AS middle,
+                ic.EXT_NAME AS ext_name
+           FROM rpfp.couples apc
+      LEFT JOIN rpfp.rpfp_class rc
+             ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
+         LEFT JOIN rpfp.individual ic ON ic.COUPLES_ID = apc.COUPLES_ID
+         LEFT JOIN rpfp.fp_details fd ON fd.COUPLES_ID = ic.COUPLES_ID
+             WHERE rc.CLASS_NUMBER = class_num
+               AND apc.IS_ACTIVE = status_active
+               AND (   rc.DB_USER_ID = name_user
+                    OR (   is_not_encoder
+                        AND user_location = (rc.BARANGAY_ID DIV POWER( 10, multiplier ))
+                    )
+                )
+               AND (
+                        ic.FNAME LIKE CONCAT('%',couples_name,'%')
+                    OR ic.LNAME LIKE CONCAT('%',couples_name,'%')
+                )
+               AND ic.AGE >= search_age_from
+               AND ic.AGE <= search_age_to
+               AND apc.NO_CHILDREN >= search_child_from
+               AND apc.NO_CHILDREN <= search_child_to
+               AND fd.TFP_TYPE_ID = tfp_used
+               AND fd.TFP_STATUS_ID = 'A'
+               AND fd.MFP_INTENTION_USE_ID >= search_intentionfp_from
+               AND fd.MFP_INTENTION_USE_ID <= search_intentionfp_to
+       ORDER BY apc.COUPLES_ID ASC
+        ; 
+    END IF;
+ELSE
+    IF NOT EXISTS (
+         SELECT rc.RPFP_CLASS_ID
+           FROM rpfp.RPFP_CLASS rc
+      LEFT JOIN rpfp.couples apc
+             ON apc.RPFP_CLASS_ID = rc.RPFP_CLASS_ID
+          WHERE apc.IS_ACTIVE = status_active
+            AND (   rc.DB_USER_ID = name_user
+                OR (   is_not_encoder
+                    AND user_location = (rc.BARANGAY_ID DIV POWER( 10, multiplier ))
+                )
+            )
+    ) THEN
+         SELECT NULL AS class_no,
+                NULL AS couplesid,
+                NULL AS isactive,
+                NULL AS date_encode,
+                NULL AS lastname,
+                NULL AS firstname,
+                NULL AS middle,
+                NULL AS ext_name
+        ;
+    ELSE
+         SELECT rc.CLASS_NUMBER AS class_no,
+                apc.COUPLES_ID AS couplesid,
+                apc.IS_ACTIVE AS isactive,
+                apc.DATE_ENCODED AS date_encode,
+                ic.LNAME AS lastname,
+                ic.FNAME AS firstname,
+                ic.MNAME AS middle,
+                ic.EXT_NAME AS ext_name
+           FROM rpfp.couples apc
+      LEFT JOIN rpfp.rpfp_class rc
+             ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
+         LEFT JOIN rpfp.individual ic ON ic.COUPLES_ID = apc.COUPLES_ID
+         LEFT JOIN rpfp.fp_details fd ON fd.COUPLES_ID = ic.COUPLES_ID
+             WHERE rc.CLASS_NUMBER = class_num
+               AND apc.IS_ACTIVE = status_active
+               AND (   rc.DB_USER_ID = name_user
+                    OR (   is_not_encoder
+                        AND user_location = (rc.BARANGAY_ID DIV POWER( 10, multiplier ))
+                        )
+                    )
+               AND (
+                        ic.FNAME LIKE CONCAT('%',couples_name,'%')
+                    OR ic.LNAME LIKE CONCAT('%',couples_name,'%')
+                )
+               AND ic.AGE >= search_age_from
+               AND ic.AGE <= search_age_to
+               AND apc.NO_CHILDREN >= search_child_from
+               AND apc.NO_CHILDREN <= search_child_to
+               AND fd.TFP_TYPE_ID = tfp_used
+               AND fd.TFP_STATUS_ID LIKE CONCAT('%',intention_status,'%')
+       ORDER BY apc.COUPLES_ID ASC
+        ; 
+    END IF;
+END IF;
+END$$
+
+CREATE DEFINER=root@localhost PROCEDURE get_couples_list_unmet (
+    IN class_num VARCHAR(50),
+    IN couples_name VARCHAR(100),
+    IN search_age_from INT,
+    IN search_age_to INT,
+    IN no_child INT,
+    IN mfp_used INT,
+    IN tfp_used INT,
+    IN intention_status VARCHAR(10),
+    IN intention_use INT,
+    IN status_active INT,
+    IN search_status INT
+    )   READS SQL DATA
+    proc_exit_point :
+BEGIN
+    DECLARE type_class_range INT;
+    DECLARE search_child_from INT;
+    DECLARE search_child_to INT;
+    DECLARE search_mfp_from INT;
+    DECLARE search_mfp_to INT;
+    DECLARE search_tfp_from INT;
+    DECLARE search_tfp_to INT;
+    DECLARE search_intention_from INT;
+    DECLARE search_intention_to INT;
+    DECLARE search_intentionfp_from INT;
+    DECLARE search_intentionfp_to INT;
+    /** 
+    SEARCH STATUS
+        1 - unmet need
+        2 - served unmet need
+        3 - shifters
+        4 - served shifters
+    */
+    DECLARE name_user VARCHAR(50);
+    DECLARE db_user_name VARCHAR(50);
+    DECLARE read_offset INT;
+    DECLARE user_scope INT;
+    DECLARE user_location INT;
+    DECLARE multiplier INT;
+    DECLARE is_not_encoder INT(1);
+    
+    CALL rpfp.lib_extract_user_name( USER(), name_user, db_user_name );
+    SET user_scope := rpfp.profile_get_scope( name_user );
+    SET multiplier := rpfp.lib_get_multiplier( user_scope );
+    SET user_location := rpfp.profile_get_location( name_user, user_scope );
+    SET is_not_encoder := NOT IFNULL(rpfp.profile_check_if_encoder(), FALSE);
+
+    IF (IFNULL( no_child, 0 ) = 0) THEN
+        SET search_child_from = 0;
+        SET search_child_to = 200;
+    END IF;
+    
+    IF search_age_from < 15 THEN
+        SET search_age_from = 15;
+    END IF;
+
+    IF search_age_to > 49 THEN
+        SET search_age_to = 49;
+    END IF;
+        
+IF ( IFNULL( tfp_used, 0 ) = 0 ) THEN
+    IF NOT EXISTS (
+         SELECT rc.RPFP_CLASS_ID
+           FROM rpfp.RPFP_CLASS rc
+      LEFT JOIN rpfp.couples apc
+             ON apc.RPFP_CLASS_ID = rc.RPFP_CLASS_ID
+          WHERE apc.IS_ACTIVE = status_active
+            AND (   rc.DB_USER_ID = name_user
+                OR (   is_not_encoder
+                    AND user_location = (rc.BARANGAY_ID DIV POWER( 10, multiplier ))
+                )
+            )
+    ) THEN
+         SELECT NULL AS class_no,
+                NULL AS couplesid,
+                NULL AS isactive,
+                NULL AS date_encode,
+                NULL AS lastname,
+                NULL AS firstname,
+                NULL AS middle,
+                NULL AS ext_name
+        ;
+    ELSE
+         SELECT rc.CLASS_NUMBER AS class_no,
+                apc.COUPLES_ID AS couplesid,
+                apc.IS_ACTIVE AS isactive,
+                apc.DATE_ENCODED AS date_encode,
+                ic.LNAME AS lastname,
+                ic.FNAME AS firstname,
+                ic.MNAME AS middle,
+                ic.EXT_NAME AS ext_name
+           FROM rpfp.couples apc
+      LEFT JOIN rpfp.rpfp_class rc
+             ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
+         LEFT JOIN rpfp.individual ic ON ic.COUPLES_ID = apc.COUPLES_ID
+         LEFT JOIN rpfp.fp_details fd ON fd.COUPLES_ID = ic.COUPLES_ID
+             WHERE rc.CLASS_NUMBER = class_num
+               AND apc.IS_ACTIVE = status_active
+               AND (   rc.DB_USER_ID = name_user
+                   OR (   is_not_encoder
+                      AND user_location = (rc.BARANGAY_ID DIV POWER( 10, multiplier ))
+                    )
+                )
+               AND (
+                        ic.FNAME LIKE CONCAT('%',couples_name,'%')
+                     OR ic.LNAME LIKE CONCAT('%',couples_name,'%')
+                )
+               AND ic.AGE >= search_age_from
+               AND ic.AGE <= search_age_to
+               AND apc.NO_CHILDREN >= search_child_from
+               AND apc.NO_CHILDREN <= search_child_to
+            AND (   
+                   fd.TFP_TYPE_ID <= 5
+                OR fd.TFP_STATUS_ID = 'A'
+                )
+               AND fd.MFP_METHOD_USED_ID = mfp_used
+       ORDER BY apc.COUPLES_ID ASC
+        ; 
+    END IF;
+    LEAVE proc_exit_point;
+END IF;
+
+IF intention_status = 'A' THEN
+    IF NOT EXISTS (
+         SELECT rc.RPFP_CLASS_ID
+           FROM rpfp.RPFP_CLASS rc
+      LEFT JOIN rpfp.couples apc
+             ON apc.RPFP_CLASS_ID = rc.RPFP_CLASS_ID
+          WHERE apc.IS_ACTIVE = status_active
+            AND rc.DB_USER_ID = name_user
+    ) THEN
+         SELECT NULL AS class_no,
+                NULL AS couplesid,
+                NULL AS isactive,
+                NULL AS date_encode,
+                NULL AS lastname,
+                NULL AS firstname,
+                NULL AS middle,
+                NULL AS ext_name
+        ;
+    ELSE
+        IF (IFNULL( intention_use, 0 ) = 0) THEN
+            SET search_intention_from = intention_use;
+            SET search_intention_to = intention_use;
+        ELSE
+            SET search_intention_from = '1';
+            SET search_intention_to = '12';
+        END IF;
+
+         SELECT rc.CLASS_NUMBER AS class_no,
+                apc.COUPLES_ID AS couplesid,
+                apc.IS_ACTIVE AS isactive,
+                apc.DATE_ENCODED AS date_encode,
+                ic.LNAME AS lastname,
+                ic.FNAME AS firstname,
+                ic.MNAME AS middle,
+                ic.EXT_NAME AS ext_name
+           FROM rpfp.couples apc
+      LEFT JOIN rpfp.rpfp_class rc
+             ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
+         LEFT JOIN rpfp.individual ic ON ic.COUPLES_ID = apc.COUPLES_ID
+         LEFT JOIN rpfp.fp_details fd ON fd.COUPLES_ID = ic.COUPLES_ID
+             WHERE rc.CLASS_NUMBER = class_num
+               AND apc.IS_ACTIVE = status_active
+               AND (   rc.DB_USER_ID = name_user
+                    OR (   is_not_encoder
+                        AND user_location = (rc.BARANGAY_ID DIV POWER( 10, multiplier ))
+                    )
+                )
+               AND (
+                        ic.FNAME LIKE CONCAT('%',couples_name,'%')
+                    OR ic.LNAME LIKE CONCAT('%',couples_name,'%')
+                )
+               AND ic.AGE >= search_age_from
+               AND ic.AGE <= search_age_to
+               AND apc.NO_CHILDREN >= search_child_from
+               AND apc.NO_CHILDREN <= search_child_to
+               AND (   
+                       fd.TFP_TYPE_ID <= 5
+                    OR fd.TFP_STATUS_ID = 'A'
+                )
+               AND fd.TFP_TYPE_ID = tfp_used
+               AND fd.TFP_STATUS_ID = 'A'
+               AND fd.MFP_INTENTION_USE_ID >= search_intentionfp_from
+               AND fd.MFP_INTENTION_USE_ID <= search_intentionfp_to
+       ORDER BY apc.COUPLES_ID ASC
+        ; 
+    END IF;
+ELSE
+    IF NOT EXISTS (
+         SELECT rc.RPFP_CLASS_ID
+           FROM rpfp.RPFP_CLASS rc
+      LEFT JOIN rpfp.couples apc
+             ON apc.RPFP_CLASS_ID = rc.RPFP_CLASS_ID
+          WHERE apc.IS_ACTIVE = status_active
+            AND (   rc.DB_USER_ID = name_user
+                OR (   is_not_encoder
+                    AND user_location = (rc.BARANGAY_ID DIV POWER( 10, multiplier ))
+                )
+            )
+    ) THEN
+         SELECT NULL AS class_no,
+                NULL AS couplesid,
+                NULL AS isactive,
+                NULL AS date_encode,
+                NULL AS lastname,
+                NULL AS firstname,
+                NULL AS middle,
+                NULL AS ext_name
+        ;
+    ELSE
+         SELECT rc.CLASS_NUMBER AS class_no,
+                apc.COUPLES_ID AS couplesid,
+                apc.IS_ACTIVE AS isactive,
+                apc.DATE_ENCODED AS date_encode,
+                ic.LNAME AS lastname,
+                ic.FNAME AS firstname,
+                ic.MNAME AS middle,
+                ic.EXT_NAME AS ext_name
+           FROM rpfp.couples apc
+      LEFT JOIN rpfp.rpfp_class rc
+             ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
+         LEFT JOIN rpfp.individual ic ON ic.COUPLES_ID = apc.COUPLES_ID
+         LEFT JOIN rpfp.fp_details fd ON fd.COUPLES_ID = ic.COUPLES_ID
+             WHERE rc.CLASS_NUMBER = class_num
+               AND apc.IS_ACTIVE = status_active
+               AND (   rc.DB_USER_ID = name_user
+                    OR (   is_not_encoder
+                        AND user_location = (rc.BARANGAY_ID DIV POWER( 10, multiplier ))
+                        )
+                    )
+               AND (
+                       ic.FNAME LIKE CONCAT('%',couples_name,'%')
+                    OR ic.LNAME LIKE CONCAT('%',couples_name,'%')
+                )
+               AND ic.AGE >= search_age_from
+               AND ic.AGE <= search_age_to
+               AND apc.NO_CHILDREN >= search_child_from
+               AND apc.NO_CHILDREN <= search_child_to
+               AND (   
+                       fd.TFP_TYPE_ID <= 5
+                    OR fd.TFP_STATUS_ID = 'A'
+                )
+               AND fd.TFP_TYPE_ID = tfp_used
+               AND fd.TFP_STATUS_ID LIKE CONCAT('%',intention_status,'%')
+       ORDER BY apc.COUPLES_ID ASC
+        ; 
+    END IF;
+END IF;
+END$$
+
+CREATE DEFINER=root@localhost PROCEDURE get_couples_list_served_unmet (
+    IN class_num VARCHAR(50),
+    IN couples_name VARCHAR(100),
+    IN search_age_from INT,
+    IN search_age_to INT,
+    IN no_child INT,
+    IN mfp_used INT,
+    IN tfp_used INT,
+    IN intention_status VARCHAR(10),
+    IN intention_use INT,
+    IN status_active INT,
+    IN search_status INT
+    )   READS SQL DATA
+    proc_exit_point :
+BEGIN
+    DECLARE type_class_range INT;
+    DECLARE search_child_from INT;
+    DECLARE search_child_to INT;
+    DECLARE search_mfp_from INT;
+    DECLARE search_mfp_to INT;
+    DECLARE search_tfp_from INT;
+    DECLARE search_tfp_to INT;
+    DECLARE search_intention_from INT;
+    DECLARE search_intention_to INT;
+    DECLARE search_intentionfp_from INT;
+    DECLARE search_intentionfp_to INT;
+    /** 
+    SEARCH STATUS
+        1 - unmet need
+        2 - served unmet need
+        3 - shifters
+        4 - served shifters
+    */
+    DECLARE name_user VARCHAR(50);
+    DECLARE db_user_name VARCHAR(50);
+    DECLARE read_offset INT;
+    DECLARE user_scope INT;
+    DECLARE user_location INT;
+    DECLARE multiplier INT;
+    DECLARE is_not_encoder INT(1);
+    
+    CALL rpfp.lib_extract_user_name( USER(), name_user, db_user_name );
+    SET user_scope := rpfp.profile_get_scope( name_user );
+    SET multiplier := rpfp.lib_get_multiplier( user_scope );
+    SET user_location := rpfp.profile_get_location( name_user, user_scope );
+    SET is_not_encoder := NOT IFNULL(rpfp.profile_check_if_encoder(), FALSE);
+
+    IF (IFNULL( no_child, 0 ) = 0) THEN
+        SET search_child_from = 0;
+        SET search_child_to = 200;
+    END IF;
+
+    IF search_age_from < 15 THEN
+        SET search_age_from = 15;
+    END IF;
+
+    IF search_age_to > 49 THEN
+        SET search_age_to = 49;
+    END IF;
+    
+IF ( IFNULL( tfp_used, 0 ) = 0 ) THEN
+    IF NOT EXISTS (
+         SELECT rc.RPFP_CLASS_ID
+           FROM rpfp.RPFP_CLASS rc
+      LEFT JOIN rpfp.couples apc
+             ON apc.RPFP_CLASS_ID = rc.RPFP_CLASS_ID
+          WHERE apc.IS_ACTIVE = status_active
+            AND (   rc.DB_USER_ID = name_user
+                OR (   is_not_encoder
+                    AND user_location = (rc.BARANGAY_ID DIV POWER( 10, multiplier ))
+                )
+            )
+    ) THEN
+         SELECT NULL AS class_no,
+                NULL AS couplesid,
+                NULL AS isactive,
+                NULL AS date_encode,
+                NULL AS lastname,
+                NULL AS firstname,
+                NULL AS middle,
+                NULL AS ext_name
+        ;
+    ELSE
+         SELECT rc.CLASS_NUMBER AS class_no,
+                apc.COUPLES_ID AS couplesid,
+                apc.IS_ACTIVE AS isactive,
+                apc.DATE_ENCODED AS date_encode,
+                ic.LNAME AS lastname,
+                ic.FNAME AS firstname,
+                ic.MNAME AS middle,
+                ic.EXT_NAME AS ext_name
+           FROM rpfp.couples apc
+      LEFT JOIN rpfp.rpfp_class rc
+             ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
+         LEFT JOIN rpfp.individual ic ON ic.COUPLES_ID = apc.COUPLES_ID
+         LEFT JOIN rpfp.fp_details fd ON fd.COUPLES_ID = ic.COUPLES_ID
+         LEFT JOIN rpfp.fp_service fs ON fs.COUPLES_ID = apc.COUPLES_ID
+             WHERE rc.CLASS_NUMBER = class_num
+               AND apc.IS_ACTIVE = status_active
+               AND (   rc.DB_USER_ID = name_user
+                   OR (   is_not_encoder
+                      AND user_location = (rc.BARANGAY_ID DIV POWER( 10, multiplier ))
+                    )
+                )
+               AND (
+                        ic.FNAME LIKE CONCAT('%',couples_name,'%')
+                     OR ic.LNAME LIKE CONCAT('%',couples_name,'%')
+                )
+               AND ic.AGE >= search_age_from
+               AND ic.AGE <= search_age_to
+               AND apc.NO_CHILDREN >= search_child_from
+               AND apc.NO_CHILDREN <= search_child_to
+               AND fs.IS_PROVIDED_SERVICE = 1
+               AND (   
+                        fd.TFP_TYPE_ID <= 5
+                     OR fd.TFP_STATUS_ID = 'A'
+                )
+               AND fd.MFP_METHOD_USED_ID = mfp_used
+       ORDER BY apc.COUPLES_ID ASC
+        ; 
+    END IF;
+    LEAVE proc_exit_point;
+END IF;
+
+IF intention_status = 'A' THEN
+    IF NOT EXISTS (
+         SELECT rc.RPFP_CLASS_ID
+           FROM rpfp.RPFP_CLASS rc
+      LEFT JOIN rpfp.couples apc
+             ON apc.RPFP_CLASS_ID = rc.RPFP_CLASS_ID
+          WHERE apc.IS_ACTIVE = status_active
+            AND rc.DB_USER_ID = name_user
+    ) THEN
+         SELECT NULL AS class_no,
+                NULL AS couplesid,
+                NULL AS isactive,
+                NULL AS date_encode,
+                NULL AS lastname,
+                NULL AS firstname,
+                NULL AS middle,
+                NULL AS ext_name
+        ;
+    ELSE
+        IF (IFNULL( intention_use, 0 ) = 0) THEN
+            SET search_intention_from = intention_use;
+            SET search_intention_to = intention_use;
+        ELSE
+            SET search_intention_from = '1';
+            SET search_intention_to = '12';
+        END IF;
+
+         SELECT rc.CLASS_NUMBER AS class_no,
+                apc.COUPLES_ID AS couplesid,
+                apc.IS_ACTIVE AS isactive,
+                apc.DATE_ENCODED AS date_encode,
+                ic.LNAME AS lastname,
+                ic.FNAME AS firstname,
+                ic.MNAME AS middle,
+                ic.EXT_NAME AS ext_name
+           FROM rpfp.couples apc
+      LEFT JOIN rpfp.rpfp_class rc
+             ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
+         LEFT JOIN rpfp.individual ic ON ic.COUPLES_ID = apc.COUPLES_ID
+         LEFT JOIN rpfp.fp_details fd ON fd.COUPLES_ID = ic.COUPLES_ID
+          LEFT JOIN rpfp.fp_service fs ON fs.COUPLES_ID = apc.COUPLES_ID
+             WHERE rc.CLASS_NUMBER = class_num
+               AND apc.IS_ACTIVE = status_active
+               AND (   rc.DB_USER_ID = name_user
+                    OR (   is_not_encoder
+                        AND user_location = (rc.BARANGAY_ID DIV POWER( 10, multiplier ))
+                    )
+                )
+               AND (
+                        ic.FNAME LIKE CONCAT('%',couples_name,'%')
+                    OR ic.LNAME LIKE CONCAT('%',couples_name,'%')
+                )
+               AND ic.AGE >= search_age_from
+               AND ic.AGE <= search_age_to
+               AND apc.NO_CHILDREN >= search_child_from
+               AND apc.NO_CHILDREN <= search_child_to
+               AND fs.IS_PROVIDED_SERVICE = 1
+               AND (   
+                        fd.TFP_TYPE_ID <= 5
+                     OR fd.TFP_STATUS_ID = 'A'
+                )
+               AND fd.TFP_TYPE_ID = tfp_used
+               AND fd.TFP_STATUS_ID = 'A'
+               AND fd.MFP_INTENTION_USE_ID >= search_intentionfp_from
+               AND fd.MFP_INTENTION_USE_ID <= search_intentionfp_to
+       ORDER BY apc.COUPLES_ID ASC
+        ; 
+    END IF;
+ELSE
+    IF NOT EXISTS (
+         SELECT rc.RPFP_CLASS_ID
+           FROM rpfp.RPFP_CLASS rc
+      LEFT JOIN rpfp.couples apc
+             ON apc.RPFP_CLASS_ID = rc.RPFP_CLASS_ID
+          WHERE apc.IS_ACTIVE = status_active
+            AND (   rc.DB_USER_ID = name_user
+                OR (   is_not_encoder
+                    AND user_location = (rc.BARANGAY_ID DIV POWER( 10, multiplier ))
+                )
+            )
+    ) THEN
+         SELECT NULL AS class_no,
+                NULL AS couplesid,
+                NULL AS isactive,
+                NULL AS date_encode,
+                NULL AS lastname,
+                NULL AS firstname,
+                NULL AS middle,
+                NULL AS ext_name
+        ;
+    ELSE
+         SELECT rc.CLASS_NUMBER AS class_no,
+                apc.COUPLES_ID AS couplesid,
+                apc.IS_ACTIVE AS isactive,
+                apc.DATE_ENCODED AS date_encode,
+                ic.LNAME AS lastname,
+                ic.FNAME AS firstname,
+                ic.MNAME AS middle,
+                ic.EXT_NAME AS ext_name
+           FROM rpfp.couples apc
+      LEFT JOIN rpfp.rpfp_class rc
+             ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
+         LEFT JOIN rpfp.individual ic ON ic.COUPLES_ID = apc.COUPLES_ID
+         LEFT JOIN rpfp.fp_details fd ON fd.COUPLES_ID = ic.COUPLES_ID
+          LEFT JOIN rpfp.fp_service fs ON fs.COUPLES_ID = apc.COUPLES_ID
+             WHERE rc.CLASS_NUMBER = class_num
+               AND apc.IS_ACTIVE = status_active
+               AND (   rc.DB_USER_ID = name_user
+                    OR (   is_not_encoder
+                        AND user_location = (rc.BARANGAY_ID DIV POWER( 10, multiplier ))
+                        )
+                    )
+               AND (
+                        ic.FNAME LIKE CONCAT('%',couples_name,'%')
+                    OR ic.LNAME LIKE CONCAT('%',couples_name,'%')
+                )
+               AND ic.AGE >= search_age_from
+               AND ic.AGE <= search_age_to
+               AND apc.NO_CHILDREN >= search_child_from
+               AND apc.NO_CHILDREN <= search_child_to
+               AND fs.IS_PROVIDED_SERVICE = 1
+               AND (   
+                        fd.TFP_TYPE_ID <= 5
+                     OR fd.TFP_STATUS_ID = 'A'
+                )
+               AND fd.TFP_TYPE_ID = tfp_used
+               AND fd.TFP_STATUS_ID LIKE CONCAT('%',intention_status,'%')
+       ORDER BY apc.COUPLES_ID ASC
+        ; 
+    END IF;
+END IF;
+END$$
+
+CREATE DEFINER=root@localhost PROCEDURE get_couples_list_shifters (
+    IN class_num VARCHAR(50),
+    IN couples_name VARCHAR(100),
+    IN search_age_from INT,
+    IN search_age_to INT,
+    IN no_child INT,
+    IN mfp_used INT,
+    IN tfp_used INT,
+    IN intention_status VARCHAR(10),
+    IN intention_use INT,
+    IN status_active INT,
+    IN search_status INT
+    )   READS SQL DATA
+    proc_exit_point :
+BEGIN
+    DECLARE type_class_range INT;
+    DECLARE search_child_from INT;
+    DECLARE search_child_to INT;
+    DECLARE search_mfp_from INT;
+    DECLARE search_mfp_to INT;
+    DECLARE search_tfp_from INT;
+    DECLARE search_tfp_to INT;
+    DECLARE search_intention_from INT;
+    DECLARE search_intention_to INT;
+    DECLARE search_intentionfp_from INT;
+    DECLARE search_intentionfp_to INT;
+    /** 
+    SEARCH STATUS
+        1 - unmet need
+        2 - served unmet need
+        3 - shifters
+        4 - served shifters
+    */
+    DECLARE name_user VARCHAR(50);
+    DECLARE db_user_name VARCHAR(50);
+    DECLARE read_offset INT;
+    DECLARE user_scope INT;
+    DECLARE user_location INT;
+    DECLARE multiplier INT;
+    DECLARE is_not_encoder INT(1);
+    
+    CALL rpfp.lib_extract_user_name( USER(), name_user, db_user_name );
+    SET user_scope := rpfp.profile_get_scope( name_user );
+    SET multiplier := rpfp.lib_get_multiplier( user_scope );
+    SET user_location := rpfp.profile_get_location( name_user, user_scope );
+    SET is_not_encoder := NOT IFNULL(rpfp.profile_check_if_encoder(), FALSE);
+
+    IF (IFNULL( no_child, 0 ) = 0) THEN
+        SET search_child_from = 0;
+        SET search_child_to = 200;
+    END IF;
+
+IF ( IFNULL( tfp_used, 0 ) = 0 ) THEN
+    IF NOT EXISTS (
+         SELECT rc.RPFP_CLASS_ID
+           FROM rpfp.RPFP_CLASS rc
+      LEFT JOIN rpfp.couples apc
+             ON apc.RPFP_CLASS_ID = rc.RPFP_CLASS_ID
+          WHERE apc.IS_ACTIVE = status_active
+            AND (   rc.DB_USER_ID = name_user
+                OR (   is_not_encoder
+                    AND user_location = (rc.BARANGAY_ID DIV POWER( 10, multiplier ))
+                )
+            )
+    ) THEN
+         SELECT NULL AS class_no,
+                NULL AS couplesid,
+                NULL AS isactive,
+                NULL AS date_encode,
+                NULL AS lastname,
+                NULL AS firstname,
+                NULL AS middle,
+                NULL AS ext_name
+        ;
+    ELSE
+         SELECT rc.CLASS_NUMBER AS class_no,
+                apc.COUPLES_ID AS couplesid,
+                apc.IS_ACTIVE AS isactive,
+                apc.DATE_ENCODED AS date_encode,
+                ic.LNAME AS lastname,
+                ic.FNAME AS firstname,
+                ic.MNAME AS middle,
+                ic.EXT_NAME AS ext_name
+           FROM rpfp.couples apc
+      LEFT JOIN rpfp.rpfp_class rc
+             ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
+         LEFT JOIN rpfp.individual ic ON ic.COUPLES_ID = apc.COUPLES_ID
+         LEFT JOIN rpfp.fp_details fd ON fd.COUPLES_ID = ic.COUPLES_ID
+             WHERE rc.CLASS_NUMBER = class_num
+               AND apc.IS_ACTIVE = status_active
+               AND (   rc.DB_USER_ID = name_user
+                   OR (   is_not_encoder
+                      AND user_location = (rc.BARANGAY_ID DIV POWER( 10, multiplier ))
+                    )
+                )
+               AND (
+                        ic.FNAME LIKE CONCAT('%',couples_name,'%')
+                     OR ic.LNAME LIKE CONCAT('%',couples_name,'%')
+                )
+               AND ic.AGE >= search_age_from
+               AND ic.AGE <= search_age_to
+               AND apc.NO_CHILDREN >= search_child_from
+               AND apc.NO_CHILDREN <= search_child_to
+               AND fd.MFP_INTENTION_SHIFT_ID >= 1
+               AND fd.MFP_METHOD_USED_ID = mfp_used
+       ORDER BY apc.COUPLES_ID ASC
+        ; 
+    END IF;
+    LEAVE proc_exit_point;
+END IF;
+
+IF intention_status = 'A' THEN
+    IF NOT EXISTS (
+         SELECT rc.RPFP_CLASS_ID
+           FROM rpfp.RPFP_CLASS rc
+      LEFT JOIN rpfp.couples apc
+             ON apc.RPFP_CLASS_ID = rc.RPFP_CLASS_ID
+          WHERE apc.IS_ACTIVE = status_active
+            AND rc.DB_USER_ID = name_user
+    ) THEN
+         SELECT NULL AS class_no,
+                NULL AS couplesid,
+                NULL AS isactive,
+                NULL AS date_encode,
+                NULL AS lastname,
+                NULL AS firstname,
+                NULL AS middle,
+                NULL AS ext_name
+        ;
+    ELSE
+        IF (IFNULL( intention_use, 0 ) = 0) THEN
+            SET search_intention_from = intention_use;
+            SET search_intention_to = intention_use;
+        ELSE
+            SET search_intention_from = '1';
+            SET search_intention_to = '12';
+        END IF;
+
+         SELECT rc.CLASS_NUMBER AS class_no,
+                apc.COUPLES_ID AS couplesid,
+                apc.IS_ACTIVE AS isactive,
+                apc.DATE_ENCODED AS date_encode,
+                ic.LNAME AS lastname,
+                ic.FNAME AS firstname,
+                ic.MNAME AS middle,
+                ic.EXT_NAME AS ext_name
+           FROM rpfp.couples apc
+      LEFT JOIN rpfp.rpfp_class rc
+             ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
+         LEFT JOIN rpfp.individual ic ON ic.COUPLES_ID = apc.COUPLES_ID
+         LEFT JOIN rpfp.fp_details fd ON fd.COUPLES_ID = ic.COUPLES_ID
+             WHERE rc.CLASS_NUMBER = class_num
+               AND apc.IS_ACTIVE = status_active
+               AND (   rc.DB_USER_ID = name_user
+                    OR (   is_not_encoder
+                        AND user_location = (rc.BARANGAY_ID DIV POWER( 10, multiplier ))
+                    )
+                )
+               AND (
+                        ic.FNAME LIKE CONCAT('%',couples_name,'%')
+                    OR ic.LNAME LIKE CONCAT('%',couples_name,'%')
+                )
+               AND ic.AGE >= search_age_from
+               AND ic.AGE <= search_age_to
+               AND apc.NO_CHILDREN >= search_child_from
+               AND apc.NO_CHILDREN <= search_child_to
+               AND fd.MFP_INTENTION_SHIFT_ID >= 1
+               AND fd.TFP_TYPE_ID = tfp_used
+               AND fd.TFP_STATUS_ID = 'A'
+               AND fd.MFP_INTENTION_USE_ID >= search_intentionfp_from
+               AND fd.MFP_INTENTION_USE_ID <= search_intentionfp_to
+       ORDER BY apc.COUPLES_ID ASC
+        ; 
+    END IF;
+ELSE
+    IF NOT EXISTS (
+         SELECT rc.RPFP_CLASS_ID
+           FROM rpfp.RPFP_CLASS rc
+      LEFT JOIN rpfp.couples apc
+             ON apc.RPFP_CLASS_ID = rc.RPFP_CLASS_ID
+          WHERE apc.IS_ACTIVE = status_active
+            AND (   rc.DB_USER_ID = name_user
+                OR (   is_not_encoder
+                    AND user_location = (rc.BARANGAY_ID DIV POWER( 10, multiplier ))
+                )
+            )
+    ) THEN
+         SELECT NULL AS class_no,
+                NULL AS couplesid,
+                NULL AS isactive,
+                NULL AS date_encode,
+                NULL AS lastname,
+                NULL AS firstname,
+                NULL AS middle,
+                NULL AS ext_name
+        ;
+    ELSE
+         SELECT rc.CLASS_NUMBER AS class_no,
+                apc.COUPLES_ID AS couplesid,
+                apc.IS_ACTIVE AS isactive,
+                apc.DATE_ENCODED AS date_encode,
+                ic.LNAME AS lastname,
+                ic.FNAME AS firstname,
+                ic.MNAME AS middle,
+                ic.EXT_NAME AS ext_name
+           FROM rpfp.couples apc
+      LEFT JOIN rpfp.rpfp_class rc
+             ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
+         LEFT JOIN rpfp.individual ic ON ic.COUPLES_ID = apc.COUPLES_ID
+         LEFT JOIN rpfp.fp_details fd ON fd.COUPLES_ID = ic.COUPLES_ID
+             WHERE rc.CLASS_NUMBER = class_num
+               AND apc.IS_ACTIVE = status_active
+               AND (   rc.DB_USER_ID = name_user
+                    OR (   is_not_encoder
+                        AND user_location = (rc.BARANGAY_ID DIV POWER( 10, multiplier ))
+                        )
+                    )
+               AND (
+                        ic.FNAME LIKE CONCAT('%',couples_name,'%')
+                    OR ic.LNAME LIKE CONCAT('%',couples_name,'%')
+                )
+               AND ic.AGE >= search_age_from
+               AND ic.AGE <= search_age_to
+               AND apc.NO_CHILDREN >= search_child_from
+               AND apc.NO_CHILDREN <= search_child_to
+               AND fd.MFP_INTENTION_SHIFT_ID >= 1
+               AND fd.TFP_TYPE_ID = tfp_used
+               AND fd.TFP_STATUS_ID LIKE CONCAT('%',intention_status,'%')
+       ORDER BY apc.COUPLES_ID ASC
+        ; 
+    END IF;
+END IF;
+END$$
+
+CREATE DEFINER=root@localhost PROCEDURE get_couples_list_served_shifters (
+    IN class_num VARCHAR(50),
+    IN couples_name VARCHAR(100),
+    IN search_age_from INT,
+    IN search_age_to INT,
+    IN no_child INT,
+    IN mfp_used INT,
+    IN tfp_used INT,
+    IN intention_status VARCHAR(10),
+    IN intention_use INT,
+    IN status_active INT,
+    IN search_status INT
+    )   READS SQL DATA
+    proc_exit_point :
+BEGIN
+    DECLARE type_class_range INT;
+    DECLARE search_child_from INT;
+    DECLARE search_child_to INT;
+    DECLARE search_mfp_from INT;
+    DECLARE search_mfp_to INT;
+    DECLARE search_tfp_from INT;
+    DECLARE search_tfp_to INT;
+    DECLARE search_intention_from INT;
+    DECLARE search_intention_to INT;
+    DECLARE search_intentionfp_from INT;
+    DECLARE search_intentionfp_to INT;
+    /** 
+    SEARCH STATUS
+        1 - unmet need
+        2 - served unmet need
+        3 - shifters
+        4 - served shifters
+    */
+    DECLARE name_user VARCHAR(50);
+    DECLARE db_user_name VARCHAR(50);
+    DECLARE read_offset INT;
+    DECLARE user_scope INT;
+    DECLARE user_location INT;
+    DECLARE multiplier INT;
+    DECLARE is_not_encoder INT(1);
+    
+    CALL rpfp.lib_extract_user_name( USER(), name_user, db_user_name );
+    SET user_scope := rpfp.profile_get_scope( name_user );
+    SET multiplier := rpfp.lib_get_multiplier( user_scope );
+    SET user_location := rpfp.profile_get_location( name_user, user_scope );
+    SET is_not_encoder := NOT IFNULL(rpfp.profile_check_if_encoder(), FALSE);
+
+    IF (IFNULL( no_child, 0 ) = 0) THEN
+        SET search_child_from = 0;
+        SET search_child_to = 200;
+    END IF;
+
+IF ( IFNULL( tfp_used, 0 ) = 0 ) THEN
+    IF NOT EXISTS (
+         SELECT rc.RPFP_CLASS_ID
+           FROM rpfp.RPFP_CLASS rc
+      LEFT JOIN rpfp.couples apc
+             ON apc.RPFP_CLASS_ID = rc.RPFP_CLASS_ID
+          WHERE apc.IS_ACTIVE = status_active
+            AND (   rc.DB_USER_ID = name_user
+                OR (   is_not_encoder
+                    AND user_location = (rc.BARANGAY_ID DIV POWER( 10, multiplier ))
+                )
+            )
+    ) THEN
+         SELECT NULL AS class_no,
+                NULL AS couplesid,
+                NULL AS isactive,
+                NULL AS date_encode,
+                NULL AS lastname,
+                NULL AS firstname,
+                NULL AS middle,
+                NULL AS ext_name
+        ;
+    ELSE
+         SELECT rc.CLASS_NUMBER AS class_no,
+                apc.COUPLES_ID AS couplesid,
+                apc.IS_ACTIVE AS isactive,
+                apc.DATE_ENCODED AS date_encode,
+                ic.LNAME AS lastname,
+                ic.FNAME AS firstname,
+                ic.MNAME AS middle,
+                ic.EXT_NAME AS ext_name
+           FROM rpfp.couples apc
+      LEFT JOIN rpfp.rpfp_class rc
+             ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
+         LEFT JOIN rpfp.individual ic ON ic.COUPLES_ID = apc.COUPLES_ID
+         LEFT JOIN rpfp.fp_details fd ON fd.COUPLES_ID = ic.COUPLES_ID
+         LEFT JOIN rpfp.fp_service fs ON fs.COUPLES_ID = apc.COUPLES_ID
+             WHERE rc.CLASS_NUMBER = class_num
+               AND apc.IS_ACTIVE = status_active
+               AND (   rc.DB_USER_ID = name_user
+                   OR (   is_not_encoder
+                      AND user_location = (rc.BARANGAY_ID DIV POWER( 10, multiplier ))
+                    )
+                )
+               AND (
+                        ic.FNAME LIKE CONCAT('%',couples_name,'%')
+                     OR ic.LNAME LIKE CONCAT('%',couples_name,'%')
+                )
+               AND ic.AGE >= search_age_from
+               AND ic.AGE <= search_age_to
+               AND apc.NO_CHILDREN >= search_child_from
+               AND apc.NO_CHILDREN <= search_child_to
+               AND fd.MFP_INTENTION_SHIFT_ID >= 1
+               AND fd.MFP_METHOD_USED_ID = mfp_used
+       ORDER BY apc.COUPLES_ID ASC
+        ; 
+    END IF;
+    LEAVE proc_exit_point;
+END IF;
+
+IF intention_status = 'A' THEN
+    IF NOT EXISTS (
+         SELECT rc.RPFP_CLASS_ID
+           FROM rpfp.RPFP_CLASS rc
+      LEFT JOIN rpfp.couples apc
+             ON apc.RPFP_CLASS_ID = rc.RPFP_CLASS_ID
+          WHERE apc.IS_ACTIVE = status_active
+            AND rc.DB_USER_ID = name_user
+    ) THEN
+         SELECT NULL AS class_no,
+                NULL AS couplesid,
+                NULL AS isactive,
+                NULL AS date_encode,
+                NULL AS lastname,
+                NULL AS firstname,
+                NULL AS middle,
+                NULL AS ext_name
+        ;
+    ELSE
+        IF (IFNULL( intention_use, 0 ) = 0) THEN
+            SET search_intention_from = intention_use;
+            SET search_intention_to = intention_use;
+        ELSE
+            SET search_intention_from = '1';
+            SET search_intention_to = '12';
+        END IF;
+
+         SELECT rc.CLASS_NUMBER AS class_no,
+                apc.COUPLES_ID AS couplesid,
+                apc.IS_ACTIVE AS isactive,
+                apc.DATE_ENCODED AS date_encode,
+                ic.LNAME AS lastname,
+                ic.FNAME AS firstname,
+                ic.MNAME AS middle,
+                ic.EXT_NAME AS ext_name
+           FROM rpfp.couples apc
+      LEFT JOIN rpfp.rpfp_class rc
+             ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
+         LEFT JOIN rpfp.individual ic ON ic.COUPLES_ID = apc.COUPLES_ID
+         LEFT JOIN rpfp.fp_details fd ON fd.COUPLES_ID = ic.COUPLES_ID
+         LEFT JOIN rpfp.fp_service fs ON fs.COUPLES_ID = apc.COUPLES_ID
+             WHERE rc.CLASS_NUMBER = class_num
+               AND apc.IS_ACTIVE = status_active
+               AND (   rc.DB_USER_ID = name_user
+                    OR (   is_not_encoder
+                        AND user_location = (rc.BARANGAY_ID DIV POWER( 10, multiplier ))
+                    )
+                )
+               AND (
+                        ic.FNAME LIKE CONCAT('%',couples_name,'%')
+                    OR ic.LNAME LIKE CONCAT('%',couples_name,'%')
+                )
+               AND ic.AGE >= search_age_from
+               AND ic.AGE <= search_age_to
+               AND apc.NO_CHILDREN >= search_child_from
+               AND apc.NO_CHILDREN <= search_child_to
+               AND fd.MFP_INTENTION_SHIFT_ID >= 1
+               AND fd.TFP_TYPE_ID = tfp_used
+               AND fd.TFP_STATUS_ID = 'A'
+               AND fd.MFP_INTENTION_USE_ID >= search_intentionfp_from
+               AND fd.MFP_INTENTION_USE_ID <= search_intentionfp_to
+       ORDER BY apc.COUPLES_ID ASC
+        ; 
+    END IF;
+ELSE
+    IF NOT EXISTS (
+         SELECT rc.RPFP_CLASS_ID
+           FROM rpfp.RPFP_CLASS rc
+      LEFT JOIN rpfp.couples apc
+             ON apc.RPFP_CLASS_ID = rc.RPFP_CLASS_ID
+          WHERE apc.IS_ACTIVE = status_active
+            AND (   rc.DB_USER_ID = name_user
+                OR (   is_not_encoder
+                    AND user_location = (rc.BARANGAY_ID DIV POWER( 10, multiplier ))
+                )
+            )
+    ) THEN
+         SELECT NULL AS class_no,
+                NULL AS couplesid,
+                NULL AS isactive,
+                NULL AS date_encode,
+                NULL AS lastname,
+                NULL AS firstname,
+                NULL AS middle,
+                NULL AS ext_name
+        ;
+    ELSE
+         SELECT rc.CLASS_NUMBER AS class_no,
+                apc.COUPLES_ID AS couplesid,
+                apc.IS_ACTIVE AS isactive,
+                apc.DATE_ENCODED AS date_encode,
+                ic.LNAME AS lastname,
+                ic.FNAME AS firstname,
+                ic.MNAME AS middle,
+                ic.EXT_NAME AS ext_name
+           FROM rpfp.couples apc
+      LEFT JOIN rpfp.rpfp_class rc
+             ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
+         LEFT JOIN rpfp.individual ic ON ic.COUPLES_ID = apc.COUPLES_ID
+         LEFT JOIN rpfp.fp_details fd ON fd.COUPLES_ID = ic.COUPLES_ID
+          LEFT JOIN rpfp.fp_service fs ON fs.COUPLES_ID = apc.COUPLES_ID
+         LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
+             WHERE rc.CLASS_NUMBER = class_num
+               AND apc.IS_ACTIVE = status_active
+               AND (   rc.DB_USER_ID = name_user
+                    OR (   is_not_encoder
+                        AND user_location = (rc.BARANGAY_ID DIV POWER( 10, multiplier ))
+                        )
+                    )
+               AND (
+                        ic.FNAME LIKE CONCAT('%',couples_name,'%')
+                    OR ic.LNAME LIKE CONCAT('%',couples_name,'%')
+                )
+               AND ic.AGE >= search_age_from
+               AND ic.AGE <= search_age_to
+               AND apc.NO_CHILDREN >= search_child_from
+               AND apc.NO_CHILDREN <= search_child_to
+               AND fd.MFP_INTENTION_SHIFT_ID >= 1
+               AND fd.TFP_TYPE_ID = tfp_used
+               AND fd.TFP_STATUS_ID LIKE CONCAT('%',intention_status,'%')
+       ORDER BY apc.COUPLES_ID ASC
+        ; 
+    END IF;
+END IF;
 END$$
 
 CREATE DEFINER=root@localhost PROCEDURE encoder_get_couples_details(
@@ -1649,6 +3294,7 @@ BEGIN
                 NULL AS tfp_status,
                 NULL AS mfp_intention_use,
                 NULL AS tfp_reason,
+                NULL AS fp_served,
                 NULL AS is_active
         ;
     ELSE
@@ -1687,6 +3333,7 @@ BEGIN
                 fp.TFP_STATUS_ID AS tfp_status,
                 fp.MFP_INTENTION_USE_ID AS mfp_intention_use,
                 fp.REASON_INTENDING_USE_ID AS tfp_reason,
+                COUNT(fs.COUPLES_ID) AS fp_served,
                 apc.is_active AS is_active
            FROM rpfp.rpfp_class rc
       LEFT JOIN rpfp.couples apc
@@ -1699,6 +3346,8 @@ BEGIN
                 AND ic_female.SEX = 2
       LEFT JOIN rpfp.fp_details fp
              ON fp.COUPLES_ID = apc.COUPLES_ID
+      LEFT JOIN rpfp.fp_service fs
+             ON fs.COUPLES_ID = apc.COUPLES_ID
           WHERE rc.CLASS_NUMBER = class_num
             AND apc.IS_ACTIVE = active_status
             AND (   rc.DB_USER_ID = name_user
@@ -2748,15 +4397,15 @@ BEGIN
     END IF;
 
 
-    IF (IFNULL( search_age_from, NULL ) = NULL) THEN
+    IF (IFNULL( search_age_from, 0 ) = 0) THEN
         SET search_age_from = 0;
     END IF;
 
-    IF (IFNULL( search_age_to, NULL ) = NULL) THEN
+    IF (IFNULL( search_age_to, 0 ) = 0) THEN
         SET search_age_to = 200;
     END IF;
 
-    IF (IFNULL( no_child, NULL ) = NULL) THEN
+    IF (IFNULL( no_child, 0 ) = 0) THEN
         SET search_child_from = 0;
         SET search_child_to = 200;
     END IF;
