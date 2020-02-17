@@ -3846,6 +3846,144 @@ DECLARE check_details INT;
     SELECT check_details;
 END$$
 
+CREATE DEFINER=root@localhost PROCEDURE check_for_duplications (
+    IN firstname_h VARCHAR(50),
+    IN lastname_h VARCHAR(50),
+    IN extname_h VARCHAR(50),
+    IN birthdate_h DATE,
+    IN firstname_w VARCHAR(50),
+    IN lastname_w VARCHAR(50),
+    IN birthdate_w DATE
+    )   READS SQL DATA
+proc_exit_point :
+BEGIN
+DECLARE check_details INT;
+
+    DECLARE name_user VARCHAR(50);
+    DECLARE db_user_name VARCHAR(50);
+    DECLARE read_offset INT;
+    DECLARE user_scope INT;
+    DECLARE user_location INT;
+    DECLARE multiplier INT;
+    DECLARE is_not_encoder INT(1);
+    
+    CALL rpfp.lib_extract_user_name( USER(), name_user, db_user_name );
+    SET user_scope := rpfp.profile_get_scope( name_user );
+    SET multiplier := rpfp.lib_get_multiplier( user_scope );
+    SET user_location := rpfp.profile_get_location( name_user, user_scope );
+    SET is_not_encoder := NOT IFNULL(rpfp.profile_check_if_encoder(), FALSE);
+    
+    IF firstname_h = 0 THEN
+      SELECT 	COUNT(couples.COUPLES_ID) AS check_details,
+                couples.COUPLES_ID AS couplesid,
+                couples.IS_ACTIVE AS active_status,
+                wife_data.w_couplesid AS w_couplesid,
+      			wife_data.w_last AS w_last,
+      			wife_data.w_first AS w_first,
+      			wife_data.w_bday AS w_bday,
+      			wife_data.w_sex AS w_sex
+        FROM rpfp.couples couples
+   LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = couples.RPFP_CLASS_ID 
+   LEFT JOIN rpfp.lib_psgc_locations lp ON lp.REGION_CODE = user_location
+   LEFT JOIN (
+       SELECT wic.COUPLES_ID AS w_couplesid,
+      		  wife.LNAME AS w_last,
+      		  wife.FNAME AS w_first,
+      		  wife.BDATE AS w_bday,
+      		  wife.SEX AS w_sex
+         FROM rpfp.couples wic
+    LEFT JOIN rpfp.individual wife ON wife.COUPLES_ID = wic.COUPLES_ID AND wife.SEX = 2
+              ) wife_data
+           ON wife_data.w_couplesid = couples.COUPLES_ID
+       WHERE wife_data.w_last = lastname_w
+         AND wife_data.w_first = firstname_w
+         AND wife_data.w_bday = birthdate_w
+    ;
+    LEAVE proc_exit_point;
+
+    ELSE 
+        IF firstname_w = 0 THEN
+        SELECT 	COUNT(couples.COUPLES_ID) AS check_details,
+                    couples.COUPLES_ID AS couplesid,
+                    couples.IS_ACTIVE AS active_status,
+                    husband_data.h_couplesid AS h_couplesid,
+                    husband_data.h_last AS h_last,
+                    husband_data.h_first AS h_first,
+                    husband_data.h_ext AS h_ext,
+                    husband_data.h_bday AS h_bday,
+                    husband_data.h_sex AS h_sex
+            FROM rpfp.couples couples
+    LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = couples.RPFP_CLASS_ID 
+    LEFT JOIN rpfp.lib_psgc_locations lp ON lp.REGION_CODE = user_location
+    LEFT JOIN (
+        SELECT hic.COUPLES_ID AS h_couplesid,
+                husband.LNAME AS h_last,
+                husband.FNAME AS h_first,
+                husband.EXT_NAME AS h_ext,
+                husband.BDATE AS h_bday,
+                husband.SEX AS h_sex
+            FROM rpfp.couples hic
+        LEFT JOIN rpfp.individual husband ON husband.COUPLES_ID = hic.COUPLES_ID AND husband.SEX = 1
+                ) husband_data
+            ON husband_data.h_couplesid = couples.COUPLES_ID
+        WHERE husband_data.h_last = lastname_h
+            AND husband_data.h_first = firstname_h
+            AND husband_data.h_ext = extname_h
+            AND husband_data.h_bday = birthdate_h
+        ;
+        LEAVE proc_exit_point;
+
+        ELSE
+        SELECT 	COUNT(couples.COUPLES_ID) AS check_details,
+                    couples.COUPLES_ID AS couplesid,
+                    couples.IS_ACTIVE AS active_status,
+                    husband_data.h_couplesid AS h_couplesid,
+                    husband_data.h_last AS h_last,
+                    husband_data.h_first AS h_first,
+                    husband_data.h_ext AS h_ext,
+                    husband_data.h_bday AS h_bday,
+                    husband_data.h_sex AS h_sex,
+                    wife_data.w_couplesid AS w_couplesid,
+                    wife_data.w_last AS w_last,
+                    wife_data.w_first AS w_first,
+                    wife_data.w_bday AS w_bday,
+                    wife_data.w_sex AS w_sex
+            FROM rpfp.couples couples
+    LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = couples.RPFP_CLASS_ID 
+    LEFT JOIN rpfp.lib_psgc_locations lp ON lp.REGION_CODE = user_location
+    LEFT JOIN (
+        SELECT hic.COUPLES_ID AS h_couplesid,
+                husband.LNAME AS h_last,
+                husband.FNAME AS h_first,
+                husband.EXT_NAME AS h_ext,
+                husband.BDATE AS h_bday,
+                husband.SEX AS h_sex
+            FROM rpfp.couples hic
+        LEFT JOIN rpfp.individual husband ON husband.COUPLES_ID = hic.COUPLES_ID AND husband.SEX = 1
+                ) husband_data
+            ON husband_data.h_couplesid = couples.COUPLES_ID
+    LEFT JOIN (
+        SELECT wic.COUPLES_ID AS w_couplesid,
+                wife.LNAME AS w_last,
+                wife.FNAME AS w_first,
+                wife.BDATE AS w_bday,
+                wife.SEX AS w_sex
+            FROM rpfp.couples wic
+        LEFT JOIN rpfp.individual wife ON wife.COUPLES_ID = wic.COUPLES_ID AND wife.SEX = 2
+                ) wife_data
+            ON wife_data.w_couplesid = couples.COUPLES_ID
+        WHERE husband_data.h_last = lastname_h
+            AND husband_data.h_first = firstname_h
+            AND husband_data.h_ext = extname_h
+            AND husband_data.h_bday = birthdate_h
+            AND wife_data.w_last = lastname_w
+            AND wife_data.w_first = firstname_w
+            AND wife_data.w_bday = birthdate_w
+        ;
+        END IF;
+    END IF;
+END$$
+
 CREATE DEFINER=root@localhost PROCEDURE check_couples_details (
     IN firstname_h VARCHAR(50),
     IN lastname_h VARCHAR(50),
@@ -4414,12 +4552,12 @@ BEGIN
         SET status_active = 0;
     END IF;
 
-    IF (IFNULL( search_date_from, NULL ) = NULL ) THEN
-        SET search_date_from = YEAR(NOW()) & '-01-01';
+    IF (IFNULL( search_date_from, 0 ) = 0 ) THEN
+        SET search_date_from = DATE(CONCAT(YEAR(NOW()),'-01-01'));
     END IF;
 
-    IF (IFNULL( search_date_to, NULL ) = NULL ) THEN
-        SET search_date_to = YEAR(NOW()) & '-12-31';
+    IF (IFNULL( search_date_to, 0 ) = 0 ) THEN
+        SET search_date_to = DATE(CONCAT(YEAR(NOW()),'-12-31'));
     END IF;
 
     IF (IFNULL( no_child, 0 ) = 0) THEN
