@@ -15,6 +15,11 @@ class NewAssets extends CI_Controller
 
     public function _remap($params = null)
     {
+        if (!isset($params)) {
+            //$params = $this->uri->segments
+            $params = $this->router->routes[0]->method;
+        }
+
         if ($params == null) {
             return $this->index();
         }
@@ -30,6 +35,7 @@ class NewAssets extends CI_Controller
 
         $newParams = str_ireplace('.', '', $newParams);
         $newParams = str_ireplace('_', '', $newParams);
+        $newParams = str_ireplace('-', '', $newParams);
         if (method_exists($this, $newParams)) {
             return $this->$newParams();
         }
@@ -221,5 +227,11 @@ class NewAssets extends CI_Controller
     {
         header('Content-Type: application/javascript');
         readfile(BASEPATH . BOOTSTRAP_SELECT_JS);
+    }
+
+    public function bootstrapSelectMinJsMap()
+    {
+        header('Content-Type: application/json');
+        readfile(BASEPATH . BOOTSTRAP_SELECT_MAP);
     }
 }

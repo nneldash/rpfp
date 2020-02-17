@@ -150,7 +150,7 @@ defined('DATATABLES_BTRP_JS') or define('DATATABLES_BTRP_JS', '/../node_modules/
 defined('CPEXCEL_JS') or define('CPEXCEL_JS', '/../node_modules/xlsx/dist/cpexcel.js');
 defined('SHIM_JS') or define('SHIM_JS', '/../node_modules/xlsx/dist/shim.min.js');
 defined('JSZIP_JS') or define('JSZIP_JS', '/../node_modules/xlsx/dist/jszip.js');
-defined('XLSX_JS') or define('XLSX_JS', '/../node_modules/xlsx/dist/xlsx.js');
+defined('XLSX_JS') or define('XLSX_JS', '/../node_modules/xlsx/dist/xlsx.full.min.js');
 
 defined('INPUTMASK_JS') or define('INPUTMASK_JS', '/../node_modules/inputmask/dist/inputmask/inputmask.js');
 defined('JQUERYINPUT_JS') or define('JQUERYINPUT_JS', '/../node_modules/inputmask/dist/inputmask/jquery.inputmask.js');
@@ -167,3 +167,4 @@ defined('TIME_STAMP') or define('TIME_STAMP', 'DATETIME');
 
 defined('BOOTSTRAP_SELECT_CSS') or define('BOOTSTRAP_SELECT_CSS', '/../node_modules/bootstrap-select/dist/css/bootstrap-select.min.css');
 defined('BOOTSTRAP_SELECT_JS') or define('BOOTSTRAP_SELECT_JS', '/../node_modules/bootstrap-select/dist/js/bootstrap-select.min.js');
+defined('BOOTSTRAP_SELECT_JS') or define('BOOTSTRAP_SELECT_MAP', '/../node_modules/bootstrap-select/dist/js/bootstrap-select.min.js.map');

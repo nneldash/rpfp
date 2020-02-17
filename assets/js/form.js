@@ -33,9 +33,6 @@ $(document).ready(function(){
 	});
 });
 
-var getProv = $('input[name="province"]').val();
-var getCity = $('input[name="city"]').val();
-var getBrgy = $('input[name="barangay"]').val();
 var isRDM = $('#rdm').val();
 var isFocal = $('#focal').val();
 
@@ -134,6 +131,16 @@ function afterLoadValidation()
 function importChanges()
 {
 	$('#importModal').on('hidden.bs.modal', function (e) {
+
+		setTimeout(function(){
+			var prov = $('input[name="province"]').val();
+
+			$('#provinceList').val(prov);
+			$('#provinceList').selectpicker('render').selectpicker('refresh');
+
+			getMunicipalities(prov);
+		}, 2000);
+
 		for(var i = 0; i <= 9; i ++) {
 			var fname1 = $('.tr1' + i + ' textarea[name="firstname1[' + i +']"]').val();
 			var lname1= $('.tr1' + i + ' textarea[name="lastname1[' + i +']"]').val();
@@ -768,6 +775,7 @@ function isApprove()
 
 function getProvinces()
 {
+	var getProv = $('input[name="province"]').val();
 	$.ajax({
 			type: 'POST',
 			cache: true,
@@ -791,6 +799,7 @@ function getProvinces()
 
 function getMunicipalities(provinceId)
 {
+	var getCity = $('input[name="city"]').val();
 	$.ajax({
 			type: 'POST',
 			cache: true,
@@ -814,6 +823,7 @@ function getMunicipalities(provinceId)
 
 function getBrgys(muniId)
 {
+	var getBrgy = $('input[name="barangay"]').val();
 	$.ajax({
 			type: 'POST',
 			cache: true,
@@ -1292,6 +1302,8 @@ function autoGetData(fname1, lname1, extname1, sex1, bday1, fname2, lname2, extn
 		return false;
 	}
 
+	// console.log(fname1+' - '+lname1+' - '+extname1+' - '+sex1+' - '+bday1+' - '+fname2+' - '+lname2+' - '+extname2+' - '+sex2+' - '+bday2+' - '+index);
+
 	$.ajax({
 			type : 'POST',
 			cache : true,
@@ -1306,6 +1318,7 @@ function autoGetData(fname1, lname1, extname1, sex1, bday1, fname2, lname2, extn
 				'w_bday'	: w_bday
 			}
 	}).done(function(result){
+		// console.log(result);
 		if (result.ActiveStatus === '2') {
 			status = 'Pending';
 		} else if (result.ActiveStatus === '0') {

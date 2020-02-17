@@ -310,4 +310,21 @@ class Location extends CI_Controller
         $this->loadJSON($ret_val, $errors);
         return;    
     }
+
+    public function getFullLocation()
+    {
+        $barangay = intval($this->input->post('barangay'));
+        $data = $this->LocationModel->getFullLocation($barangay);
+
+        $data = [  
+                    'RegionCode' => $data->Region->Code,
+                    'ProvinceCode' => $data->Province->Code,
+                    'CityCode' => $data->City->Code,
+                    'BarangayCode' => $data->Barangay->Code
+                ];
+
+        $this->output
+            ->set_content_type('application/json')
+            ->set_output(json_encode($data));
+    }
 }
