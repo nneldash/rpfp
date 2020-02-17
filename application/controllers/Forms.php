@@ -128,10 +128,12 @@ class Forms extends CI_Controller
             $couple->FirstEntry = $this->getIndividual(1, $i);
             $couple->SecondEntry = $this->getIndividual(2, $i);
 
-            if (($couple->FirstEntry->Name->Firstname == N_A) &&
-                ($couple->FirstEntry->Name->Surname == N_A) &&
-                ($couple->SecondEntry->Name->Firstname == N_A) &&
-                ($couple->SecondEntry->Name->Surname == N_A)
+            $indiv1 = $couple->FirstEntry->Name;
+            $indiv2 = $couple->SecondEntry->Name;
+            if (($indiv1->Firstname == N_A || $indiv1->Firstname == BLANK) &&
+                ($indiv1->Surname == N_A || $indiv1->Surname == BLANK) &&
+                ($indiv2->Firstname == N_A || $indiv2->Firstname == BLANK) &&
+                ($indiv2->Surname == N_A || $indiv2->Surname == BLANK)
             ) {
                 continue;
             }
@@ -161,10 +163,14 @@ class Forms extends CI_Controller
 
         $individual->Id = $this->input->post('individual_id' . $entry_num)[$index];
         
-        $individual->Name->Surname      = (empty($this->input->post('lastname' . $entry_num)[$index]) ? BLANK : $this->input->post('lastname' . $entry_num)[$index]);
-        $individual->Name->Firstname    = (empty($this->input->post('firstname' . $entry_num)[$index]) ? BLANK : $this->input->post('firstname' . $entry_num)[$index]);
-        $individual->Name->Middlename   = (empty($this->input->post('middlename' . $entry_num)[$index]) ? BLANK : $this->input->post('middlename' . $entry_num)[$index]);
-        $individual->Name->Extname      = (empty($this->input->post('extname' . $entry_num)[$index]) ? BLANK : $this->input->post('extname' . $entry_num)[$index]);
+        $fname = trim($this->input->post('lastname' . $entry_num)[$index]);
+        $lname = trim($this->input->post('firstname' . $entry_num)[$index]);
+        $mname = trim($this->input->post('middlename' . $entry_num)[$index]);
+        $ename = trim($this->input->post('extname' . $entry_num)[$index]);
+        $individual->Name->Surname      = empty($fname) ? null : $lname;
+        $individual->Name->Firstname    = empty($lname) ? null : $fname;
+        $individual->Name->Middlename   = empty($mname) ? null : $mname;
+        $individual->Name->Extname      = empty($ename) ? null : $ename;
 
         $temp_sex = strtoupper($this->input->post('sex' . $entry_num)[$index]);
         $individual->Sex = (!array_key_exists($temp_sex, Sexes::UI_Enumerate()) ? 0 :  ($temp_sex == Sexes::UI_FEMALE ? Sexes::FEMALE : Sexes::MALE));
@@ -172,7 +178,7 @@ class Forms extends CI_Controller
         $individual->Birthdate = DateTime::createFromFormat('n-j-Y', $this->input->post('bday' . $entry_num)[$index]);
         $individual->Age = $this->input->post('age' . $entry_num)[$index];
         $individual->HighestEducation = $this->input->post('educ' . $entry_num)[$index];
-        $individual->Attendee = $this->input->post('attendee1' . $entry_num)[$index];
+        $individual->Attendee = $this->input->post('attendee' . $entry_num)[$index] == 1;
 
         return $individual;
     }

@@ -4018,7 +4018,7 @@ BEGIN
         LEAVE proc_exit_point;
     END IF;
 
-    IF ( IFNULL( indv_id_m, 0 ) = 0 )THEN
+    IF ( IFNULL( indv_id_m, 0 ) = 0 ) THEN
         INSERT INTO rpfp.individual (
                     COUPLES_ID,
                     LNAME,
@@ -4047,6 +4047,8 @@ BEGIN
                 )
             ;
 
+    END IF;
+    IF ( IFNULL( indv_id_f, 0 ) = 0 ) THEN
         INSERT INTO rpfp.individual (
                     COUPLES_ID,
                     LNAME,
@@ -4077,6 +4079,7 @@ BEGIN
         LEAVE proc_exit_point;
     END IF;
 
+    IF ( IFNULL( indv_id_m, 0 ) != 0 ) THEN
      UPDATE rpfp.individual ic
         SET ic.LNAME = IF( IFNULL( lastname_m, '') = '', ic.LNAME, lastname_m ),
             ic.FNAME = IF( IFNULL( firstname_m, '') = '', ic.FNAME, firstname_m ),
@@ -4090,7 +4093,9 @@ BEGIN
       WHERE ic.COUPLES_ID = couplesid
         AND ic.SEX = 1
     ;
+    END IF;
 
+    IF ( IFNULL( indv_id_f, 0 ) != 0 ) THEN
      UPDATE rpfp.individual ic
         SET ic.LNAME = IF( IFNULL( lastname_f, '') = '', ic.LNAME, lastname_f ),
             ic.FNAME = IF( IFNULL( firstname_f, '') = '', ic.FNAME, firstname_f ),
@@ -4103,9 +4108,8 @@ BEGIN
       WHERE ic.COUPLES_ID = couplesid
         AND ic.SEX = 2
     ;
-
+    END IF;
     SELECT "SUCCESS!" AS MESSAGE;
-    
 END$$
 
 CREATE DEFINER=root@localhost PROCEDURE encoder_save_fp_details (

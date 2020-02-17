@@ -1485,7 +1485,15 @@ function saveForm1()
 		var formData = {};
 		/** iterate all inputs/textarea */
 		$.each( $('#form_validation input, #form_validation textarea'), function(key, value) {
-			formData[$(value).attr('name')] = $(value).val();
+			var item = $(value);
+			var item_value = item.val();
+			if (item.prop('type') == 'radio') {
+				item_value = $('#rpfpClass input[name="' + item.prop('name') + '"]:checked').val();
+			}
+			if (item.prop('name').indexOf('attendee') == 0) {
+				item_value = item.val() == 'attended' ? 1 : 0;
+			}
+			formData[item.prop('name')] = item_value;
 		});
 				
 		$.ajax({
@@ -1520,6 +1528,9 @@ $(document).ready(function(){
 	if (($('#new_form').val() != undefined) || ($('#edit_existing').val() != undefined)) {
 		reset_page_storage();
 	}
+	$.each($('#paged_form input[name^="attendee"]'), function(key, value) {
+		$(this).prop('checked', $(value).val() =='attended');
+	});
 	var current = current_page();
 	var total_pages = num_pages();
 

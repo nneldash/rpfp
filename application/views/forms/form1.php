@@ -775,7 +775,7 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 									<td class="small <?php if (!$is_pdf): ?> back-eee <?php endif;?>" style="border-right: none; padding: 0">
 										<?php if (!$is_pdf) : ?>
 											<label class="cont">
-												<input type="checkbox" class="attended<?= $i; ?>" name="attendee1[<?= $i ?>]" value="attended" <?= ($couple->FirstEntry->Attendee == 1) ? 'checked' : '' ?> />
+												<input type="checkbox" class="attended<?= $i; ?>" name="attendee1[<?= $i ?>]" value="<?= ($couple->FirstEntry->Attendee == 1 ? 'attended' : '') ?>" />
 												<span class="checkmark height-34"></span>
 											</label>
 										<?php endif; ?>
@@ -925,7 +925,7 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 									<td class="small back-eee" style="border-right: none; padding: 0">
 										<?php if (!$is_pdf) : ?>
 											<label class="cont">
-												<input type="checkbox" class="attended<?= $i; ?>" name="attendee2[<?= $i ?>]" value="attended" <?= ($couple->SecondEntry->Attendee == 1) ? 'checked' : '' ?> />
+												<input type="checkbox" class="attended<?= $i; ?>" name="attendee2[<?= $i ?>]" value="<?= ($couple->SecondEntry->Attendee == 1 ? 'attended' : '') ?>" />
 												<span class="checkmark height-35" ></span>
 											</label>
 										<?php endif; ?>
