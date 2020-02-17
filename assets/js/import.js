@@ -45,44 +45,38 @@ var process_wb = (function() {
 
 	    $('#importModal').modal('hide');
 
-	    if(typeof array[101] !== '') $('#4ps').prop('checked', 'checked');
-	    if(typeof array[104] !== '') $('#house').prop('checked', 'checked');
-	    if(typeof array[117] !== '') $('#faith').prop('checked', 'checked');
-	    if(typeof array[120] !== '') $('#profile').prop('checked', 'checked');
-	    if(typeof array[133] !== '') $('#pmc').prop('checked', 'checked');
-	    if(typeof array[136] !== '') $('#others').prop('checked', 'checked');
-	   	if(typeof array[150] !== '') $('#usapan').prop('checked', 'checked');
-
-	   	if(typeof array[101] === '') $('#4ps').prop('checked', false);
-	    if(typeof array[104] === '') $('#house').prop('checked', false);
-	    if(typeof array[117] === '') $('#faith').prop('checked', false);
-	    if(typeof array[120] === '') $('#profile').prop('checked', false);
-	    if(typeof array[133] === '') $('#pmc').prop('checked', false);
-	    if(typeof array[136] === '') $('#others').prop('checked', false);
-	   	if(typeof array[150] === '') $('#usapan').prop('checked', false);
+	   	var fourps 	= $.trim(array[101]);
+	   	var house 	= $.trim(array[104]);
+	   	var faith 	= $.trim(array[117]);
+	   	var profile = $.trim(array[120]);
+	   	var pmc 	= $.trim(array[133]);
+	   	var others 	= $.trim(array[136]);
+	   	var usapan 	= $.trim(array[150]);
 	    
-	    if(array[101] !== '')  {
-	    	$('#4ps').prop('checked', 'checked');
-	    } else if(array[104] !== '') {
-			$('#house').prop('checked', 'checked');
-	    } else if(array[117] !== '') {
-	    	$('#faith').prop('checked', 'checked');
-	    } else if(array[120] !== '') {
- 			$('#profile').prop('checked', 'checked');
-	    } else if(array[133] !== '') {
-	    	$('#pmc').prop('checked', 'checked');
-	    } else if(array[136] !== '') {
-	    	$('#others').prop('checked', 'checked');
-	    } else if(array[150] !== '') {
-			$('#usapan').prop('checked', 'checked');
+	    if(fourps.toUpperCase() === 'X')  {
+	    	$('#4ps').attr('checked', 'checked');
+	    } else if(house.toUpperCase() === 'X') {
+			$('#house').attr('checked', 'checked');
+	    } else if(faith.toUpperCase() === 'X') {
+	    	$('#faith').attr('checked', 'checked');
+	    } else if(profile.toUpperCase() === 'X') {
+ 			$('#profile').attr('checked', 'checked');
+	    } else if(pmc.toUpperCase() === 'X') {
+	    	$('#pmc').attr('checked', 'checked');
+	    } else if(others.toUpperCase() === 'X') {
+	    	$('#others').attr('checked', 'checked');
+	    	$('input[name="others"]').attr('disabled', false);
+	    	$('input[name="others"]').val(array[140]);
+	    } else if(usapan.toUpperCase() === 'X') {
+			$('#usapan').attr('checked', 'checked');
 	    } else {
-	    	$('#4ps').prop('checked', false);
-			$('#house').prop('checked', false);
-	    	$('#faith').prop('checked', false);
- 			$('#profile').prop('checked', false);
-	    	$('#pmc').prop('checked', false);
-	    	$('#others').prop('checked', false);
-			$('#usapan').prop('checked', false);
+	    	$('#4ps').attr('checked', false);
+			$('#house').attr('checked', false);
+	    	$('#faith').attr('checked', false);
+ 			$('#profile').attr('checked', false);
+	    	$('#pmc').attr('checked', false);
+	    	$('#others').attr('checked', false);
+			$('#usapan').attr('checked', false);
 	    }
 
 	    $('input[name=class_no]').val(array[112]);
@@ -90,13 +84,11 @@ var process_wb = (function() {
 	    var barangay = array[145];
 	    getFullLocation(barangay);
 
-	    var date_conducted = array[161].split('-');
-	    var month = new Date(date_conducted[1]);
+	    var now = new Date(array[161]);
+		var day = ("0" + now.getDate()).slice(-2);
+		var month = ("0" + (now.getMonth() + 1)).slice(-2);
 
-	    var month = month.getMonth();
-
-	    date_conducted = date_conducted[2] + '-' + date_conducted[1] + '-' + date_conducted[0];
-	    console.log(date_conducted);
+		var date_conducted = now.getFullYear()+"-"+(month)+"-"+(day);
 
 	    $('input[name=date_conducted]').val(date_conducted);
 	    $('input[name=prepared_by]').val(array[790]);
