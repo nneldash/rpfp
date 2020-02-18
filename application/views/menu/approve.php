@@ -217,7 +217,7 @@ if (empty($title)) {
                     </tr>
                 <?php } else { ?>
                     <tr>
-                        <td class="text-center" colspan="5">No result(s) found.</td>
+                        <td class="text-center" colspan="9">No result(s) found.</td>
                     </tr>
                 <?php } ?>
             <?php endforeach; ?>

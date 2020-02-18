@@ -31,6 +31,7 @@ class CoupleModel extends BaseModel
                 'Municipality' => 'municipality_name',
                 'Barangay' => 'barangay',
                 'ClassNo' => 'class_no',
+                'CouplesEncoded' => 'couples_encoded',
                 'DateConduct' => 'date_conduct',
                 'LastName' => 'lastname',
                 'FirstName' => 'firstname'
@@ -64,6 +65,7 @@ class CoupleModel extends BaseModel
                 'Municipality' => 'municipality_name',
                 'Barangay' => 'barangay',
                 'ClassNo' => 'class_no',
+                'CouplesEncoded' => 'couples_encoded',
                 'DateConduct' => 'date_conduct',
                 'LastName' => 'lastname',
                 'FirstName' => 'firstname'
