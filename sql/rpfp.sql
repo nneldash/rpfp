@@ -1087,7 +1087,7 @@ BEGIN
                 NULL AS psgc_code,
                 NULL AS barangay,
                 NULL AS class_no,
-                NULL AS no_couples,
+                NULL AS couples_encoded,
                 NULL AS date_conduct,
                 NULL AS lastname,
                 NULL AS firstname
@@ -4657,7 +4657,7 @@ BEGIN
                         NULL AS municipality_name,
                         NULL AS barangay,
                         NULL AS class_no,
-                        NULL AS no_couples,
+                        NULL AS couples_encoded,
                         NULL AS date_conduct,
                         NULL AS lastname,
                         NULL AS firstname
@@ -4802,7 +4802,7 @@ BEGIN
                         NULL AS municipality_name,
                         NULL AS barangay,
                         NULL AS class_no,
-                        NULL AS no_couples,
+                        NULL AS couples_encoded,
                         NULL AS date_conduct,
                         NULL AS lastname,
                         NULL AS firstname
@@ -4951,7 +4951,7 @@ BEGIN
                         NULL AS municipality_name,
                         NULL AS barangay,
                         NULL AS class_no,
-                        NULL AS no_couples,
+                        NULL AS couples_encoded,
                         NULL AS date_conduct,
                         NULL AS lastname,
                         NULL AS firstname
@@ -5102,7 +5102,7 @@ BEGIN
                         NULL AS municipality_name,
                         NULL AS barangay,
                         NULL AS class_no,
-                        NULL AS no_couples,
+                        NULL AS couples_encoded,
                         NULL AS date_conduct,
                         NULL AS lastname,
                         NULL AS firstname
@@ -5248,7 +5248,7 @@ BEGIN
                         NULL AS municipality_name,
                         NULL AS barangay,
                         NULL AS class_no,
-                        NULL AS no_couples,
+                        NULL AS couples_encoded,
                         NULL AS date_conduct,
                         NULL AS lastname,
                         NULL AS firstname
@@ -5736,7 +5736,7 @@ IF ( IFNULL( tfp_used, 0 ) = 0 ) THEN
                         NULL AS municipality_name,
                         NULL AS barangay,
                         NULL AS class_no,
-                        NULL AS no_couples,
+                        NULL AS couples_encoded,
                         NULL AS date_conduct,
                         NULL AS lastname,
                         NULL AS firstname
@@ -5821,7 +5821,7 @@ IF intention_status = 'A' THEN
                         NULL AS municipality_name,
                         NULL AS barangay,
                         NULL AS class_no,
-                        NULL AS no_couples,
+                        NULL AS couples_encoded,
                         NULL AS date_conduct,
                         NULL AS lastname,
                         NULL AS firstname
@@ -5918,7 +5918,7 @@ ELSE
                         NULL AS municipality_name,
                         NULL AS barangay,
                         NULL AS class_no,
-                        NULL AS no_couples,
+                        NULL AS couples_encoded,
                         NULL AS date_conduct,
                         NULL AS lastname,
                         NULL AS firstname
@@ -6084,7 +6084,7 @@ IF ( IFNULL( tfp_used, 0 ) = 0 ) THEN
                         NULL AS municipality_name,
                         NULL AS barangay,
                         NULL AS class_no,
-                        NULL AS no_couples,
+                        NULL AS couples_encoded,
                         NULL AS date_conduct,
                         NULL AS lastname,
                         NULL AS firstname
@@ -6173,7 +6173,7 @@ IF intention_status = 'A' THEN
                         NULL AS municipality_name,
                         NULL AS barangay,
                         NULL AS class_no,
-                        NULL AS no_couples,
+                        NULL AS couples_encoded,
                         NULL AS date_conduct,
                         NULL AS lastname,
                         NULL AS firstname
@@ -6274,7 +6274,7 @@ ELSE
                         NULL AS municipality_name,
                         NULL AS barangay,
                         NULL AS class_no,
-                        NULL AS no_couples,
+                        NULL AS couples_encoded,
                         NULL AS date_conduct,
                         NULL AS lastname,
                         NULL AS firstname
@@ -6444,7 +6444,7 @@ IF ( IFNULL( tfp_used, 0 ) = 0 ) THEN
                         NULL AS municipality_name,
                         NULL AS barangay,
                         NULL AS class_no,
-                        NULL AS no_couples,
+                        NULL AS couples_encoded,
                         NULL AS date_conduct,
                         NULL AS lastname,
                         NULL AS firstname
@@ -6535,7 +6535,7 @@ IF intention_status = 'A' THEN
                         NULL AS municipality_name,
                         NULL AS barangay,
                         NULL AS class_no,
-                        NULL AS no_couples,
+                        NULL AS couples_encoded,
                         NULL AS date_conduct,
                         NULL AS lastname,
                         NULL AS firstname
@@ -6638,7 +6638,7 @@ ELSE
                         NULL AS municipality_name,
                         NULL AS barangay,
                         NULL AS class_no,
-                        NULL AS no_couples,
+                        NULL AS couples_encoded,
                         NULL AS date_conduct,
                         NULL AS lastname,
                         NULL AS firstname
@@ -6802,7 +6802,7 @@ IF ( IFNULL( tfp_used, 0 ) = 0 ) THEN
                         NULL AS municipality_name,
                         NULL AS barangay,
                         NULL AS class_no,
-                        NULL AS no_couples,
+                        NULL AS couples_encoded,
                         NULL AS date_conduct,
                         NULL AS lastname,
                         NULL AS firstname
@@ -6888,7 +6888,7 @@ IF intention_status = 'A' THEN
                         NULL AS municipality_name,
                         NULL AS barangay,
                         NULL AS class_no,
-                        NULL AS no_couples,
+                        NULL AS couples_encoded,
                         NULL AS date_conduct,
                         NULL AS lastname,
                         NULL AS firstname
@@ -6986,7 +6986,7 @@ ELSE
                         NULL AS municipality_name,
                         NULL AS barangay,
                         NULL AS class_no,
-                        NULL AS no_couples,
+                        NULL AS couples_encoded,
                         NULL AS date_conduct,
                         NULL AS lastname,
                         NULL AS firstname
@@ -7145,7 +7145,7 @@ IF ( IFNULL( tfp_used, 0 ) = 0 ) THEN
                         NULL AS municipality_name,
                         NULL AS barangay,
                         NULL AS class_no,
-                        NULL AS no_couples,
+                        NULL AS couples_encoded,
                         NULL AS date_conduct,
                         NULL AS lastname,
                         NULL AS firstname
@@ -7232,7 +7232,7 @@ IF intention_status = 'A' THEN
                         NULL AS municipality_name,
                         NULL AS barangay,
                         NULL AS class_no,
-                        NULL AS no_couples,
+                        NULL AS couples_encoded,
                         NULL AS date_conduct,
                         NULL AS lastname,
                         NULL AS firstname
@@ -7331,7 +7331,7 @@ ELSE
                         NULL AS municipality_name,
                         NULL AS barangay,
                         NULL AS class_no,
-                        NULL AS no_couples,
+                        NULL AS couples_encoded,
                         NULL AS date_conduct,
                         NULL AS lastname,
                         NULL AS firstname
