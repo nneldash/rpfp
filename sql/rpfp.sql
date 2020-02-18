@@ -10458,11 +10458,8 @@ GRANT EXECUTE ON PROCEDURE rpfp.encoder_get_couples_with_fp_details TO 'encoder'
 GRANT EXECUTE ON PROCEDURE rpfp.process_accomplishment TO 'encoder';
 GRANT EXECUTE ON PROCEDURE rpfp.check_couples_details TO 'encoder';
 GRANT EXECUTE ON PROCEDURE rpfp.encoder_get_duplicate_details TO 'encoder';
-<<<<<<< HEAD
 GRANT EXECUTE ON PROCEDURE rpfp.lib_get_full_location TO 'encoder';
 GRANT EXECUTE ON PROCEDURE rpfp.search_data TO 'encoder';
-=======
->>>>>>> 6ca6c0e6a09619b989de89b4b562ea2fcf193ec3
 
 GRANT EXECUTE ON PROCEDURE rpfp.rdm_approve_couples TO 'regional_data_manager';
 GRANT EXECUTE ON PROCEDURE rpfp.rdm_save_target TO 'regional_data_manager';
