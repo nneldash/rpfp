@@ -492,7 +492,7 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 									<td class="small">
 										<div style="display: inline-flex; border: 1px solid transparent;">
 											<input type="hidden" id="isDuplicate1[<?= $i; ?>]" name="isDuplicate1[<?= $i; ?>]" value="" />
-											<input type="hidden" class="loopIndex1" name="loopIndex1" value="<?= $i; ?>" />
+											<input type="hidden" class="loopIndex1" value="<?= $i; ?>" />
 											<?php
 					                            echo HtmlHelper::inputPdf(
 					                                $is_pdf,
@@ -795,7 +795,7 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 									<td class="small">
 										<div style="display: inline-flex; border: 1px solid transparent;">
 											<input type="hidden" id="isDuplicate2[<?= $i; ?>]" name="isDuplicate2[<?= $i; ?>]" value="" />
-											<input type="hidden" class="loopIndex2" name="loopIndex2" value="<?= $i;?>" />
+											<input type="hidden" class="loopIndex2" value="<?= $i;?>" />
 											<?php
 					                            echo HtmlHelper::inputPdf(
 					                            	$is_pdf,

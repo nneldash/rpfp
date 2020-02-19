@@ -26,7 +26,8 @@
 	background-color: #eee;
 }
 .swal2-popup {
-  font-size: 1.6rem !important;
+  	font-size: 1.6rem !important;
+  	border-radius: 0;
 }
 
 /*------------------------------------------------------------------
@@ -185,7 +186,7 @@ input {
 input:focus,
 textarea:focus {
 	border-color: #777!important;
-	border-bottom: 1px solid #2196F3!important;
+	border-bottom: 1px solid #076c1b!important;
 	color: #000!important;
 }
 input[disabled],

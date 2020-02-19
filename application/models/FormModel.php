@@ -22,6 +22,8 @@ class FormModel extends BaseModel
         $this->CI->load->library('accomplishment/AccomplishmentClass');
         $this->CI->load->library('accomplishment/lists/ReportAccomplishment');
 
+        $this->CI->load->library('couple_list/DuplicateIndividualClass');
+
         $this->CI->load->library('common/Errors');
 
     }
@@ -507,6 +509,33 @@ class FormModel extends BaseModel
                 'W_Sex' => 'w_sex'
             ),
             'check_couples_details',
+            array($h_fname, $h_lname, $h_ext, $h_bday, $w_fname, $w_lname, $w_bday)
+        );
+    }
+
+    public function getDuplicateIndividual() : DuplicateIndividualInterface
+    {
+        $h_fname    = $this->input->post('h_fname');
+        $h_lname    = $this->input->post('h_lname');
+        $h_ext      = $this->input->post('h_ext');
+        $h_bday     = $this->input->post('h_bday');
+        $w_fname    = $this->input->post('w_fname');
+        $w_lname    = $this->input->post('w_lname');
+        $w_bday     = $this->input->post('w_bday');
+
+        return $this->fromDbGetSpecific(
+            'DuplicateIndividualClass',
+            array(
+                'CheckDetails' => 'check_details',
+                'CouplesId' => 'couplesid',
+                'ActiveStatus' => 'active_status',
+                'W_couplesId' => 'w_couplesid',
+                'W_Last' => 'w_last',
+                'W_First' => 'w_first',
+                'W_Bday' => 'w_bday',
+                'W_Sex' => 'w_sex'
+            ),
+            'check_for_duplications',
             array($h_fname, $h_lname, $h_ext, $h_bday, $w_fname, $w_lname, $w_bday)
         );
     }

@@ -473,6 +473,26 @@ class Forms extends CI_Controller
             ->set_output(json_encode($data));
     }
 
+    public function checkIndividualDuplicate()
+    {
+        $this->load->model('FormModel');
+        $data = $this->FormModel->getDuplicateIndividual();
+
+        $fullname = $data->W_First . ' ' . $data->W_Last;
+
+        $data = [  
+                    'CheckCount' => $data->CheckDetails,
+                    'CouplesId' => $data->CouplesId,
+                    'ActiveStatus' => $data->ActiveStatus,
+                    'Wife' => $fullname,
+                    'Husband' => ''
+                ];
+
+        $this->output
+            ->set_content_type('application/json')
+            ->set_output(json_encode($data));
+    }
+
     public function getDuplicateDetails()
     {
         $this->load->model('FormModel');

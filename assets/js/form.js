@@ -1281,33 +1281,58 @@ function getDataDuplicate()
 
 function autoGetData(fname1, lname1, extname1, sex1, bday1, fname2, lname2, extname2, sex2, bday2, index)
 {
+	var controller = 'forms/checkCoupleDuplicate';
 	var status = '';
-	if (sex1 === 'F' && sex2 === 'M') {
-		var h_fname = fname2;
-		var h_lname = lname2;
-		var h_extname = extname2;
-		var h_bday = bday2;
-		var w_fname = fname1;
-		var w_lname = lname1;
-		var w_bday = bday1;
-	} else if(sex2 === 'F' && sex1 === 'M') {
-		var h_fname = fname1;
-		var h_lname = lname1;
-		var h_extname = extname1;
-		var h_bday = bday1;
-		var w_fname = fname2;
-		var w_lname = lname2;
-		var w_bday = bday2;
+	if(sex1 != '' && sex2 != '') {
+		controller = 'forms/checkCoupleDuplicate';
+		if (sex1 === 'F' && sex2 === 'M') {
+			var h_fname = fname2;
+			var h_lname = lname2;
+			var h_extname = extname2;
+			var h_bday = bday2;
+			var w_fname = fname1;
+			var w_lname = lname1;
+			var w_bday = bday1;
+		} else if(sex2 === 'F' && sex1 === 'M') {
+			var h_fname = fname1;
+			var h_lname = lname1;
+			var h_extname = extname1;
+			var h_bday = bday1;
+			var w_fname = fname2;
+			var w_lname = lname2;
+			var w_bday = bday2;
+		} else {
+			return false;
+		}
+	} else if (sex1 != '' && sex2 == ''){
+		controller = 'forms/checkIndividualDuplicate';
+		if (sex1 === 'F') {
+			var h_fname = fname2;
+			var h_lname = lname2;
+			var h_extname = extname2;
+			var h_bday = bday2;
+			var w_fname = fname1;
+			var w_lname = lname1;
+			var w_bday = bday1;
+		} else if(sex1 === 'M') {
+			var h_fname = fname1;
+			var h_lname = lname1;
+			var h_extname = extname1;
+			var h_bday = bday1;
+			var w_fname = fname2;
+			var w_lname = lname2;
+			var w_bday = bday2;
+		} else {
+			return false;
+		}
 	} else {
 		return false;
 	}
 
-	// console.log(fname1+' - '+lname1+' - '+extname1+' - '+sex1+' - '+bday1+' - '+fname2+' - '+lname2+' - '+extname2+' - '+sex2+' - '+bday2+' - '+index);
-
 	$.ajax({
 			type : 'POST',
 			cache : true,
-			url : base_url + 'forms/checkCoupleDuplicate',
+			url : base_url + controller,
 			data : {
 				'h_fname'	: h_fname, 
 				'h_lname' 	: h_lname, 
@@ -1318,13 +1343,16 @@ function autoGetData(fname1, lname1, extname1, sex1, bday1, fname2, lname2, extn
 				'w_bday'	: w_bday
 			}
 	}).done(function(result){
-		// console.log(result);
 		if (result.ActiveStatus === '2') {
 			status = 'Pending';
 		} else if (result.ActiveStatus === '0') {
 			status = 'Approve';
 		} else {
 			status;
+		}
+
+		if(result.Husband == '') {
+			result.Husband = 'N/A';
 		}
 
 		if (result.CheckCount >= 1) {
