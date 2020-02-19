@@ -12,7 +12,7 @@ if (empty($title)) {
 
 <div class="col-md-12" style="padding: 0 0 20px">
     <div class="col-md-3" style="text-transform: none; padding: 0">
-        <input type="submit" class="save genAccomp" value="Generate Report" name="genAccomplishment" />
+        <input type="submit" class="save genReportC" value="Generate Report" name="genAccomplishment" />
     </div>
     <div class="col-md-9"></div>
 </div>

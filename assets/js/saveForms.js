@@ -8,7 +8,7 @@ function genForm()
 
 	$('.genFormSubmit').click(function() {
 		$('.genFormSubmit').attr('hidden', true);
-		$('.loading').removeAttr('hidden', false);
+		$('.loading-form').removeAttr('hidden', false);
 
 		const Toast = Swal.mixin({
 			toast: true,
@@ -27,7 +27,7 @@ function genForm()
 			if(result.is_save == true) {
 				Toast.fire({
 					type: 'success',
-					title: 'Accomplishment Report successfully saved!'
+					title: 'Report successfully saved!'
 				});
 				$('#generateReportModal').modal('hide');
 				location.reload();

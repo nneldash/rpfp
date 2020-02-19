@@ -10460,6 +10460,7 @@ GRANT EXECUTE ON PROCEDURE rpfp.check_couples_details TO 'encoder';
 GRANT EXECUTE ON PROCEDURE rpfp.encoder_get_duplicate_details TO 'encoder';
 GRANT EXECUTE ON PROCEDURE rpfp.lib_get_full_location TO 'encoder';
 GRANT EXECUTE ON PROCEDURE rpfp.search_data TO 'encoder';
+GRANT EXECUTE ON PROCEDURE rpfp.check_for_duplications TO 'encoder';
 
 GRANT EXECUTE ON PROCEDURE rpfp.rdm_approve_couples TO 'regional_data_manager';
 GRANT EXECUTE ON PROCEDURE rpfp.rdm_save_target TO 'regional_data_manager';
@@ -10476,6 +10477,7 @@ GRANT EXECUTE ON PROCEDURE rpfp.get_report_served_method_mix_list TO 'regional_d
 GRANT EXECUTE ON PROCEDURE rpfp.get_report_demandgen_details TO 'regional_data_manager';
 GRANT EXECUTE ON PROCEDURE rpfp.get_report_unmet_need_details TO 'regional_data_manager';
 GRANT EXECUTE ON PROCEDURE rpfp.get_report_served_method_mix_details TO 'regional_data_manager';
+GRANT EXECUTE ON PROCEDURE rpfp.process_demandgen TO 'regional_data_manager';
 
 GRANT EXECUTE ON PROCEDURE rpfp.get_forms_list to 'regional_data_manager';
 GRANT EXECUTE ON PROCEDURE rpfp.get_class_details to 'regional_data_manager';

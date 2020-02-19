@@ -24,7 +24,7 @@ $profile = UserProfile::getFromVariable(empty($profile) ? BLANK : $profile);
 
 $default_tab = $links[MY_PENDING];
 if ($profile->isRegionalDataManager()) {
-    $default_tab = $links[MY_APPROVE];
+    $default_tab = $links[MY_PENDING];
 }
 
 if (empty($title)) {
