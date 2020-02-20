@@ -3348,7 +3348,7 @@ BEGIN
                 fp.TFP_STATUS_ID AS tfp_status,
                 fp.MFP_INTENTION_USE_ID AS mfp_intention_use,
                 fp.REASON_INTENDING_USE_ID AS tfp_reason,
-                COUNT(fs.COUPLES_ID) AS fp_served,
+                (CASE WHEN fs.COUPLES_ID IS NULL THEN 0 ELSE 1 END) AS fp_served,
                 apc.is_active AS is_active
            FROM rpfp.rpfp_class rc
       LEFT JOIN rpfp.couples apc
