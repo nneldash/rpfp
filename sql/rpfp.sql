@@ -4166,12 +4166,14 @@ CREATE DEFINER=root@localhost PROCEDURE encoder_save_individual (
     )  MODIFIES SQL DATA
 proc_exit_point :
 BEGIN
+    DECLARE TEXT_MESSAGE VARCHAR(100);
+
     IF ( IFNULL( couplesid, 0 ) = 0 ) THEN
         SELECT "CANNOT SAVE RECORD WITH GIVEN PARAMETERS" AS MESSAGE;
         LEAVE proc_exit_point;
     END IF;
 
-    IF ( IFNULL( indv_id_m, 0 ) = 0 )THEN
+    IF ( IFNULL( indv_id_m, 0 ) = 0 ) THEN
         INSERT INTO rpfp.individual (
                     COUPLES_ID,
                     LNAME,
@@ -4199,7 +4201,24 @@ BEGIN
                     attendee_m
                 )
             ;
-
+            SELECT "NEW INSERT MALE: " INTO TEXT_MESSAGE;
+    ELSE
+         UPDATE rpfp.individual ic
+            SET ic.LNAME = IF( IFNULL( lastname_m, '') = '', ic.LNAME, lastname_m ),
+                ic.FNAME = IF( IFNULL( firstname_m, '') = '', ic.FNAME, firstname_m ),
+                ic.MNAME = IF( IFNULL( middle_m, '') = '', ic.MNAME, middle_m ),
+                ic.EXT_NAME = IF( IFNULL( extname_m, '') = '', ic.EXT_NAME, extname_m ),
+                ic.AGE = IF( IFNULL( age_years_m, '') = '', ic.AGE, age_years_m ),
+                ic.BDATE = IF( IFNULL( birthdate_m, '') = '', ic.BDATE, birthdate_m ),
+                ic.CIVIL_ID = IF( IFNULL( civil_status_m, '') = '', ic.CIVIL_ID, civil_status_m ),
+                ic.EDUC_BCKGRND_ID = IF( IFNULL( educ_bckgrnd_m, '') = '', ic.EDUC_BCKGRND_ID, educ_bckgrnd_m ),
+                ic.IS_ATTENDEE = IF( IFNULL( attendee_m, '0') = '0', 0, 1 )
+          WHERE ic.COUPLES_ID = couplesid
+            AND ic.SEX = 1
+        ;
+        SELECT "UPDATE MALE: " INTO TEXT_MESSAGE;
+    END IF;
+    IF ( IFNULL( indv_id_f, 0 ) = 0 ) THEN
         INSERT INTO rpfp.individual (
                     COUPLES_ID,
                     LNAME,
@@ -4225,40 +4244,24 @@ BEGIN
                     attendee_f
                 )
             ;
-
-        SELECT CONCAT( "NEW ENTRY: ", LAST_INSERT_ID() ) AS MESSAGE;
-        LEAVE proc_exit_point;
+            SELECT CONCAT(TEXT_MESSAGE, '; ',  "NEW INSERT FEMALE: ") INTO TEXT_MESSAGE;
+    ELSE
+         UPDATE rpfp.individual ic
+            SET ic.LNAME = IF( IFNULL( lastname_f, '') = '', ic.LNAME, lastname_f ),
+                ic.FNAME = IF( IFNULL( firstname_f, '') = '', ic.FNAME, firstname_f ),
+                ic.MNAME = IF( IFNULL( middle_f, '') = '', ic.MNAME, middle_f ),
+                ic.AGE = IF( IFNULL( age_years_f, '') = '', ic.AGE, age_years_f ),
+                ic.BDATE = IF( IFNULL( birthdate_f, '') = '', ic.BDATE, birthdate_f ),
+                ic.CIVIL_ID = IF( IFNULL( civil_status_f, '') = '', ic.CIVIL_ID, civil_status_f ),
+                ic.EDUC_BCKGRND_ID = IF( IFNULL( educ_bckgrnd_f, '') = '', ic.EDUC_BCKGRND_ID, educ_bckgrnd_f ),
+                ic.IS_ATTENDEE = IF( IFNULL( attendee_f, '0') = '0', 0, 1 )
+          WHERE ic.COUPLES_ID = couplesid
+            AND ic.SEX = 2
+        ;
+        SELECT CONCAT(TEXT_MESSAGE, '; ', "UPDATE FEMALE: ") INTO TEXT_MESSAGE;
     END IF;
 
-     UPDATE rpfp.individual ic
-        SET ic.LNAME = IF( IFNULL( lastname_m, '') = '', ic.LNAME, lastname_m ),
-            ic.FNAME = IF( IFNULL( firstname_m, '') = '', ic.FNAME, firstname_m ),
-            ic.MNAME = IF( IFNULL( middle_m, '') = '', ic.MNAME, middle_m ),
-            ic.EXT_NAME = IF( IFNULL( extname_m, '') = '', ic.EXT_NAME, extname_m ),
-            ic.AGE = IF( IFNULL( age_years_m, '') = '', ic.AGE, age_years_m ),
-            ic.BDATE = IF( IFNULL( birthdate_m, '') = '', ic.BDATE, birthdate_m ),
-            ic.CIVIL_ID = IF( IFNULL( civil_status_m, '') = '', ic.CIVIL_ID, civil_status_m ),
-            ic.EDUC_BCKGRND_ID = IF( IFNULL( educ_bckgrnd_m, '') = '', ic.EDUC_BCKGRND_ID, educ_bckgrnd_m ),
-            ic.IS_ATTENDEE = IF( IFNULL( attendee_m, '') = '', ic.IS_ATTENDEE, attendee_m )
-      WHERE ic.COUPLES_ID = couplesid
-        AND ic.SEX = 1
-    ;
-
-     UPDATE rpfp.individual ic
-        SET ic.LNAME = IF( IFNULL( lastname_f, '') = '', ic.LNAME, lastname_f ),
-            ic.FNAME = IF( IFNULL( firstname_f, '') = '', ic.FNAME, firstname_f ),
-            ic.MNAME = IF( IFNULL( middle_f, '') = '', ic.MNAME, middle_f ),
-            ic.AGE = IF( IFNULL( age_years_f, '') = '', ic.AGE, age_years_f ),
-            ic.BDATE = IF( IFNULL( birthdate_f, '') = '', ic.BDATE, birthdate_f ),
-            ic.CIVIL_ID = IF( IFNULL( civil_status_f, '') = '', ic.CIVIL_ID, civil_status_f ),
-            ic.EDUC_BCKGRND_ID = IF( IFNULL( educ_bckgrnd_f, '') = '', ic.EDUC_BCKGRND_ID, educ_bckgrnd_f ),
-            ic.IS_ATTENDEE = IF( IFNULL( attendee_f, '') = '', ic.IS_ATTENDEE, attendee_f )
-      WHERE ic.COUPLES_ID = couplesid
-        AND ic.SEX = 2
-    ;
-
-    SELECT "SUCCESS!" AS MESSAGE;
-    
+    SELECT TEXT_MESSAGE AS MESSAGE;
 END$$
 
 CREATE DEFINER=root@localhost PROCEDURE encoder_save_fp_details (

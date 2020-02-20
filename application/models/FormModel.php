@@ -140,7 +140,7 @@ class FormModel extends BaseModel
             $husband->Birthdate == N_A ? BLANK : $husband->Birthdate->format('Y-m-d'),
             $husband->CivilStatus == N_A ? BLANK : $husband->CivilStatus,
             $husband->HighestEducation == N_A ? BLANK : $husband->HighestEducation,
-            $husband->Attendee == N_A ? "0" : "1",
+            gettype($husband->Attendee) == "string" ? "0" : "1",
 
             $wife->Id == N_A ? BLANK : $wife->Id,
             $wife->Name->Surname == N_A ? BLANK : $wife->Name->Surname,
@@ -150,7 +150,7 @@ class FormModel extends BaseModel
             $wife->Birthdate == N_A ? BLANK : $wife->Birthdate->format('Y-m-d'),
             $wife->CivilStatus == N_A ? BLANK : $wife->CivilStatus,
             $wife->HighestEducation == N_A ? BLANK : $wife->HighestEducation,
-            $wife->Attendee == N_A ? "0" : "1"
+            gettype($wife->Attendee) == "string" ? "0" : "1"
         ];
         $result = $this->saveToDb($method2, $params2);
         if (empty($result)) {
@@ -191,6 +191,9 @@ class FormModel extends BaseModel
             }
         
             $couple_id = intval($saved->ReturnValue);
+            if ($couple_id == 0) {
+                $couple_id = $couple->Id;
+            }
             $saved = $this->saveHusbandAndWife($couple_id, $couple);
             if (!empty($saved->Code)) {
                 break;
