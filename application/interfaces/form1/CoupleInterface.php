@@ -39,6 +39,8 @@ abstract class CoupleInterface extends BaseInterface
     /** @var TraditionalFpUserInterface */
     public $TraditionalFp;
 
+    public $FpServed;
+
     public $IsActive;
 
 
