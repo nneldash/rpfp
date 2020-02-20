@@ -755,8 +755,9 @@ function isApprove()
 	var count = $('tr:last-child').find('.loopIndex2').val();
 	var i = 0;
 
-	for (i = 0; i <= count; i ++) {
+	for (i = 0; i <= count; i++) {
 		var hasClass = $('.tr1' + i).hasClass('isApprove');
+		var fpserved = $('.tr1' + i).find('.fp_served'+ i).val();
 		if (hasClass) {
 			$('.tr1' + i).find('td input').attr('disabled', true);
 			$('.tr1' + i).find('td input').css('cursor', 'not-allowed');
@@ -769,6 +770,11 @@ function isApprove()
 			$('.tr2' + i).find('td textarea').attr('disabled', true);
 			$('.tr2' + i).find('td textarea').css('cursor', 'not-allowed');
 			$('.tr2' + i).find('td input[class="check"]').attr('disabled', false);
+
+			if(fpserved <= 1) {
+				$('.tr1' + i + ' .criteria').find('.label-success').removeClass('none');
+				$('.tr1' + i + ' .criteria').find('.label-danger').addClass('none');
+			}
 		}
 	}
 }
