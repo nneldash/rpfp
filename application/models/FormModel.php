@@ -366,6 +366,7 @@ class FormModel extends BaseModel
                     'IntentionUse' => 'mfp_intention_use',
                     'ReasonForUse' => 'tfp_reason'
                 ),
+                'FpServed' => 'fp_served',
                 'IsActive' => 'is_active'
             ),
             'encoder_get_couples_with_fp_details',

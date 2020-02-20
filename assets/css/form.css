@@ -584,13 +584,14 @@ textarea::placeholder {
 .label {
 	border-radius: 0;
 }
-
 .label-age {
 	background-color: #bb0ebb;
 }
-
 .label-intention {
 	background-color: #ff7a08;
+}
+.label-success {
+	background-color: #076c1b;
 }
 
 /*------------------------------------------------------------------
