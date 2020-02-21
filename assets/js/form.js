@@ -1,6 +1,37 @@
 /** PREVENT SAVE FORM UPON CLICK OF SERVICE SLIP */
 var backspace_and_tab = {8: 'BACKSPACE', 9: 'TAB'};
-var statuses = {};
+var statuses = {65 : 'A', 66 : 'B', 67 : 'C', 68 : 'D'};
+var sexes = {70 : 'FEMALE', 77 : 'MALE'};
+var zeros = {48 : 'ZERO', 96 : 'NUMPAD ZERO'};
+var sixes = {54 : 'SIX', 102 : 'NUMPAD SIX'};
+
+var one_to_three = {	49 : 'ONE', 
+						50 : 'TWO', 
+						51 : 'THREE', 
+						97 : 'NUMPAD ONE', 
+						98 : 'NUMPAD TWO', 
+						99 : 'NUMPAD THREE'
+					};
+var one_to_five = 	{  	49 : 'ONE', 
+						50 : 'TWO', 
+						51 : 'THREE', 
+						52 : 'FOUR', 
+						53 : 'FIVE', 
+						97 : 'NUMPAD ONE', 
+						98 : 'NUMPAD TWO',
+						99 : 'NUMPAD THREE', 
+						100 : 'NUMPAD FOUR', 
+						101 : 'NUMPAD FIVE'
+					};
+var six_to_nine = 	{ 	54 : 'SIX',
+						55 : 'SEVEN', 
+						56 : 'EIGHT', 
+						57 : 'NINE', 
+						102 : 'NUMPAD SIX',
+						103 : 'NUMPAD SEVEN',
+						104 : 'NUMPAD EIGHT',
+						105 : 'NUMPAD NINE'
+					};
 
 $(document).ready(function(){
 	$(window).keydown(function(event){
@@ -34,8 +65,6 @@ $(document).ready(function(){
 		var brgy_id = $(e.target.options[clickedIndex]).val();
 		$($('#form_validation input[name="barangay"]')[0]).val(brgy_id);
 	});
-
-	test();
 });
 
 var isRDM = $('#rdm').val();
@@ -311,93 +340,78 @@ function tooltip(couplesId, status, husband, wife, index)
 function sexValidation()
 {
 	$('.gender1').keydown(function(event){
-		if(!(event.keyCode == 70 ||
-			event.keyCode == 77  ||
-			event.keyCode == 8 	 || 
-			event.keyCode == 9)) 
-		{
-			event.preventDefault();
-			return false;
-	    }
+		var val = $(this).val();
+		var key = event.keyCode || event.which;
 
-	    if(!$(this).prop('required')) {
-	    	$(this).closest('tr').find('.require-this').attr('required', 'required');
-	    	$(this).closest('tr').find('.required').removeAttr('hidden', 'hidden');
+		if ((sexes.hasOwnProperty(key)) ||
+	    	(backspace_and_tab.hasOwnProperty(key))
+	    ) {
+			if(!$(this).prop('required')) {
+		    	$(this).closest('tr').find('.require-this').attr('required', 'required');
+		    	$(this).closest('tr').find('.required').removeAttr('hidden', 'hidden');
+		    }
+	    } else {
+	    	event.preventDefault();
+	    	return false;
 	    }
 	});
 
-	{'M' : , 'F'};
-	var gender_array = [];
-	var numpad_keys = []
 	$('.gender2').keydown(function(event){
-		if(!(event.keyCode == 70 || 
-			event.keyCode == 77  || 
-			event.keyCode == 8   || 
-			event.keyCode == 9)) 
-		{
-			event.preventDefault();
-			return false;
-	    }
+		var val = $(this).val();
+		var key = event.keyCode || event.which;
 
-	    if(!$(this).prop('required')) {
-	    	$(this).closest('tr').find('.require-this').attr('required', 'required');
-	    	$(this).closest('tr').find('.required').removeAttr('hidden', 'hidden');
-	    }
+		if ((sexes.hasOwnProperty(key)) ||
+	    	(backspace_and_tab.hasOwnProperty(key))
+	    ) {
+			if(!$(this).prop('required')) {
+		    	$(this).closest('tr').find('.require-this').attr('required', 'required');
+		    	$(this).closest('tr').find('.required').removeAttr('hidden', 'hidden');
+		    }
 
-	    if(!$(this).prop('required')) {
-	    	$(this).closest('tr').find('.require-this').attr('required', 'required');
-	    	$(this).closest('tr').find('.required').removeAttr('hidden', 'hidden');
-	    }
+		    if(!$(this).prop('required')) {
+		    	$(this).closest('tr').find('.require-this').attr('required', 'required');
+		    	$(this).closest('tr').find('.required').removeAttr('hidden', 'hidden');
+		    }
+	    } else {
+	    	event.preventDefault();
+	    	return false;
+	    }	    
 	});
 }
 
 function civilStatusValidation()
 {
 	$('.civil1').keydown(function(event){
-		if(!(event.keyCode == 49 || 
-			event.keyCode == 50  ||
-			event.keyCode == 51  ||
-			event.keyCode == 52  ||
-			event.keyCode == 53  ||
-			event.keyCode == 97  || 
-			event.keyCode == 98  ||
-			event.keyCode == 99  ||
-			event.keyCode == 100 ||
-			event.keyCode == 101 ||
-			event.keyCode == 8   || 
-			event.keyCode == 9)) 
-		{
-			event.preventDefault();
-			return false;
-	    }
+		var val = $(this).val();
+		var key = event.keyCode || event.which;
 
-	    if(!$(this).prop('required')) {
-	    	$(this).closest('tr').find('.require-this').attr('required', 'required');
-	    	$(this).closest('tr').find('.required').removeAttr('hidden', 'hidden');
+		if ((one_to_five.hasOwnProperty(key)) ||
+	    	(backspace_and_tab.hasOwnProperty(key))
+	    ) {
+			if(!$(this).prop('required')) {
+		    	$(this).closest('tr').find('.require-this').attr('required', 'required');
+		    	$(this).closest('tr').find('.required').removeAttr('hidden', 'hidden');
+		    }
+	    } else {
+	    	event.preventDefault();
+	    	return false;
 	    }
 	});
 
 	$('.civil2').keydown(function(event){
-		if(!(event.keyCode == 49 || 
-			event.keyCode == 50  ||
-			event.keyCode == 51  ||
-			event.keyCode == 52  ||
-			event.keyCode == 53  ||
-			event.keyCode == 97  || 
-			event.keyCode == 98  ||
-			event.keyCode == 99  ||
-			event.keyCode == 100 ||
-			event.keyCode == 101 ||
-			event.keyCode == 8   || 
-			event.keyCode == 9)) 
-		{
-			event.preventDefault();
-			return false;
-	    }
+		var val = $(this).val();
+		var key = event.keyCode || event.which;
 
-	    if(!$(this).prop('required')) {
-	    	$(this).closest('tr').find('.require-this').attr('required', 'required');
-	    	$(this).closest('tr').find('.required').removeAttr('hidden', 'hidden');
+		if ((one_to_five.hasOwnProperty(key)) ||
+	    	(backspace_and_tab.hasOwnProperty(key))
+	    ) {
+			if(!$(this).prop('required')) {
+		    	$(this).closest('tr').find('.require-this').attr('required', 'required');
+		    	$(this).closest('tr').find('.required').removeAttr('hidden', 'hidden');
+		    }
+	    } else {
+	    	event.preventDefault();
+	    	return false;
 	    }
 	});
 }
@@ -405,66 +419,38 @@ function civilStatusValidation()
 function educationValidation()
 {
 	$('.education1').keydown(function(event){
-		if(!(event.keyCode == 49 || 
-			event.keyCode == 50  ||
-			event.keyCode == 51  ||
-			event.keyCode == 52  ||
-			event.keyCode == 53  ||
-			event.keyCode == 54  ||
-			event.keyCode == 55  ||
-			event.keyCode == 56  ||
-			event.keyCode == 57  ||
-			event.keyCode == 97  || 
-			event.keyCode == 98  ||
-			event.keyCode == 99  ||
-			event.keyCode == 100 ||
-			event.keyCode == 101 ||
-			event.keyCode == 102 ||
-			event.keyCode == 103 ||
-			event.keyCode == 104 ||
-			event.keyCode == 105 ||
-			event.keyCode == 8   || 
-			event.keyCode == 9)) 
-		{
-			event.preventDefault();
-			return false;
-	    }
+		var val = $(this).val();
+		var key = event.keyCode || event.which;
 
-	    if(!$(this).prop('required')) {
-	    	$(this).closest('tr').find('.require-this').attr('required', 'required');
-	    	$(this).closest('tr').find('.required').removeAttr('hidden', 'hidden');
+		if ((one_to_five.hasOwnProperty(key)) ||
+			(six_to_nine.hasOwnProperty(key)) ||
+	    	(backspace_and_tab.hasOwnProperty(key))
+	    ) {
+			if(!$(this).prop('required')) {
+		    	$(this).closest('tr').find('.require-this').attr('required', 'required');
+		    	$(this).closest('tr').find('.required').removeAttr('hidden', 'hidden');
+		    }
+	    } else {
+	    	event.preventDefault();
+	    	return false;
 	    }
 	});
 
 	$('.education2').keydown(function(event){
-		if(!(event.keyCode == 49 || 
-			event.keyCode == 50  ||
-			event.keyCode == 51  ||
-			event.keyCode == 52  ||
-			event.keyCode == 53  ||
-			event.keyCode == 54  ||
-			event.keyCode == 55  ||
-			event.keyCode == 56  ||
-			event.keyCode == 57  ||
-			event.keyCode == 97  || 
-			event.keyCode == 98  ||
-			event.keyCode == 99  ||
-			event.keyCode == 100 ||
-			event.keyCode == 101 ||
-			event.keyCode == 102 ||
-			event.keyCode == 103 ||
-			event.keyCode == 104 ||
-			event.keyCode == 105 ||
-			event.keyCode == 8   || 
-			event.keyCode == 9)) 
-		{
-			event.preventDefault();
-			return false;
-	    }
+		var val = $(this).val();
+		var key = event.keyCode || event.which;
 
-	    if(!$(this).prop('required')) {
-	    	$(this).closest('tr').find('.require-this').attr('required', 'required');
-	    	$(this).closest('tr').find('.required').removeAttr('hidden', 'hidden');
+		if ((one_to_five.hasOwnProperty(key)) ||
+			(six_to_nine.hasOwnProperty(key)) ||
+	    	(backspace_and_tab.hasOwnProperty(key))
+	    ) {
+			if(!$(this).prop('required')) {
+		    	$(this).closest('tr').find('.require-this').attr('required', 'required');
+		    	$(this).closest('tr').find('.required').removeAttr('hidden', 'hidden');
+		    }
+	    } else {
+	    	event.preventDefault();
+	    	return false;
 	    }
 	});
 }
@@ -472,31 +458,21 @@ function educationValidation()
 function noChildrenValidation()
 {
 	$('.noChildren').keydown(function(event){
-		if(!(event.keyCode == 48 ||
-			event.keyCode == 49 || 
-			event.keyCode == 50  ||
-			event.keyCode == 51  ||
-			event.keyCode == 52  ||
-			event.keyCode == 53  ||
-			event.keyCode == 54  ||
-			event.keyCode == 55  ||
-			event.keyCode == 56  ||
-			event.keyCode == 57  ||
-			event.keyCode == 96  ||
-			event.keyCode == 97  || 
-			event.keyCode == 98  ||
-			event.keyCode == 99  ||
-			event.keyCode == 100 ||
-			event.keyCode == 101 ||
-			event.keyCode == 102 ||
-			event.keyCode == 103 ||
-			event.keyCode == 104 ||
-			event.keyCode == 105 ||
-			event.keyCode == 8   || 
-			event.keyCode == 9)) 
-		{
-			event.preventDefault();
-			return false;
+		var val = $(this).val();
+		var key = event.keyCode || event.which;
+
+		if ((one_to_five.hasOwnProperty(key)) ||
+			(six_to_nine.hasOwnProperty(key)) ||
+			(zeros.hasOwnProperty(key)) ||
+	    	(backspace_and_tab.hasOwnProperty(key))
+	    ) {
+	    	if(!$(this).prop('required')) {
+		    	$(this).closest('tr').find('.require-this').attr('required', 'required');
+		    	$(this).closest('tr').find('.required').removeAttr('hidden', 'hidden');
+		    }
+	    } else {
+	    	event.preventDefault();
+	    	return false;
 	    }
 	});
 }
@@ -522,70 +498,40 @@ function methodValidation()
 	});
 
 	$('.method8').keydown(function(event){
-		if(!(event.keyCode == 48 ||
-			event.keyCode == 49  || 
-			event.keyCode == 50  ||
-			event.keyCode == 51  ||
-			event.keyCode == 52  ||
-			event.keyCode == 53  ||
-			event.keyCode == 54  ||
-			event.keyCode == 55  ||
-			event.keyCode == 56  ||
-			event.keyCode == 57  ||
-			event.keyCode == 96  ||
-			event.keyCode == 97  || 
-			event.keyCode == 98  ||
-			event.keyCode == 99  ||
-			event.keyCode == 100 ||
-			event.keyCode == 101 ||
-			event.keyCode == 102 ||
-			event.keyCode == 103 ||
-			event.keyCode == 104 ||
-			event.keyCode == 105 ||
-			event.keyCode == 8   || 
-			event.keyCode == 9)) 
-		{
-			event.preventDefault();
-			return false;
-	    }
+		var val = $(this).val();
+		var key = event.keyCode || event.which;
 
-	    if(!$(this).prop('required')) {
-	    	$(this).closest('tr').find('.require-this').attr('required', 'required');
-	    	$(this).closest('tr').find('.required').removeAttr('hidden', 'hidden');
+		if ((one_to_five.hasOwnProperty(key)) ||
+			(six_to_nine.hasOwnProperty(key)) ||
+			(zeros.hasOwnProperty(key)) ||
+	    	(backspace_and_tab.hasOwnProperty(key))
+	    ) {
+	    	if(!$(this).prop('required')) {
+		    	$(this).closest('tr').find('.require-this').attr('required', 'required');
+		    	$(this).closest('tr').find('.required').removeAttr('hidden', 'hidden');
+		    }
+	    } else {
+	    	event.preventDefault();
+	    	return false;
 	    }
 	});
 
 	$('.method9').keydown(function(event){
-		if(!(event.keyCode == 48 ||
-			event.keyCode == 49  || 
-			event.keyCode == 50  ||
-			event.keyCode == 51  ||
-			event.keyCode == 52  ||
-			event.keyCode == 53  ||
-			event.keyCode == 54  ||
-			event.keyCode == 55  ||
-			event.keyCode == 56  ||
-			event.keyCode == 57  ||
-			event.keyCode == 96  ||
-			event.keyCode == 97  || 
-			event.keyCode == 98  ||
-			event.keyCode == 99  ||
-			event.keyCode == 100 ||
-			event.keyCode == 101 ||
-			event.keyCode == 102 ||
-			event.keyCode == 103 ||
-			event.keyCode == 104 ||
-			event.keyCode == 105 ||
-			event.keyCode == 8   || 
-			event.keyCode == 9)) 
-		{
-			event.preventDefault();
-			return false;	    	
-	    }	
+		var val = $(this).val();
+		var key = event.keyCode || event.which;
 
-	    if(!$(this).prop('required')) {
-	    	$(this).closest('tr').find('.require-this').attr('required', 'required');
-	    	$(this).closest('tr').find('.required').removeAttr('hidden', 'hidden');
+		if ((one_to_five.hasOwnProperty(key)) ||
+			(six_to_nine.hasOwnProperty(key)) ||
+			(zeros.hasOwnProperty(key)) ||
+	    	(backspace_and_tab.hasOwnProperty(key))
+	    ) {
+	    	if(!$(this).prop('required')) {
+		    	$(this).closest('tr').find('.require-this').attr('required', 'required');
+		    	$(this).closest('tr').find('.required').removeAttr('hidden', 'hidden');
+		    }
+	    } else {
+	    	event.preventDefault();
+	    	return false;
 	    }
 	});
 }
@@ -593,28 +539,20 @@ function methodValidation()
 function typeValidation()
 {
 	$('.typeFp').keydown(function(event){
-		if(!(event.keyCode == 49 || 
-			event.keyCode == 50  ||
-			event.keyCode == 51  ||
-			event.keyCode == 52  ||
-			event.keyCode == 53  ||
-			event.keyCode == 54  ||
-			event.keyCode == 97  || 
-			event.keyCode == 98  ||
-			event.keyCode == 99  ||
-			event.keyCode == 100 ||
-			event.keyCode == 101 ||
-			event.keyCode == 102 ||
-			event.keyCode == 8   || 
-			event.keyCode == 9)) 
-		{
-			event.preventDefault();
-			return false;
-	    }
+		var val = $(this).val();
+		var key = event.keyCode || event.which;
 
-	    if(!$(this).prop('required')) {
-	    	$(this).closest('tr').find('.require-this').attr('required', 'required');
-	    	$(this).closest('tr').find('.required').removeAttr('hidden', 'hidden');
+		if ((one_to_five.hasOwnProperty(key)) ||
+			(sixes.hasOwnProperty(key)) ||
+	    	(backspace_and_tab.hasOwnProperty(key))
+	    ) {
+	    	if(!$(this).prop('required')) {
+		    	$(this).closest('tr').find('.require-this').attr('required', 'required');
+		    	$(this).closest('tr').find('.required').removeAttr('hidden', 'hidden');
+		    }
+	    } else {
+	    	event.preventDefault();
+	    	return false;
 	    }
 	});
 }
@@ -660,27 +598,29 @@ function typeUnmet()
 function statusValidation()
 {
 	$('.status-trad').keydown(function(event){
-		if(!(event.keyCode in statuses) ||
-			!(event.keyCode in backspace_and_tab)
-		) {
-			event.preventDefault();
-			return false;
-	    }	    
-		
-		var index = $(this).closest('tr').find('input[class="slipIndex"]').val();
 	    var val = $(this).val();
-	    val = val.toUpperCase();
+	    var key = event.keyCode || event.which;
 
-	    if(val == statuses.A) {
-	    	$(this).closest('tr').find('.intention-use').attr('required', 'required');
-	    	$(this).closest('tr').find('.intention-required').removeAttr('hidden', 'hidden');
-	    	$(this).closest('tr').find('input[name="intention_use['+index+']"]').removeAttr('disabled', 'disabled');
-	    	intentionStatusValidation(index);
+	    if ((statuses.hasOwnProperty(key)) ||
+	    	(backspace_and_tab.hasOwnProperty(key))
+	    ) {
+	    	var index = $(this).closest('tr').find('input[class="slipIndex"]').val();
+		    val = val.toUpperCase();
+
+		    if(val == 'A') {
+		    	$(this).closest('tr').find('.intention-use').attr('required', 'required');
+		    	$(this).closest('tr').find('.intention-required').removeAttr('hidden', 'hidden');
+		    	$(this).closest('tr').find('input[name="intention_use['+index+']"]').removeAttr('disabled', 'disabled');
+		    	intentionStatusValidation(index);
+		    } else {
+		    	$(this).closest('tr').find('.intention-use').val('');
+		    	$(this).closest('tr').find('.intention-use').removeAttr('required', 'required');
+		    	$(this).closest('tr').find('.intention-required').attr('hidden', 'hidden');
+		    	$(this).closest('tr').find('input[name="intention_use['+index+']"]').attr('disabled', 'disabled');
+		    }
 	    } else {
-	    	$(this).closest('tr').find('.intention-use').val('');
-	    	$(this).closest('tr').find('.intention-use').removeAttr('required', 'required');
-	    	$(this).closest('tr').find('.intention-required').attr('hidden', 'hidden');
-	    	$(this).closest('tr').find('input[name="intention_use['+index+']"]').attr('disabled', 'disabled');
+	    	event.preventDefault();
+	    	return false;
 	    }
 	});
 }
@@ -697,36 +637,21 @@ function intentionStatusValidation()
 	});
 
 	$('.intention-use').keydown(function(event){
-		if(!(event.keyCode == 48 ||
-			event.keyCode == 49  || 
-			event.keyCode == 50  ||
-			event.keyCode == 51  ||
-			event.keyCode == 52  ||
-			event.keyCode == 53  ||
-			event.keyCode == 54  ||
-			event.keyCode == 55  ||
-			event.keyCode == 56  ||
-			event.keyCode == 57  ||
-			event.keyCode == 96  ||
-			event.keyCode == 97  || 
-			event.keyCode == 98  ||
-			event.keyCode == 99  ||
-			event.keyCode == 100 ||
-			event.keyCode == 101 ||
-			event.keyCode == 102 ||
-			event.keyCode == 103 ||
-			event.keyCode == 104 ||
-			event.keyCode == 105 ||
-			event.keyCode == 8   || 
-			event.keyCode == 9)) 
-		{
-			event.preventDefault();
-			return false;
-	    }
+		var val = $(this).val();
+	    var key = event.keyCode || event.which;
 
-	    if(!$(this).prop('required')) {
-	    	$(this).closest('tr').find('.require-this').attr('required', 'required');
-	    	$(this).closest('tr').find('.required').removeAttr('hidden', 'hidden');
+	    if ((zeros.hasOwnProperty(key)) ||
+	    	(one_to_five.hasOwnProperty(key)) ||
+	    	(six_to_nine.hasOwnProperty(key)) ||
+	    	(backspace_and_tab.hasOwnProperty(key))
+	    ) {
+	    	if(!$(this).prop('required')) {
+		    	$(this).closest('tr').find('.require-this').attr('required', 'required');
+		    	$(this).closest('tr').find('.required').removeAttr('hidden', 'hidden');
+		    }
+	    } else {
+	    	event.preventDefault();
+	    	return false;
 	    }
 	});
 }
@@ -734,22 +659,19 @@ function intentionStatusValidation()
 function reasonValidation()
 {
 	$('.reasonFp').keydown(function(event){
-		if(!(event.keyCode == 49 || 
-			event.keyCode == 50  ||
-			event.keyCode == 51  ||
-			event.keyCode == 97  || 
-			event.keyCode == 98  ||
-			event.keyCode == 99  ||
-			event.keyCode == 8 	 || 
-			event.keyCode == 9)) 
-		{
-			event.preventDefault();
-			return false;
-	    }
+		var val = $(this).val();
+	    var key = event.keyCode || event.which;
 
-	    if(!$(this).prop('required')) {
-	    	$(this).closest('tr').find('.require-this').attr('required', 'required');
-	    	$(this).closest('tr').find('.required').removeAttr('hidden', 'hidden');
+	    if ((one_to_three.hasOwnProperty(key)) ||
+	    	(backspace_and_tab.hasOwnProperty(key))
+	    ) {
+	    	if(!$(this).prop('required')) {
+		    	$(this).closest('tr').find('.require-this').attr('required', 'required');
+		    	$(this).closest('tr').find('.required').removeAttr('hidden', 'hidden');
+		    }
+	    } else {
+	    	event.preventDefault();
+	    	return false;
 	    }
 	});
 }
@@ -1767,13 +1689,4 @@ function re_initialize_page() {
 	}
 	update_page_numbering(current, total_pages);
 	$('#loading-wrapper').removeClass('loading');
-}
-
-
-function test() {
-	$('#traditional_statuses').each(function(){
-		//statuses[$(this).val()] = $(this).text();
-		var da_letter = $(this).val();
-		statuses[da_letter.charCodeAt(0)] = da_letter;
-	});
 }

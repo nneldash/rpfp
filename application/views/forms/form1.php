@@ -1155,11 +1155,3 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 		);
 	</script>
 <?php endif; ?>
-
-<select type="hidden" id="traditional_statuses">
-<?php
-	foreach (TraditionalStatuses::UI_Enumerate() as $key => $value) {
-		echo '<option value="' . $key . '" >' . $value . '</option>';
-	}
-?>
-</select>
