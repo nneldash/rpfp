@@ -21,9 +21,10 @@ $slip = ServiceSlipClass::getServiceSlipFromVariable($slip);
 				</div>
 				<div class="col-md-6 padding-r3p text-right">
 					<p class="small">
+					<span class="required">*</span>
 						<b>
 							Date of visit: 
-							<input type="date" name="date_of_visit" class="date_visit" value="<?= ($slip->DateOfVisit != 'N/A' ? $slip->DateOfVisit : 'DD/MM/YYYY'); ?>" class="padding-l10 underline width-70"  />
+							<input type="date" name="date_of_visit" value="<?= ($slip->DateOfVisit != 'N/A' ? $slip->DateOfVisit : 'MM/DD/YYYY'); ?>" class="padding-l10 underline width-70 date_visit"  required/>
 						</b>
 					</p>
 				</div>
@@ -323,7 +324,7 @@ $slip = ServiceSlipClass::getServiceSlipFromVariable($slip);
 						<p class="small">
 							Date of accepting the method: &nbsp;
 						</p>
-						<input type="date" name="date_of_method" class="date_method" value="<?= ($slip->DateOfMethod != 'N/A' ? $slip->DateOfMethod : 'DD/MM/YYYY'); ?>" class="padding-l10 underline width-70" />
+						<input type="date" name="date_of_method" class="date_method" value="<?= ($slip->DateOfMethod != 'N/A' ? $slip->DateOfMethod : 'MM/DD/YYYY'); ?>" class="padding-l10 underline width-70" />
 					</div>
 					<div class="flex">
 						<p class="small">
@@ -344,33 +345,13 @@ $slip = ServiceSlipClass::getServiceSlipFromVariable($slip);
 				</div>	
 			</div>
 			<div class="col-md-12 padding-l7p flex">
-				<p class="small">Name & address of referral facility :</p>
-				<?php
-                    echo HtmlHelper::inputPdf(
-                        $is_pdf,
-                        ($slip->ReferralFacility != 'N/A' ? $slip->ReferralFacility : ''),
-                        "text",
-                        "referral_facility",
-						"padding-l10 underline width-35",
-						"required",
-						""
-                    );
-                ?>
+				<p class="small"><span class="required">*</span>Name & address of referral facility :</p>
+					<input type="text" name="referral_facility" class="padding-l10 underline width-35" value="<?= ($slip->ReferralFacility != 'N/A' ? $slip->ReferralFacility : ''); ?>" required/>
 			</div>
 			<div class="col-md-12 padding-l7p text-center">
 				<br><br>
-				<?php
-                    echo HtmlHelper::inputPdf(
-                        $is_pdf,
-                        ($slip->HealthServiceProvider != 'N/A' ? $slip->HealthServiceProvider : ''),
-                        "text",
-                        "health_service_provider",
-						"padding-l10 underline width-70 text-center",
-						"required",
-                        ""
-                    );
-                ?>
-				<p class="small text-center">Name, Position and Signature of attending Health Service Provider</p>
+					<input type="text" name="health_service_provider" class="padding-l10 underline width-70 text-center" value="<?= ($slip->HealthServiceProvider != 'N/A' ? $slip->HealthServiceProvider : ''); ?>" required/>
+				<p class="small text-center"><span class="required">*</span>Name, Position and Signature of attending Health Service Provider</p>
 			</div>
 		</form>
 	</div>
