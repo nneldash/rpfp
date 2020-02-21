@@ -13,7 +13,7 @@ abstract class TraditionalStatuses extends BasicEnum
     const UI_EXPRESSING_INTENTION = 'A';
     const UI_UNDECIDED = 'B';
     const UI_CURRENTLY_PREGNANT = 'C';
-    const UI_NO_INTENTION = 'C';
+    const UI_NO_INTENTION = 'D';
 
     public static function Enumerate() : array
     {

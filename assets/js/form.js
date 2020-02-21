@@ -1,4 +1,7 @@
 /** PREVENT SAVE FORM UPON CLICK OF SERVICE SLIP */
+var backspace_and_tab = {8: 'BACKSPACE', 9: 'TAB'};
+var statuses = {};
+
 $(document).ready(function(){
 	$(window).keydown(function(event){
 	    if(event.keyCode == 13) {
@@ -31,6 +34,8 @@ $(document).ready(function(){
 		var brgy_id = $(e.target.options[clickedIndex]).val();
 		$($('#form_validation input[name="barangay"]')[0]).val(brgy_id);
 	});
+
+	test();
 });
 
 var isRDM = $('#rdm').val();
@@ -321,6 +326,9 @@ function sexValidation()
 	    }
 	});
 
+	{'M' : , 'F'};
+	var gender_array = [];
+	var numpad_keys = []
 	$('.gender2').keydown(function(event){
 		if(!(event.keyCode == 70 || 
 			event.keyCode == 77  || 
@@ -652,13 +660,9 @@ function typeUnmet()
 function statusValidation()
 {
 	$('.status-trad').keydown(function(event){
-		if(!(event.keyCode == 65 || 
-			event.keyCode == 66  ||
-			event.keyCode == 67  ||
-			event.keyCode == 68  ||
-			event.keyCode == 8   || 
-			event.keyCode == 9)) 
-		{
+		if(!(event.keyCode in statuses) ||
+			!(event.keyCode in backspace_and_tab)
+		) {
 			event.preventDefault();
 			return false;
 	    }	    
@@ -667,7 +671,7 @@ function statusValidation()
 	    var val = $(this).val();
 	    val = val.toUpperCase();
 
-	    if(val == 'A') {
+	    if(val == statuses.A) {
 	    	$(this).closest('tr').find('.intention-use').attr('required', 'required');
 	    	$(this).closest('tr').find('.intention-required').removeAttr('hidden', 'hidden');
 	    	$(this).closest('tr').find('input[name="intention_use['+index+']"]').removeAttr('disabled', 'disabled');
@@ -1537,10 +1541,15 @@ function saveForm1()
 			url: base_url + '/forms/saveForm1'
 		}).done(function(result){
 			Toast.fire({
-				type: (result.is_save == true) ? 'success' : 'error',
+				type: (result.is_save) ? 'success' : 'error',
 				title: 'Form 1 save status',
 				message: result.message == undefined ? "There was an error saving Form 1" : result.message
 			});
+
+			if (result.is_save) {
+				/** put rpfp class id in field */
+				/** initialize edit existing field */
+			}
 		});
 
 		return false;
@@ -1559,25 +1568,8 @@ function checkBox()
 
 
 $(document).ready(function(){
-	if (($('#new_form').val() != undefined) || ($('#edit_existing').val() != undefined)) {
-		reset_page_storage();
-	}
-	$.each($('#paged_form input[name^="attendee"]'), function(key, value) {
-		$(this).prop('checked', $(value).val() =='attended');
-	});
-	var current = current_page();
-	var total_pages = num_pages();
 
-	if (current > 0) {
-		get_page(current);
-		if (total_pages < current) {
-			num_pages(total_pages = current);			
-		}
-	} else {
-		current = 1;
-		total_pages = 1;
-	}
-	update_page_numbering(current, total_pages);
+	re_initialize_page();
 
 	$('.next').click(function() {
 		/** load variables from browser storage */
@@ -1737,10 +1729,51 @@ function update_page_numbering(page_num, total_pages) {
 }
 
 $(document).ready(function() {
-	$('#new_form_1').click(function() {
+	$('#new_form_1').click(function(event) {
+		event.preventDefault();
 		if (confirm('Changes will be LOST!!!, proceed to NEW FORM?')) {
 			// window.location.href = base_url + "/Forms/new";
-			reset_page_storage()
+			var temp = $('#new_form');
+			if (temp.length == 0) {
+				temp = document.createElement('div');
+				temp.prop('id', 'new_form');
+			}
+			temp.val('new-form-from-click');
+
+			re_initialize_page();
 		}
-	});
+	});	
 });
+
+function re_initialize_page() {
+	$('#loading-wrapper').addClass('loading');
+	if (($('#new_form').val() != undefined) || ($('#edit_existing').val() != undefined)) {
+		reset_page_storage();
+	}
+	$.each($('#paged_form input[name^="attendee"]'), function(key, value) {
+		$(this).prop('checked', $(value).val() =='attended');
+	});
+	var current = current_page();
+	var total_pages = num_pages();
+
+	if (current > 0) {
+		get_page(current);
+		if (total_pages < current) {
+			num_pages(total_pages = current);			
+		}
+	} else {
+		current = 1;
+		total_pages = 1;
+	}
+	update_page_numbering(current, total_pages);
+	$('#loading-wrapper').removeClass('loading');
+}
+
+
+function test() {
+	$('#traditional_statuses').each(function(){
+		//statuses[$(this).val()] = $(this).text();
+		var da_letter = $(this).val();
+		statuses[da_letter.charCodeAt(0)] = da_letter;
+	});
+}

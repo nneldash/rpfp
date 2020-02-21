@@ -295,7 +295,7 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 							</td>
 							<td class="border-0">
 								<span class="small">
-									<input type="date" name="date_conducted" value="<?= ($form1->Seminar->DateConducted != 'N/A' ? $form1->Seminar->DateConducted : ''); ?>" class="padding-l10 underline width-70" required max="9999-12-31" />
+									<input type="date" name="date_conducted" value="<?= ($form1->Seminar->DateConducted != 'N/A' ? $form1->Seminar->DateConducted : ''); ?>" class="padding-l10 underline width-70" required max="9999-12-31" data-provide="datepicker"/>
 			                    </span>
 							</td>
 							
@@ -752,7 +752,7 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 												"1",
 												"",
 												""
-				                            );
+											);
 				                        ?>
 				                        <div style="display: inline-flex">
 					                        <span style="color: red" class="intention-required" hidden>*</span>
@@ -1155,3 +1155,11 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 		);
 	</script>
 <?php endif; ?>
+
+<select type="hidden" id="traditional_statuses">
+<?php
+	foreach (TraditionalStatuses::UI_Enumerate() as $key => $value) {
+		echo '<option value="' . $key . '" >' . $value . '</option>';
+	}
+?>
+</select>
