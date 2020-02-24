@@ -1584,6 +1584,7 @@ function clear_form() {
 	$('.duplicateBtn').prop('hidden', true);
 	$('.criteria .label:not(.none)').addClass('none');
 	$(".fp_served*").prop('type', 'hidden');
+	$('#paged_form .required').text('');
 }
 
 function clear_seminar() {
