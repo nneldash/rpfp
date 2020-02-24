@@ -1,14 +1,18 @@
-$(function(){
-	genForm();
-});
-
 function genForm()
 {
+	$(window).keydown(function(event){
+	    if(event.keyCode == 13) {
+			event.preventDefault();
+			return false;
+	    }
+	});
+
 	var formName = $('.formName').val();
 
 	$('.genFormSubmit').click(function() {
 		$('.genFormSubmit').attr('hidden', true);
 		$('.loading-form').removeAttr('hidden', false);
+		$('.loading-form').removeAttr('disabled', false);
 
 		const Toast = Swal.mixin({
 			toast: true,
@@ -34,11 +38,11 @@ function genForm()
 			} else {
 				Toast.fire({
 					type: 'error',
-					title: 'An error occurred.'
+					title: 'No data to generate.'
 				});
+				$('#generateReportModal').modal('hide');
 			}
 		});
-
 		return false;
 	});
 

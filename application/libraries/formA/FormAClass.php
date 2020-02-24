@@ -4,7 +4,6 @@ $CI =& get_instance();
 $CI->load->iface('formA/FormAInterface');
 $CI->load->library('formA/PeriodReportClass');
 $CI->load->library('formA/lists/ListMonthsClass');
-// $CI->load->iface('formA/FormAInterface');
 
 class FormAClass extends FormAInterface
 {

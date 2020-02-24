@@ -23,6 +23,7 @@ class FormGeneration extends CI_Controller
 
     public function genFormA()
     {
+        $demandgen_id = '';
         $genData = new GenerateFormAClass();
 
         $profile = $this->ProfileModel->getOwnProfile();

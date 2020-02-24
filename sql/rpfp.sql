@@ -7777,8 +7777,6 @@ DECLARE random_no VARCHAR(400) DEFAULT 0 ;
             )
     ;
 
-      SELECT class_usapan;
-
       SELECT COUNT(DISTINCT rc.CLASS_NUMBER) 
         INTO class_pmc 
         FROM rpfp.rpfp_class rc 
@@ -7792,8 +7790,6 @@ DECLARE random_no VARCHAR(400) DEFAULT 0 ;
             )
     ;
 
-      SELECT class_pmc;
-
       SELECT COUNT(DISTINCT rc.CLASS_NUMBER) 
         INTO class_h2h 
         FROM rpfp.rpfp_class rc 
@@ -7806,8 +7802,6 @@ DECLARE random_no VARCHAR(400) DEFAULT 0 ;
              OR (IFNULL( psgc_code, 0 ) = 0)
             )
     ;
-
-      SELECT class_h2h;
 
       SELECT COUNT(DISTINCT rc.CLASS_NUMBER) 
         INTO class_profiled 
@@ -8080,10 +8074,6 @@ DECLARE random_no VARCHAR(400) DEFAULT 0 ;
         ;
 
         SELECT CONCAT( "NEW ENTRY: ", LAST_INSERT_ID() ) AS MESSAGE;
-        LEAVE proc_exit_point;
-
-    SELECT "SUCCESS!" AS MESSAGE;
-    
 END$$
 
 CREATE DEFINER=root@localhost PROCEDURE process_unmet_need (

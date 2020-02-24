@@ -2,7 +2,7 @@
 defined('BASEPATH') or exit('No direct script access allowed');
 
 if (empty($title)) {
-    $title = 'RPFP Online | Form A Data List';
+    $title = 'Online RPFP Monitoring System | RPFP Form A Report List';
 }
 ?>
 <script>document.querySelector("head title").innerHTML = '<?=$title?>';</script>
@@ -12,12 +12,12 @@ if (empty($title)) {
 
 <div class="col-md-12" style="padding: 0 0 20px">
     <div class="col-md-3" style="text-transform: none; padding: 0">
-        <input type="submit" class="save genReportA" value="Generate Report" name="genAccomplishment" />
+        <input type="submit" class="save genReportA" value="Generate Report" name="genFormA" />
     </div>
     <div class="col-md-9"></div>
 </div>
 
-<table id="datatable-responsive" class="table table-condensed table-striped table-hover table-bordered dt-responsive nowrap" cellspacing="0" width="100%">
+<table id="datatable-responsive" class="table table-condensed table-striped table-hover table-bordered dt-responsive nowrap formAList" cellspacing="0" width="100%">
     <thead>
         <tr>
             <th>Report #</th>
@@ -50,22 +50,16 @@ if (empty($title)) {
 </table>
 
 <script>
-    loadJs(base_url + 'assets/js/modals.js', function(){
-        clickModalReportA();
+    loadJs(base_url + 'NewAssets/templateJs', function() {
+        loadJs(base_url + 'assets/js/modalFormA.js', function(){
+            clickModalReportA();
+        });
+    });
+
+    $(".formAList").DataTable({
+        "lengthMenu": [
+            [12, 24, 36, 48, 60],
+            ['12', '24', '36', '48', '60']
+        ]
     });
 </script>
-
-<?php
-if (!empty($reload)) {
-    ?>
-    <script>
-        $("#datatable-responsive").DataTable({
-            "lengthMenu": [
-                [12, 24, 36, 48, 60],
-                ['12', '24', '36', '48', '60']
-            ]
-        });
-    </script>
-    <?php
-}
-?>

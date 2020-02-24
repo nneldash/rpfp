@@ -10,6 +10,7 @@ class FormAModel extends BaseModel
         $this->CI->load->library('formA/FormAClass');
         $this->CI->load->library('formA/lists/ListFormA');
         $this->CI->load->library('formA/lists/ReportFormA');
+        $this->CI->load->library('formA/GenerateFormAClass');
     }
 
     public function getFormAList() : ListFormAInterface
