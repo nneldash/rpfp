@@ -24,7 +24,7 @@ $slip = ServiceSlipClass::getServiceSlipFromVariable($slip);
 					<span class="required">*</span>
 						<b>
 							Date of visit: 
-							<input type="date" name="date_of_visit" value="<?= ($slip->DateOfVisit != 'N/A' ? $slip->DateOfVisit : 'MM/DD/YYYY'); ?>" class="padding-l10 underline width-70 date_visit"  required/>
+							<input type="date" name="date_of_visit" value="<?= ($slip->DateOfVisit != 'N/A' ? $slip->DateOfVisit : 'MM/DD/YYYY'); ?>" class="padding-l10 underline width-70 date_visit" max="<?= date('Y-m-d'); ?>" required/>
 						</b>
 					</p>
 				</div>
@@ -324,7 +324,7 @@ $slip = ServiceSlipClass::getServiceSlipFromVariable($slip);
 						<p class="small">
 							Date of accepting the method: &nbsp;
 						</p>
-						<input type="date" name="date_of_method" class="date_method" value="<?= ($slip->DateOfMethod != 'N/A' ? $slip->DateOfMethod : 'MM/DD/YYYY'); ?>" class="padding-l10 underline width-70" />
+						<input type="date" name="date_of_method" class="date_method" value="<?= ($slip->DateOfMethod != 'N/A' ? $slip->DateOfMethod : 'MM/DD/YYYY'); ?>" class="padding-l10 underline width-70" max="<?= date('Y-m-d'); ?>"/>
 					</div>
 					<div class="flex">
 						<p class="small">

@@ -364,6 +364,9 @@ input.underline:hover {
 	background: #fff;
 	color: #076c1b;
 }
+.save:focus {
+	color: #fff;
+}
 a:hover {
     text-decoration: none;
     color: #57b846;
@@ -558,8 +561,15 @@ textarea::placeholder {
 .accordionDropdown {
 	padding: 0;
 	float: right;
+	background-color: #076c1b;
+    color: #fff;
+    padding: 2px 12px;
+}
+.accordionDropdown:focus {
+	color: #fff;
 }
 .accordionDropdown:hover {
+	color: #076c1b;
 	background-color: none;
 }
 

@@ -93,7 +93,9 @@ $(function() {
 	importChanges();
 	afterLoadValidation();
 
-	Inputmask().mask(".birthAge");	
+	Inputmask().mask(".birthAge");
+
+	// $('#date_con').datepicker();	
 
     $('.selectpicker').selectpicker({
     	container: 'body'
@@ -340,7 +342,6 @@ function tooltip(couplesId, status, husband, wife, index)
 function sexValidation()
 {
 	$('.gender1').keydown(function(event){
-		var val = $(this).val();
 		var key = event.keyCode || event.which;
 
 		if ((sexes.hasOwnProperty(key)) ||
@@ -357,18 +358,12 @@ function sexValidation()
 	});
 
 	$('.gender2').keydown(function(event){
-		var val = $(this).val();
 		var key = event.keyCode || event.which;
 
 		if ((sexes.hasOwnProperty(key)) ||
 	    	(backspace_and_tab.hasOwnProperty(key))
 	    ) {
 			if(!$(this).prop('required')) {
-		    	$(this).closest('tr').find('.require-this').attr('required', 'required');
-		    	$(this).closest('tr').find('.required').removeAttr('hidden', 'hidden');
-		    }
-
-		    if(!$(this).prop('required')) {
 		    	$(this).closest('tr').find('.require-this').attr('required', 'required');
 		    	$(this).closest('tr').find('.required').removeAttr('hidden', 'hidden');
 		    }
@@ -382,7 +377,6 @@ function sexValidation()
 function civilStatusValidation()
 {
 	$('.civil1').keydown(function(event){
-		var val = $(this).val();
 		var key = event.keyCode || event.which;
 
 		if ((one_to_five.hasOwnProperty(key)) ||
@@ -399,7 +393,6 @@ function civilStatusValidation()
 	});
 
 	$('.civil2').keydown(function(event){
-		var val = $(this).val();
 		var key = event.keyCode || event.which;
 
 		if ((one_to_five.hasOwnProperty(key)) ||
@@ -419,7 +412,6 @@ function civilStatusValidation()
 function educationValidation()
 {
 	$('.education1').keydown(function(event){
-		var val = $(this).val();
 		var key = event.keyCode || event.which;
 
 		if ((one_to_five.hasOwnProperty(key)) ||
@@ -437,7 +429,6 @@ function educationValidation()
 	});
 
 	$('.education2').keydown(function(event){
-		var val = $(this).val();
 		var key = event.keyCode || event.which;
 
 		if ((one_to_five.hasOwnProperty(key)) ||
@@ -458,7 +449,6 @@ function educationValidation()
 function noChildrenValidation()
 {
 	$('.noChildren').keydown(function(event){
-		var val = $(this).val();
 		var key = event.keyCode || event.which;
 
 		if ((one_to_five.hasOwnProperty(key)) ||
@@ -498,7 +488,6 @@ function methodValidation()
 	});
 
 	$('.method8').keydown(function(event){
-		var val = $(this).val();
 		var key = event.keyCode || event.which;
 
 		if ((one_to_five.hasOwnProperty(key)) ||
@@ -517,7 +506,6 @@ function methodValidation()
 	});
 
 	$('.method9').keydown(function(event){
-		var val = $(this).val();
 		var key = event.keyCode || event.which;
 
 		if ((one_to_five.hasOwnProperty(key)) ||
@@ -539,7 +527,6 @@ function methodValidation()
 function typeValidation()
 {
 	$('.typeFp').keydown(function(event){
-		var val = $(this).val();
 		var key = event.keyCode || event.which;
 
 		if ((one_to_five.hasOwnProperty(key)) ||
@@ -604,13 +591,18 @@ function statusValidation()
 	    if ((statuses.hasOwnProperty(key)) ||
 	    	(backspace_and_tab.hasOwnProperty(key))
 	    ) {
+	    	if(!$(this).prop('required')) {
+		    	$(this).closest('tr').find('.require-this').attr('required', 'required');
+		    	$(this).closest('tr').find('.required').removeAttr('hidden', 'hidden');
+		    }
 	    	var index = $(this).closest('tr').find('input[class="slipIndex"]').val();
+
 		    val = val.toUpperCase();
 
-		    if(val == 'A') {
+		    if(key == 65 || val == 'A') {
+		    	$(this).closest('tr').find('input[name="intention_use['+index+']"]').removeAttr('disabled', 'disabled');
 		    	$(this).closest('tr').find('.intention-use').attr('required', 'required');
 		    	$(this).closest('tr').find('.intention-required').removeAttr('hidden', 'hidden');
-		    	$(this).closest('tr').find('input[name="intention_use['+index+']"]').removeAttr('disabled', 'disabled');
 		    	intentionStatusValidation(index);
 		    } else {
 		    	$(this).closest('tr').find('.intention-use').val('');
@@ -637,7 +629,6 @@ function intentionStatusValidation()
 	});
 
 	$('.intention-use').keydown(function(event){
-		var val = $(this).val();
 	    var key = event.keyCode || event.which;
 
 	    if ((zeros.hasOwnProperty(key)) ||
@@ -659,7 +650,6 @@ function intentionStatusValidation()
 function reasonValidation()
 {
 	$('.reasonFp').keydown(function(event){
-		var val = $(this).val();
 	    var key = event.keyCode || event.which;
 
 	    if ((one_to_three.hasOwnProperty(key)) ||
@@ -1275,6 +1265,8 @@ function autoGetData(fname1, lname1, extname1, sex1, bday1, fname2, lname2, extn
 				'w_bday'	: w_bday
 			}
 	}).done(function(result){
+		var hasId = $('.tr1' + index + ' input[name="couple_id['+ index +']"]').val();
+		console.log(hasId);
 		if (result.ActiveStatus === '2') {
 			status = 'Pending';
 		} else if (result.ActiveStatus === '0') {
@@ -1288,44 +1280,46 @@ function autoGetData(fname1, lname1, extname1, sex1, bday1, fname2, lname2, extn
 		}
 
 		if (result.CheckCount >= 1) {
-			$('.tr1' + index + ' td:nth-child(1)').addClass('has-duplicate');
-			$('.tr2' + index + ' td:nth-child(1)').addClass('has-duplicate');
+			if (hasId == '') {
+				$('.tr1' + index + ' td:nth-child(1)').addClass('has-duplicate');
+				$('.tr2' + index + ' td:nth-child(1)').addClass('has-duplicate');
 
-			$('.tr1' + index + ' td:nth-child(2)').addClass('has-duplicate');
-			$('.tr2' + index + ' td:nth-child(2)').addClass('has-duplicate');
+				$('.tr1' + index + ' td:nth-child(2)').addClass('has-duplicate');
+				$('.tr2' + index + ' td:nth-child(2)').addClass('has-duplicate');
 
-			$('.tr1' + index + ' td:nth-child(3)').addClass('has-duplicate');
-			$('.tr2' + index + ' td:nth-child(3)').addClass('has-duplicate');
+				$('.tr1' + index + ' td:nth-child(3)').addClass('has-duplicate');
+				$('.tr2' + index + ' td:nth-child(3)').addClass('has-duplicate');
 
-			$('.tr1' + index + ' td:nth-child(4)').addClass('has-duplicate');
-			$('.tr2' + index + ' td:nth-child(4)').addClass('has-duplicate');
+				$('.tr1' + index + ' td:nth-child(4)').addClass('has-duplicate');
+				$('.tr2' + index + ' td:nth-child(4)').addClass('has-duplicate');
 
-			$('.tr1' + index + ' td:nth-child(5)').addClass('has-duplicate');
+				$('.tr1' + index + ' td:nth-child(5)').addClass('has-duplicate');
 
-			$('.tr1' + index + ' td .extname1').addClass('has-duplicate');
-			$('.tr2' + index + ' td .extname2').addClass('has-duplicate');
+				$('.tr1' + index + ' td .extname1').addClass('has-duplicate');
+				$('.tr2' + index + ' td .extname2').addClass('has-duplicate');
 
-			$('.tr1' + index + ' td .gender1').addClass('has-duplicate');
-			$('.tr2' + index + ' td .gender2').addClass('has-duplicate');
+				$('.tr1' + index + ' td .gender1').addClass('has-duplicate');
+				$('.tr2' + index + ' td .gender2').addClass('has-duplicate');
 
-			$('.tr1' + index + ' td .bday1').addClass('has-duplicate');
-			$('.tr2' + index + ' td .bday2').addClass('has-duplicate');
+				$('.tr1' + index + ' td .bday1').addClass('has-duplicate');
+				$('.tr2' + index + ' td .bday2').addClass('has-duplicate');
 
-			$('.tr1' + index + ' td .civil1').addClass('has-duplicate');
-			$('.tr2' + index + ' td .civil2').addClass('has-duplicate');
+				$('.tr1' + index + ' td .civil1').addClass('has-duplicate');
+				$('.tr2' + index + ' td .civil2').addClass('has-duplicate');
 
-			$('.tr1' + index + ' td .getAge1').addClass('has-duplicate');
-			$('.tr2' + index + ' td .getAge2').addClass('has-duplicate');
+				$('.tr1' + index + ' td .getAge1').addClass('has-duplicate');
+				$('.tr2' + index + ' td .getAge2').addClass('has-duplicate');
 
-			$('.tr1' + index + ' td textarea').addClass('has-duplicate');
-			$('.tr2' + index + ' td textarea').addClass('has-duplicate');
+				$('.tr1' + index + ' td textarea').addClass('has-duplicate');
+				$('.tr2' + index + ' td textarea').addClass('has-duplicate');
 
-			$('.tr1' + index + ' td .duplicateBtn').removeAttr('hidden');
+				$('.tr1' + index + ' td .duplicateBtn').removeAttr('hidden');
 
-			$('.tr1' + index + ' td #popover-content').find('.fill-husband').text(result.Husband);
-			$('.tr1' + index + ' td #popover-content').find('.fill-wife').text(result.Wife);
+				$('.tr1' + index + ' td #popover-content').find('.fill-husband').text(result.Husband);
+				$('.tr1' + index + ' td #popover-content').find('.fill-wife').text(result.Wife);
 
-			tooltip(result.CouplesId, status, result.Husband, result.Wife, index);
+				tooltip(result.CouplesId, status, result.Husband, result.Wife, index);
+			}
 		} else {
 
 			$('.tr1' + index + ' td:nth-child(1)').removeClass('has-duplicate');
