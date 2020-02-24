@@ -1581,7 +1581,7 @@ function clear_form() {
 	$('#paged_form input[type="text"]').val('');
 	$('.has-duplicate').removeClass('has-duplicate');
 	$("[data-toggle^=popover]").unbind('mousedown');
-	$('.duplicateBtn').prop('type', 'hidden');
+	$('.duplicateBtn').prop('hidden', true);
 	$('.criteria .label:not(.none)').addClass('none');
 	$(".fp_served*").prop('type', 'hidden');
 }
