@@ -1470,7 +1470,15 @@ function saveForm1()
 
 			if (result.is_save) {
 				/** put rpfp class id in field */
+				$('#class_id').val(result.value);
+
 				/** initialize edit existing field */
+				var temp = $('#edit_existing');
+				if (temp.length == 0) {
+					temp = $(document.createElement('div'));
+					temp.prop('id', 'edit_existing');
+				}
+				temp.val('edit-from-save');
 			}
 		});
 
@@ -1555,7 +1563,6 @@ function num_pages(page_num=null) {
 	localStorage.setItem('num_pages', page_num);
 }
 
-
 function reset_page_storage() {
 	current_page(1);
 	num_pages(1);
@@ -1564,7 +1571,6 @@ function reset_page_storage() {
 			localStorage.removeItem(value);
 		}
 	});
-	
 }
 
 function clear_form() {
@@ -1573,6 +1579,21 @@ function clear_form() {
 	$('#paged_form input[type="hidden"]').not($('.loopIndex1')).not($('[name="slipIndex"')).val('');
 	$('#paged_form textarea').val('');
 	$('#paged_form input[type="text"]').val('');
+	$('.has-duplicate').removeClass('has-duplicate');
+	$("[data-toggle^=popover]").unbind('mousedown');
+	$('.duplicateBtn').prop('type', 'hidden');
+	$('.criteria .label:not(.none)').addClass('none');
+	$(".fp_served*").prop('type', 'hidden');
+}
+
+function clear_seminar() {
+	$('.selectpicker').val('0');
+	$('.selectpicker').selectpicker('render').selectpicker('refresh');
+
+	$('#rpfpClass input[type="radio"]').attr('checked', false);
+	$('#rpfpClass textarea').val('');
+	$('#rpfpClass input[type="text"]').val('');
+	$('#rpfpClass input[type="date"]').val('')
 	
 }
 
@@ -1654,15 +1675,29 @@ $(document).ready(function() {
 	$('#new_form_1').click(function(event) {
 		event.preventDefault();
 		if (confirm('Changes will be LOST!!!, proceed to NEW FORM?')) {
-			// window.location.href = base_url + "/Forms/new";
+			clear_seminar();
+			var temp1 = document.getElementById('new_form');
+			var temp2 = document.getElementById('edit_existing');
+			if (temp1 != null) {
+				document.body.removeChild(temp1);
+			}
+			if (temp2 != null) {
+				document.body.removeChild(temp2);
+			}
+			
+			re_initialize_page();
+			clear_form();
+			get_page(current);
+			current_page(current);
+			update_page_numbering(current, total_pages);
+	
 			var temp = $('#new_form');
 			if (temp.length == 0) {
-				temp = document.createElement('div');
+				temp = $(document.createElement('div'));
 				temp.prop('id', 'new_form');
+				temp.prop('hidden', true);
 			}
 			temp.val('new-form-from-click');
-
-			re_initialize_page();
 		}
 	});	
 });
