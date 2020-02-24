@@ -595,8 +595,8 @@ function statusValidation()
 		    	$(this).closest('tr').find('.require-this').attr('required', 'required');
 		    	$(this).closest('tr').find('.required').removeAttr('hidden', 'hidden');
 		    }
-	    	var index = $(this).closest('tr').find('input[class="slipIndex"]').val();
 
+	    	var index = $(this).closest('tr').find('input[class="slipIndex"]').val();
 		    val = val.toUpperCase();
 
 		    if(key == 65 || val == 'A') {
@@ -956,12 +956,23 @@ function getDataDuplicate()
 		dob1 = new Date(bday1);
 		var today1 = new Date();
 		var age1 = Math.floor((today1 - dob1) / (365.25 * 24 * 60 * 60 * 1000));
+		var curr_year = today1.getFullYear();
 
 		var dateArr1 = bday1.split('-');
 
 		var month1 = $.trim(dateArr1[0]);
 		var day1 = $.trim(dateArr1[1]);
 		var year1 = $.trim(dateArr1[2]);
+		
+		if (month1 > 12 || 
+			day1   > 31 ||
+			month1 == 0 || 
+			day1   == 0 ||
+			year1 	> curr_year
+		) {
+			age1 = '';
+			$(this).val('');
+		}
 
 		var bday1 = year1 + '-' + month1 + '-' + day1;
 		$(this).closest('td').find('.getAge1').val(age1);
@@ -1155,12 +1166,23 @@ function getDataDuplicate()
 		dob2 = new Date(bday2);
 		var today2 = new Date();
 		var age2 = Math.floor((today2 - dob2) / (365.25 * 24 * 60 * 60 * 1000));
-
+		var curr_year = today2.getFullYear();
+		
 		var dateArr2 = bday2.split('-');
 
 		var month2 = $.trim(dateArr2[0]);
 		var day2 = $.trim(dateArr2[1]);
 		var year2 = $.trim(dateArr2[2]);
+
+		if (month2 > 12 || 
+			day2   > 31 ||
+			month2 == 0 || 
+			day2   == 0 ||
+			year2 	> curr_year
+		) {
+			age2 = '';
+			$(this).val('');
+		}
 
 		var bday2 = year2 + '-' + month2 + '-' + day2;
 		$(this).closest('td').find('.getAge2').val(age2);
