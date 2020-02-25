@@ -8266,10 +8266,6 @@ DECLARE random_no VARCHAR(400) DEFAULT 0 ;
         ;
 
         SELECT CONCAT( "NEW ENTRY: ", LAST_INSERT_ID() ) AS MESSAGE;
-        LEAVE proc_exit_point;
-
-    SELECT "SUCCESS!" AS MESSAGE;
-    
 END$$
 
 CREATE DEFINER=root@localhost PROCEDURE process_served_method_mix (
@@ -8543,10 +8539,6 @@ DECLARE random_no VARCHAR(400) DEFAULT 0 ;
         ;
 
         SELECT CONCAT( "NEW ENTRY: ", LAST_INSERT_ID() ) AS MESSAGE;
-        LEAVE proc_exit_point;
-
-    SELECT "SUCCESS!" AS MESSAGE;
-    
 END$$
 /** END PROCESS REPORTS */
 
@@ -8663,8 +8655,6 @@ BEGIN
        ORDER BY rd.DATE_PROCESSED DESC
           LIMIT read_offset, items_per_page
         ;
-        
-        LEAVE proc_exit_point;
     END IF;
 END$$
 
@@ -8712,8 +8702,6 @@ BEGIN
        ORDER BY rd.DATE_PROCESSED DESC
           LIMIT read_offset, items_per_page
         ;
-        
-        LEAVE proc_exit_point;
     END IF;
 END$$
 
@@ -8771,7 +8759,6 @@ BEGIN
                 ru.REPORT_MONTH AS report_month,
                 ru.DATE_PROCESSED AS date_processed
            FROM rpfp.report_unmet_need ru
-       GROUP BY ru.UNMET_ID
        ORDER BY ru.DATE_PROCESSED DESC
           LIMIT read_offset, items_per_page
         ;
@@ -8815,7 +8802,6 @@ BEGIN
                 ru.DATE_PROCESSED AS date_processed
            FROM rpfp.report_unmet_need ru
           WHERE ru.PSGC_CODE = region_of_user
-       GROUP BY ru.UNMET_ID
        ORDER BY ru.DATE_PROCESSED DESC
           LIMIT read_offset, items_per_page
         ;
@@ -8879,7 +8865,6 @@ BEGIN
                 rs.REPORT_MONTH AS report_month,
                 rs.DATE_PROCESSED AS date_processed
            FROM rpfp.report_served_method_mix rs
-       GROUP BY rs.SERVED_ID
        ORDER BY rs.DATE_PROCESSED DESC
           LIMIT read_offset, items_per_page
         ;
@@ -8923,7 +8908,6 @@ BEGIN
                 rs.DATE_PROCESSED AS date_processed
            FROM rpfp.report_served_method_mix rs
           WHERE rs.PSGC_CODE = region_of_user
-       GROUP BY rs.SERVED_ID
        ORDER BY rs.DATE_PROCESSED DESC
           LIMIT read_offset, items_per_page
         ;
@@ -8975,6 +8959,7 @@ BEGIN
 END$$
 
 CREATE DEFINER=root@localhost PROCEDURE get_report_demandgen_details(
+    IN report_id INT,
     IN report_month INT,
     IN report_year INT
     )   READS SQL DATA
@@ -9043,8 +9028,7 @@ BEGIN
               WHERE rd.REPORT_YEAR = report_year
                 AND rd.REPORT_MONTH >= 1
                 AND rd.REPORT_MONTH <= report_month
-                AND rd.PSGC_CODE = region_of_user
-           GROUP BY rd.REPORT_MONTH
+                AND rd.REPORT_ID = report_id
            ORDER BY rd.REPORT_ID DESC
               LIMIT 1
             ;
@@ -9053,7 +9037,9 @@ BEGIN
 END$$
 
 CREATE DEFINER=root@localhost PROCEDURE get_report_unmet_need_details(
-    IN unmet_id INT
+    IN report_id INT,
+    IN report_month INT,
+    IN report_year INT
     )   READS SQL DATA
 BEGIN
     IF NOT EXISTS (
@@ -9089,15 +9075,20 @@ BEGIN
                     ru.TOTAL_SERVED AS total_served,
                     ru.DATE_PROCESSED AS date_processed
                FROM rpfp.report_unmet_need ru
-              WHERE ru.unmet_id = unmet_id
-           ORDER BY ru.report_id ASC
+              WHERE ru.REPORT_YEAR = report_year
+                AND ru.REPORT_MONTH >= 1
+                AND ru.REPORT_MONTH <= report_month
+                AND ru.REPORT_ID = report_id
+           ORDER BY ru.REPORT_ID DESC
             ;
         END;
     END IF;
 END$$
 
 CREATE DEFINER=root@localhost PROCEDURE get_report_served_method_mix_details(
-    IN served_id INT
+    IN report_id INT,
+    IN report_month INT,
+    IN report_year INT
     )   READS SQL DATA
 BEGIN
     IF NOT EXISTS (
@@ -9145,8 +9136,11 @@ BEGIN
                     rs.TOTAL_SERVED AS total_served,
                     rs.DATE_PROCESSED AS date_processed
                FROM rpfp.report_served_method_mix rs
-              WHERE rs.SERVED_ID = served_id
-           ORDER BY rs.report_id ASC
+              WHERE rs.REPORT_YEAR = report_year
+                AND rs.REPORT_MONTH >= 1
+                AND rs.REPORT_MONTH <= report_month
+                AND rs.REPORT_ID = report_id
+           ORDER BY rs.REPORT_ID DESC
             ;
         END;
     END IF;
@@ -10471,7 +10465,8 @@ GRANT EXECUTE ON PROCEDURE rpfp.get_report_demandgen_details TO 'regional_data_m
 GRANT EXECUTE ON PROCEDURE rpfp.get_report_unmet_need_details TO 'regional_data_manager';
 GRANT EXECUTE ON PROCEDURE rpfp.get_report_served_method_mix_details TO 'regional_data_manager';
 GRANT EXECUTE ON PROCEDURE rpfp.process_demandgen TO 'regional_data_manager';
-
+GRANT EXECUTE ON PROCEDURE rpfp.process_unmet_need TO 'regional_data_manager';
+GRANT EXECUTE ON PROCEDURE rpfp.process_served_method_mix TO 'regional_data_manager';
 GRANT EXECUTE ON PROCEDURE rpfp.get_forms_list to 'regional_data_manager';
 GRANT EXECUTE ON PROCEDURE rpfp.get_class_details to 'regional_data_manager';
 GRANT EXECUTE ON PROCEDURE rpfp.encoder_get_couples_with_fp_details to 'regional_data_manager';

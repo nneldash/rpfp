@@ -1,6 +1,7 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 $this->load->library('helpers/HtmlHelper');
+$formc_list = ReportFormC::getFromVariable($form_C);
 ?>
 
 <?php if($is_pdf){ ?>
@@ -36,7 +37,8 @@ $this->load->library('helpers/HtmlHelper');
 			<p class="small">
 				<b>
 					RPFP CLASSES IMPLEMENTATION REPORT <br>
-					FOR THE PERIOD __________ <br>
+					FOR THE PERIOD <?= strtoupper( date('F, Y', $formc_list->From)) ?> <br>
+					POPCOM Regional Office <?=$formc_list->RegionalOffice; ?> <br>
 					TOTAL NUMBER OF COUPLES SERVED WITH UNMET NEED
 				</b>
 			</p>

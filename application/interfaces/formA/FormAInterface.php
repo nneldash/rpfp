@@ -3,13 +3,13 @@ defined('BASEPATH') or exit('No direct script access allowed');
 $CI =& get_instance();
 $CI->load->iface('base/BaseInterface');
 $CI->load->iface('formA/PeriodReportInterface');
-$CI->load->iface('formA/lists/ListMonthsInterface');
+$CI->load->iface('formA/lists/ListFormAMonthsInterface');
 
 abstract class FormAInterface extends BaseInterface
 {
     /** @var PeriodReportInterface */
     public $Period;
-    /** @var ListMonthsInterface */
+    /** @var ListFormAMonthsInterface */
     public $ListMonth;
 
     public $ReportID;

@@ -25,6 +25,10 @@ class Forms extends CI_Controller
         $this->load->library('accomplishment/AccomplishmentClass');
         $this->load->model('FormAModel');
         $this->load->library('formA/FormAClass');
+        $this->load->model('FormBModel');
+        $this->load->library('formB/FormBClass');
+        $this->load->model('FormCModel');
+        $this->load->library('formC/FormCClass');
     }
 
     public function index()
@@ -294,9 +298,10 @@ class Forms extends CI_Controller
 
         $this->load->model('FormAModel');
 
+        $reportID = $this->input->get('ReportID');
         $reportMonth = $this->input->get('ReportMonth');
         $reportYear = $this->input->get('ReportYear');
-        $formA = $this->FormAModel->getFormAReport($reportMonth,$reportYear);
+        $formA = $this->FormAModel->getFormAReport($reportID,$reportMonth,$reportYear);
 
         $this->load->view('includes/header', $header);
         $this->load->view('forms/forma', array('form_A' => $formA, 'is_pdf' => false, RELOAD => true));
@@ -310,8 +315,15 @@ class Forms extends CI_Controller
     {
         $header['title'] = 'Online RPFP Monitoring System | Form B';
 
+        $this->load->model('FormBModel');
+
+        $reportID = $this->input->get('ReportID');
+        $reportMonth = $this->input->get('ReportMonth');
+        $reportYear = $this->input->get('ReportYear');
+        $formB = $this->FormBModel->getFormBReport($reportID,$reportMonth,$reportYear);
+
         $this->load->view('includes/header', $header);
-        $this->load->view('forms/formb', array('is_pdf' => false));
+        $this->load->view('forms/formb', array('form_B' => $formB, 'is_pdf' => false, RELOAD => true));
         $this->load->view('includes/footer');
 
         $this->load->library('common/PageHandler');
@@ -322,8 +334,15 @@ class Forms extends CI_Controller
     {
         $header['title'] = 'Online RPFP Monitoring System | Form C';
 
+        $this->load->model('FormCModel');
+
+        $reportID = $this->input->get('ReportID');
+        $reportMonth = $this->input->get('ReportMonth');
+        $reportYear = $this->input->get('ReportYear');
+        $formC = $this->FormCModel->getFormCReport($reportID,$reportMonth,$reportYear);
+
         $this->load->view('includes/header', $header);
-        $this->load->view('forms/formc', array('is_pdf' => false));
+        $this->load->view('forms/formc', array('form_C' => $formC, 'is_pdf' => false, RELOAD => true));
         $this->load->view('includes/footer');
 
         $this->load->library('common/PageHandler');

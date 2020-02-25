@@ -34,13 +34,18 @@ $current_year = date('Y');
     		</select>
     		<br>
     		<div style="text-transform: none; ">
-                <input type="submit" class="save genFormSubmit" name="saveReport" value="SUBMIT" />
-                <button class="save loading-form" hidden><span><i class="fa fa-spinner fa-spin"></i></span></button>
+                <input type="submit" class="save genFormSubmit buttonload" name="saveAccomp" value="SUBMIT" />
+                <button class="save buttonload loading-form" hidden disabled>
+                    <span><i class="fa fa-spinner fa-spin"></i></span>
+                </button>
             </div>
         </form>
 	</div>
 </div>
-<script type="text/javascript" src="<?= base_url('assets/js/saveForms.js')?>"></script>
 <script>
-	loadJs(base_url + 'NewAssets/sweetalertJs');
+	loadJs(base_url + 'NewAssets/sweetalertJs', function(){
+        loadJs(base_url + 'assets/js/saveForms.js', function(){
+            genForm();
+        });
+    });
 </script>

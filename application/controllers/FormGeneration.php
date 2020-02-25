@@ -76,7 +76,7 @@ class FormGeneration extends CI_Controller
         $genData->ReportYear = $this->input->post('repYearSelect');
         $genData->ReportMonth = $this->input->post('repMonthSelect');
 
-        if (!$this->FormBModel->saveFormC($served_id, $psgc_code, $genData)) {
+        if (!$this->FormCModel->saveFormC($served_id, $psgc_code, $genData)) {
             $data = ['is_save' => false];
         } else {
             $data = ['is_save' => true];

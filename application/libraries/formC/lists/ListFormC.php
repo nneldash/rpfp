@@ -5,4 +5,12 @@ $CI->load->iface('formC/lists/ListFormCInterface');
 
 class ListFormC extends ListFormCInterface
 {
+    public static function getFromVariable($variable) : ListFormCInterface
+    {
+        if ($variable instanceof ListFormCInterface) {
+            return $variable;
+        }
+        return new ListFormC();
+    }
+
 }

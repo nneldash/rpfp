@@ -1,15 +1,15 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 $CI =& get_instance();
-$CI->load->iface('formC/MonthsInterface');
-$CI->load->library('formC/lists/ListCouplesUnmetNeedClass');
-$CI->load->library('formC/lists/ListClientsUnmetNeedClass');
-$CI->load->library('formC/lists/ListCouplesUsingTraditionalFpClass');
-$CI->load->library('formC/lists/ListClientsUsingTraditionalFpClass');
-$CI->load->library('formC/lists/ListTotalUnmetNeedClass');
-$CI->load->library('formC/lists/ListTotalClientsClass');
+$CI->load->iface('formB/FormBMonthsInterface');
+$CI->load->library('formB/lists/ListCouplesUnmetNeedClass');
+$CI->load->library('formB/lists/ListClientsUnmetNeedClass');
+$CI->load->library('formB/lists/ListCouplesUsingTraditionalFpClass');
+$CI->load->library('formB/lists/ListClientsUsingTraditionalFpClass');
+$CI->load->library('formB/lists/ListTotalUnmetNeedClass');
+$CI->load->library('formB/lists/ListTotalClientsClass');
 
-class MonthsClass extends MonthsInterface
+class FormBMonthsClass extends FormBMonthsInterface
 {
     public function __construct($params = null)
     {

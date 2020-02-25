@@ -9,6 +9,8 @@ class FormBModel extends BaseModel
         parent::__construct();
         $this->CI->load->library('formB/FormBClass');
         $this->CI->load->library('formB/lists/ListFormB');
+        $this->CI->load->library('formB/lists/ReportFormB');
+        $this->CI->load->library('formB/GenerateFormBClass');
     }
 
     public function getFormBList() : ListFormBInterface
@@ -39,7 +41,35 @@ class FormBModel extends BaseModel
         return $retval;
     }
 
-    public function saveFormB($unmet_id, $psgc_code, GenerateFormAInterface $data) 
+    public function getFormBReport(int $report_id, int $report_month, int $report_year) : ReportFormBInterface
+    {
+        $formb_report = $this->fromDbGetReportList(
+            'ReportFormB',
+            'FormBClass',
+            array(
+                'UnmetModern' => 'unmet_modern',
+                'ServedModern' => 'served_modern',
+                'NoIntention' => 'no_intention',
+                'WithIntention' => 'w_intention',
+                'ServedTraditional' => 'served_traditional',
+                'TotalUnmet' => 'total_unmet',      
+                'TotalServed' => 'total_served'
+            ),
+            'get_report_unmet_need_details',
+            array($report_id, $report_month, $report_year)
+        );
+
+        $retval = new ReportFormB();
+
+        foreach($formb_report as $form_B) {
+            $retval->append($form_B);
+        }
+
+        $retval->From = strtotime($report_year . '-' . $report_month . '-1');
+        return $retval;
+    }
+
+    public function saveFormB($unmet_id, $psgc_code, GenerateFormBInterface $data) 
     {
         $method = 'process_unmet_need';
 

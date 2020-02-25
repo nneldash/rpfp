@@ -6,7 +6,7 @@ $CI->load->iface('formA/SessionsHeldInterface');
 $CI->load->iface('formA/IndividualsReproductiveAgeInterface');
 $CI->load->iface('formA/SoloCoupleDisaggregationInterface');
 
-abstract class MonthsInterface extends BaseInterface
+abstract class FormAMonthsInterface extends BaseInterface
 {
     public $Month;
 
