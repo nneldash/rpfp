@@ -205,14 +205,14 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 							</td>
 							<td class="border-0 dropdownLoc">
 								<span class="small">
-									<select class="selectpicker" id="provinceList" data-live-search="true" title="Province" required>
+									<select class="selectpicker" id="provinceList" data-live-search="true" title="Province">
 										
 									</select>
-									<input type="hidden" readonly name="province" value="<?=$form1->Seminar->Location->Province->Code != 'N/A' ? $form1->Seminar->Location->Province->Code : ''; ?>">
-			                    	<select class="selectpicker" id="muniList" data-live-search="true" title="City/Municipality" required>
+									<input type="hidden" readonly name="province" class="provinceList" value="<?=$form1->Seminar->Location->Province->Code != 'N/A' ? $form1->Seminar->Location->Province->Code : ''; ?>" required>
+			                    	<select class="selectpicker" id="muniList" data-live-search="true" title="City/Municipality">
 										
 									</select>
-									<input type="hidden" readonly name="city" value="<?=$form1->Seminar->Location->City->Code != 'N/A' ? $form1->Seminar->Location->City->Code : ''; ?>">
+									<input type="hidden" required readonly name="city" class="muniList" value="<?=$form1->Seminar->Location->City->Code != 'N/A' ? $form1->Seminar->Location->City->Code : ''; ?>">
 			                    </span>
 							</td> 
 						</tr>
@@ -264,10 +264,10 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 							</td>
 							<td class="border-0 dropdownLoc">
 								<span class="small">
-									<select class="selectpicker" id="brgyList" data-size="3" data-live-search="true" title="Barangay" required>
+									<select class="selectpicker" id="brgyList" data-size="3" data-live-search="true" title="Barangay">
 										
 									</select>
-									<input type="hidden" readonly name="barangay" value="<?=$form1->Seminar->Location->Barangay->Code != 'N/A' ? $form1->Seminar->Location->Barangay->Code : ''; ?>">
+									<input type="hidden" class="brgyList" readonly name="barangay" value="<?=$form1->Seminar->Location->Barangay->Code != 'N/A' ? $form1->Seminar->Location->Barangay->Code : ''; ?>" required>
 			                    </span>
 							</td>
 						</tr>

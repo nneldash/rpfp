@@ -29,6 +29,9 @@
   	font-size: 1.6rem !important;
   	border-radius: 0;
 }
+.swal2-container {
+	top: 10%!important;
+}
 
 /*------------------------------------------------------------------
 [ Borders ]*/
@@ -210,7 +213,7 @@ td.small input[disabled] {
     color: black!important;
 }
 input.underline {
-	background: none!important;
+	background: none;
     color: black!important;
 	border-bottom: solid 1px!important;
 	border: none;
@@ -645,4 +648,8 @@ textarea::placeholder {
 @keyframes spinner {
 	0% { transform: rotate(0deg); }
 	100% { transform: rotate(360deg); }
+}
+
+.required-field {
+	background-color: #ffa7a7!important;
 }
