@@ -4535,16 +4535,16 @@ BEGIN
     END IF;
 
     IF (IFNULL( loc_province, 0 ) = 0 ) THEN
-        SET location_code_from = user_location * 1000;
-        SET location_code_to = (user_location + 10000) * 1000;
+        SET location_code_from = user_location * POWER(10, multiplier);
+        SET location_code_to = (user_location + 1) * POWER(10, multiplier) - 1;
     ELSE
         IF (IFNULL( loc_municipality, 0 ) = 0 ) THEN
             SET location_code_from = loc_province * 100000;
-            SET location_code_to = (loc_province + 1) * 100000;
+            SET location_code_to = (loc_province + 1) * 100000 - 1;
         ELSE
             IF (IFNULL( loc_barangay, 0 ) = 0 ) THEN
                 SET location_code_from = loc_municipality * 1000;
-                SET location_code_to = (loc_municipality + 1) * 1000;
+                SET location_code_to = (loc_municipality + 1) * 1000 - 1;
             ELSE
                 SET location_code_from = loc_barangay;
                 SET location_code_to = loc_barangay;
