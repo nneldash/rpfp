@@ -4173,94 +4173,101 @@ BEGIN
         LEAVE proc_exit_point;
     END IF;
 
-    IF ( IFNULL( indv_id_m, 0 ) = 0 ) THEN
-        INSERT INTO rpfp.individual (
-                    COUPLES_ID,
-                    LNAME,
-                    FNAME,
-                    MNAME,
-                    EXT_NAME,
-                    AGE,
-                    SEX,
-                    BDATE,
-                    CIVIL_ID,
-                    EDUC_BCKGRND_ID,
-                    IS_ATTENDEE
-                )
-            VALUES (
-                    couplesid,
-                    lastname_m,
-                    firstname_m,
-                    middle_m,
-                    extname_m,
-                    age_years_m,
-                    1,
-                    birthdate_m,
-                    civil_status_m,
-                    educ_bckgrnd_m,
-                    attendee_m
-                )
-            ;
-            SELECT "NEW INSERT MALE: " INTO TEXT_MESSAGE;
-    ELSE
-         UPDATE rpfp.individual ic
-            SET ic.LNAME = IF( IFNULL( lastname_m, '') = '', ic.LNAME, lastname_m ),
-                ic.FNAME = IF( IFNULL( firstname_m, '') = '', ic.FNAME, firstname_m ),
-                ic.MNAME = IF( IFNULL( middle_m, '') = '', ic.MNAME, middle_m ),
-                ic.EXT_NAME = IF( IFNULL( extname_m, '') = '', ic.EXT_NAME, extname_m ),
-                ic.AGE = IF( IFNULL( age_years_m, '') = '', ic.AGE, age_years_m ),
-                ic.BDATE = IF( IFNULL( birthdate_m, '') = '', ic.BDATE, birthdate_m ),
-                ic.CIVIL_ID = IF( IFNULL( civil_status_m, '') = '', ic.CIVIL_ID, civil_status_m ),
-                ic.EDUC_BCKGRND_ID = IF( IFNULL( educ_bckgrnd_m, '') = '', ic.EDUC_BCKGRND_ID, educ_bckgrnd_m ),
-                ic.IS_ATTENDEE = IF( IFNULL( attendee_m, '0') = '0', 0, 1 )
-          WHERE ic.COUPLES_ID = couplesid
-            AND ic.SEX = 1
-        ;
-        SELECT "UPDATE MALE: " INTO TEXT_MESSAGE;
+    IF (TRIM(IFNULL(lastname_m, '')) <> '' AND TRIM(IFNULL(firstname_m, '')) <> '') THEN
+        BEGIN
+            IF (IFNULL( indv_id_m, 0 ) = 0 ) THEN
+                INSERT INTO rpfp.individual (
+                            COUPLES_ID,
+                            LNAME,
+                            FNAME,
+                            MNAME,
+                            EXT_NAME,
+                            AGE,
+                            SEX,
+                            BDATE,
+                            CIVIL_ID,
+                            EDUC_BCKGRND_ID,
+                            IS_ATTENDEE
+                        )
+                    VALUES (
+                            couplesid,
+                            lastname_m,
+                            firstname_m,
+                            middle_m,
+                            extname_m,
+                            age_years_m,
+                            1,
+                            birthdate_m,
+                            civil_status_m,
+                            educ_bckgrnd_m,
+                            attendee_m
+                        )
+                ;
+                SELECT "NEW INSERT MALE: " INTO TEXT_MESSAGE;
+            ELSE
+                UPDATE rpfp.individual ic
+                    SET ic.LNAME = IF( IFNULL( lastname_m, '') = '', ic.LNAME, lastname_m ),
+                        ic.FNAME = IF( IFNULL( firstname_m, '') = '', ic.FNAME, firstname_m ),
+                        ic.MNAME = IF( IFNULL( middle_m, '') = '', ic.MNAME, middle_m ),
+                        ic.EXT_NAME = IF( IFNULL( extname_m, '') = '', ic.EXT_NAME, extname_m ),
+                        ic.AGE = IF( IFNULL( age_years_m, '') = '', ic.AGE, age_years_m ),
+                        ic.BDATE = IF( IFNULL( birthdate_m, '') = '', ic.BDATE, birthdate_m ),
+                        ic.CIVIL_ID = IF( IFNULL( civil_status_m, '') = '', ic.CIVIL_ID, civil_status_m ),
+                        ic.EDUC_BCKGRND_ID = IF( IFNULL( educ_bckgrnd_m, '') = '', ic.EDUC_BCKGRND_ID, educ_bckgrnd_m ),
+                        ic.IS_ATTENDEE = IF( IFNULL( attendee_m, '0') = '0', 0, 1 )
+                WHERE ic.COUPLES_ID = couplesid
+                    AND ic.SEX = 1
+                ;
+                SELECT "UPDATE MALE: " INTO TEXT_MESSAGE;
+            END IF;
+        END;
     END IF;
-    IF ( IFNULL( indv_id_f, 0 ) = 0 ) THEN
-        INSERT INTO rpfp.individual (
-                    COUPLES_ID,
-                    LNAME,
-                    FNAME,
-                    MNAME,
-                    AGE,
-                    SEX,
-                    BDATE,
-                    CIVIL_ID,
-                    EDUC_BCKGRND_ID,
-                    IS_ATTENDEE
-                )
-            VALUES (
-                    couplesid,
-                    lastname_f,
-                    firstname_f,
-                    middle_f,
-                    age_years_f,
-                    2,
-                    birthdate_f,
-                    civil_status_f,
-                    educ_bckgrnd_f,
-                    attendee_f
-                )
-            ;
-            SELECT CONCAT(TEXT_MESSAGE, '; ',  "NEW INSERT FEMALE: ") INTO TEXT_MESSAGE;
-    ELSE
-         UPDATE rpfp.individual ic
-            SET ic.LNAME = IF( IFNULL( lastname_f, '') = '', ic.LNAME, lastname_f ),
-                ic.FNAME = IF( IFNULL( firstname_f, '') = '', ic.FNAME, firstname_f ),
-                ic.MNAME = IF( IFNULL( middle_f, '') = '', ic.MNAME, middle_f ),
-                ic.AGE = IF( IFNULL( age_years_f, '') = '', ic.AGE, age_years_f ),
-                ic.BDATE = IF( IFNULL( birthdate_f, '') = '', ic.BDATE, birthdate_f ),
-                ic.CIVIL_ID = IF( IFNULL( civil_status_f, '') = '', ic.CIVIL_ID, civil_status_f ),
-                ic.EDUC_BCKGRND_ID = IF( IFNULL( educ_bckgrnd_f, '') = '', ic.EDUC_BCKGRND_ID, educ_bckgrnd_f ),
-                ic.IS_ATTENDEE = IF( IFNULL( attendee_f, '0') = '0', 0, 1 )
-          WHERE ic.COUPLES_ID = couplesid
-            AND ic.SEX = 2
-        ;
-        SELECT CONCAT(TEXT_MESSAGE, '; ', "UPDATE FEMALE: ") INTO TEXT_MESSAGE;
+    IF (TRIM(IFNULL(lastname_m, '')) <> '' AND TRIM(IFNULL(firstname_m, '')) <> '') THEN
+        BEGIN
+            IF ( IFNULL( indv_id_f, 0 ) = 0 ) THEN
+                INSERT INTO rpfp.individual (
+                            COUPLES_ID,
+                            LNAME,
+                            FNAME,
+                            MNAME,
+                            AGE,
+                            SEX,
+                            BDATE,
+                            CIVIL_ID,
+                            EDUC_BCKGRND_ID,
+                            IS_ATTENDEE
+                        )
+                    VALUES (
+                            couplesid,
+                            lastname_f,
+                            firstname_f,
+                            middle_f,
+                            age_years_f,
+                            2,
+                            birthdate_f,
+                            civil_status_f,
+                            educ_bckgrnd_f,
+                            attendee_f
+                        )
+                ;
+                SELECT CONCAT(TEXT_MESSAGE, '; ',  "NEW INSERT FEMALE: ") INTO TEXT_MESSAGE;
+            ELSE
+                UPDATE rpfp.individual ic
+                    SET ic.LNAME = IF( IFNULL( lastname_f, '') = '', ic.LNAME, lastname_f ),
+                        ic.FNAME = IF( IFNULL( firstname_f, '') = '', ic.FNAME, firstname_f ),
+                        ic.MNAME = IF( IFNULL( middle_f, '') = '', ic.MNAME, middle_f ),
+                        ic.AGE = IF( IFNULL( age_years_f, '') = '', ic.AGE, age_years_f ),
+                        ic.BDATE = IF( IFNULL( birthdate_f, '') = '', ic.BDATE, birthdate_f ),
+                        ic.CIVIL_ID = IF( IFNULL( civil_status_f, '') = '', ic.CIVIL_ID, civil_status_f ),
+                        ic.EDUC_BCKGRND_ID = IF( IFNULL( educ_bckgrnd_f, '') = '', ic.EDUC_BCKGRND_ID, educ_bckgrnd_f ),
+                        ic.IS_ATTENDEE = IF( IFNULL( attendee_f, '0') = '0', 0, 1 )
+                WHERE ic.COUPLES_ID = couplesid
+                    AND ic.SEX = 2
+                ;
+                SELECT CONCAT(TEXT_MESSAGE, '; ', "UPDATE FEMALE: ") INTO TEXT_MESSAGE;
+            END IF;
+        END;
     END IF;
-
     SELECT TEXT_MESSAGE AS MESSAGE;
 END$$
 

@@ -167,12 +167,12 @@ class Forms extends CI_Controller
 
         $individual->Id = $this->input->post('individual_id' . $entry_num)[$index];
         
-        $fname = trim($this->input->post('lastname' . $entry_num)[$index]);
-        $lname = trim($this->input->post('firstname' . $entry_num)[$index]);
+        $lname = trim($this->input->post('lastname' . $entry_num)[$index]);
+        $fname = trim($this->input->post('firstname' . $entry_num)[$index]);
         $mname = trim($this->input->post('middlename' . $entry_num)[$index]);
         $ename = trim($this->input->post('extname' . $entry_num)[$index]);
-        $individual->Name->Surname      = empty($fname) ? null : $lname;
-        $individual->Name->Firstname    = empty($lname) ? null : $fname;
+        $individual->Name->Surname      = empty($lname) ? null : $lname;
+        $individual->Name->Firstname    = empty($fname) ? null : $fname;
         $individual->Name->Middlename   = empty($mname) ? null : $mname;
         $individual->Name->Extname      = empty($ename) ? null : $ename;
 
