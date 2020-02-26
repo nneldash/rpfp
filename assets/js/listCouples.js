@@ -161,7 +161,7 @@ function searchNow()
 			url: base_url + '/menu/approvedClassSearch'
 		}).done(function(result){
 			console.log(result);
-			$('.table-search-results').html(tableResults(result));
+			$('.table-search-results').html(result);
 		});
 		
 	})

@@ -65,13 +65,15 @@ class Menu extends CI_Controller
         $this->load->model('CoupleModel');
         $approve = $this->CoupleModel->getApproveList();
         if ($this->input->server(REQUEST_METHOD) == POST) {
-            $this->load->view('menu/approve', array('approve' => $approve, RELOAD => true));
+            $this->load->view('menu/approve', array(RELOAD => true));
+            $this->load->view('menu/approve_list', array('approve' => $approve));
             return;
         }
 
         $this->do_not_render_footer = true;
         $this->index();
-        $this->load->view('menu/approve', array('approve' => $approve));
+        $this->load->view('menu/approve');
+        $this->load->view('menu/approve_list', array('approve' => $approve));
         $this->footer();
 
         $this->load->library('common/PageHandler');
@@ -294,6 +296,11 @@ class Menu extends CI_Controller
         
         
         $ret_val = $this->CoupleModel->getSearchValues($searchApprove);
+
+        if ($this->input->server(REQUEST_METHOD) == POST) {
+            $this->load->view('menu/approve_list', array('approve' => $ret_val));
+            return;
+        }
 
         $this->output
             ->set_content_type('application/json')
