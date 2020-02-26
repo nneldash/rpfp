@@ -1401,9 +1401,68 @@ function inputValid()
 	});
 }
 
+function checkRequired() 
+{
+	var validate = {
+						'type_class' : 0,
+						'class_details' : 0
+	}
+
+	if ($('input[name=type_of_class]:checked').size() > 0) {
+		validate['type_class'] = 0;
+		$('#rpfpClass table tr').find('td .checkmark').removeClass('required-field');
+
+		var others = $('#rpfpClass table tr').find('td input[id=others]');
+		if ((others).is(':checked')) {
+			if ($('#rpfpClass table tr').find('td input[name=others]').val() == '') {
+				$('#rpfpClass table tr').find('td input[name=others]').addClass('required-field');
+				validate['type_class'] = 1;
+			} else {
+				$('#rpfpClass table tr').find('td input[name=others]').removeClass('required-field');
+				validate['type_class'] = 0;
+			}
+		} else {
+			$('#rpfpClass table tr').find('td input').removeClass('required-field');
+			validate['type_class'] = 0;
+		}
+	} else {
+		$('#rpfpClass table tr').find('td .checkmark').addClass('required-field');
+		validate['type_class'] = 1;
+	}
+
+	$.each($('input,textarea,select').filter('[required]'), function(key, value) {
+		var item = $(value).val();
+		var className = $(value).attr('class');
+
+		if (item == '') {
+			validate['class_details'] = 1;
+			$(value).addClass('required-field');
+			
+			if (className == 'provinceList' || className == 'muniList' || className == 'brgyList') {
+				$(value).closest('td').find('button[data-id='+ className +']').addClass('required-field');
+				validate['class_details'] = 1;
+			}
+		} else {
+			$(value).removeClass('required-field');
+			if (className == 'provinceList' || className == 'muniList' || className == 'brgyList') {
+				$(value).closest('td').find('button[data-id='+ className +']').removeClass('required-field');
+				validate['class_details'] = 0;
+			}
+		}
+	});
+
+	if (validate['type_class'] == 0 && validate['class_details'] == 0) {
+		validate = 1
+		return validate;
+	} else {
+		validate = 0;
+	}
+}
+
 function saveForm1()
 {
-	$('.saveForm1').click(function() {
+	$('.saveForm1').click(function(event) {
+		event.preventDefault();
 		const Toast = Swal.mixin({
 			toast: true,
 			position: 'top-end',
@@ -1411,32 +1470,6 @@ function saveForm1()
 			timer: 3000
 		});
 
-		$.each($('input,textarea,select').filter('[required]'), function(key, value) {
-			var item = $(value).val();
-			var className = $(value).attr('class');	
-
-			if (item == '') {
-				$(value).addClass('required-field');
-				
-				if (className == 'provinceList' || className == 'muniList' || className == 'brgyList') {
-					$(value).closest('td').find('button[data-id='+ className +']').addClass('required-field');
-				}
-
-				Toast.fire({
-					type: 'error',
-					title: 'Fill the required fields'
-				});
-
-			} else {
-				$(value).removeClass('required-field');
-				if (className == 'provinceList' || className == 'muniList' || className == 'brgyList') {
-					$(value).closest('td').find('button[data-id='+ className +']').removeClass('required-field');
-				}
-			}
-		});
-
-		return false;
-				
 		save_page(current_page());
 		var formData = {};
 		/** iterate all inputs/textarea */
@@ -1451,34 +1484,41 @@ function saveForm1()
 			}
 			formData[item.prop('name')] = item_value;
 		});
-				
-		$.ajax({
-			type: 'POST',
-			dataType: 'JSON',
-			data: formData,
-			url: base_url + '/forms/saveForm1'
-		}).done(function(result){
+
+		var validate = checkRequired();
+		if (validate != 1) {
 			Toast.fire({
-				type: (result.is_save) ? 'success' : 'error',
-				title: 'Form 1 save status',
-				message: result.message == undefined ? "There was an error saving Form 1" : result.message
-			});
+				type: 'error',
+				title: 'Fill the required fields'
+			}); 
+		} else {
+			$.ajax({
+				type: 'POST',
+				dataType: 'JSON',
+				data: formData,
+				url: base_url + '/forms/saveForm1'
+			}).done(function(result){
+				console.log(result);
+				Toast.fire({
+					type: (result.is_save) ? 'success' : 'error',
+					title: 'Form 1 save status',
+					message: result.message == undefined ? "There was an error saving Form 1" : result.message
+				});
 
-			if (result.is_save) {
-				/** put rpfp class id in field */
-				$('#class_id').val(result.value);
+				if (result.is_save) {
+					/** put rpfp class id in field */
+					$('#class_id').val(result.value);
 
-				/** initialize edit existing field */
-				var temp = $('#edit_existing');
-				if (temp.length == 0) {
-					temp = $(document.createElement('div'));
-					temp.prop('id', 'edit_existing');
+					/** initialize edit existing field */
+					var temp = $('#edit_existing');
+					if (temp.length == 0) {
+						temp = $(document.createElement('div'));
+						temp.prop('id', 'edit_existing');
+					}
+					temp.val('edit-from-save');
 				}
-				temp.val('edit-from-save');
-			}
-		});
-
-		return false;
+			});
+		}				
 	});
 }
 

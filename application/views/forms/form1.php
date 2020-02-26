@@ -92,10 +92,6 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 		<form id="form_validation" class="form-horizontal">
 			<input type="hidden" id="num_items" name="num_items" value="1" />
 			<?php if(!$is_pdf) : ?>
-				<div id="rightButton" style="text-transform: none; ">					
-		            <input type="submit" class="save saveForm1" value="Save" name="saveform1" />
-		        </div>
-
 		        <div id="leftButton">
 		        	<div class="dropdown save">
 						<button class="dropdown-toggle" type="button" data-toggle="dropdown">
@@ -113,6 +109,9 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 					</div>
 	
 			    </div>
+				<div id="rightButton" style="text-transform: none; ">					
+		            <input type="submit" class="save saveForm1" value="Save" name="saveform1" />
+		        </div>
 			<?php endif; ?>
 			<input type="hidden" name="class_id" value="<?= $rpfpId; ?>" />
 	        <br>
