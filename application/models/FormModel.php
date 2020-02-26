@@ -233,8 +233,6 @@ class FormModel extends BaseModel
         
         if ($fp_service == 'FP SERVICE ADDED') {
             return 'added';
-        } else if ($fp_service == 'DATA IS UPDATED') {
-            return 'existed';
         } else {
             return false;
         }

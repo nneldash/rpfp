@@ -106,6 +106,9 @@ function checkbox()
 
 function saveServiceSlip()
 {
+	var coupleId = $('input[name="couple_id"]').val();
+	var fp_id = $('input[name="slip_id"]').val();
+
 	$('.saveServiceSlip').click(function() {
 		const Toast = Swal.mixin({
 			toast: true,
@@ -115,8 +118,7 @@ function saveServiceSlip()
 		});
 		
 		var formData = $('#service_slip').serialize();
-		var coupleId = $('input[name="couple_id"]').val();
-
+		
 		$.ajax({
 			type: 'POST',
 			data: formData,
@@ -127,7 +129,7 @@ function saveServiceSlip()
 					type: 'success',
 					title: 'Service Slip successfully saved!'
 				});
-			} else if (result.is_save == 'existed'){
+			} else if (fp_id != ''){
 				Toast.fire({
 					type: 'warning',
 					title: 'Data Already Exist.'
