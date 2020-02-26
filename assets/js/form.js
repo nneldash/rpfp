@@ -1434,8 +1434,6 @@ function saveForm1()
 				}
 			}
 		});
-
-		return false;
 				
 		save_page(current_page());
 		var formData = {};
