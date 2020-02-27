@@ -91,7 +91,7 @@ $slip = ServiceSlipClass::getServiceSlipFromVariable($slip);
 							<td class="padding-0 back-eee">
 								<?php if (!$is_pdf) : ?>
 									<label class="cont">
-										<input type="radio" name="method" class="fp_method" value="<?= ModernMethods::SDM ?>" <?= $slip->MethodUsed == '11' ? 'checked' : '' ?> required />
+										<input type="radio" name="method" class="fp_method" value="<?= ModernMethods::SDM ?>" <?= $slip->MethodUsed == '11' ? 'checked' : '' ?> />
 										<span class="checkmark"></span>
 									</label>
 								<?php endif; ?>
@@ -321,10 +321,11 @@ $slip = ServiceSlipClass::getServiceSlipFromVariable($slip);
 						<p>)</p>
 					</div>
 					<div class="flex">
+						<span class="required">*</span>
 						<p class="small">
 							Date of accepting the method: &nbsp;
 						</p>
-						<input type="date" name="date_of_method" class="date_method" value="<?= ($slip->DateOfMethod != 'N/A' ? $slip->DateOfMethod : 'MM/DD/YYYY'); ?>" class="padding-l10 underline width-70" max="<?= date('Y-m-d'); ?>"/>
+						<input type="date" name="date_of_method" class="date_method" value="<?= ($slip->DateOfMethod != 'N/A' ? $slip->DateOfMethod : 'MM/DD/YYYY'); ?>" class="padding-l10 underline width-70" max="<?= date('Y-m-d'); ?>" required />
 					</div>
 					<div class="flex">
 						<p class="small">

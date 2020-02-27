@@ -489,7 +489,7 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 										<input type="hidden" class="fp_served<?= $i; ?>" value="<?= $couple->FpServed; ?>" />
 									</td>
 									
-									<td class="small">
+									<td class="small highlight-this">
 										<div style="display: inline-flex; border: 1px solid transparent;">
 											<input type="hidden" id="isDuplicate1[<?= $i; ?>]" name="isDuplicate1[<?= $i; ?>]" value="" />
 											<input type="hidden" class="loopIndex1" value="<?= $i; ?>" />
@@ -568,7 +568,7 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 					                        ?>
 					                    </div>
 									</td>
-									<td class="small-20">
+									<td class="small-20 highlight-this">
 										<span class="required" hidden>*</span>
 										<?php
 				                            echo HtmlHelper::inputPdf(
@@ -583,7 +583,7 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 				                            );
 				                        ?>
 									</td>
-									<td class="small-20">
+									<td class="small-20 highlight-this">
 										<span class="required" hidden>*</span>
 										<?php
 				                            echo HtmlHelper::inputPdf(
@@ -598,7 +598,7 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 				                            );
 				                        ?>
 									</td>
-									<td class="small-20">
+									<td class="small-20 highlight-this">
 										<div style="display: inline-flex; border: 1px solid transparent;">
 											<span class="required" hidden>*</span>
 											<br><br>
@@ -792,7 +792,7 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 									<?php endif; ?>
 								</tr>
 								<tr class="secondRow tr2<?= $i; ?> <?= $couple->Id != 'N/A' ? $couple->IsActive != 'N/A' ? ' ' : 'isApprove' : '' ?>">
-									<td class="small">
+									<td class="small highlight-this">
 										<div style="display: inline-flex; border: 1px solid transparent;">
 											<input type="hidden" id="isDuplicate2[<?= $i; ?>]" name="isDuplicate2[<?= $i; ?>]" value="" />
 											<input type="hidden" class="loopIndex2" value="<?= $i;?>" />
@@ -858,7 +858,7 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 					                        ?>
 					                    </div>
 									</td>
-									<td class="small-20">
+									<td class="small-20 highlight-this">
 										<span class="required" hidden>*</span>
 										<input type="hidden" value="" class="getSex1" name="getSex1" />
 										<?php
@@ -874,7 +874,7 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 				                            );
 				                        ?>
 									</td>
-									<td class="small-20">
+									<td class="small-20 highlight-this">
 										<span class="required" hidden>*</span>
 										<?php
 				                            echo HtmlHelper::inputPdf(
@@ -889,7 +889,7 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 				                            );
 				                        ?>
 									</td>
-									<td class="small-20">
+									<td class="small-20 highlight-this">
 										<div style="display: inline-flex; border: 1px solid transparent;">
 											<span class="required" hidden>*</span>
 											<br><br>

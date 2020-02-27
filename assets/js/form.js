@@ -44,6 +44,8 @@ $(document).ready(function(){
 	$('#provinceList').on('changed.bs.select', function (e, clickedIndex, isSelected, previousValue) {
 		var provinceId = $(e.target.options[clickedIndex]).val();
 		$($('#form_validation input[name="province"]')[0]).val(provinceId);
+		$('#form_validation input[name="city"]').val('');
+		$('#form_validation input[name="barangay"]').val('');
 
 		$('#muniList').find('option').remove();
 		$('#muniList').selectpicker('refresh');
@@ -55,6 +57,7 @@ $(document).ready(function(){
 	$('#muniList').on('changed.bs.select', function (e, clickedIndex, isSelected, previousValue) {
 		var muniId = $(e.target.options[clickedIndex]).val();
 		$($('#form_validation input[name="city"]')[0]).val(muniId);
+		$('#form_validation input[name="barangay"]').val('');
 
 		$('#brgyList').find('option').remove();
 		$('#brgyList').selectpicker('refresh');
@@ -659,7 +662,6 @@ function getProvinces()
 	}).done(function(result){
 		var data = result.LOCATION_LIST;
 
-
 		$.each(data, function(i, text){
 			$('#provinceList').append(new Option(data[i].LOCATION_DESCRIPTION, data[i].PROVINCE));
 		});
@@ -1242,7 +1244,6 @@ function autoGetData(fname1, lname1, extname1, sex1, bday1, fname2, lname2, extn
 			}
 	}).done(function(result){
 		var hasId = $('.tr1' + index + ' input[name="couple_id['+ index +']"]').val();
-		console.log(hasId);
 		if (result.ActiveStatus === '2') {
 			status = 'Pending';
 		} else if (result.ActiveStatus === '0') {
@@ -1405,7 +1406,7 @@ function checkRequired()
 {
 	var validate = {
 						'type_class' : 0,
-						'class_details' : 0
+						'class_and_couple_details' : 0
 	}
 
 	if ($('input[name=type_of_class]:checked').size() > 0) {
@@ -1435,23 +1436,23 @@ function checkRequired()
 		var className = $(value).attr('class');
 
 		if (item == '') {
-			validate['class_details'] = 1;
+			validate['class_and_couple_details'] = 1;
 			$(value).addClass('required-field');
 			
 			if (className == 'provinceList' || className == 'muniList' || className == 'brgyList') {
 				$(value).closest('td').find('button[data-id='+ className +']').addClass('required-field');
-				validate['class_details'] = 1;
+				validate['class_and_couple_details'] = 1;
 			}
 		} else {
 			$(value).removeClass('required-field');
 			if (className == 'provinceList' || className == 'muniList' || className == 'brgyList') {
 				$(value).closest('td').find('button[data-id='+ className +']').removeClass('required-field');
-				validate['class_details'] = 0;
+				validate['class_and_couple_details'] = 0;
 			}
 		}
 	});
 
-	if (validate['type_class'] == 0 && validate['class_details'] == 0) {
+	if (validate['type_class'] == 0 && validate['class_and_couple_details'] == 0) {
 		validate = 1
 		return validate;
 	} else {
@@ -1460,6 +1461,7 @@ function checkRequired()
 }
 
 function saveForm1()
+
 {
 	$('.saveForm1').click(function(event) {
 		event.preventDefault();
@@ -1498,7 +1500,6 @@ function saveForm1()
 				data: formData,
 				url: base_url + '/forms/saveForm1'
 			}).done(function(result){
-				console.log(result);
 				Toast.fire({
 					type: (result.is_save) ? 'success' : 'error',
 					title: 'Form 1 save status',

@@ -8,7 +8,7 @@ $(function() {
 
 		if (coupleId == 0) {
 			$('#service_slip input:not(.saveServiceSlip)').attr('disabled', 'disabled');
-
+			$('.saveServiceSlip').css('display', 'none');
 			const Toast = Swal.mixin({
 				toast: true,
 				position: 'top-end',
@@ -104,12 +104,35 @@ function checkbox()
 	});
 }
 
+function checkRequired()
+{
+	var validate = 0;
+	$.each($('#service_slip input').filter('[required]'), function(key, value) {
+		var item = $(value).val();
+
+		if (item == '') {
+			validate = 0;
+			$(value).addClass('required-field');
+		} else {
+			validate = 1;
+			$(value).removeClass('required-field');
+		}
+	});
+
+	if (validate == 1) {
+		return validate;
+	} else {
+		validate = 0;
+	}
+}
+
 function saveServiceSlip()
 {
 	var coupleId = $('input[name="couple_id"]').val();
 	var fp_id = $('input[name="slip_id"]').val();
 
-	$('.saveServiceSlip').click(function() {
+	$('.saveServiceSlip').click(function(event) {
+		event.preventDefault();
 		const Toast = Swal.mixin({
 			toast: true,
 			position: 'top-end',
@@ -118,35 +141,42 @@ function saveServiceSlip()
 		});
 		
 		var formData = $('#service_slip').serialize();
-		
-		$.ajax({
-			type: 'POST',
-			data: formData,
-			url: base_url + '/forms/saveServiceSlip'
-		}).done(function(result){
-			if(result.is_save == 'added') {
-				Toast.fire({
-					type: 'success',
-					title: 'Service Slip successfully saved!'
-				});
-			} else if (fp_id != ''){
-				Toast.fire({
-					type: 'warning',
-					title: 'Data Already Exist.'
-				});
-			} else if (coupleId == 0) {
-				Toast.fire({
-					type: 'warning',
-					title: 'Save Form 1 before providing\nFP Service details.'
-				});
-			} else {
-				Toast.fire({
-					type: 'warning',
-					title: 'No input data.'
-				});
-			}
-		});
-		return false;
+		var validate = checkRequired();
+
+		if (validate != 1) {
+			Toast.fire({
+				type: 'error',
+				title: 'Fill the required fields'
+			});
+		} else {
+			$.ajax({
+				type: 'POST',
+				data: formData,
+				url: base_url + '/forms/saveServiceSlip'
+			}).done(function(result){
+				if(result.is_save == 'added') {
+					Toast.fire({
+						type: 'success',
+						title: 'Service Slip successfully saved!'
+					});
+				} else if (fp_id != ''){
+					Toast.fire({
+						type: 'warning',
+						title: 'Data Already Exist.'
+					});
+				} else if (coupleId == 0) {
+					Toast.fire({
+						type: 'warning',
+						title: 'Save Form 1 before providing\nFP Service details.'
+					});
+				} else {
+					Toast.fire({
+						type: 'warning',
+						title: 'No input data.'
+					});
+				}
+			});
+		}
 	});
 
 }
