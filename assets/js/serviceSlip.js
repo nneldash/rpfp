@@ -5,6 +5,7 @@ $(function() {
 
 	  $(document).ready(function(){
 		var coupleId = $('input[name="couple_id"]').val();
+		var fpId = $('input[name="slip_id"]').val();
 
 		if (coupleId == 0) {
 			$('#service_slip input:not(.saveServiceSlip)').attr('disabled', 'disabled');
@@ -23,6 +24,11 @@ $(function() {
 		} else {
 			$('#service_slip input').removeAttr('disabled');
 		}
+
+		if (fpId != '') {
+			$('.saveServiceSlip').css('display', 'none');
+		}
+		
 	  });
 	  
 });
