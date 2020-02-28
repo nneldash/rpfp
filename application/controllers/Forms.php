@@ -89,7 +89,6 @@ class Forms extends CI_Controller
 
     public function saveForm1()
     {
-        print_r($_POST);exit;
         $form1 = new FormClass();
 
         $num_entries = $this->input->post('num_items');
