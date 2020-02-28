@@ -98,8 +98,6 @@ $(function() {
 
 	Inputmask().mask(".birthAge");
 
-	// $('#date_con').datepicker();	
-
     $('.selectpicker').selectpicker({
     	container: 'body'
     });
@@ -113,8 +111,6 @@ $(function() {
 		$('td select').css('cursor', 'not-allowed');
 		$('td input[class="check"]').attr('disabled', false);
 	}
-
-	setTimeout(getIntentionUse, 2000);
 });
 
 function afterLoadValidation()
@@ -147,7 +143,7 @@ function afterLoadValidation()
 		var month2 = $.trim(dateArr2[0]);
 		var day2 = $.trim(dateArr2[1]);
 		var year2 = $.trim(dateArr2[2]);
-		var bday2 = year2 + '-' + month2 + '-' + day2;
+		var bday2 = year2 + '-' + month2 + '-' + day2;		
 
 		if (fname1 != '') {
 			if(!$('.tr1' + i + ' textarea[name="firstname1[' + i +']"]').prop('required')) {
@@ -164,31 +160,8 @@ function afterLoadValidation()
 		}
 		autoGetData(fname1, lname1, extname1, sex1, bday1, fname2, lname2, extname2, sex2, bday2, i);
 		criteria(i, i, sex1, sex2, age1, age2, type, status);
-	}
-}
 
-function importChanges()
-{
-	$('#importModal').on('hidden.bs.modal', function (e) {
-
-		setTimeout(function(){
-			var prov = $('input[name="province"]').val();
-
-			$('#provinceList').val(prov);
-			$('#provinceList').selectpicker('render').selectpicker('refresh');
-
-			getMunicipalities(prov);
-		}, 2000);
-
-		afterLoadValidation();
-	});
-}
-
-function getIntentionUse() 
-{
-	for(var i = 0; i <= 9 ; i ++) {
-		var val = $('.tr1' + i).find('input[name="status[' + i +']"]').val();
-
+		val = status.toUpperCase();
 		if(val == 'A') {
 	    	$('input[name="intention-use[' + i +']"').attr('required', 'required');
 	    	$('input[name="intention-use[' + i +']"').find('.intention-required').removeAttr('hidden', 'hidden');
@@ -200,6 +173,20 @@ function getIntentionUse()
 	    	$('input[name="intention_use['+i+']"').attr('disabled', 'disabled');
 	    }
 	}
+}
+
+function importChanges()
+{
+	$('#importModal').on('hidden.bs.modal', function (e) {
+		setTimeout(function(){
+			var prov = $('input[name="province"]').val();
+			$('#provinceList').val(prov);
+			$('#provinceList').selectpicker('render').selectpicker('refresh');
+
+			getMunicipalities(prov);
+		}, 2000);
+		afterLoadValidation();
+	});
 }
 
 function click_click_click(index, id, couplesId)
@@ -517,6 +504,20 @@ function statusUnmet()
 		gender2 = gender2.toUpperCase();
 		
 		criteria(index1, index2, gender1, gender2, age1, age2, type, status);
+
+		var index = $(this).closest('tr').find('input[class="loopIndex1"]').val();
+		status = status.toUpperCase();
+		if(status == 'A') {
+	    	$(this).closest('tr').find('.intention-use').attr('required', 'required');
+	    	$(this).closest('tr').find('.intention-required').removeAttr('hidden', 'hidden');
+	    	$(this).closest('tr').find('input[name="intention_use['+index+']"]').removeAttr('disabled', 'disabled');
+	    	intentionStatusValidation(index);
+	    } else {
+	    	$(this).closest('tr').find('.intention-use').val('');
+	    	$(this).closest('tr').find('.intention-use').removeAttr('required', 'required');
+	    	$(this).closest('tr').find('.intention-required').attr('hidden', 'hidden');
+	    	$(this).closest('tr').find('input[name="intention_use['+index+']"]').attr('disabled', 'disabled');
+	    }
 	});
 }
 
@@ -551,21 +552,6 @@ function statusValidation()
 	    	if(!$(this).prop('required')) {
 		    	$(this).closest('tr').find('.require-this').attr('required', 'required');
 		    	$(this).closest('tr').find('.required').removeAttr('hidden', 'hidden');
-		    }
-
-	    	var index = $(this).closest('tr').find('input[class="slipIndex"]').val();
-		    val = val.toUpperCase();
-
-		    if(key == 65 || val == 'A') {
-		    	$(this).closest('tr').find('input[name="intention_use['+index+']"]').removeAttr('disabled', 'disabled');
-		    	$(this).closest('tr').find('.intention-use').attr('required', 'required');
-		    	$(this).closest('tr').find('.intention-required').removeAttr('hidden', 'hidden');
-		    	intentionStatusValidation(index);
-		    } else {
-		    	$(this).closest('tr').find('.intention-use').val('');
-		    	$(this).closest('tr').find('.intention-use').removeAttr('required', 'required');
-		    	$(this).closest('tr').find('.intention-required').attr('hidden', 'hidden');
-		    	$(this).closest('tr').find('input[name="intention_use['+index+']"]').attr('disabled', 'disabled');
 		    }
 	    } else {
 	    	event.preventDefault();
