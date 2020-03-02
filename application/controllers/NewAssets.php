@@ -234,4 +234,16 @@ class NewAssets extends CI_Controller
         header('Content-Type: application/json');
         readfile(BASEPATH . BOOTSTRAP_SELECT_MAP);
     }
+
+    public function jQueryUi()
+    {
+        header('Content-Type: application/json');
+        readfile(BASEPATH . JQUERY_UI);
+    }
+
+    public function theme()
+    {
+        header('Content-Type: text/css');
+        readfile(BASEPATH . THEME);
+    }
 }

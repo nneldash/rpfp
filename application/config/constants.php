@@ -168,3 +168,6 @@ defined('TIME_STAMP') or define('TIME_STAMP', 'DATETIME');
 defined('BOOTSTRAP_SELECT_CSS') or define('BOOTSTRAP_SELECT_CSS', '/../node_modules/bootstrap-select/dist/css/bootstrap-select.min.css');
 defined('BOOTSTRAP_SELECT_JS') or define('BOOTSTRAP_SELECT_JS', '/../node_modules/bootstrap-select/dist/js/bootstrap-select.min.js');
 defined('BOOTSTRAP_SELECT_MAP') or define('BOOTSTRAP_SELECT_MAP', '/../node_modules/bootstrap-select/dist/js/bootstrap-select.min.js.map');
+
+defined('JQUERY_UI') or define('JQUERY_UI', '/../node_modules/jquery-ui/ui/widgets/datepicker.js');
+defined('THEME') or define('THEME', '/../node_modules/jquery-ui/themes/base/datepicker.css');

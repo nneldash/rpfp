@@ -102,12 +102,11 @@ $(function() {
     	container: 'body'
     });
 
-    // $.datepicker.formatDate( "yy-mm-dd", new Date( 2007, 1 - 1, 26 ) );
-    // $('#date_con').val();
-
-    // $('#date_con').datepicker({
-    // 	format: 'dd-mm-yyyy'
-    // });
+    var FromEndDate = new Date();
+    $('.date_con').datepicker({
+    	dateFormat: "mm/dd/yy",
+    	endDate: FromEndDate
+    });
 
 	if(isRDM == 1 || isFocal == 1){
 		$('td input').attr('disabled', true);
@@ -119,21 +118,21 @@ $(function() {
 		$('td input[class="check"]').attr('disabled', false);
 	}
 
-	$('#date_con').keyup(function(){
-		var d = new Date();
-		var month = d.getMonth()+1;
-		var day = d.getDate();
+	// $('.date_con').keyup(function(){
+		// var d = new Date();
+		// var month = d.getMonth()+1;
+		// var day = d.getDate();
 
-		var today = d.getFullYear() + '-' +
-		    (month < 10 ? '0' : '') + month + '-' +
-		    (day   < 10 ? '0' : '') + day;
+		// var today = d.getFullYear() + '-' +
+		//     (month < 10 ? '0' : '') + month + '-' +
+		//     (day   < 10 ? '0' : '') + day;
 
-		var value = $(this).val();
+		// var value = $(this).val();
 
-		if (value > today) {
-			$(this).val('');
-		}
-	});
+		// if (value > today) {
+		// 	$(this).val('');
+		// }
+	// });
 });
 
 function afterLoadValidation()

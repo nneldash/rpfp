@@ -19,6 +19,7 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 <?php } else { ?>
 	<link href="<?= base_url('NewAssets/FontAwesome'); ?>" rel="stylesheet">
 	<link href="<?= base_url('NewAssets/bootstrapSelectCss'); ?>" rel="stylesheet">	
+	<link href="<?= base_url('NewAssets/theme') ?>" rel="stylesheet">
 	<style>
 		.table >tbody > .approveCheck > td,
 		.table >tbody > .secondRow > td {
@@ -294,10 +295,9 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 							</td>
 							<td class="border-0">
 								<span class="small">
-									<input id="date_con" data-date-format="dd/mm/yy" type="date" name="date_conducted" value="<?= ($form1->Seminar->DateConducted != 'N/A' ? $form1->Seminar->DateConducted : ''); ?>" class="padding-l10 underline width-70" required max="<?= date('Y-m-d'); ?>" data-provide="datepicker"/>
+									<input type="text" name="date_conducted" value="<?= ($form1->Seminar->DateConducted != 'N/A' ? $form1->Seminar->DateConducted : ''); ?>" class="padding-l10 underline width-70 date_con" placeholder="MM/DD/YYYY" required />
 			                    </span>
-							</td>
-							
+							</td>							
 						</tr>
 					</table>
 				</div>
@@ -1142,15 +1142,12 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 
 <?php if(!$is_pdf) : ?>
 	<script>
-		loadJs(base_url + 'NewAssets/templateJs',
-			function() {
-				loadJs(base_url + 'NewAssets/inputMaskJs', function() {
-					loadJs(base_url + 'assets/js/form.js');
-				});
-				loadJs(base_url + 'NewAssets/jqueryMaskJs');
-				loadJs(base_url + 'NewAssets/inputExtJs');
-				loadJs(base_url + 'NewAssets/bootstrapSelectJs');
-			}
-		);
+		loadJs(base_url + 'NewAssets/inputMaskJs', function() {
+			loadJs(base_url + 'assets/js/form.js');
+		});
+		loadJs(base_url + 'NewAssets/jqueryMaskJs');
+		loadJs(base_url + 'NewAssets/inputExtJs');
+		loadJs(base_url + 'NewAssets/bootstrapSelectJs');
+		loadJs(base_url + 'NewAssets/jQueryUi');
 	</script>
 <?php endif; ?>
