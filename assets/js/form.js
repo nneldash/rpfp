@@ -102,6 +102,7 @@ $(function() {
     	container: 'body'
     });
 
+    // $.datepicker.formatDate( "yy-mm-dd", new Date( 2007, 1 - 1, 26 ) );
     // $('#date_con').val();
 
     // $('#date_con').datepicker({
@@ -124,8 +125,8 @@ $(function() {
 		var day = d.getDate();
 
 		var today = d.getFullYear() + '-' +
-		    (month<10 ? '0' : '') + month + '-' +
-		    (day<10 ? '0' : '') + day;
+		    (month < 10 ? '0' : '') + month + '-' +
+		    (day   < 10 ? '0' : '') + day;
 
 		var value = $(this).val();
 
