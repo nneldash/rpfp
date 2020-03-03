@@ -295,7 +295,8 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 							</td>
 							<td class="border-0">
 								<span class="small">
-									<input type="text" name="date_conducted" value="<?= ($form1->Seminar->DateConducted != 'N/A' ? $form1->Seminar->DateConducted : ''); ?>" class="padding-l10 underline width-70 date_con" placeholder="MM/DD/YYYY" required />
+									<?php $date_con = strtotime($form1->Seminar->DateConducted)?>
+									<input type="text" name="date_conducted" value="<?= ($form1->Seminar->DateConducted != 'N/A' ? date('m/d/Y', $date_con) : ''); ?>" class="padding-l10 underline width-70 date_con" placeholder="MM/DD/YYYY" required readonly />
 			                    </span>
 							</td>							
 						</tr>

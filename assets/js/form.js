@@ -105,7 +105,8 @@ $(function() {
     var FromEndDate = new Date();
     $('.date_con').datepicker({
     	dateFormat: "mm/dd/yy",
-    	endDate: FromEndDate
+    	maxDate: FromEndDate,
+		changeYear: true
     });
 
 	if(isRDM == 1 || isFocal == 1){
@@ -117,55 +118,39 @@ $(function() {
 		$('td select').css('cursor', 'not-allowed');
 		$('td input[class="check"]').attr('disabled', false);
 	}
-
-	// $('.date_con').keyup(function(){
-		// var d = new Date();
-		// var month = d.getMonth()+1;
-		// var day = d.getDate();
-
-		// var today = d.getFullYear() + '-' +
-		//     (month < 10 ? '0' : '') + month + '-' +
-		//     (day   < 10 ? '0' : '') + day;
-
-		// var value = $(this).val();
-
-		// if (value > today) {
-		// 	$(this).val('');
-		// }
-	// });
 });
 
 function afterLoadValidation()
 {
 	for(var i = 0; i <= 9; i ++) {
-		var fname1 = $('.tr1' + i + ' textarea[name="firstname1[' + i +']"]').val();
-		var lname1= $('.tr1' + i + ' textarea[name="lastname1[' + i +']"]').val();
-		var extname1 = $('.tr1' + i + ' input[name="extname1[' + i +']"]').val();
-		var sex1 = $('.tr1' + i + ' input[name="sex1[' + i +']"]').val();
-		var bday1 = $('.tr1' + i + ' input[name="bday1[' + i +']"]').val();
-		var age1 = $('.tr1' + i + ' input[name="age1[' + i +']"]').val();
+		var fname1 	  =	$('.tr1' + i + ' textarea[name="firstname1[' + i +']"]').val();
+		var lname1 	  =	$('.tr1' + i + ' textarea[name="lastname1[' + i +']"]').val();
+		var extname1  =	$('.tr1' + i + ' input[name="extname1[' + i +']"]').val();
+		var sex1 	  =	$('.tr1' + i + ' input[name="sex1[' + i +']"]').val();
+		var bday1     =	$('.tr1' + i + ' input[name="bday1[' + i +']"]').val();
+		var age1      =	$('.tr1' + i + ' input[name="age1[' + i +']"]').val();
 
-		var fname2 = $('.tr2' + i + ' textarea[name="firstname2[' + i +']"]').val();
-		var lname2= $('.tr2' + i + ' textarea[name="lastname2[' + i +']"]').val();
-		var extname2 = $('.tr2' + i + ' input[name="extname2[' + i +']"]').val();
-		var sex2 = $('.tr2' + i + ' input[name="sex2[' + i +']"]').val();
-		var bday2 = $('.tr2' + i + ' input[name="bday2[' + i +']"]').val();
-		var age2 = $('.tr2' + i + ' input[name="age2[' + i +']"]').val();
+		var fname2    =	$('.tr2' + i + ' textarea[name="firstname2[' + i +']"]').val();
+		var lname2    =	$('.tr2' + i + ' textarea[name="lastname2[' + i +']"]').val();
+		var extname2  =	$('.tr2' + i + ' input[name="extname2[' + i +']"]').val();
+		var sex2      =	$('.tr2' + i + ' input[name="sex2[' + i +']"]').val();
+		var bday2     =	$('.tr2' + i + ' input[name="bday2[' + i +']"]').val();
+		var age2      =	$('.tr2' + i + ' input[name="age2[' + i +']"]').val();
 
-		var type = $('.tr1' + i + ' input[name="type[' + i +']"]').val();
-		var status = $('.tr1' + i + ' input[name="status[' + i +']"]').val();
+		var type      =	$('.tr1' + i + ' input[name="type[' + i +']"]').val();
+		var status    =	$('.tr1' + i + ' input[name="status[' + i +']"]').val();
 
-		var dateArr1 = bday1.split('-');
-		var month1 = $.trim(dateArr1[0]);
-		var day1 = $.trim(dateArr1[1]);
-		var year1 = $.trim(dateArr1[2]);
-		var bday1 = year1 + '-' + month1 + '-' + day1;
+		var dateArr1  = bday1.split('-');
+		var month1    = $.trim(dateArr1[0]);
+		var day1      =	$.trim(dateArr1[1]);
+		var year1     = $.trim(dateArr1[2]);
+		var bday1     =	year1 + '-' + month1 + '-' + day1;
 
-		var dateArr2 = bday2.split('-');
-		var month2 = $.trim(dateArr2[0]);
-		var day2 = $.trim(dateArr2[1]);
-		var year2 = $.trim(dateArr2[2]);
-		var bday2 = year2 + '-' + month2 + '-' + day2;		
+		var dateArr2  = bday2.split('-');
+		var month2    =	$.trim(dateArr2[0]);
+		var day2      =	$.trim(dateArr2[1]);
+		var year2     =	$.trim(dateArr2[2]);
+		var bday2     = year2 + '-' + month2 + '-' + day2;		
 
 		if (fname1 != '') {
 			if(!$('.tr1' + i + ' textarea[name="firstname1[' + i +']"]').prop('required')) {
@@ -766,33 +751,33 @@ function UnmetNeedCriteria(index, age, type, status)
 function getDataDuplicate()
 {
 	$('.fname1').keyup(function(){
-		var fname1 = $(this).val();
-		var lname1 = $(this).closest('tr').find('.lname1').val();
-		var extname1 = $(this).closest('tr').find('.extname1').val();
-		var sex1 = $(this).closest('tr').find('.gender1').val();
-		var sex1 = sex1.toUpperCase();
+		var fname1 	  =	$(this).val();
+		var lname1    =	$(this).closest('tr').find('.lname1').val();
+		var extname1  =	$(this).closest('tr').find('.extname1').val();
+		var sex1      =	$(this).closest('tr').find('.gender1').val();
+		var sex1 	  = sex1.toUpperCase();
 		
-		var bday1 = $(this).closest('tr').find('.bday1').val();
-		var dateArr1 = bday1.split('-');
-		var month1 = $.trim(dateArr1[0]);
-		var day1 = $.trim(dateArr1[1]);
-		var year1 = $.trim(dateArr1[2]);
-		var bday1 = year1 + '-' + month1 + '-' + day1;
+		var bday1     =	$(this).closest('tr').find('.bday1').val();
+		var dateArr1  =	bday1.split('-');
+		var month1    =	$.trim(dateArr1[0]);
+		var day1      =	$.trim(dateArr1[1]);
+		var year1     =	$.trim(dateArr1[2]);
+		var bday1     =	year1 + '-' + month1 + '-' + day1;
 
-		var fname2 = $(this).closest('tr').next('.secondRow').find('.fname2').val();
-		var lname2 = $(this).closest('tr').next('.secondRow').find('.lname2').val();
-		var extname2 = $(this).closest('tr').next('.secondRow').find('.extname2').val();
-		var sex2 = $(this).closest('tr').next('.secondRow').find('.gender2').val();
-		var sex2 = sex2.toUpperCase();
+		var fname2    =	$(this).closest('tr').next('.secondRow').find('.fname2').val();
+		var lname2    =	$(this).closest('tr').next('.secondRow').find('.lname2').val();
+		var extname2  =	$(this).closest('tr').next('.secondRow').find('.extname2').val();
+		var sex2      =	$(this).closest('tr').next('.secondRow').find('.gender2').val();
+		var sex2      = sex2.toUpperCase();
 		
-		var bday2 = $(this).closest('tr').next('.secondRow').find('.bday2').val();
-		var dateArr2 = bday2.split('-');
-		var month2 = $.trim(dateArr2[0]);
-		var day2 = $.trim(dateArr2[1]);
-		var year2 = $.trim(dateArr2[2]);
-		var bday2 = year2 + '-' + month2 + '-' + day2;
+		var bday2     =	$(this).closest('tr').next('.secondRow').find('.bday2').val();
+		var dateArr2  =	bday2.split('-');
+		var month2    =	$.trim(dateArr2[0]);
+		var day2      =	$.trim(dateArr2[1]);
+		var year2     =	$.trim(dateArr2[2]);
+		var bday2     =	year2 + '-' + month2 + '-' + day2;
 
-		var index = $(this).closest('tr').find('.loopIndex1').val();
+		var index     =	$(this).closest('tr').find('.loopIndex1').val();
 
 		autoGetData(fname1, lname1, extname1, sex1, bday1, fname2, lname2, extname2, sex2, bday2, index);
 
@@ -803,33 +788,33 @@ function getDataDuplicate()
 	});
 
 	$('.lname1').keyup(function(){
-		var lname1 = $(this).val();
-		var fname1 = $(this).closest('tr').find('.fname1').val();
-		var extname1 = $(this).closest('tr').find('.extname1').val();
-		var sex1 = $(this).closest('tr').find('.gender1').val();
-		var sex1 = sex1.toUpperCase();
+		var lname1 	  = $(this).val();
+		var fname1    =	$(this).closest('tr').find('.fname1').val();
+		var extname1  =	$(this).closest('tr').find('.extname1').val();
+		var sex1      =	$(this).closest('tr').find('.gender1').val();
+		var sex1 	  =	sex1.toUpperCase();
 		
-		var bday1 = $(this).closest('tr').find('.bday1').val();
-		var dateArr1 = bday1.split('-');
-		var month1 = $.trim(dateArr1[0]);
-		var day1 = $.trim(dateArr1[1]);
-		var year1 = $.trim(dateArr1[2]);
-		var bday1 = year1 + '-' + month1 + '-' + day1;
+		var bday1     =	$(this).closest('tr').find('.bday1').val();
+		var dateArr1  =	bday1.split('-');
+		var month1    =	$.trim(dateArr1[0]);
+		var day1      =	$.trim(dateArr1[1]);
+		var year1     =	$.trim(dateArr1[2]);
+		var bday1     =	year1 + '-' + month1 + '-' + day1;
 
-		var fname2 = $(this).closest('tr').next('.secondRow').find('.fname2').val();
-		var lname2 = $(this).closest('tr').next('.secondRow').find('.lname2').val();
-		var extname2 = $(this).closest('tr').next('.secondRow').find('.extname2').val();
-		var sex2 = $(this).closest('tr').next('.secondRow').find('.gender2').val();
-		var sex2 = sex2.toUpperCase();
+		var fname2    =	$(this).closest('tr').next('.secondRow').find('.fname2').val();
+		var lname2    =	$(this).closest('tr').next('.secondRow').find('.lname2').val();
+		var extname2  =	$(this).closest('tr').next('.secondRow').find('.extname2').val();
+		var sex2      =	$(this).closest('tr').next('.secondRow').find('.gender2').val();
+		var sex2      =	sex2.toUpperCase();
 		
-		var bday2 = $(this).closest('tr').next('.secondRow').find('.bday2').val();
-		var dateArr2 = bday2.split('-');
-		var month2 = $.trim(dateArr2[0]);
-		var day2 = $.trim(dateArr2[1]);
-		var year2 = $.trim(dateArr2[2]);
-		var bday2 = year2 + '-' + month2 + '-' + day2;
+		var bday2     =	$(this).closest('tr').next('.secondRow').find('.bday2').val();
+		var dateArr2  =	bday2.split('-');
+		var month2    =	$.trim(dateArr2[0]);
+		var day2 	  =	$.trim(dateArr2[1]);
+		var year2     =	$.trim(dateArr2[2]);
+		var bday2     =	year2 + '-' + month2 + '-' + day2;
 
-		var index = $(this).closest('tr').find('.loopIndex1').val();
+		var index 	  = $(this).closest('tr').find('.loopIndex1').val();
 
 		autoGetData(fname1, lname1, extname1, sex1, bday1, fname2, lname2, extname2, sex2, bday2, index);
 
@@ -840,70 +825,70 @@ function getDataDuplicate()
 	});
 
 	$('.extname1').keyup(function(){
-		var extname1 = $(this).val();
-		var fname1 = $(this).closest('tr').find('.fname1').val();
-		var lname1 = $(this).closest('tr').find('.lname1').val();
-		var sex1 = $(this).closest('tr').find('.gender1').val();
-		var sex1 = sex1.toUpperCase();
+		var extname1  = $(this).val();
+		var fname1    =	$(this).closest('tr').find('.fname1').val();
+		var lname1 	  =	$(this).closest('tr').find('.lname1').val();
+		var sex1 	  =	$(this).closest('tr').find('.gender1').val();
+		var sex1 	  =	sex1.toUpperCase();
 		
-		var bday1 = $(this).closest('tr').find('.bday1').val();
-		var dateArr1 = bday1.split('-');
-		var month1 = $.trim(dateArr1[0]);
-		var day1 = $.trim(dateArr1[1]);
-		var year1 = $.trim(dateArr1[2]);
-		var bday1 = year1 + '-' + month1 + '-' + day1;
+		var bday1 	  = $(this).closest('tr').find('.bday1').val();
+		var dateArr1  =	bday1.split('-');
+		var month1    =	$.trim(dateArr1[0]);
+		var day1      =	$.trim(dateArr1[1]);
+		var year1     = $.trim(dateArr1[2]);
+		var bday1     =	year1 + '-' + month1 + '-' + day1;
 
-		var fname2 = $(this).closest('tr').next('.secondRow').find('.fname2').val();
-		var lname2 = $(this).closest('tr').next('.secondRow').find('.lname2').val();
-		var extname2 = $(this).closest('tr').next('.secondRow').find('.extname2').val();
-		var sex2 = $(this).closest('tr').next('.secondRow').find('.gender2').val();
-		var sex2 = sex2.toUpperCase();
+		var fname2    =	$(this).closest('tr').next('.secondRow').find('.fname2').val();
+		var lname2    =	$(this).closest('tr').next('.secondRow').find('.lname2').val();
+		var extname2  =	$(this).closest('tr').next('.secondRow').find('.extname2').val();
+		var sex2      =	$(this).closest('tr').next('.secondRow').find('.gender2').val();
+		var sex2      = sex2.toUpperCase();
 		
-		var bday2 = $(this).closest('tr').next('.secondRow').find('.bday2').val();
-		var dateArr2 = bday2.split('-');
-		var month2 = $.trim(dateArr2[0]);
-		var day2 = $.trim(dateArr2[1]);
-		var year2 = $.trim(dateArr2[2]);
-		var bday2 = year2 + '-' + month2 + '-' + day2;
+		var bday2     =	$(this).closest('tr').next('.secondRow').find('.bday2').val();
+		var dateArr2  =	bday2.split('-');
+		var month2    =	$.trim(dateArr2[0]);
+		var day2      =	$.trim(dateArr2[1]);
+		var year2     =	$.trim(dateArr2[2]);
+		var bday2     =	year2 + '-' + month2 + '-' + day2;
 
-		var index = $(this).closest('tr').find('.loopIndex1').val();
+		var index     =	$(this).closest('tr').find('.loopIndex1').val();
 
 		autoGetData(fname1, lname1, extname1, sex1, bday1, fname2, lname2, extname2, sex2, bday2, index);
 	});
 
 	$('.gender1').keyup(function(){
-		var sex1 = $(this).val();
-		var sex1 = sex1.toUpperCase();
-		var fname1 = $(this).closest('tr').find('.fname1').val();
-		var lname1 = $(this).closest('tr').find('.lname1').val();
-		var extname1 = $(this).closest('tr').find('.extname1').val();
+		var sex1      = $(this).val();
+		var sex1      =	sex1.toUpperCase();
+		var fname1 	  =	$(this).closest('tr').find('.fname1').val();
+		var lname1    =	$(this).closest('tr').find('.lname1').val();
+		var extname1  =	$(this).closest('tr').find('.extname1').val();
 		
-		var bday1 = $(this).closest('tr').find('.bday1').val();
-		var dateArr1 = bday1.split('-');
-		var month1 = $.trim(dateArr1[0]);
-		var day1 = $.trim(dateArr1[1]);
-		var year1 = $.trim(dateArr1[2]);
-		var bday1 = year1 + '-' + month1 + '-' + day1;
+		var bday1     = $(this).closest('tr').find('.bday1').val();
+		var dateArr1  =	bday1.split('-');
+		var month1    =	$.trim(dateArr1[0]);
+		var day1      =	$.trim(dateArr1[1]);
+		var year1     =	$.trim(dateArr1[2]);
+		var bday1     =	year1 + '-' + month1 + '-' + day1;
 
-		var fname2 = $(this).closest('tr').next('.secondRow').find('.fname2').val();
-		var lname2 = $(this).closest('tr').next('.secondRow').find('.lname2').val();
-		var extname2 = $(this).closest('tr').next('.secondRow').find('.extname2').val();
-		var sex2 = $(this).closest('tr').next('.secondRow').find('.gender2').val();
-		var sex2 = sex2.toUpperCase();
+		var fname2    =	$(this).closest('tr').next('.secondRow').find('.fname2').val();
+		var lname2    =	$(this).closest('tr').next('.secondRow').find('.lname2').val();
+		var extname2  =	$(this).closest('tr').next('.secondRow').find('.extname2').val();
+		var sex2      =	$(this).closest('tr').next('.secondRow').find('.gender2').val();
+		var sex2      =	sex2.toUpperCase();
 		
-		var bday2 = $(this).closest('tr').next('.secondRow').find('.bday2').val();
-		var dateArr2 = bday2.split('-');
-		var month2 = $.trim(dateArr2[0]);
-		var day2 = $.trim(dateArr2[1]);
-		var year2 = $.trim(dateArr2[2]);
-		var bday2 = year2 + '-' + month2 + '-' + day2;
+		var bday2     =	$(this).closest('tr').next('.secondRow').find('.bday2').val();
+		var dateArr2  =	bday2.split('-');
+		var month2    =	$.trim(dateArr2[0]);
+		var day2      =	$.trim(dateArr2[1]);
+		var year2     =	$.trim(dateArr2[2]);
+		var bday2     = year2 + '-' + month2 + '-' + day2;
 
-		var index = $(this).closest('tr').find('.loopIndex1').val();
+		var index 	  = $(this).closest('tr').find('.loopIndex1').val();
 
-		var age1 	= $(this).closest('tr').find('.getAge1').val();
-		var age2 	= $(this).closest('tr').next('tr').find('.getAge2').val();
-		var type 	= $(this).closest('tr').find('.typeFp').val();
-		var status 	= $(this).closest('tr').find('.status-trad').val();
+		var age1      =	$(this).closest('tr').find('.getAge1').val();
+		var age2 	  =	$(this).closest('tr').next('tr').find('.getAge2').val();
+		var type 	  =	$(this).closest('tr').find('.typeFp').val();
+		var status 	  = $(this).closest('tr').find('.status-trad').val();
 
 		criteria(index, index, sex1, sex2, age1, age2, type, status);
 		autoGetData(fname1, lname1, extname1, sex1, bday1, fname2, lname2, extname2, sex2, bday2, index);
@@ -917,16 +902,16 @@ function getDataDuplicate()
 	$('.bday1').keyup(function(){
 		var bday1 = $(this).val();
 
-		dob1 = new Date(bday1);
-		var today1 = new Date();
-		var age1 = Math.floor((today1 - dob1) / (365.25 * 24 * 60 * 60 * 1000));
+		dob1 = 			new Date(bday1);
+		var today1 = 	new Date();
+		var age1 = 		Math.floor((today1 - dob1) / (365.25 * 24 * 60 * 60 * 1000));
 		var curr_year = today1.getFullYear();
 
-		var dateArr1 = bday1.split('-');
+		var dateArr1 =	 bday1.split('-');
 
-		var month1 = $.trim(dateArr1[0]);
-		var day1 = $.trim(dateArr1[1]);
-		var year1 = $.trim(dateArr1[2]);
+		var month1 = 	$.trim(dateArr1[0]);
+		var day1 = 		$.trim(dateArr1[1]);
+		var year1 = 	$.trim(dateArr1[2]);
 		
 		if (month1 > 12 || 
 			day1   > 31 ||
@@ -941,30 +926,30 @@ function getDataDuplicate()
 		var bday1 = year1 + '-' + month1 + '-' + day1;
 		$(this).closest('td').find('.getAge1').val(age1);
 
-		var fname1 = $(this).closest('tr').find('.fname1').val();
-		var lname1 = $(this).closest('tr').find('.lname1').val();
-		var extname1 = $(this).closest('tr').find('.extname1').val();
-		var sex1 = $(this).closest('tr').find('.gender1').val();
-		var sex1 = sex1.toUpperCase();
+		var fname1    = $(this).closest('tr').find('.fname1').val();
+		var lname1    =	$(this).closest('tr').find('.lname1').val();
+		var extname1  =	$(this).closest('tr').find('.extname1').val();
+		var sex1      =	$(this).closest('tr').find('.gender1').val();
+		var sex1  	  =	sex1.toUpperCase();
 
-		var fname2 = $(this).closest('tr').next('.secondRow').find('.fname2').val();
-		var lname2 = $(this).closest('tr').next('.secondRow').find('.lname2').val();
-		var extname2 = $(this).closest('tr').next('.secondRow').find('.extname2').val();
-		var sex2 = $(this).closest('tr').next('.secondRow').find('.gender2').val();
-		var sex2 = sex2.toUpperCase();
+		var fname2 	  =	$(this).closest('tr').next('.secondRow').find('.fname2').val();
+		var lname2 	  =	$(this).closest('tr').next('.secondRow').find('.lname2').val();
+		var extname2  =	$(this).closest('tr').next('.secondRow').find('.extname2').val();
+		var sex2 	  =	$(this).closest('tr').next('.secondRow').find('.gender2').val();
+		var sex2 	  =	sex2.toUpperCase();
 		
-		var bday2 = $(this).closest('tr').next('.secondRow').find('.bday2').val();
-		var dateArr2 = bday2.split('-');
-		var month2 = $.trim(dateArr2[0]);
-		var day2 = $.trim(dateArr2[1]);
-		var year2 = $.trim(dateArr2[2]);
-		var bday2 = year2 + '-' + month2 + '-' + day2;
+		var bday2 	  = $(this).closest('tr').next('.secondRow').find('.bday2').val();
+		var dateArr2  =	bday2.split('-');
+		var month2    =	$.trim(dateArr2[0]);
+		var day2      =	$.trim(dateArr2[1]);
+		var year2     =	$.trim(dateArr2[2]);
+		var bday2     =	year2 + '-' + month2 + '-' + day2;
 
-		var index = $(this).closest('tr').find('.loopIndex1').val();
+		var index     =	$(this).closest('tr').find('.loopIndex1').val();
 
-		var age2 	= $(this).closest('tr').next('tr').find('.getAge2').val();
-		var type 	= $(this).closest('tr').find('.typeFp').val();
-		var status 	= $(this).closest('tr').find('.status-trad').val();
+		var age2      =	$(this).closest('tr').next('tr').find('.getAge2').val();
+		var type      =	$(this).closest('tr').find('.typeFp').val();
+		var status    =	$(this).closest('tr').find('.status-trad').val();
 
 		criteria(index, index, sex1, sex2, age1, age2, type, status);
 		autoGetData(fname1, lname1, extname1, sex1, bday1, fname2, lname2, extname2, sex2, bday2, index);
@@ -976,33 +961,33 @@ function getDataDuplicate()
 	});
 
 	$('.fname2').keyup(function(){
-		var fname2 = $(this).val();
-		var lname2 = $(this).closest('tr').find('.lname2').val();
-		var extname2 = $(this).closest('tr').find('.extname2').val();
-		var sex2 = $(this).closest('tr').find('.gender2').val();
-		var sex2 = sex2.toUpperCase();
+		var fname2    =	$(this).val();
+		var lname2    =	$(this).closest('tr').find('.lname2').val();
+		var extname2  =	$(this).closest('tr').find('.extname2').val();
+		var sex2      =	$(this).closest('tr').find('.gender2').val();
+		var sex2      =	sex2.toUpperCase();
 		
-		var bday2 = $(this).closest('tr').find('.bday2').val();
-		var dateArr2 = bday2.split('-');
-		var month2 = $.trim(dateArr2[0]);
-		var day2 = $.trim(dateArr2[1]);
-		var year2 = $.trim(dateArr2[2]);
-		var bday2 = year2 + '-' + month2 + '-' + day2;
+		var bday2     =	$(this).closest('tr').find('.bday2').val();
+		var dateArr2  =	bday2.split('-');
+		var month2    =	$.trim(dateArr2[0]);
+		var day2      =	$.trim(dateArr2[1]);
+		var year2     =	$.trim(dateArr2[2]);
+		var bday2     =	year2 + '-' + month2 + '-' + day2;
 
-		var fname1 = $(this).closest('tr').prev('tr').find('.fname1').val();
-		var lname1 = $(this).closest('tr').prev('tr').find('.lname1').val();
-		var extname1 = $(this).closest('tr').prev('tr').find('.extname1').val();
-		var sex1 = $(this).closest('tr').prev('tr').find('.gender1').val();
-		var sex1 = sex1.toUpperCase();
+		var fname1    =	$(this).closest('tr').prev('tr').find('.fname1').val();
+		var lname1    =	$(this).closest('tr').prev('tr').find('.lname1').val();
+		var extname1  =	$(this).closest('tr').prev('tr').find('.extname1').val();
+		var sex1      = $(this).closest('tr').prev('tr').find('.gender1').val();
+		var sex1      =	sex1.toUpperCase();
 		
-		var bday1 = $(this).closest('tr').prev('tr').find('.bday1').val();
-		var dateArr1 = bday1.split('-');
-		var month1 = $.trim(dateArr1[0]);
-		var day1 = $.trim(dateArr1[1]);
-		var year1 = $.trim(dateArr1[2]);
-		var bday1 = year1 + '-' + month1 + '-' + day1;
+		var bday1     =	$(this).closest('tr').prev('tr').find('.bday1').val();
+		var dateArr1  =	bday1.split('-');
+		var month1    =	$.trim(dateArr1[0]);
+		var day1      = $.trim(dateArr1[1]);
+		var year1 	  =	$.trim(dateArr1[2]);
+		var bday1     = year1 + '-' + month1 + '-' + day1;
 		
-		var index = $(this).closest('tr').find('.loopIndex2').val();
+		var index     = $(this).closest('tr').find('.loopIndex2').val();
 
 		autoGetData(fname1, lname1, extname1, sex1, bday1, fname2, lname2, extname2, sex2, bday2, index);
 
@@ -1013,33 +998,33 @@ function getDataDuplicate()
 	});
 
 	$('.lname2').keyup(function(){
-		var lname2 = $(this).val();
-		var fname2 = $(this).closest('tr').find('.fname2').val();
-		var extname2 = $(this).closest('tr').find('.extname2').val();
-		var sex2 = $(this).closest('tr').find('.gender2').val();
-		var sex2 = sex2.toUpperCase();
+		var lname2    = $(this).val();
+		var fname2    = $(this).closest('tr').find('.fname2').val();
+		var extname2  = $(this).closest('tr').find('.extname2').val();
+		var sex2      =	$(this).closest('tr').find('.gender2').val();
+		var sex2      =	sex2.toUpperCase();
 		
-		var bday2 = $(this).closest('tr').find('.bday2').val();
-		var dateArr2 = bday2.split('-');
-		var month2 = $.trim(dateArr2[0]);
-		var day2 = $.trim(dateArr2[1]);
-		var year2 = $.trim(dateArr2[2]);
-		var bday2 = year2 + '-' + month2 + '-' + day2;
+		var bday2     =	$(this).closest('tr').find('.bday2').val();
+		var dateArr2  =	bday2.split('-');
+		var month2    =	$.trim(dateArr2[0]);
+		var day2      =	$.trim(dateArr2[1]);
+		var year2     =	$.trim(dateArr2[2]);
+		var bday2     =	year2 + '-' + month2 + '-' + day2;
 
-		var fname1 = $(this).closest('tr').prev('tr').find('.fname1').val();
-		var lname1 = $(this).closest('tr').prev('tr').find('.lname1').val();
-		var extname1 = $(this).closest('tr').prev('tr').find('.extname1').val();
-		var sex1 = $(this).closest('tr').prev('tr').find('.gender1').val();
-		var sex1 = sex1.toUpperCase();
+		var fname1    =	$(this).closest('tr').prev('tr').find('.fname1').val();
+		var lname1    =	$(this).closest('tr').prev('tr').find('.lname1').val();
+		var extname1  =	$(this).closest('tr').prev('tr').find('.extname1').val();
+		var sex1      =	$(this).closest('tr').prev('tr').find('.gender1').val();
+		var sex1      =	sex1.toUpperCase();
 		
-		var bday1 = $(this).closest('tr').prev('tr').find('.bday1').val();
-		var dateArr1 = bday1.split('-');
-		var month1 = $.trim(dateArr1[0]);
-		var day1 = $.trim(dateArr1[1]);
-		var year1 = $.trim(dateArr1[2]);
-		var bday1 = year1 + '-' + month1 + '-' + day1;
+		var bday1     =	$(this).closest('tr').prev('tr').find('.bday1').val();
+		var dateArr1  =	bday1.split('-');
+		var month1    =	$.trim(dateArr1[0]);
+		var day1      =	$.trim(dateArr1[1]);
+		var year1     =	$.trim(dateArr1[2]);
+		var bday1     =	year1 + '-' + month1 + '-' + day1;
 
-		var index = $(this).closest('tr').find('.loopIndex2').val();
+		var index     = $(this).closest('tr').find('.loopIndex2').val();
 
 		autoGetData(fname1, lname1, extname1, sex1, bday1, fname2, lname2, extname2, sex2, bday2, index);
 
@@ -1051,69 +1036,69 @@ function getDataDuplicate()
 
 	$('.extname2').keyup(function(){
 		var extname2 = $(this).val();
-		var fname2 = $(this).closest('tr').find('.fname2').val();
-		var lname2 = $(this).closest('tr').find('.lname2').val();
-		var sex2 = $(this).closest('tr').find('.gender2').val();
-		var sex2 = sex2.toUpperCase();
+		var fname2   = $(this).closest('tr').find('.fname2').val();
+		var lname2   = $(this).closest('tr').find('.lname2').val();
+		var sex2     = $(this).closest('tr').find('.gender2').val();
+		var sex2     = sex2.toUpperCase();
 		
-		var bday2 = $(this).closest('tr').find('.bday2').val();
+		var bday2    = $(this).closest('tr').find('.bday2').val();
 		var dateArr2 = bday2.split('-');
-		var month2 = $.trim(dateArr2[0]);
-		var day2 = $.trim(dateArr2[1]);
-		var year2 = $.trim(dateArr2[2]);
-		var bday2 = year2 + '-' + month2 + '-' + day2;
+		var month2   = $.trim(dateArr2[0]);
+		var day2     = $.trim(dateArr2[1]);
+		var year2    = $.trim(dateArr2[2]);
+		var bday2    = year2 + '-' + month2 + '-' + day2;
 
-		var fname1 = $(this).closest('tr').prev('tr').find('.fname1').val();
-		var lname1 = $(this).closest('tr').prev('tr').find('.lname1').val();
+		var fname1   = $(this).closest('tr').prev('tr').find('.fname1').val();
+		var lname1   = $(this).closest('tr').prev('tr').find('.lname1').val();
 		var extname1 = $(this).closest('tr').prev('tr').find('.extname1').val();
-		var sex1 = $(this).closest('tr').prev('tr').find('.gender1').val();
-		var sex1 = sex1.toUpperCase();
+		var sex1     = $(this).closest('tr').prev('tr').find('.gender1').val();
+		var sex1     = sex1.toUpperCase();
 		
-		var bday1 = $(this).closest('tr').prev('tr').find('.bday1').val();
+		var bday1    = $(this).closest('tr').prev('tr').find('.bday1').val();
 		var dateArr1 = bday1.split('-');
-		var month1 = $.trim(dateArr1[0]);
-		var day1 = $.trim(dateArr1[1]);
-		var year1 = $.trim(dateArr1[2]);
-		var bday1 = year1 + '-' + month1 + '-' + day1;
+		var month1   = $.trim(dateArr1[0]);
+		var day1     = $.trim(dateArr1[1]);
+		var year1    = $.trim(dateArr1[2]);
+		var bday1    = year1 + '-' + month1 + '-' + day1;
 
-		var index = $(this).closest('tr').find('.loopIndex2').val();
+		var index    = $(this).closest('tr').find('.loopIndex2').val();
 
 		autoGetData(fname1, lname1, extname1, sex1, bday1, fname2, lname2, extname2, sex2, bday2, index);
 	});
 
 	$('.gender2').keyup(function(){
-		var sex2 = $(this).val();
-		var sex2 = sex2.toUpperCase();
-		var fname2 = $(this).closest('tr').find('.fname2').val();
-		var lname2 = $(this).closest('tr').find('.lname2').val();
+		var sex2 	 = $(this).val();
+		var sex2 	 = sex2.toUpperCase();
+		var fname2   = $(this).closest('tr').find('.fname2').val();
+		var lname2   = $(this).closest('tr').find('.lname2').val();
 		var extname2 = $(this).closest('tr').find('.extname2').val();
 		
-		var bday2 = $(this).closest('tr').find('.bday2').val();
+		var bday2    = $(this).closest('tr').find('.bday2').val();
 		var dateArr2 = bday2.split('-');
-		var month2 = $.trim(dateArr2[0]);
-		var day2 = $.trim(dateArr2[1]);
-		var year2 = $.trim(dateArr2[2]);
-		var bday2 = year2 + '-' + month2 + '-' + day2;
+		var month2   = $.trim(dateArr2[0]);
+		var day2     = $.trim(dateArr2[1]);
+		var year2    = $.trim(dateArr2[2]);
+		var bday2    = year2 + '-' + month2 + '-' + day2;
 
-		var fname1 = $(this).closest('tr').prev('tr').find('.fname1').val();
-		var lname1 = $(this).closest('tr').prev('tr').find('.lname1').val();
+		var fname1   = $(this).closest('tr').prev('tr').find('.fname1').val();
+		var lname1   = $(this).closest('tr').prev('tr').find('.lname1').val();
 		var extname1 = $(this).closest('tr').prev('tr').find('.extname1').val();
-		var sex1 = $(this).closest('tr').prev('tr').find('.gender1').val();
-		var sex1 = sex1.toUpperCase();
+		var sex1     = $(this).closest('tr').prev('tr').find('.gender1').val();
+		var sex1     = sex1.toUpperCase();
 		
-		var bday1 = $(this).closest('tr').prev('tr').find('.bday1').val();
+		var bday1    = $(this).closest('tr').prev('tr').find('.bday1').val();
 		var dateArr1 = bday1.split('-');
-		var month1 = $.trim(dateArr1[0]);
-		var day1 = $.trim(dateArr1[1]);
-		var year1 = $.trim(dateArr1[2]);
-		var bday1 = year1 + '-' + month1 + '-' + day1;
+		var month1   = $.trim(dateArr1[0]);
+		var day1     = $.trim(dateArr1[1]);
+		var year1    = $.trim(dateArr1[2]);
+		var bday1    = year1 + '-' + month1 + '-' + day1;
 
-		var index = $(this).closest('tr').find('.loopIndex2').val();
+		var index    = $(this).closest('tr').find('.loopIndex2').val();
 
-		var age1 	= $(this).closest('tr').prev('tr').find('.getAge1').val();
-		var age2 	= $(this).closest('tr').find('.getAge2').val();
-		var type 	= $(this).closest('tr').prev('tr').find('.typeFp').val();
-		var status 	= $(this).closest('tr').prev('tr').find('.status-trad').val();
+		var age1     = $(this).closest('tr').prev('tr').find('.getAge1').val();
+		var age2     = $(this).closest('tr').find('.getAge2').val();
+		var type     = $(this).closest('tr').prev('tr').find('.typeFp').val();
+		var status   = $(this).closest('tr').prev('tr').find('.status-trad').val();
 
 		criteria(index, index, sex1, sex2, age1, age2, type, status);
 		autoGetData(fname1, lname1, extname1, sex1, bday1, fname2, lname2, extname2, sex2, bday2, index);
@@ -1151,31 +1136,31 @@ function getDataDuplicate()
 		var bday2 = year2 + '-' + month2 + '-' + day2;
 		$(this).closest('td').find('.getAge2').val(age2);
 
-		var index2 = $(this).closest('tr').find('.loopIndex2').val();
-		var fname2 = $(this).closest('tr').find('.fname2').val();
-		var lname2 = $(this).closest('tr').find('.lname2').val();
+		var index2 	 = $(this).closest('tr').find('.loopIndex2').val();
+		var fname2   = $(this).closest('tr').find('.fname2').val();
+		var lname2   = $(this).closest('tr').find('.lname2').val();
 		var extname2 = $(this).closest('tr').find('.extname2').val();
-		var sex2 = $(this).closest('tr').find('.gender2').val();
-		var sex2 = sex2.toUpperCase();
+		var sex2 	 = $(this).closest('tr').find('.gender2').val();
+		var sex2     = sex2.toUpperCase();
 
-		var fname1 = $(this).closest('tr').prev('tr').find('.fname1').val();
-		var lname1 = $(this).closest('tr').prev('tr').find('.lname1').val();
+		var fname1   = $(this).closest('tr').prev('tr').find('.fname1').val();
+		var lname1   = $(this).closest('tr').prev('tr').find('.lname1').val();
 		var extname1 = $(this).closest('tr').prev('tr').find('.extname1').val();
-		var sex1 = $(this).closest('tr').prev('tr').find('.gender1').val();
-		var sex1 = sex1.toUpperCase();
+		var sex1 	 = $(this).closest('tr').prev('tr').find('.gender1').val();
+		var sex1 	 = sex1.toUpperCase();
 		
-		var bday1 = $(this).closest('tr').prev('tr').find('.bday1').val();
+		var bday1    = $(this).closest('tr').prev('tr').find('.bday1').val();
 		var dateArr1 = bday1.split('-');
-		var month1 = $.trim(dateArr1[0]);
-		var day1 = $.trim(dateArr1[1]);
-		var year1 = $.trim(dateArr1[2]);
-		var bday1 = year1 + '-' + month1 + '-' + day1;
+		var month1   = $.trim(dateArr1[0]);
+		var day1     = $.trim(dateArr1[1]);
+		var year1    = $.trim(dateArr1[2]);
+		var bday1    = year1 + '-' + month1 + '-' + day1;
 		
-		var index = $(this).closest('tr').find('.loopIndex2').val();
+		var index    = $(this).closest('tr').find('.loopIndex2').val();
 
-		var age1 	= $(this).closest('tr').prev('tr').find('.getAge2').val();
-		var type 	= $(this).closest('tr').find('.typeFp').val();
-		var status 	= $(this).closest('tr').find('.status-trad').val();
+		var age1 	 = $(this).closest('tr').prev('tr').find('.getAge2').val();
+		var type 	 = $(this).closest('tr').find('.typeFp').val();
+		var status 	 = $(this).closest('tr').find('.status-trad').val();
 
 		criteria(index, index, sex1, sex2, age1, age2, type, status);
 		autoGetData(fname1, lname1, extname1, sex1, bday1, fname2, lname2, extname2, sex2, bday2, index);
@@ -1194,42 +1179,42 @@ function autoGetData(fname1, lname1, extname1, sex1, bday1, fname2, lname2, extn
 	if(sex1 != '' && sex2 != '') {
 		controller = 'forms/checkCoupleDuplicate';
 		if (sex1 === 'F' && sex2 === 'M') {
-			var h_fname = fname2;
-			var h_lname = lname2;
-			var h_extname = extname2;
-			var h_bday = bday2;
-			var w_fname = fname1;
-			var w_lname = lname1;
-			var w_bday = bday1;
+			var h_fname 	= fname2;
+			var h_lname 	= lname2;
+			var h_extname 	= extname2;
+			var h_bday 		= bday2;
+			var w_fname 	= fname1;
+			var w_lname 	= lname1;
+			var w_bday 		= bday1;
 		} else if(sex2 === 'F' && sex1 === 'M') {
-			var h_fname = fname1;
-			var h_lname = lname1;
-			var h_extname = extname1;
-			var h_bday = bday1;
-			var w_fname = fname2;
-			var w_lname = lname2;
-			var w_bday = bday2;
+			var h_fname 	= fname1;
+			var h_lname 	= lname1;
+			var h_extname 	= extname1;
+			var h_bday 		= bday1;
+			var w_fname 	= fname2;
+			var w_lname 	= lname2;
+			var w_bday 		= bday2;
 		} else {
 			return false;
 		}
 	} else if (sex1 != '' && sex2 == ''){
 		controller = 'forms/checkIndividualDuplicate';
 		if (sex1 === 'F') {
-			var h_fname = fname2;
-			var h_lname = lname2;
-			var h_extname = extname2;
-			var h_bday = bday2;
-			var w_fname = fname1;
-			var w_lname = lname1;
-			var w_bday = bday1;
+			var h_fname 	= fname2;
+			var h_lname 	= lname2;
+			var h_extname 	= extname2;
+			var h_bday 		= bday2;
+			var w_fname 	= fname1;
+			var w_lname 	= lname1;
+			var w_bday 		= bday1;
 		} else if(sex1 === 'M') {
-			var h_fname = fname1;
-			var h_lname = lname1;
-			var h_extname = extname1;
-			var h_bday = bday1;
-			var w_fname = fname2;
-			var w_lname = lname2;
-			var w_bday = bday2;
+			var h_fname 	= fname1;
+			var h_lname 	= lname1;
+			var h_extname 	= extname1;
+			var h_bday 		= bday1;
+			var w_fname 	= fname2;
+			var w_lname 	= lname2;
+			var w_bday 		= bday2;
 		} else {
 			return false;
 		}

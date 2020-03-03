@@ -1,26 +1,34 @@
 var base_url = window.location.origin + '/rpfp';
 $(function() {
-	  checkbox();
-	  saveServiceSlip();
+	var FromEndDate = new Date();
+    $('.date_visit, .date_method').datepicker({
+    	dateFormat: "mm/dd/yy",
+    	maxDate: FromEndDate,
+		changeYear: true
+    });
 
-	  $(document).ready(function(){
+	checkbox();
+	saveServiceSlip();
+
+	$(document).ready(function(){
 		var coupleId = $('input[name="couple_id"]').val();
 		var fpId = $('input[name="slip_id"]').val();
 
 		if (coupleId == 0) {
 			$('#service_slip input:not(.saveServiceSlip)').attr('disabled', 'disabled');
 			$('.saveServiceSlip').css('display', 'none');
+
 			const Toast = Swal.mixin({
 				toast: true,
 				position: 'top-end',
 				showConfirmButton: false,
 				timer: 3000
 			});
+
 			Toast.fire({
 				type: 'warning',
 				title: 'Save Form 1 before providing\nFP Service details.'
-			});
-			
+			});			
 		} else {
 			$('#service_slip input').removeAttr('disabled');
 		}
@@ -28,8 +36,7 @@ $(function() {
 		if (fpId != '') {
 			$('.saveServiceSlip').css('display', 'none');
 		}
-		
-	  });
+	});
 	  
 });
 
