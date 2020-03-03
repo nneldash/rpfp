@@ -309,10 +309,9 @@ class Forms extends CI_Controller
 
         $this->load->model('FormBModel');
 
-        $reportID = $this->input->get('ReportID');
         $reportMonth = $this->input->get('ReportMonth');
         $reportYear = $this->input->get('ReportYear');
-        $formB = $this->FormBModel->getFormBReport($reportID,$reportMonth,$reportYear);
+        $formB = $this->FormBModel->getFormBReport($reportMonth,$reportYear);
 
         $this->load->view('includes/header', $header);
         $this->load->view('forms/formb', array('form_B' => $formB, 'is_pdf' => false, RELOAD => true));

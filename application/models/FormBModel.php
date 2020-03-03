@@ -8,8 +8,8 @@ class FormBModel extends BaseModel
     {
         parent::__construct();
         $this->CI->load->library('formB/FormBClass');
-        $this->CI->load->library('formB/lists/ListFormB');
-        $this->CI->load->library('formB/lists/ReportFormB');
+        $this->CI->load->library('formB/lists/ListFormBClass');
+        $this->CI->load->library('formB/lists/ReportFormBClass');
         $this->CI->load->library('formB/GenerateFormBClass');
     }
 
@@ -19,7 +19,7 @@ class FormBModel extends BaseModel
         $items_per_page = 10;
 
         $formb_list = $this->fromDbGetList(
-            'ListFormB',
+            'ListFormBClass',
             'FormBClass',
             array(
                 'ReportID' => 'report_id',
@@ -32,7 +32,7 @@ class FormBModel extends BaseModel
             array($page_no, $items_per_page)
         );
 
-        $retval = new ListFormB();
+        $retval = new ListFormBClass();
 
         foreach($formb_list as $form_B) {
             $retval->append($form_B);
@@ -41,12 +41,13 @@ class FormBModel extends BaseModel
         return $retval;
     }
 
-    public function getFormBReport(int $report_id, int $report_month, int $report_year) : ReportFormBInterface
+    public function getFormBReport(int $report_month, int $report_year) : ReportFormBInterface
     {
         $formb_report = $this->fromDbGetReportList(
-            'ReportFormB',
+            'ReportFormBClass',
             'FormBClass',
             array(
+                'ReportDate' => 'report_month',
                 'UnmetModern' => 'unmet_modern',
                 'ServedModern' => 'served_modern',
                 'NoIntention' => 'no_intention',
@@ -56,10 +57,10 @@ class FormBModel extends BaseModel
                 'TotalServed' => 'total_served'
             ),
             'get_report_unmet_need_details',
-            array($report_id, $report_month, $report_year)
+            array($report_month,$report_year)
         );
 
-        $retval = new ReportFormB();
+        $retval = new ReportFormBClass();
 
         foreach($formb_report as $form_B) {
             $retval->append($form_B);

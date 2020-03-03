@@ -34,7 +34,7 @@ if (empty($title)) {
                     <td><?= $formb->ReportYear ?> - <?php if ($formb->ReportMonth != 0) { echo strftime("%b" ,mktime(0,0,0, $formb->ReportMonth )); } else { echo $formb->ReportMonth; } ?></td>
                     <td><?= date('F d, Y', strtotime($formb->DateProcessed)); ?></td>
                     <td class="text-center">
-                    <a class="viewForm folderview" href="<?= base_url('forms/formb?ReportID='. $formb->ReportID.'&ReportMonth='. $formb->ReportMonth.'&ReportYear='. $formb->ReportYear); ?>" target="_blank">
+                    <a class="viewForm folderview" href="<?= base_url('forms/formb?ReportMonth='. $formb->ReportMonth.'&ReportYear='. $formb->ReportYear); ?>" target="_blank">
                         <button class="btn btn-primary" data-toggle="tooltip" data-placement="left" title="View">
                             <i class="fa fa-folder-open"></i>
                         </button>					

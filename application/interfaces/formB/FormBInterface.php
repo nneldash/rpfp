@@ -20,6 +20,8 @@ abstract class FormBInterface extends BaseInterface
     public $DateText;
 
     /** @var int */
+    public $ReportDate = 0;
+    /** @var int */
     public $UnmetModern = 0;
     /** @var int */
     public $ServedModern = 0;

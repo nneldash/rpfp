@@ -9044,7 +9044,6 @@ BEGIN
 END$$
 
 CREATE DEFINER=root@localhost PROCEDURE get_report_unmet_need_details(
-    IN report_id INT,
     IN report_month INT,
     IN report_year INT
     )   READS SQL DATA
@@ -9052,7 +9051,7 @@ BEGIN
     IF NOT EXISTS (
          SELECT ru.REPORT_ID
            FROM rpfp.report_unmet_need ru
-          WHERE ru.UNMET_ID = unmet_id
+          WHERE ru.REPORT_YEAR = report_year
     ) THEN
         BEGIN
              SELECT NULL AS report_year,
@@ -9070,9 +9069,10 @@ BEGIN
         END;
     ELSE
         BEGIN
-             SELECT ru.REPORT_YEAR AS report_year,
-                    ru.PSGC_CODE AS psgc_code,
+             SELECT DISTINCT
                     ru.REPORT_MONTH AS report_month,
+                    ru.REPORT_YEAR AS report_year,
+                    ru.PSGC_CODE AS psgc_code,
                     ru.UNMET_MODERN_FP AS unmet_modern,
                     ru.SERVED_MODERN_FP AS served_modern,
                     ru.NO_INTENTION AS no_intention,
@@ -9083,10 +9083,8 @@ BEGIN
                     ru.DATE_PROCESSED AS date_processed
                FROM rpfp.report_unmet_need ru
               WHERE ru.REPORT_YEAR = report_year
-                AND ru.REPORT_MONTH >= 1
                 AND ru.REPORT_MONTH <= report_month
-                AND ru.REPORT_ID = report_id
-           ORDER BY ru.REPORT_ID DESC
+           ORDER BY ru.REPORT_MONTH ASC
             ;
         END;
     END IF;
