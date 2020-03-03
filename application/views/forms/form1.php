@@ -1143,12 +1143,16 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 
 <?php if(!$is_pdf) : ?>
 	<script>
-		loadJs(base_url + 'NewAssets/inputMaskJs', function() {
-			loadJs(base_url + 'assets/js/form.js');
-		});
-		loadJs(base_url + 'NewAssets/jqueryMaskJs');
-		loadJs(base_url + 'NewAssets/inputExtJs');
-		loadJs(base_url + 'NewAssets/bootstrapSelectJs');
-		loadJs(base_url + 'NewAssets/jQueryUi');
+		loadJs(base_url + 'NewAssets/templateJs',
+			function() {
+				loadJs(base_url + 'NewAssets/inputMaskJs', function() {
+					loadJs(base_url + 'assets/js/form.js');
+				});
+				loadJs(base_url + 'NewAssets/jqueryMaskJs');
+				loadJs(base_url + 'NewAssets/inputExtJs');
+				loadJs(base_url + 'NewAssets/bootstrapSelectJs');
+				loadJs(base_url + 'NewAssets/jQueryUi');
+			}
+		);
 	</script>
 <?php endif; ?>
