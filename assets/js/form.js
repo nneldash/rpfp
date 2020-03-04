@@ -1453,14 +1453,6 @@ function checkRequired()
 	}
 }
 
-function reformatDateString(s) {
-	var b = s.split(/\D/);
-	
-	return b.reverse().join('-');
-  }
-  
-//   console.log(reformatDateString('25-12-2014')); // 2014-12-25
-
 function saveForm1()
 
 {
@@ -1498,7 +1490,7 @@ function saveForm1()
 			
 			formData[item.prop('name')] = item_value;
 		});
-		// console.log(formData);
+		
 		var validate = checkRequired();
 		if (validate != 1) {
 			Toast.fire({
