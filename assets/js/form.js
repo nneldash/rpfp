@@ -1453,6 +1453,14 @@ function checkRequired()
 	}
 }
 
+function reformatDateString(s) {
+	var b = s.split(/\D/);
+	
+	return b.reverse().join('-');
+  }
+  
+//   console.log(reformatDateString('25-12-2014')); // 2014-12-25
+
 function saveForm1()
 
 {
@@ -1477,9 +1485,20 @@ function saveForm1()
 			if (item.prop('name').indexOf('attendee') == 0) {
 				item_value = item.val() == 'attended' ? 1 : 0;
 			}
+			if (item.prop('name') == 'date_conducted') {
+				var newDate = new Date(item.val());
+				var yyyy = newDate.getFullYear();
+				var mm = newDate.getMonth();
+				var dd = newDate.getDate();
+				mm += 1;
+				newDate = yyyy + '-' + ('0' + (mm)).slice(-2) + '-' + ('0' + dd).slice(-2);
+
+				item_value = newDate;
+			}
+			
 			formData[item.prop('name')] = item_value;
 		});
-
+		// console.log(formData);
 		var validate = checkRequired();
 		if (validate != 1) {
 			Toast.fire({
