@@ -18,6 +18,8 @@ abstract class FormCInterface extends BaseInterface
     public $DateText;
 
     /** @var int */
+    public $ReportDate = 0;
+    /** @var int */
     public $ServedCondom = 0;
     /** @var int */
     public $ServedIUD = 0;

@@ -8594,7 +8594,7 @@ BEGIN
            FROM rpfp.report_couples_encoded rce
           WHERE rce.DB_USER_ID = name_user
        GROUP BY rce.ACCOM_ID
-       ORDER BY rce.DATE_PROCESSED DESC
+       ORDER BY rce.DATE_PROCESSED ASC
           LIMIT read_offset, items_per_page
         ;
     END IF;
@@ -8659,7 +8659,7 @@ BEGIN
                 rd.DATE_PROCESSED AS date_processed
            FROM rpfp.report_demandgen rd
     --    GROUP BY rd.DEMANDGEN_ID
-       ORDER BY rd.DATE_PROCESSED DESC
+       ORDER BY rd.DATE_PROCESSED ASC
           LIMIT read_offset, items_per_page
         ;
     END IF;
@@ -8706,7 +8706,7 @@ BEGIN
            FROM rpfp.report_demandgen rd
           WHERE rd.PSGC_CODE = region_of_user
     --    GROUP BY rd.DEMANDGEN_ID
-       ORDER BY rd.DATE_PROCESSED DESC
+       ORDER BY rd.DATE_PROCESSED ASC
           LIMIT read_offset, items_per_page
         ;
     END IF;
@@ -8766,7 +8766,7 @@ BEGIN
                 ru.REPORT_MONTH AS report_month,
                 ru.DATE_PROCESSED AS date_processed
            FROM rpfp.report_unmet_need ru
-       ORDER BY ru.DATE_PROCESSED DESC
+       ORDER BY ru.DATE_PROCESSED ASC
           LIMIT read_offset, items_per_page
         ;
     END IF;
@@ -8809,7 +8809,7 @@ BEGIN
                 ru.DATE_PROCESSED AS date_processed
            FROM rpfp.report_unmet_need ru
           WHERE ru.PSGC_CODE = region_of_user
-       ORDER BY ru.DATE_PROCESSED DESC
+       ORDER BY ru.DATE_PROCESSED ASC
           LIMIT read_offset, items_per_page
         ;
     END IF;
@@ -8872,7 +8872,7 @@ BEGIN
                 rs.REPORT_MONTH AS report_month,
                 rs.DATE_PROCESSED AS date_processed
            FROM rpfp.report_served_method_mix rs
-       ORDER BY rs.DATE_PROCESSED DESC
+       ORDER BY rs.DATE_PROCESSED ASC
           LIMIT read_offset, items_per_page
         ;
     END IF;
@@ -8915,7 +8915,7 @@ BEGIN
                 rs.DATE_PROCESSED AS date_processed
            FROM rpfp.report_served_method_mix rs
           WHERE rs.PSGC_CODE = region_of_user
-       ORDER BY rs.DATE_PROCESSED DESC
+       ORDER BY rs.DATE_PROCESSED ASC
           LIMIT read_offset, items_per_page
         ;
     END IF;
@@ -8966,7 +8966,6 @@ BEGIN
 END$$
 
 CREATE DEFINER=root@localhost PROCEDURE get_report_demandgen_details(
-    IN report_id INT,
     IN report_month INT,
     IN report_year INT
     )   READS SQL DATA
@@ -9008,7 +9007,8 @@ BEGIN
         END;
     ELSE
         BEGIN
-             SELECT rd.REPORT_YEAR AS report_year,
+             SELECT DISTINCT
+                    rd.REPORT_YEAR AS report_year,
                     rd.PSGC_CODE AS psgc_code,
                     rd.REPORT_MONTH AS report_month,
                     rd.CLASS_4PS AS class_4ps,
@@ -9033,11 +9033,8 @@ BEGIN
                     rd.DATE_PROCESSED AS date_processed
                FROM rpfp.report_demandgen rd
               WHERE rd.REPORT_YEAR = report_year
-                AND rd.REPORT_MONTH >= 1
                 AND rd.REPORT_MONTH <= report_month
-                AND rd.REPORT_ID = report_id
-           ORDER BY rd.REPORT_ID DESC
-              LIMIT 1
+           ORDER BY rd.REPORT_MONTH ASC
             ;
         END;
     END IF;
@@ -9091,7 +9088,6 @@ BEGIN
 END$$
 
 CREATE DEFINER=root@localhost PROCEDURE get_report_served_method_mix_details(
-    IN report_id INT,
     IN report_month INT,
     IN report_year INT
     )   READS SQL DATA
@@ -9099,7 +9095,7 @@ BEGIN
     IF NOT EXISTS (
          SELECT rs.REPORT_ID
            FROM rpfp.report_served_method_mix rs
-          WHERE rs.SERVED_ID = served_id
+          WHERE rs.REPORT_YEAR = report_year
     ) THEN
         BEGIN
              SELECT NULL AS report_year,
@@ -9123,7 +9119,8 @@ BEGIN
         END;
     ELSE
         BEGIN
-             SELECT rs.REPORT_YEAR AS report_year,
+             SELECT DISTINCT
+                    rs.REPORT_YEAR AS report_year,
                     rs.PSGC_CODE AS psgc_code,
                     rs.REPORT_MONTH AS report_month,
                     rs.SERVED_CONDOM AS served_condom,
@@ -9142,10 +9139,8 @@ BEGIN
                     rs.DATE_PROCESSED AS date_processed
                FROM rpfp.report_served_method_mix rs
               WHERE rs.REPORT_YEAR = report_year
-                AND rs.REPORT_MONTH >= 1
                 AND rs.REPORT_MONTH <= report_month
-                AND rs.REPORT_ID = report_id
-           ORDER BY rs.REPORT_ID DESC
+           ORDER BY rs.REPORT_MONTH ASC
             ;
         END;
     END IF;

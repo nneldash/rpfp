@@ -246,23 +246,90 @@ $forma_list = ReportFormA::getFromVariable($form_A);
                     $grand_total = new FormAClass();
                     $forma = new FormAClass();
                     $num_entries = count($forma_list);
+                    $x = 1;
+                    $y = 1;
+                    $z = 1;
                     $num_grand_total = 16;
-                    $x = -1;
+
                     foreach ($forma_list as $key => $forma) {
                     // for ($x = 0; $x < $num_grand_total; $x++) {
-                        $x++;
-                        $forma->DateText = date('F', $forma_list->From);
+                        $forma->DateText = date('F', strtotime(strtoupper( date('Y', $forma_list->From)) .'-' . $forma->ReportDate . '-1'));
+								
                         $divisor = 4;
                         $quarter = (int) ($x / $divisor);
                         $offset = (int) ($x % $divisor) + 1;
                         $list_position = $quarter * $divisor + $offset;
 
-                        if ($x == $num_grand_total) {
-                            $forma = $grand_total;
-                            $sub_total->DateText = "Grand Total";
-                        } elseif ($list_position > $num_entries) {
-                            $forma = new FormAClass();
-                        } elseif ($offset == 0) {
+                        if ($z == 4) {
+                    ?>
+                            <tr>
+                                <td class="text-center">
+                                    <p class="small">
+                                        <b>
+												Subtotal
+                                        <b>
+                                    </p>
+                                </td>
+                                <td>
+                                    <?php echo HtmlHelper::dashInputPdf($forma->Class4Ps); ?>
+                                </td>
+                                <td>
+                                    <?php echo HtmlHelper::dashInputPdf($forma->ClassNon4Ps); ?>
+                                </td>
+                                <td>
+                                    <?php echo HtmlHelper::dashInputPdf($forma->ClassUsapan); ?>
+                                </td>
+                                <td>
+                                    <?php echo HtmlHelper::dashInputPdf($forma->ClassPMC); ?>
+                                </td>
+                                <td>
+                                    <?php echo HtmlHelper::dashInputPdf($forma->ClassH2H); ?>
+                                </td>
+                                <td>
+                                    <?php echo HtmlHelper::dashInputPdf($forma->ClassProfiled); ?>
+                                </td>
+                                <td>
+                                    <?php echo HtmlHelper::dashInputPdf($forma->TotalSessions); ?>
+                                </td>
+                                <td>
+                                    <?php echo HtmlHelper::dashInputPdf($forma->TargetCouples); ?>
+                                </td>
+                                <td>
+                                    <?php echo HtmlHelper::dashInputPdf($forma->WRA4Ps); ?>
+                                </td>
+                                <td>
+                                    <?php echo HtmlHelper::dashInputPdf($forma->WRANon4Ps); ?>
+                                </td>
+                                <td>
+                                    <?php echo HtmlHelper::dashInputPdf($forma->WRAUsapan); ?>
+                                </td>
+                                <td>
+                                    <?php echo HtmlHelper::dashInputPdf($forma->WRAPMC); ?>
+                                </td>
+                                <td>
+                                    <?php echo HtmlHelper::dashInputPdf($forma->WRAH2H); ?>
+                                </td>
+                                <td>
+                                    <?php echo HtmlHelper::dashInputPdf($forma->WRAProfiled); ?>
+                                </td>
+                                <td>
+                                    <?php echo HtmlHelper::dashInputPdf($forma->TotalWRA); ?>
+                                </td>
+                                <td>
+                                    <?php echo HtmlHelper::dashInputPdf($forma->SoloMale); ?>
+                                </td>
+                                <td>
+                                    <?php echo HtmlHelper::dashInputPdf($forma->SoloFemale); ?>
+                                </td>
+                                <td>
+                                    <?php echo HtmlHelper::dashInputPdf($forma->CoupleAttendee); ?>
+                                </td>
+                                <td>
+                                    <?php echo HtmlHelper::dashInputPdf($forma->TotalReached); ?>
+                                </td>
+                            </tr>
+                    <?php
+                            $x++;
                             /** subtotal here */
                             $grand_total->Class4Ps = (int)$grand_total->Class4Ps + (int)$sub_total->Class4Ps;
                             $grand_total->ClassNon4Ps = (int)$grand_total->ClassNon4Ps + (int)$sub_total->ClassNon4Ps;
@@ -281,9 +348,7 @@ $forma_list = ReportFormA::getFromVariable($form_A);
                             $grand_total->SoloFemale = (int)$grand_total->SoloFemale + (int)$sub_total->SoloFemale;
                             $grand_total->CoupleAttendee = (int)$grand_total->CoupleAttendee + (int)$sub_total->CoupleAttendee;
                             $grand_total->TotalReached = (int)$grand_total->TotalReached + (int)$sub_total->TotalReached;
-                            $forma = $sub_total;
-                            $sub_total = new FormAClass();
-                            $sub_total->DateText = "Subtotal";
+                            $z = 1;
                         } else {
                             /** forma_list */
                             // $forma = $forma_list[$list_position];
@@ -305,6 +370,8 @@ $forma_list = ReportFormA::getFromVariable($form_A);
                             $sub_total->SoloFemale = (int)$sub_total->SoloFemale + (int)$forma->SoloFemale;
                             $sub_total->CoupleAttendee = (int)$sub_total->CoupleAttendee + (int)$forma->CoupleAttendee;
                             $sub_total->TotalReached = (int)$sub_total->TotalReached + (int)$forma->TotalReached;
+                            $y++;
+                            $z++;
                         }
                         ?>
 
@@ -377,6 +444,76 @@ $forma_list = ReportFormA::getFromVariable($form_A);
                         <?php
                     }
 
+                    if ($y == $num_entries) {
+                    ?>
+                        <tr>
+                            <td class="text-center">
+                                <p class="small">
+                                    <b>
+													Grand Total
+                                    <b>
+                                </p>
+                            </td>
+                            <td>
+                                <?php echo HtmlHelper::dashInputPdf($forma->Class4Ps); ?>
+                            </td>
+                            <td>
+                                <?php echo HtmlHelper::dashInputPdf($forma->ClassNon4Ps); ?>
+                            </td>
+                            <td>
+                                <?php echo HtmlHelper::dashInputPdf($forma->ClassUsapan); ?>
+                            </td>
+                            <td>
+                                <?php echo HtmlHelper::dashInputPdf($forma->ClassPMC); ?>
+                            </td>
+                            <td>
+                                <?php echo HtmlHelper::dashInputPdf($forma->ClassH2H); ?>
+                            </td>
+                            <td>
+                                <?php echo HtmlHelper::dashInputPdf($forma->ClassProfiled); ?>
+                            </td>
+                            <td>
+                                <?php echo HtmlHelper::dashInputPdf($forma->TotalSessions); ?>
+                            </td>
+                            <td>
+                                <?php echo HtmlHelper::dashInputPdf($forma->TargetCouples); ?>
+                            </td>
+                            <td>
+                                <?php echo HtmlHelper::dashInputPdf($forma->WRA4Ps); ?>
+                            </td>
+                            <td>
+                                <?php echo HtmlHelper::dashInputPdf($forma->WRANon4Ps); ?>
+                            </td>
+                            <td>
+                                <?php echo HtmlHelper::dashInputPdf($forma->WRAUsapan); ?>
+                            </td>
+                            <td>
+                                <?php echo HtmlHelper::dashInputPdf($forma->WRAPMC); ?>
+                            </td>
+                            <td>
+                                <?php echo HtmlHelper::dashInputPdf($forma->WRAH2H); ?>
+                            </td>
+                            <td>
+                                <?php echo HtmlHelper::dashInputPdf($forma->WRAProfiled); ?>
+                            </td>
+                            <td>
+                                <?php echo HtmlHelper::dashInputPdf($forma->TotalWRA); ?>
+                            </td>
+                            <td>
+                                <?php echo HtmlHelper::dashInputPdf($forma->SoloMale); ?>
+                            </td>
+                            <td>
+                                <?php echo HtmlHelper::dashInputPdf($forma->SoloFemale); ?>
+                            </td>
+                            <td>
+                                <?php echo HtmlHelper::dashInputPdf($forma->CoupleAttendee); ?>
+                            </td>
+                            <td>
+                                <?php echo HtmlHelper::dashInputPdf($forma->TotalReached); ?>
+                            </td>
+                        </tr>
+                    <?php
+                    }
                     ?>
                     </tbody>
                 </table>

@@ -166,213 +166,219 @@ $formc_list = ReportFormC::getFromVariable($form_C);
 								</th>
 							</tr>
 						</thead>
-						<tbody>
-							<?php for ($i=1; $i <= 3; $i++): ?>
+						<?php
+
+						$sub_total = new FormCClass();
+						$grand_total = new FormCClass();
+						$formc = new FormCClass();
+						$num_entries = count($formc_list);
+						$x = 1;
+						$y = 1;
+						$z = 1;
+						$num_grand_total = 16;
+
+						foreach ($formc_list as $key => $formc) {
+						// for ($x = 0; $x < $num_grand_total; $x++) {
+							$formc->DateText = date('F', strtotime(strtoupper( date('Y', $formc_list->From)) .'-' . $formc->ReportDate . '-1'));
+									
+							$divisor = 4;
+							$quarter = (int) ($x / $divisor);
+							$offset = (int) ($x % $divisor) + 1;
+							$list_position = $quarter * $divisor + $offset;
+
+							if ($z == 4) {
+						?>
 								<tr>
 									<td class="text-center">
 										<p class="small">
 											<b>
-												<?= date('F',strtotime('01.'.$i.'.2001'))?>
-											</b>
-										</p>
-									</td>
-									<td></td>
-									<td></td>
-									<td></td>
-									<td></td>
-									<td></td>
-									<td></td>
-									<td></td>
-									<td></td>
-									<td></td>
-									<td></td>
-									<td></td>
-									<td></td>
-									<td></td>
-								</tr>
-							<?php endfor; ?>
-							<tr>
-								<td class="text-center">
-									<p class="small text-danger">
-										<b>
-											Sub-Total
-										</b>
-									</p>
-								</td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-							</tr>
-							<?php for ($i=4; $i <= 6; $i++): ?>
-								<tr>
-									<td class="text-center">
-										<p class="small">
+													Subtotal
 											<b>
-												<?= date('F',strtotime('01.'.$i.'.2001'))?>
-											</b>
 										</p>
 									</td>
-									<td></td>
-									<td></td>
-									<td></td>
-									<td></td>
-									<td></td>
-									<td></td>
-									<td></td>
-									<td></td>
-									<td></td>
-									<td></td>
-									<td></td>
-									<td></td>
-									<td></td>
-								</tr>
-							<?php endfor; ?>
-							<tr>
-								<td class="text-center">
-									<p class="small text-danger">
-										<b>
-											Sub-Total
-										</b>
-									</p>
-								</td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-							</tr>
-							<?php for ($i=7; $i <= 9; $i++): ?>
-								<tr>
-									<td class="text-center">
-										<p class="small">
-											<b>
-												<?= date('F',strtotime('01.'.$i.'.2001'))?>
-											</b>
-										</p>
+									<td>
+										<?php echo HtmlHelper::dashInputPdf($formc->ServedCondom); ?>
 									</td>
-									<td></td>
-									<td></td>
-									<td></td>
-									<td></td>
-									<td></td>
-									<td></td>
-									<td></td>
-									<td></td>
-									<td></td>
-									<td></td>
-									<td></td>
-									<td></td>
-									<td></td>
-								</tr>
-							<?php endfor; ?>
-							<tr>
-								<td class="text-center">
-									<p class="small text-danger">
-										<b>
-											Sub-Total
-										</b>
-									</p>
-								</td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-							</tr>
-							<?php for ($i=10; $i <= 12; $i++): ?>
-								<tr>
-									<td class="text-center">
-										<p class="small">
-											<b>
-												<?= date('F',strtotime('01.'.$i.'.2001'))?>
-											</b>
-										</p>
+									<td>
+										<?php echo HtmlHelper::dashInputPdf($formc->ServedIUD); ?>
 									</td>
-									<td></td>
-									<td></td>
-									<td></td>
-									<td></td>
-									<td></td>
-									<td></td>
-									<td></td>
-									<td></td>
-									<td></td>
-									<td></td>
-									<td></td>
-									<td></td>
-									<td></td>
+									<td>
+										<?php echo HtmlHelper::dashInputPdf($formc->ServedPills); ?>
+									</td>
+									<td>
+										<?php echo HtmlHelper::dashInputPdf($formc->ServedInjectables); ?>
+									</td>
+									<td>
+										<?php echo HtmlHelper::dashInputPdf($formc->ServedNSV); ?>
+									</td>
+									<td>
+										<?php echo HtmlHelper::dashInputPdf($formc->ServedBTL); ?>
+									</td>
+									<td>
+										<?php echo HtmlHelper::dashInputPdf($formc->ServedImplant); ?>
+									</td>
+									<td>
+										<?php echo HtmlHelper::dashInputPdf($formc->ServedCMM); ?>
+									</td>
+									<td>
+										<?php echo HtmlHelper::dashInputPdf($formc->ServedBBT); ?>
+									</td>
+									<td>
+										<?php echo HtmlHelper::dashInputPdf($formc->ServedSymptoThermal); ?>
+									</td>
+									<td>
+										<?php echo HtmlHelper::dashInputPdf($formc->ServedSDM); ?>
+									</td>
+									<td>
+										<?php echo HtmlHelper::dashInputPdf($formc->ServedLAM); ?>
+									</td>
+									<td>
+										<?php echo HtmlHelper::dashInputPdf($formc->TotalServed); ?>
+									</td>
 								</tr>
-							<?php endfor; ?>
+						<?php
+								$x++;
+								/** subtotal here */
+								$grand_total->ServedCondom = (int)$grand_total->ServedCondom + (int)$sub_total->ServedCondom;
+								$grand_total->ServedIUD = (int)$grand_total->ServedIUD + (int)$sub_total->ServedIUD;
+								$grand_total->ServedPills = (int)$grand_total->ServedPills + (int)$sub_total->ServedPills;
+								$grand_total->ServedInjectables = (int)$grand_total->ServedInjectables + (int)$sub_total->ServedInjectables;
+								$grand_total->ServedNSV = (int)$grand_total->ServedNSV + (int)$sub_total->ServedNSV;
+								$grand_total->ServedBTL = (int)$grand_total->ServedBTL + (int)$sub_total->ServedBTL;
+								$grand_total->ServedImplant = (int)$grand_total->ServedImplant + (int)$sub_total->ServedImplant;
+								$grand_total->ServedCMM = (int)$grand_total->ServedCMM + (int)$sub_total->ServedCMM;
+								$grand_total->ServedBBT = (int)$grand_total->ServedBBT + (int)$sub_total->ServedBBT;
+								$grand_total->ServedSymptoThermal = (int)$grand_total->ServedSymptoThermal + (int)$sub_total->ServedSymptoThermal;
+								$grand_total->ServedSDM = (int)$grand_total->ServedSDM + (int)$sub_total->ServedSDM;
+								$grand_total->ServedLAM = (int)$grand_total->ServedLAM + (int)$sub_total->ServedLAM;
+								$grand_total->TotalServed = (int)$grand_total->TotalServed + (int)$sub_total->TotalServed;
+								$z = 1;
+							} else {
+								/** forma_list */
+								// $forma = $forma_list[$list_position];
+
+								$sub_total->ServedCondom = (int)$sub_total->ServedCondom + (int)$formc->ServedCondom;
+								$sub_total->ServedIUD = (int)$sub_total->ServedIUD + (int)$formc->ServedIUD;
+								$sub_total->ServedPills = (int)$sub_total->ServedPills + (int)$formc->ServedPills ;
+								$sub_total->ServedInjectables = (int)$sub_total->ServedInjectables + (int)$formc->ServedInjectables;
+								$sub_total->ServedNSV = (int)$sub_total->ServedNSV + (int)$formc->ServedNSV;
+								$sub_total->ServedBTL = (int)$sub_total->ServedBTL + (int)$formc->ServedBTL;
+								$sub_total->ServedImplant = (int)$sub_total->ServedImplant + (int)$formc->ServedImplant;
+								$sub_total->ServedCMM = (int)$sub_total->ServedCMM + (int)$formc->ServedCMM;
+								$sub_total->ServedBBT = (int)$sub_total->ServedBBT + (int)$formc->ServedBBT;
+								$sub_total->ServedSymptoThermal = (int)$sub_total->ServedSymptoThermal + (int)$formc->ServedSymptoThermal;
+								$sub_total->ServedSDM = (int)$sub_total->ServedSDM + (int)$formc->ServedSDM;
+								$sub_total->ServedLAM = (int)$sub_total->ServedLAM + (int) $formc->ServedLAM;
+								$sub_total->TotalServed = (int)$sub_total->TotalServed +  (int)$formc->TotalServed;
+								$y++;
+								$z++;
+							}
+							?>
+
 							<tr>
 								<td class="text-center">
-									<p class="small text-danger">
+									<p class="small">
 										<b>
-											Sub-Total
-										</b>
+										<?= $formc->DateText ?>
+										<b>
 									</p>
 								</td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
+								<td>
+									<?php echo HtmlHelper::dashInputPdf($formc->ServedCondom); ?>
+								</td>
+								<td>
+									<?php echo HtmlHelper::dashInputPdf($formc->ServedIUD); ?>
+								</td>
+								<td>
+									<?php echo HtmlHelper::dashInputPdf($formc->ServedPills); ?>
+								</td>
+								<td>
+									<?php echo HtmlHelper::dashInputPdf($formc->ServedInjectables); ?>
+								</td>
+								<td>
+									<?php echo HtmlHelper::dashInputPdf($formc->ServedNSV); ?>
+								</td>
+								<td>
+									<?php echo HtmlHelper::dashInputPdf($formc->ServedBTL); ?>
+								</td>
+								<td>
+									<?php echo HtmlHelper::dashInputPdf($formc->ServedImplant); ?>
+								</td>
+								<td>
+									<?php echo HtmlHelper::dashInputPdf($formc->ServedCMM); ?>
+								</td>
+								<td>
+									<?php echo HtmlHelper::dashInputPdf($formc->ServedBBT); ?>
+								</td>
+								<td>
+									<?php echo HtmlHelper::dashInputPdf($formc->ServedSymptoThermal); ?>
+								</td>
+								<td>
+									<?php echo HtmlHelper::dashInputPdf($formc->ServedSDM); ?>
+								</td>
+								<td>
+									<?php echo HtmlHelper::dashInputPdf($formc->ServedLAM); ?>
+								</td>
+								<td>
+									<?php echo HtmlHelper::dashInputPdf($formc->TotalServed); ?>
+								</td>
 							</tr>
+							<?php
+						}
+
+						if ($y == $num_entries) {
+						?>
 							<tr>
 								<td class="text-center">
-									<p class="small text-primary">
+									<p class="small">
 										<b>
-											Total
-										</b>
+													Grand Total
+										<b>
 									</p>
 								</td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
+								<td>
+									<?php echo HtmlHelper::dashInputPdf($formc->ServedCondom); ?>
+								</td>
+								<td>
+									<?php echo HtmlHelper::dashInputPdf($formc->ServedIUD); ?>
+								</td>
+								<td>
+									<?php echo HtmlHelper::dashInputPdf($formc->ServedPills); ?>
+								</td>
+								<td>
+									<?php echo HtmlHelper::dashInputPdf($formc->ServedInjectables); ?>
+								</td>
+								<td>
+									<?php echo HtmlHelper::dashInputPdf($formc->ServedNSV); ?>
+								</td>
+								<td>
+									<?php echo HtmlHelper::dashInputPdf($formc->ServedBTL); ?>
+								</td>
+								<td>
+									<?php echo HtmlHelper::dashInputPdf($formc->ServedImplant); ?>
+								</td>
+								<td>
+									<?php echo HtmlHelper::dashInputPdf($formc->ServedCMM); ?>
+								</td>
+								<td>
+									<?php echo HtmlHelper::dashInputPdf($formc->ServedBBT); ?>
+								</td>
+								<td>
+									<?php echo HtmlHelper::dashInputPdf($formc->ServedSymptoThermal); ?>
+								</td>
+								<td>
+									<?php echo HtmlHelper::dashInputPdf($formc->ServedSDM); ?>
+								</td>
+								<td>
+									<?php echo HtmlHelper::dashInputPdf($formc->ServedLAM); ?>
+								</td>
+								<td>
+									<?php echo HtmlHelper::dashInputPdf($formc->TotalServed); ?>
+								</td>
 							</tr>
+						<?php
+						}
+						?>
 						</tbody>
 					</table>
 				</div>

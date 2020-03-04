@@ -42,12 +42,13 @@ class FormCModel extends BaseModel
         return $retval;
     }
 
-    public function getFormCReport(int $report_id, int $report_month, int $report_year) : ReportFormCInterface
+    public function getFormCReport(int $report_month, int $report_year) : ReportFormCInterface
     {
         $formc_report = $this->fromDbGetReportList(
             'ReportFormC',
             'FormCClass',
             array(
+                'ReportDate' => 'report_month',
                 'ServedCondom' => 'served_condom',
                 'ServedIUD' => 'served_iud',
                 'ServedPills' => 'served_pills',
@@ -63,7 +64,7 @@ class FormCModel extends BaseModel
                 'TotalServed' => 'total_served'
             ),
             'get_report_served_method_mix_details',
-            array($report_id, $report_month, $report_year)
+            array($report_month, $report_year)
         );
 
         $retval = new ReportFormC();
