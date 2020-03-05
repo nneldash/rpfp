@@ -241,19 +241,24 @@ class Forms extends CI_Controller
             return $slip;
         }
 
+        if (!empty($this->input->post('date_of_visit'))) {
+            $date_of_visit = date("Y-m-d", strtotime($this->input->post('date_of_visit')));
+            $date_of_method = date("Y-m-d", strtotime($this->input->post('date_of_method')));
+        }
+
         $slip->Id = $this->input->post('slip_id');
-        $slip->DateOfVisit = $this->input->post('date_of_visit');
+        $slip->DateOfVisit = $date_of_visit;
         $slip->MethodUsed = $this->input->post('method');
         $slip->IsCounseling = $this->input->post('is_counseling');
         $slip->OtherConcern = $this->input->post('other_concern');
         $slip->CounseledToUse = $this->input->post('counseled_to_use');
         $slip->OtherSpecify = $this->input->post('other_specify');
         $slip->IsProvided = $this->input->post('is_provided_service');
-        $slip->DateOfMethod = $this->input->post('date_of_method');
+        $slip->DateOfMethod = $date_of_method;
         $slip->ClientAdvised = $this->input->post('client_advised');
         $slip->ReferralFacility = $this->input->post('referral_facility');
         $slip->HealthServiceProvider = $this->input->post('health_service_provider');
-
+        
         $serviceSlip = $this->FormModel->saveServiceSlip($couple_id, $slip);
         
         if ($serviceSlip == 'added') {
