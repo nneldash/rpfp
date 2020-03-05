@@ -1,7 +1,7 @@
 var base_url = window.location.origin + '/rpfp';
 $(function() {
 	var FromEndDate = new Date();
-    $('.date_visit, .date_method').datepicker({
+    $('.date_visit').datepicker({
     	dateFormat: "mm/dd/yy",
     	maxDate: FromEndDate,
 		changeYear: true
