@@ -1399,7 +1399,8 @@ function checkRequired()
 {
 	var validate = {
 						'type_class' : 0,
-						'class_and_couple_details' : 0
+						'class_and_couple_details' : 0,
+						'signature' : 0
 	}
 
 	if ($('input[name=type_of_class]:checked').size() > 0) {
@@ -1415,7 +1416,7 @@ function checkRequired()
 				$('#rpfpClass table tr').find('td input[name=others]').removeClass('required-field');
 				validate['type_class'] = 0;
 			}
-		} else {
+		} else { 
 			$('#rpfpClass table tr').find('td input').removeClass('required-field');
 			validate['type_class'] = 0;
 		}
@@ -1431,6 +1432,8 @@ function checkRequired()
 		if (item == '') {
 			validate['class_and_couple_details'] = 1;
 			$(value).addClass('required-field');
+			$(value).closest('tr').addClass('required-tr');
+			var index = $(value).closest('tr').find('td:nth-child(2) .loopIndex1').val();			
 			
 			if (className == 'provinceList' || className == 'muniList' || className == 'brgyList') {
 				$(value).closest('td').find('button[data-id='+ className +']').addClass('required-field');
@@ -1445,7 +1448,48 @@ function checkRequired()
 		}
 	});
 
-	if (validate['type_class'] == 0 && validate['class_and_couple_details'] == 0) {
+	for (var i = 0; i <= 9; i++) {
+		var trRequired1 = $('.tr1' + i).hasClass('required-tr');
+		var trRequired2 = $('.tr2' + i).hasClass('required-tr');
+
+		if (trRequired1 == true && trRequired2 == true) {
+			if ($('input[name="attendee1['+ i +']"]:checked').size() > 0 || $('input[name="attendee2['+ i +']"]:checked').size() > 0) {
+				$('input[name="attendee1['+ i +']"], input[name="attendee2['+ i +']"]').closest('tr').removeClass('required-tr');
+				$('input[name="attendee1['+ i +']"], input[name="attendee2['+ i +']"]').closest('tr').find('.back-eee').removeClass('required-field');
+			} else {
+				validate['signature'] = 1;
+				$('input[name="attendee1['+ i +']"], input[name="attendee2['+ i +']"]').closest('tr').addClass('required-tr');
+				$('input[name="attendee1['+ i +']"], input[name="attendee2['+ i +']"]').closest('tr').find('.back-eee').addClass('required-field');
+			}
+		} else {
+			if (trRequired1 == true) {
+				if ($('input[name="attendee1['+ i +']"]:checked').size() > 0) {
+					$('input[name="attendee1['+ i +']"]').closest('tr').removeClass('required-tr');
+					$('input[name="attendee1['+ i +']"]').closest('tr').find('.back-eee').removeClass('required-field');
+				} else {
+					$('input[name="attendee1['+ i +']"]').closest('tr').addClass('required-tr');
+					$('input[name="attendee1['+ i +']"]').closest('tr').find('.back-eee').addClass('required-field');
+				}
+			} else if (trRequired2 == true) {
+				if ($('input[name="attendee2['+ i +']"]:checked').size() > 0) {
+					$('input[name="attendee2['+ i +']"]').closest('tr').removeClass('required-tr');
+					$('input[name="attendee2['+ i +']"]').closest('tr').find('.back-eee').removeClass('required-field');
+				} else {
+					$('input[name="attendee2['+ i +']"]').closest('tr').addClass('required-tr');
+					$('input[name="attendee2['+ i +']"]').closest('tr').find('.back-eee').addClass('required-field');
+				}
+			}
+		}
+	}
+
+	var countRequired = $('.required-tr').size();
+	if (countRequired == 0) {
+		validate['signature'] = 0;
+	} else {
+		validate['signature'] = 1;
+	}
+
+	if (validate['type_class'] == 0 && validate['class_and_couple_details'] == 0 && validate['signature'] == 0) {
 		validate = 1
 		return validate;
 	} else {

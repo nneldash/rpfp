@@ -743,9 +743,22 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 									</td>
 									<td class="small-20" rowspan="2">
 										<?php
+											if ($couple->TraditionalFp->Status == 1) {
+												$TraditionalFp_Status = 'A';
+											} elseif ($couple->TraditionalFp->Status == 2) {
+												$TraditionalFp_Status = 'B';
+											} elseif ($couple->TraditionalFp->Status == 3) {
+												$TraditionalFp_Status = 'C';
+											} elseif ($couple->TraditionalFp->Status == 4) {
+												$TraditionalFp_Status = 'D';
+											} else {
+												$TraditionalFp_Status = $couple->TraditionalFp->Status;
+											}
+										?>
+										<?php
 				                            echo HtmlHelper::inputPdf(
 				                            	$is_pdf,
-				                            	($couple->TraditionalFp->Status != 'N/A' ? $couple->TraditionalFp->Status : ''),
+				                            	($couple->TraditionalFp->Status != 'N/A' ? $TraditionalFp_Status : ''),
 				                                "text",
 				                                "status[".$i."]",
 				                                "height-50 text-center status-trad",
@@ -776,7 +789,7 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 									<td class="small <?php if (!$is_pdf): ?> back-eee <?php endif;?>" style="border-right: none; padding: 0">
 										<?php if (!$is_pdf) : ?>
 											<label class="cont">
-												<input type="checkbox" class="attended<?= $i; ?>" name="attendee1[<?= $i ?>]" value="<?= ($couple->FirstEntry->Attendee == 1 ? 'attended' : '') ?>" />
+												<input type="checkbox" class="attended<?= $i; ?> attendeed1[<?= $i ?>]" name="attendee1[<?= $i ?>]" value="<?= ($couple->FirstEntry->Attendee == 1 ? 'attended' : '') ?>" />
 												<span class="checkmark height-34"></span>
 											</label>
 										<?php endif; ?>
@@ -926,7 +939,7 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 									<td class="small back-eee" style="border-right: none; padding: 0">
 										<?php if (!$is_pdf) : ?>
 											<label class="cont">
-												<input type="checkbox" class="attended<?= $i; ?>" name="attendee2[<?= $i ?>]" value="<?= ($couple->SecondEntry->Attendee == 1 ? 'attended' : '') ?>" />
+												<input type="checkbox" class="attended<?= $i; ?> attendeed2[<?= $i ?>]" name="attendee2[<?= $i ?>]" value="<?= ($couple->SecondEntry->Attendee == 1 ? 'attended' : '') ?>" />
 												<span class="checkmark height-35" ></span>
 											</label>
 										<?php endif; ?>
