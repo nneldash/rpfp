@@ -1371,7 +1371,7 @@ function importModal()
 
 function highlight()
 {
-	$('td:first-child input[value="aproveCouple"]').change(function() {
+	$('td:first-child input[value="approveCouple"]').change(function() {
     	$(this).closest('tr').toggleClass("highlight", this.checked);
     	$(this).closest('tr').next('tr').toggleClass("highlight", this.checked);
   	});
@@ -1534,7 +1534,7 @@ function saveForm1()
 			
 			formData[item.prop('name')] = item_value;
 		});
-		
+		console.log(formData);return false;
 		var validate = checkRequired();
 		if (validate != 1) {
 			Toast.fire({
@@ -1576,8 +1576,8 @@ function checkBox()
 	$('#checkAll').click(function() {
         var checked = $(this).prop('checked');
         $('.approveCheck').find('.check').prop('checked', checked);
-    	$('td:first-child input[value="aproveCouple"]').closest('tr').toggleClass("highlight", this.checked);
-    	$('td:first-child input[value="aproveCouple"]').closest('tr').next('tr').toggleClass("highlight", this.checked);
+    	$('td:first-child input[value="approveCouple"]').closest('tr').toggleClass("highlight", this.checked);
+    	$('td:first-child input[value="approveCouple"]').closest('tr').next('tr').toggleClass("highlight", this.checked);
     });
 }
 
@@ -1625,8 +1625,8 @@ $(document).ready(function(){
 	});
 
 	$('input[type=checkbox] + span').click(function(){
-		var current_value = $($(this).siblings('input[type=checkbox]')[0]).val();
-		$($(this).siblings('input[type=checkbox]')[0]).val(current_value == 'attended' ? "" : 'attended');
+		var current_value = $($(this).siblings('input[name=approveCouple]')[0]).val();
+		$($(this).siblings('input[name=approveCouple]')[0]).val(current_value == 'approved' ? "" : 'approved');
 	});
 
 	$('#loading-wrapper').removeClass('loading');
