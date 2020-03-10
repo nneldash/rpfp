@@ -4222,7 +4222,7 @@ BEGIN
             END IF;
         END;
     END IF;
-    IF (TRIM(IFNULL(lastname_m, '')) <> '' AND TRIM(IFNULL(firstname_m, '')) <> '') THEN
+    IF (TRIM(IFNULL(lastname_f, '')) <> '' AND TRIM(IFNULL(firstname_f, '')) <> '') THEN
         BEGIN
             IF ( IFNULL( indv_id_f, 0 ) = 0 ) THEN
                 INSERT INTO rpfp.individual (
