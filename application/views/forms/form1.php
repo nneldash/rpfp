@@ -313,7 +313,7 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 									<?php if ($isRegionalDataManager): ?>
 										<th rowspan="2" class="text-center">
 											<label class="cont back-eee checkApprove" style="height: 37px;">
-												<input type="checkbox" name="type_of_class" id="checkAll" />
+												<input type="checkbox" name="approve_all" id="checkAll" />
 												<span class="checkmark"></span>
 											</label>
 										</th>
@@ -474,7 +474,7 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 											<td rowspan="2" class="back-eee padding-0">
 												<label class="cont">
 													<input class="check" type="checkbox" <?= $couple->Id != 'N/A' ? $couple->IsActive != 'N/A' ? ' ' : 'checked' : '' ?> 
-													name="approveCouple" value="approveCouple" <?= $couple->Id != 'N/A' ? $couple->IsActive != 'N/A' ? ' ' : 'disabled' : '' ?>  />
+													name="approveCouple" value="approveCouple" <?= $couple->Id != 'N/A' ? $couple->IsActive != 'N/A' ? ' ' : 'disabled' : '' ?>  > 
 													<span class="checkmark"></span>
 												</label>
 											</td> 
