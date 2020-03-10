@@ -1534,7 +1534,7 @@ function saveForm1()
 			
 			formData[item.prop('name')] = item_value;
 		});
-		console.log(formData);return false;
+		// console.log(formData);return false;
 		var validate = checkRequired();
 		if (validate != 1) {
 			Toast.fire({
