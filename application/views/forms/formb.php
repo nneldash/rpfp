@@ -138,13 +138,56 @@ $formb_list = ReportFormBClass::getFromVariable($form_B);
 								// for ($x = 1; $x < $num_grand_total; $x++) {
 								$formb->DateText = date('F', strtotime(strtoupper( date('Y', $formb_list->From)) .'-' . $formb->ReportDate . '-1'));
 								// $sub_total->DateText = date('F', $reportDate);
-								
-								$divisor = 4;
-								$quarter = (int) ($x / $divisor);
-								$offset = (int) ($x % $divisor) + 1;
-								$list_position = $quarter * $divisor + $offset;
+								?>
+								<tr>
+									<td class="text-center">
+										<p class="small">
+											<b>
+                                    			<?= $formb->DateText ?>
+											<b>
+										</p>
+									</td>
+									<td>
+										<?php echo HtmlHelper::dashInputPdf($formb->UnmetModern); ?>
+									</td>
+									<td>
+										<?php echo HtmlHelper::dashInputPdf($formb->ServedModern); ?>
+									</td>
+									<td>
+										<?php echo HtmlHelper::dashInputPdf($formb->NoIntention); ?>
+									</td>
+									<td>
+										<?php echo HtmlHelper::dashInputPdf($formb->WithIntention); ?>
+									</td>
+									<td>
+										<?php echo HtmlHelper::dashInputPdf($formb->ServedTraditional); ?>
+									</td>
+									<td>
+										<?php echo HtmlHelper::dashInputPdf($formb->TotalUnmet); ?>
+									</td>
+									<td>
+										<?php echo HtmlHelper::dashInputPdf($formb->TotalServed); ?>
+									</td>
+								</tr>
+								<?php
 
-								if ($z == 4) {
+								$sub_total->UnmetModern = (int)$sub_total->UnmetModern + (int)$formb->UnmetModern;
+								$sub_total->ServedModern = (int)$sub_total->ServedModern + (int)$formb->ServedModern;
+								$sub_total->NoIntention = (int)$sub_total->NoIntention + (int)$formb->NoIntention ;
+								$sub_total->WithIntention = (int)$sub_total->WithIntention + (int)$formb->WithIntention;
+								$sub_total->ServedTraditional = (int)$sub_total->ServedTraditional + (int)$formb->ServedTraditional;
+								$sub_total->TotalUnmet = (int)$sub_total->TotalUnmet + (int)$formb->TotalUnmet;
+								$sub_total->TotalServed = (int)$sub_total->TotalServed + (int)$formb->TotalServed;
+
+								$grand_total->UnmetModern = (int)$grand_total->UnmetModern + (int)$formb->UnmetModern;
+								$grand_total->ServedModern = (int)$grand_total->ServedModern + (int)$formb->ServedModern;
+								$grand_total->NoIntention = (int)$grand_total->NoIntention + (int)$formb->NoIntention;
+								$grand_total->WithIntention = (int)$grand_total->WithIntention + (int)$formb->WithIntention;
+								$grand_total->ServedTraditional = (int)$grand_total->ServedTraditional + (int)$formb->ServedTraditional;
+								$grand_total->TotalUnmet = (int)$grand_total->TotalUnmet + (int)$formb->TotalUnmet;
+								$grand_total->TotalServed = (int)$grand_total->TotalServed + (int)$formb->TotalServed;
+								
+								if ($z == 3) {
 									/** subtotal here */
 							?>
 								<tr>
@@ -180,64 +223,55 @@ $formb_list = ReportFormBClass::getFromVariable($form_B);
 
 							<?php
 									$x++;
-									$grand_total->UnmetModern = (int)$grand_total->UnmetModern + (int)$sub_total->UnmetModern;
-									$grand_total->ServedModern = (int)$grand_total->ServedModern + (int)$sub_total->ServedModern;
-									$grand_total->NoIntention = (int)$grand_total->NoIntention + (int)$sub_total->NoIntention;
-									$grand_total->WithIntention = (int)$grand_total->WithIntention + (int)$sub_total->WithIntention;
-									$grand_total->ServedTraditional = (int)$grand_total->ServedTraditional + (int)$sub_total->ServedTraditional;
-									$grand_total->TotalUnmet = (int)$grand_total->TotalUnmet + (int)$sub_total->TotalUnmet;
-									$grand_total->TotalServed = (int)$grand_total->TotalServed + (int)$sub_total->TotalServed;
 									$z = 1;
+									$sub_total->UnmetModern = 0;
+									$sub_total->ServedModern = 0;
+									$sub_total->NoIntention = 0;
+									$sub_total->WithIntention = 0;
+									$sub_total->ServedTraditional = 0;
+									$sub_total->TotalUnmet = 0;
+									$sub_total->TotalServed = 0;
 								} else {
-
-									$sub_total->UnmetModern = (int)$sub_total->UnmetModern + (int)$formb->UnmetModern;
-									$sub_total->ServedModern = (int)$sub_total->ServedModern + (int)$formb->ServedModern;
-									$sub_total->NoIntention = (int)$sub_total->NoIntention + (int)$formb->NoIntention ;
-									$sub_total->WithIntention = (int)$sub_total->WithIntention + (int)$formb->WithIntention;
-									$sub_total->ServedTraditional = (int)$sub_total->ServedTraditional + (int)$formb->ServedTraditional;
-									$sub_total->TotalUnmet = (int)$sub_total->TotalUnmet + (int)$formb->TotalUnmet;
-									$sub_total->TotalServed = (int)$sub_total->TotalServed + (int)$formb->TotalServed;
 									$y++;
 									$z++;
 								}
-								?>
 
-								<tr>
-									<td class="text-center">
-										<p class="small">
-											<b>
-                                    			<?= $formb->DateText ?>
-											<b>
-										</p>
-									</td>
-									<td>
-										<?php echo HtmlHelper::dashInputPdf($formb->UnmetModern); ?>
-									</td>
-									<td>
-										<?php echo HtmlHelper::dashInputPdf($formb->ServedModern); ?>
-									</td>
-									<td>
-										<?php echo HtmlHelper::dashInputPdf($formb->NoIntention); ?>
-									</td>
-									<td>
-										<?php echo HtmlHelper::dashInputPdf($formb->WithIntention); ?>
-									</td>
-									<td>
-										<?php echo HtmlHelper::dashInputPdf($formb->ServedTraditional); ?>
-									</td>
-									<td>
-										<?php echo HtmlHelper::dashInputPdf($formb->TotalUnmet); ?>
-									</td>
-									<td>
-										<?php echo HtmlHelper::dashInputPdf($formb->TotalServed); ?>
-									</td>
-								</tr>
-								<?php
-								$x++;
 							}
-							
-								if ($y == $num_entries) {	
+								if ($y <= 3) {
 								?>
+									<tr>
+										<td class="text-center">
+											<p class="small">
+												<b>
+													Subtotal
+												<b>
+											</p>
+										</td>
+										<td>
+											<?php echo HtmlHelper::dashInputPdf($sub_total->UnmetModern); ?>
+										</td>
+										<td>
+											<?php echo HtmlHelper::dashInputPdf($sub_total->ServedModern); ?>
+										</td>
+										<td>
+											<?php echo HtmlHelper::dashInputPdf($sub_total->NoIntention); ?>
+										</td>
+										<td>
+											<?php echo HtmlHelper::dashInputPdf($sub_total->WithIntention); ?>
+										</td>
+										<td>
+											<?php echo HtmlHelper::dashInputPdf($sub_total->ServedTraditional); ?>
+										</td>
+										<td>
+											<?php echo HtmlHelper::dashInputPdf($sub_total->TotalUnmet); ?>
+										</td>
+										<td>
+											<?php echo HtmlHelper::dashInputPdf($sub_total->TotalServed); ?>
+										</td>
+									</tr>
+									<?php
+								}
+									?>
 									<tr>
 										<td class="text-center">
 											<p class="small">
@@ -268,9 +302,6 @@ $formb_list = ReportFormBClass::getFromVariable($form_B);
 											<?php echo HtmlHelper::dashInputPdf($grand_total->TotalServed); ?>
 										</td>
 									</tr>
-							<?php
-							}
-							?>
 						</tbody>
 					</table>
 				</div>
