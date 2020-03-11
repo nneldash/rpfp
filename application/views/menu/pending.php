@@ -48,6 +48,10 @@ if (empty($title)) {
             <?php } else { ?>
                 <tr>
                     <td class="text-center" colspan="5">No result(s) found.</td>
+                    <td class="text-center none"></td>
+                    <td class="text-center none"></td>
+                    <td class="text-center none"></td>
+                    <td class="text-center none"></td>
                 </tr>
             <?php } ?>
         <?php endforeach; ?>

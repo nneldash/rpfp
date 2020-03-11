@@ -34,7 +34,7 @@ if (empty($title)) {
                     <td><?= $forma->ReportYear ?> - <?php if ($forma->ReportMonth != 0) { echo strftime("%b" ,mktime(0,0,0, $forma->ReportMonth )); } else { echo $forma->ReportMonth; } ?></td>
                     <td><?= date('F d, Y', strtotime($forma->DateProcessed)); ?></td>
                     <td class="text-center">
-                    <a class="viewForm folderview" href="<?= base_url('forms/forma?ReportMonth='. $forma->ReportMonth.'&ReportYear='. $forma->ReportYear); ?>" target="_blank">
+                        <a class="viewForm folderview" href="<?= base_url('forms/forma?ReportMonth='. $forma->ReportMonth.'&ReportYear='. $forma->ReportYear); ?>" target="_blank">
                         <button class="btn btn-primary" data-toggle="tooltip" data-placement="left" title="View">
                             <i class="fa fa-folder-open"></i>
                         </button>					
@@ -43,6 +43,9 @@ if (empty($title)) {
             <?php } else { ?>
                 <tr>
                     <td class="text-center" colspan="4">No result(s) found.</td>
+                    <td class="text-center none"></td>
+                    <td class="text-center none"></td>
+                    <td class="text-center none"></td>
                 </tr>
             <?php } ?>
         <?php endforeach; ?>

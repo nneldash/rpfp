@@ -352,12 +352,12 @@ function getBrgys(muniId)
 	});
 }
 
-// function removeSearch()
-// {
-// 	$('#datatable-responsive').DataTable( {
-//         "paging":   	false,
-//         "ordering": 	false,
-// 		"info":     	false,
-// 		"searching":	false
-//     } );
-// }
+function removeSearch()
+{
+	$('#datatable-responsive').DataTable( {
+        "paging":   	false,
+        "ordering": 	false,
+		"info":     	false,
+		"searching":	false
+    } );
+}
