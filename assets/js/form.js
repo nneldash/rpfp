@@ -76,7 +76,6 @@ var isFocal = $('#focal').val();
 $(function() {
   	serviceModal();
   	importModal();
-  	highlight();
 	inputValid();
 	saveForm1();
 	checkBox();
@@ -1197,27 +1196,27 @@ function autoGetData(fname1, lname1, extname1, sex1, bday1, fname2, lname2, extn
 		} else {
 			return false;
 		}
-	} else if (sex1 != '' && sex2 == ''){
-		controller = 'forms/checkIndividualDuplicate';
-		if (sex1 === 'F') {
-			var h_fname 	= fname2;
-			var h_lname 	= lname2;
-			var h_extname 	= extname2;
-			var h_bday 		= bday2;
-			var w_fname 	= fname1;
-			var w_lname 	= lname1;
-			var w_bday 		= bday1;
-		} else if(sex1 === 'M') {
-			var h_fname 	= fname1;
-			var h_lname 	= lname1;
-			var h_extname 	= extname1;
-			var h_bday 		= bday1;
-			var w_fname 	= fname2;
-			var w_lname 	= lname2;
-			var w_bday 		= bday2;
-		} else {
-			return false;
-		}
+	// } else if (sex1 != '' && sex2 == ''){
+	// 	controller = 'forms/checkIndividualDuplicate';
+	// 	if (sex1 === 'F') {
+	// 		var h_fname 	= fname2;
+	// 		var h_lname 	= lname2;
+	// 		var h_extname 	= extname2;
+	// 		var h_bday 		= bday2;
+	// 		var w_fname 	= fname1;
+	// 		var w_lname 	= lname1;
+	// 		var w_bday 		= bday1;
+	// 	} else if(sex1 === 'M') {
+	// 		var h_fname 	= fname1;
+	// 		var h_lname 	= lname1;
+	// 		var h_extname 	= extname1;
+	// 		var h_bday 		= bday1;
+	// 		var w_fname 	= fname2;
+	// 		var w_lname 	= lname2;
+	// 		var w_bday 		= bday2;
+	// 	} else {
+	// 		return false;
+	// 	}
 	} else {
 		return false;
 	}
@@ -1369,9 +1368,16 @@ function importModal()
 	});
 }
 
-function highlight()
+function checkBox()
 {
-	$('td:first-child input[value="approveCouple"]').change(function() {
+	$('#checkAll').click(function() {
+        var checked = $(this).prop('checked');
+        $('.approveCheck').find('.check').prop('checked', checked);
+    	$('td:first-child input[name="approveCouple"]').closest('tr').toggleClass("highlight", this.checked);
+    	$('td:first-child input[name="approveCouple"]').closest('tr').next('tr').toggleClass("highlight", this.checked);
+    });
+
+	$('td:first-child input[name="approveCouple"]').change(function() {
     	$(this).closest('tr').toggleClass("highlight", this.checked);
     	$(this).closest('tr').next('tr').toggleClass("highlight", this.checked);
   	});
@@ -1570,17 +1576,6 @@ function saveForm1()
 		}				
 	});
 }
-
-function checkBox()
-{
-	$('#checkAll').click(function() {
-        var checked = $(this).prop('checked');
-        $('.approveCheck').find('.check').prop('checked', checked);
-    	$('td:first-child input[value="approveCouple"]').closest('tr').toggleClass("highlight", this.checked);
-    	$('td:first-child input[value="approveCouple"]').closest('tr').next('tr').toggleClass("highlight", this.checked);
-    });
-}
-
 
 $(document).ready(function(){
 

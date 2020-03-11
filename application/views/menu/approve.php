@@ -24,7 +24,7 @@ if (empty($title)) {
     Hide/Show Search
 </a>
 <form class="form-horizontal form-label-left" id="search_form"> 
-    <div class="col-md-12 collapse in" id="searchCouple">
+    <div class="col-md-12 collapse" id="searchCouple">
         <div class="col-md-6 col-xs-12">
             <div class="x_title">
                 <h3>Class</h3>

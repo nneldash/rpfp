@@ -54,7 +54,6 @@ if (empty($title)) {
     </tbody>
 </table>
 
-<button id="refresh">refresher</button>
 <script>
     loadJs(base_url + 'NewAssets/templateJs', function() {
         loadJs(base_url + 'assets/js/listCouples.js', function(){
@@ -64,11 +63,6 @@ if (empty($title)) {
             loadJs(base_url + 'NewAssets/datatableBtJs', function() {
                 loadJs(base_url + 'NewAssets/datatableRpJs', function() {
                     loadJs(base_url + 'NewAssets/datatableBtrpJs.js', function() {
-                        loadJs(base_url + 'assets/js/pending.js', function() {
-                            if (<?= (!empty($reload) ? 'true' : 'false') ?>) {
-                                refresh_now();
-                            }
-                        });
                     });
                 });
             });
