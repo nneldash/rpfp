@@ -1620,8 +1620,17 @@ $(document).ready(function(){
 	});
 
 	$('input[type=checkbox] + span').click(function(){
-		var current_value = $($(this).siblings('input[name=approveCouple]')[0]).val();
-		$($(this).siblings('input[name=approveCouple]')[0]).val(current_value == 'approved' ? "" : 'approved');
+		// var current_value = $($(this).siblings('input[type=checkbox][class^="attended"]')[0]).val();
+		var current_checkbox = $($(this).siblings('input[type=checkbox]')[0]);
+		var current_value = current_checkbox.val();
+
+		var new_value = "";
+		if (current_checkbox.is('[class^="attended"]')) {
+			new_value = current_value == 'attended' ? "" : 'attended';
+		} else if (current_checkbox.is('[name^="approveCouple"]')){
+			new_value = current_value == 'approved' ? "" : 'approved';
+		}
+		current_checkbox.val(new_value);
 	});
 
 	$('#loading-wrapper').removeClass('loading');

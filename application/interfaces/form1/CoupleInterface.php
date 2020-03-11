@@ -39,10 +39,14 @@ abstract class CoupleInterface extends BaseInterface
     /** @var TraditionalFpUserInterface */
     public $TraditionalFp;
 
+    /** @var int */
     public $FpServed;
 
+    /** @var bool */
     public $IsActive;
 
+    /** @var bool */
+    public $IsApproved;
 
     abstract public function Husband() : IndividualInterface;
     abstract public function Wife() : IndividualInterface;

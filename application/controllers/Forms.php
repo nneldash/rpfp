@@ -90,18 +90,23 @@ class Forms extends CI_Controller
     public function saveForm1()
     {
         $form1 = new FormClass();
-
-        $num_entries = $this->input->post('num_items');
-        $form1->Seminar = $this->getInputFromSeminar();
-        $form1->ListCouple = $this->getInputFromListCouples($num_entries);
-        $errors = $this->FormModel->saveForm1($form1);
-        $errors = Errors::getFromVariable($errors);
-        $data = [
-            'is_save' => empty($errors->Code),
-            'message' => $errors->Message,
-            'description' => $errors->Description,
-            'value' => intval($errors->ReturnValue)
-        ];
+        /** get user role */
+        // if ($user->isRDM()) {
+        //         /** get list couples */
+        //         /** approve couples */
+        // } else {
+            $num_entries = $this->input->post('num_items');
+            $form1->Seminar = $this->getInputFromSeminar();
+            $form1->ListCouple = $this->getInputFromListCouples($num_entries);
+            $errors = $this->FormModel->saveForm1($form1);
+            $errors = Errors::getFromVariable($errors);
+            $data = [
+                'is_save' => empty($errors->Code),
+                'message' => $errors->Message,
+                'description' => $errors->Description,
+                'value' => intval($errors->ReturnValue)
+            ];
+        // }
 
         $this->output
             ->set_content_type('application/json')
