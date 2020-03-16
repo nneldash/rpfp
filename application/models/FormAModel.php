@@ -25,7 +25,7 @@ class FormAModel extends BaseModel
                 'ReportID' => 'report_id',
                 'ReportYear' => 'report_year',
                 'ReportMonth' => 'report_month',
-                // 'ReportNo' => 'demandgen_id',
+                'RegionalOffice' => 'psgc_code',
                 'DateProcessed' => 'date_processed'
             ),
             'get_report_demandgen_list',
@@ -41,7 +41,7 @@ class FormAModel extends BaseModel
         return $retval;
     }
 
-    public function getFormAReport(int $report_month, int $report_year) : ReportFormAInterface
+    public function getFormAReport(int $regionalOffice, int $report_month, int $report_year) : ReportFormAInterface
     {
         $forma_report = $this->fromDbGetReportList(
             'ReportFormA',
@@ -61,7 +61,8 @@ class FormAModel extends BaseModel
                 'WRAUsapan' => 'wra_usapan',
                 'WRAPMC' => 'wra_pmc',
                 'WRAH2H' => 'wra_h2h',
-                'WRAProfiled' => 'wra_total',
+                'WRAProfiled' => 'wra_profiled',
+                'WRATotal' => 'wra_total',
                 'SoloMale' => 'solo_male',
                 'SoloFemale' => 'solo_female',
                 'CoupleAttendee' => 'couple_attendee',
@@ -78,6 +79,8 @@ class FormAModel extends BaseModel
         }
 
         $retval->From = strtotime($report_year . '-' . $report_month . '-1');
+
+        $retval->RegionalOffice = $regionalOffice;
         return $retval;
     }
 

@@ -27,6 +27,8 @@ abstract class FormAInterface extends BaseInterface
     /** @var int */
     public $ReportDate = 0;
     /** @var int */
+    public $RegionalOffice = 0;
+    /** @var int */
     public $Class4Ps = 0;
     /** @var int */
     public $ClassNon4Ps = 0;

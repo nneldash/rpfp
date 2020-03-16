@@ -7772,7 +7772,9 @@ DECLARE class_profiled INT;
 DECLARE class_total INT;
 DECLARE target_couples INT;
 DECLARE wra_4ps INT;
-DECLARE wra_non4ps INT;
+DECLARE wra_non4ps_a INT;
+DECLARE wra_non4ps_b INT;
+DECLARE wra_non4ps_total INT;
 DECLARE wra_usapan INT;
 DECLARE wra_pmc INT;
 DECLARE wra_h2h INT;
@@ -7784,18 +7786,7 @@ DECLARE couple_attendee INT;
 DECLARE reached_total INT;
 DECLARE report_scope VARCHAR(100);
     
--- DECLARE count_id INT;
 DECLARE random_no VARCHAR(400) DEFAULT 0 ;
-
--- SET random_no = CONCAT("RPFP-",report_year,report_month,"-",CEILING(RAND()*10000000000));
-
--- SELECT COUNT(*) INTO count_id FROM report_random_id WHERE RANDOM_ID = random_no;
-
--- IF count_id > 0 THEN
---     SELECT "CANNOT PROCESS RECORD WITH GIVEN PARAMETERS" AS MESSAGE;
---     LEAVE proc_exit_point;
--- END IF
--- ;
 
       SELECT COUNT(DISTINCT rc.CLASS_NUMBER) 
         INTO class_4ps 
@@ -7919,8 +7910,7 @@ DECLARE random_no VARCHAR(400) DEFAULT 0 ;
    LEFT JOIN rpfp.couples apc ON apc.COUPLES_ID = ic.COUPLES_ID
    LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
    LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
-       WHERE ic.SEX = 2 
-         AND apc.IS_ACTIVE = 0
+       WHERE apc.IS_ACTIVE = 0
          AND YEAR(rc.DATE_CONDUCTED) = report_year 
          AND MONTH(rc.DATE_CONDUCTED) = report_month 
          AND rc.TYPE_CLASS_ID = 1
@@ -7931,17 +7921,18 @@ DECLARE random_no VARCHAR(400) DEFAULT 0 ;
        ;
 
       SELECT COUNT(ic.INDV_ID) 
-        INTO wra_non4ps 
+        INTO wra_non4ps_total
         FROM rpfp.individual ic
    LEFT JOIN rpfp.couples apc ON apc.COUPLES_ID = ic.COUPLES_ID
    LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
    LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
-       WHERE ic.SEX = 2 
-         AND apc.IS_ACTIVE = 0
+       WHERE apc.IS_ACTIVE = 0
          AND YEAR(rc.DATE_CONDUCTED) = report_year 
          AND MONTH(rc.DATE_CONDUCTED) = report_month 
-         AND rc.TYPE_CLASS_ID = 2
-         AND rc.TYPE_CLASS_ID = 7
+         AND (
+                rc.TYPE_CLASS_ID = 2
+             OR rc.TYPE_CLASS_ID = 7
+         )
          AND (
                 QUOTE(lp.REGION_CODE) = QUOTE(psgc_code)
              OR (IFNULL( psgc_code, 0 ) = 0)
@@ -7954,8 +7945,7 @@ DECLARE random_no VARCHAR(400) DEFAULT 0 ;
    LEFT JOIN rpfp.couples apc ON apc.COUPLES_ID = ic.COUPLES_ID
    LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
    LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
-       WHERE ic.SEX = 2 
-         AND apc.IS_ACTIVE = 0
+       WHERE apc.IS_ACTIVE = 0
          AND YEAR(rc.DATE_CONDUCTED) = report_year 
          AND MONTH(rc.DATE_CONDUCTED) = report_month 
          AND rc.TYPE_CLASS_ID = 4
@@ -7971,8 +7961,7 @@ DECLARE random_no VARCHAR(400) DEFAULT 0 ;
    LEFT JOIN rpfp.couples apc ON apc.COUPLES_ID = ic.COUPLES_ID
    LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
    LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
-       WHERE ic.SEX = 2 
-         AND apc.IS_ACTIVE = 0
+       WHERE apc.IS_ACTIVE = 0
          AND YEAR(rc.DATE_CONDUCTED) = report_year 
          AND MONTH(rc.DATE_CONDUCTED) = report_month 
          AND rc.TYPE_CLASS_ID = 3
@@ -7988,8 +7977,7 @@ DECLARE random_no VARCHAR(400) DEFAULT 0 ;
    LEFT JOIN rpfp.couples apc ON apc.COUPLES_ID = ic.COUPLES_ID
    LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
    LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
-       WHERE ic.SEX = 2 
-         AND apc.IS_ACTIVE = 0
+       WHERE apc.IS_ACTIVE = 0
          AND YEAR(rc.DATE_CONDUCTED) = report_year 
          AND MONTH(rc.DATE_CONDUCTED) = report_month 
          AND rc.TYPE_CLASS_ID = 5
@@ -8005,8 +7993,7 @@ DECLARE random_no VARCHAR(400) DEFAULT 0 ;
    LEFT JOIN rpfp.couples apc ON apc.COUPLES_ID = ic.COUPLES_ID
    LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
    LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
-       WHERE ic.SEX = 2 
-         AND apc.IS_ACTIVE = 0
+       WHERE apc.IS_ACTIVE = 0
          AND YEAR(rc.DATE_CONDUCTED) = report_year 
          AND MONTH(rc.DATE_CONDUCTED) = report_month 
          AND rc.TYPE_CLASS_ID = 6
@@ -8022,54 +8009,6 @@ DECLARE random_no VARCHAR(400) DEFAULT 0 ;
    LEFT JOIN rpfp.couples apc ON apc.COUPLES_ID = ic.COUPLES_ID
    LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
    LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
-       WHERE ic.SEX = 2 
-         AND apc.IS_ACTIVE = 0
-         AND YEAR(rc.DATE_CONDUCTED) = report_year 
-         AND MONTH(rc.DATE_CONDUCTED) = report_month 
-         AND (
-                QUOTE(lp.REGION_CODE) = QUOTE(psgc_code)
-             OR (IFNULL( psgc_code, 0 ) = 0)
-            )
-       ;
-
-      SELECT COUNT(ic.INDV_ID) 
-        INTO solo_male 
-        FROM rpfp.individual ic
-   LEFT JOIN rpfp.couples apc ON apc.COUPLES_ID = ic.COUPLES_ID
-   LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
-   LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
-       WHERE ic.SEX = 1 
-         AND apc.IS_ACTIVE = 0
-         AND YEAR(rc.DATE_CONDUCTED) = report_year 
-         AND MONTH(rc.DATE_CONDUCTED) = report_month 
-         AND (
-                QUOTE(lp.REGION_CODE) = QUOTE(psgc_code)
-             OR (IFNULL( psgc_code, 0 ) = 0)
-            )
-       ;
-
-      SELECT COUNT(ic.INDV_ID) 
-        INTO solo_female 
-        FROM rpfp.individual ic
-   LEFT JOIN rpfp.couples apc ON apc.COUPLES_ID = ic.COUPLES_ID
-   LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
-   LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
-       WHERE ic.SEX = 2
-         AND apc.IS_ACTIVE = 0
-         AND YEAR(rc.DATE_CONDUCTED) = report_year 
-         AND MONTH(rc.DATE_CONDUCTED) = report_month 
-         AND (
-                QUOTE(lp.REGION_CODE) = QUOTE(psgc_code)
-             OR (IFNULL( psgc_code, 0 ) = 0)
-            )
-       ;
-
-      SELECT COUNT(DISTINCT ic.COUPLES_ID) 
-        INTO couple_attendee 
-        FROM rpfp.individual ic
-   LEFT JOIN rpfp.couples apc ON apc.COUPLES_ID = ic.COUPLES_ID
-   LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
-   LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
        WHERE apc.IS_ACTIVE = 0
          AND YEAR(rc.DATE_CONDUCTED) = report_year 
          AND MONTH(rc.DATE_CONDUCTED) = report_month 
@@ -8079,19 +8018,167 @@ DECLARE random_no VARCHAR(400) DEFAULT 0 ;
             )
        ;
 
-      SELECT COUNT(apc.COUPLES_ID) 
-        INTO reached_total 
-        FROM rpfp.couples apc
-   LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = rc.RPFP_CLASS_ID
-   LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
-       WHERE apc.IS_ACTIVE = 0
-         AND YEAR(rc.DATE_CONDUCTED) = report_year 
-         AND MONTH(rc.DATE_CONDUCTED) = report_month  
-         AND (
-                QUOTE(lp.REGION_CODE) = QUOTE(psgc_code)
-             OR (IFNULL( psgc_code, 0 ) = 0)
-            )
-       ;
+       SELECT COUNT(*) INTO solo_male
+       FROM (
+            SELECT husband.INDV_ID AS individualid,
+                    husband.LNAME AS h_last,
+                    husband.FNAME AS h_first,
+                    husband.EXT_NAME AS h_ext,
+                    husband.BDATE AS h_bday,
+                    husband.SEX AS h_sex,
+                    full_data.w_couplesid AS w_couplesid,
+                    full_data.w_last AS w_last,
+                    full_data.w_first AS w_first,
+                    full_data.w_bday AS w_bday,
+                    full_data.w_sex AS sex_w
+               FROM rpfp.individual husband
+          LEFT JOIN rpfp.couples couples ON couples.COUPLES_ID = husband.COUPLES_ID AND husband.SEX = 1
+          LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = couples.RPFP_CLASS_ID
+          LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
+          LEFT JOIN (
+                     SELECT wic.COUPLES_ID AS w_couplesid,
+                            wife.LNAME AS w_last,
+                            wife.FNAME AS w_first,
+                            wife.BDATE AS w_bday,
+                            wife.SEX AS w_sex
+                       FROM rpfp.couples wic
+                  LEFT JOIN rpfp.individual wife ON wife.COUPLES_ID = wic.COUPLES_ID AND wife.SEX = 2
+                            ) full_data
+                         ON full_data.w_couplesid = couples.COUPLES_ID
+              WHERE couples.IS_ACTIVE = 0
+                AND full_data.w_sex IS NULL
+                AND YEAR(rc.DATE_CONDUCTED) = 2019 
+                AND MONTH(rc.DATE_CONDUCTED) = 03  
+                AND (
+                        QUOTE(lp.REGION_CODE) = QUOTE(08)
+                     OR (IFNULL( 08, 0 ) = 0)
+                    )
+           GROUP BY individualid, h_last, h_first, h_ext, h_bday, h_sex, w_last, w_first, w_bday, w_sex
+             HAVING COUNT(individualid)
+        ) total_reached
+        ;
+
+       SELECT COUNT(*) INTO solo_female
+       FROM (
+             SELECT wife.INDV_ID AS individualid,
+                    wife.LNAME AS w_last,
+                    wife.FNAME AS w_first,
+                    wife.BDATE AS w_bday,
+                    wife.SEX AS w_sex,
+                    full_data.h_couplesid AS h_couplesid,
+                    full_data.h_last AS h_last,
+                    full_data.h_first AS h_first,
+                    full_data.h_bday AS h_bday,
+                    full_data.h_sex AS sex_h
+               FROM rpfp.individual wife
+          LEFT JOIN rpfp.couples couples ON couples.COUPLES_ID = wife.COUPLES_ID AND wife.SEX = 2
+          LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = couples.RPFP_CLASS_ID
+          LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
+          LEFT JOIN (
+                     SELECT hic.COUPLES_ID AS h_couplesid,
+                            husband.LNAME AS h_last,
+                            husband.FNAME AS h_first,
+                            husband.BDATE AS h_bday,
+                            husband.SEX AS h_ext,
+                            husband.SEX AS h_sex
+                       FROM rpfp.couples hic
+                  LEFT JOIN rpfp.individual husband ON husband.COUPLES_ID = hic.COUPLES_ID AND husband.SEX = 1
+                            ) full_data
+                         ON full_data.h_couplesid = couples.COUPLES_ID
+              WHERE couples.IS_ACTIVE = 0
+                AND full_data.h_sex IS NULL
+                AND YEAR(rc.DATE_CONDUCTED) = 2019 
+                AND MONTH(rc.DATE_CONDUCTED) = 03  
+                AND (
+                        QUOTE(lp.REGION_CODE) = QUOTE(08)
+                     OR (IFNULL( 08, 0 ) = 0)
+                    )
+           GROUP BY individualid, w_last, w_first, w_bday, w_sex, h_last, h_first, h_ext, h_bday, h_sex
+             HAVING COUNT(individualid)
+        ) total_reached
+        ;
+
+       SELECT COUNT(*) INTO couple_attendee
+       FROM (
+            SELECT 	couples.COUPLES_ID AS couplesid,
+                    couples.IS_ACTIVE AS active_status,
+                    husband.LNAME AS h_last,
+                    husband.FNAME AS h_first,
+                    husband.EXT_NAME AS h_ext,
+                    husband.BDATE AS h_bday,
+                    husband.SEX AS h_sex,
+                    full_data.w_couplesid AS w_couplesid,
+                    full_data.w_last AS w_last,
+                    full_data.w_first AS w_first,
+                    full_data.w_bday AS w_bday,
+                    full_data.w_sex AS sex_w
+               FROM rpfp.couples couples
+          LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = couples.RPFP_CLASS_ID
+          LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
+          LEFT JOIN rpfp.individual husband ON husband.COUPLES_ID = couples.COUPLES_ID AND husband.SEX = 1
+          LEFT JOIN (
+                     SELECT wic.COUPLES_ID AS w_couplesid,
+                            wife.LNAME AS w_last,
+                            wife.FNAME AS w_first,
+                            wife.BDATE AS w_bday,
+                            wife.SEX AS w_sex
+                       FROM rpfp.couples wic
+                  LEFT JOIN rpfp.individual wife ON wife.COUPLES_ID = wic.COUPLES_ID AND wife.SEX = 2
+                            ) full_data
+                         ON full_data.w_couplesid = couples.COUPLES_ID
+              WHERE couples.IS_ACTIVE = 0
+                AND husband.SEX != 0
+                AND full_data.w_sex != 0
+                AND YEAR(rc.DATE_CONDUCTED) = report_year 
+                AND MONTH(rc.DATE_CONDUCTED) = report_month  
+                AND (
+                        QUOTE(lp.REGION_CODE) = QUOTE(psgc_code)
+                     OR (IFNULL( psgc_code, 0 ) = 0)
+                    )
+           GROUP BY couplesid, h_last, h_first, h_ext, h_bday, h_sex, w_last, w_first, w_bday, w_sex
+             HAVING COUNT(couplesid)
+        ) total_reached
+        ;
+
+       SELECT COUNT(*) INTO reached_total
+       FROM (
+            SELECT 	couples.COUPLES_ID AS couplesid,
+                    couples.IS_ACTIVE AS active_status,
+                    husband.LNAME AS h_last,
+                    husband.FNAME AS h_first,
+                    husband.EXT_NAME AS h_ext,
+                    husband.BDATE AS h_bday,
+                    husband.SEX AS h_sex,
+                    full_data.w_couplesid AS w_couplesid,
+                    full_data.w_last AS w_last,
+                    full_data.w_first AS w_first,
+                    full_data.w_bday AS w_bday,
+                    full_data.w_sex AS sex_w
+               FROM rpfp.couples couples
+          LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = couples.RPFP_CLASS_ID
+          LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
+          LEFT JOIN rpfp.individual husband ON husband.COUPLES_ID = couples.COUPLES_ID AND husband.SEX = 1
+          LEFT JOIN (
+                     SELECT wic.COUPLES_ID AS w_couplesid,
+                            wife.LNAME AS w_last,
+                            wife.FNAME AS w_first,
+                            wife.BDATE AS w_bday,
+                            wife.SEX AS w_sex
+                       FROM rpfp.couples wic
+                  LEFT JOIN rpfp.individual wife ON wife.COUPLES_ID = wic.COUPLES_ID AND wife.SEX = 2
+                            ) full_data
+                         ON full_data.w_couplesid = couples.COUPLES_ID
+              WHERE couples.IS_ACTIVE = 0
+                AND YEAR(rc.DATE_CONDUCTED) = report_year 
+                AND MONTH(rc.DATE_CONDUCTED) = report_month  
+                AND (
+                        QUOTE(lp.REGION_CODE) = QUOTE(psgc_code)
+                     OR (IFNULL( psgc_code, 0 ) = 0)
+                    )
+           GROUP BY couplesid, h_last, h_first, h_ext, h_bday, h_sex, w_last, w_first, w_bday, w_sex
+             HAVING COUNT(couplesid)
+        ) total_reached
+        ;
 
         INSERT INTO rpfp.report_demandgen (
                 DEMANDGEN_ID,
@@ -8133,7 +8220,7 @@ DECLARE random_no VARCHAR(400) DEFAULT 0 ;
                 class_total,
                 target_couples,
                 wra_4ps,
-                wra_non4ps,
+                wra_non4ps_total,
                 wra_usapan,
                 wra_pmc,
                 wra_h2h,
@@ -8365,18 +8452,7 @@ DECLARE served_lam INT;
 DECLARE total_served INT;
 DECLARE report_scope VARCHAR(100);
 
--- DECLARE count_id INT;
 DECLARE random_no VARCHAR(400) DEFAULT 0 ;
-
--- SET random_no = CONCAT("RPFP-",report_year,report_month,"-",CEILING(RAND()*10000000000));
-
--- SELECT COUNT(*) INTO count_id FROM report_random_id WHERE RANDOM_ID = random_no;
-
--- IF count_id > 0 THEN
---     SELECT "CANNOT PROCESS RECORD WITH GIVEN PARAMETERS" AS MESSAGE;
---     LEAVE proc_exit_point;
--- END IF
--- ;
 
     SELECT COUNT(*)
       INTO served_condom 
