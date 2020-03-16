@@ -1068,11 +1068,7 @@ BEGIN
       LEFT JOIN rpfp.couples apc
              ON apc.RPFP_CLASS_ID = rc.RPFP_CLASS_ID
           WHERE apc.IS_ACTIVE = status_active
-            AND (   rc.DB_USER_ID = name_user
-                 OR (   is_not_encoder
-                    AND user_location = (rc.BARANGAY_ID DIV POWER( 10, multiplier ))
-                    )
-                )
+            AND user_location = (rc.BARANGAY_ID DIV POWER( 10, multiplier ))
         )
     ) THEN
          SELECT NULL AS rpfpclass,
@@ -1127,11 +1123,7 @@ BEGIN
                              ON prov.PSGC_CODE = (brgy.PROVINCE_CODE * POWER( 10, 5 ))
           LEFT JOIN rpfp.user_profile up ON up.DB_USER_ID = rc.DB_USER_ID
               WHERE apc.IS_ACTIVE = status_active
-                AND (   rc.DB_USER_ID = name_user
-                    OR (   is_not_encoder
-                        AND user_location = (rc.BARANGAY_ID DIV POWER( 10, multiplier ))
-                        )
-                    )
+                AND user_location = (rc.BARANGAY_ID DIV POWER( 10, multiplier ))
            GROUP BY rc.CLASS_NUMBER
            ORDER BY rc.DATE_CONDUCTED DESC
               LIMIT read_offset, items_per_page
@@ -3268,11 +3260,7 @@ BEGIN
       LEFT JOIN rpfp.rpfp_class rc
              ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
           WHERE rc.CLASS_NUMBER = class_num
-            AND (   rc.DB_USER_ID = name_user
-                OR (   is_not_encoder
-                    AND user_location = (rc.BARANGAY_ID DIV POWER( 10, multiplier ))
-                    )
-                )
+            AND user_location = (rc.BARANGAY_ID DIV POWER( 10, multiplier ))
     ) THEN
          SELECT NULL AS couplesid,
                 NULL AS indvid_female,
@@ -3365,11 +3353,7 @@ BEGIN
              ON fs.COUPLES_ID = apc.COUPLES_ID
           WHERE rc.CLASS_NUMBER = class_num
             AND apc.IS_ACTIVE = active_status
-            AND (   rc.DB_USER_ID = name_user
-                OR (   is_not_encoder
-                    AND user_location = (rc.BARANGAY_ID DIV POWER( 10, multiplier ))
-                    )
-                )
+            AND user_location = (rc.BARANGAY_ID DIV POWER( 10, multiplier ))
        ORDER BY apc.COUPLES_ID ASC
         ;
     END IF;
@@ -8638,6 +8622,7 @@ BEGIN
          SELECT NULL AS report_id,
                 NULL AS report_year,
                 NULL AS report_month,
+                NULL AS psgc_code,
                 NULL AS date_processed
         ;
         LEAVE proc_exit_point;
@@ -8656,9 +8641,11 @@ BEGIN
          SELECT rd.REPORT_ID AS report_id,
                 rd.REPORT_YEAR AS report_year,
                 rd.REPORT_MONTH AS report_month,
+                rd.PSGC_CODE AS psgc_code,
                 rd.DATE_PROCESSED AS date_processed
            FROM rpfp.report_demandgen rd
-    --    GROUP BY rd.DEMANDGEN_ID
+       GROUP BY rd.REPORT_MONTH 
+         HAVING rd.REPORT_ID = MAX(rd.REPORT_ID)
        ORDER BY rd.DATE_PROCESSED ASC
           LIMIT read_offset, items_per_page
         ;
@@ -8684,6 +8671,7 @@ BEGIN
          SELECT NULL AS report_id,
                 NULL AS report_year,
                 NULL AS report_month,
+                NULL AS psgc_code,
                 NULL AS date_processed
         ;
         LEAVE proc_exit_point;
@@ -8702,6 +8690,7 @@ BEGIN
          SELECT rd.REPORT_ID AS report_id,
                 rd.REPORT_YEAR AS report_year,
                 rd.REPORT_MONTH AS report_month,
+                rd.PSGC_CODE AS psgc_code,
                 rd.DATE_PROCESSED AS date_processed
            FROM rpfp.report_demandgen rd
           WHERE rd.PSGC_CODE = region_of_user
@@ -8748,6 +8737,7 @@ BEGIN
          SELECT NULL AS report_id,
                 NULL AS report_year,
                 NULL AS report_month,
+                NULL AS psgc_code,
                 NULL AS date_processed
         ;
     ELSE
@@ -8764,8 +8754,11 @@ BEGIN
          SELECT ru.REPORT_ID AS report_id,
                 ru.REPORT_YEAR AS report_year,
                 ru.REPORT_MONTH AS report_month,
+                ru.PSGC_CODE AS psgc_code,
                 ru.DATE_PROCESSED AS date_processed
            FROM rpfp.report_unmet_need ru
+       GROUP BY ru.REPORT_MONTH 
+         HAVING ru.REPORT_ID = MAX(ru.REPORT_ID)
        ORDER BY ru.DATE_PROCESSED ASC
           LIMIT read_offset, items_per_page
         ;
@@ -8790,6 +8783,7 @@ BEGIN
          SELECT NULL AS report_id,
                 NULL AS report_year,
                 NULL AS report_month,
+                NULL AS psgc_code,
                 NULL AS date_processed
         ;
     ELSE
@@ -8806,6 +8800,7 @@ BEGIN
          SELECT ru.REPORT_ID AS report_id,
                 ru.REPORT_YEAR AS report_year,
                 ru.REPORT_MONTH AS report_month,
+                ru.PSGC_CODE AS psgc_code,
                 ru.DATE_PROCESSED AS date_processed
            FROM rpfp.report_unmet_need ru
           WHERE ru.PSGC_CODE = region_of_user
@@ -8854,6 +8849,7 @@ BEGIN
          SELECT NULL AS report_id,
                 NULL AS report_year,
                 NULL AS report_month,
+                NULL AS psgc_code,
                 NULL AS date_processed
         ;
     ELSE
@@ -8870,8 +8866,11 @@ BEGIN
          SELECT rs.REPORT_ID AS report_id,
                 rs.REPORT_YEAR AS report_year,
                 rs.REPORT_MONTH AS report_month,
+                rs.PSGC_CODE AS psgc_code,
                 rs.DATE_PROCESSED AS date_processed
            FROM rpfp.report_served_method_mix rs
+       GROUP BY rs.REPORT_MONTH 
+       HAVING rs.REPORT_ID = MAX(rs.REPORT_ID)
        ORDER BY rs.DATE_PROCESSED ASC
           LIMIT read_offset, items_per_page
         ;
@@ -8896,6 +8895,7 @@ BEGIN
          SELECT NULL AS report_id,
                 NULL AS report_year,
                 NULL AS report_month,
+                NULL AS psgc_code,
                 NULL AS date_processed
         ;
     ELSE
@@ -8912,6 +8912,7 @@ BEGIN
          SELECT rs.REPORT_ID AS report_id,
                 rs.REPORT_YEAR AS report_year,
                 rs.REPORT_MONTH AS report_month,
+                rs.PSGC_CODE AS psgc_code,
                 rs.DATE_PROCESSED AS date_processed
            FROM rpfp.report_served_method_mix rs
           WHERE rs.PSGC_CODE = region_of_user
@@ -8966,6 +8967,103 @@ BEGIN
 END$$
 
 CREATE DEFINER=root@localhost PROCEDURE get_report_demandgen_details(
+    IN report_month INT,
+    IN report_year INT
+    )   READS SQL DATA
+proc_exit_point :
+BEGIN
+    DECLARE read_offset INT;
+    DECLARE role_of_user INT;
+
+    SET role_of_user := rpfp.profile_get_own_role();
+
+    IF role_of_user = 90 THEN
+        CALL pmed_get_report_demandgen_details(report_month, report_year);
+        LEAVE proc_exit_point;
+    END IF;
+
+    IF role_of_user = 80 THEN
+        CALL rdm_get_report_demandgen_details(report_month, report_year);
+        LEAVE proc_exit_point;
+    END IF;
+END$$
+
+CREATE DEFINER=root@localhost PROCEDURE pmed_get_report_demandgen_details(
+    IN report_month INT,
+    IN report_year INT
+    )   READS SQL DATA
+BEGIN
+    DECLARE region_of_user INT;
+
+    SET region_of_user := rpfp.profile_get_own_region();
+
+    IF NOT EXISTS (
+         SELECT rd.REPORT_ID
+           FROM rpfp.report_demandgen rd
+          WHERE rd.REPORT_YEAR = report_year
+    ) THEN
+        BEGIN
+             SELECT NULL AS report_year,
+                    NULL AS psgc_code,
+                    NULL AS report_month,
+                    NULL AS class_4ps,
+                    NULL AS class_non4ps,
+                    NULL AS class_usapan,
+                    NULL AS class_pmc,
+                    NULL AS class_h2h,
+                    NULL AS class_profiled,
+                    NULL AS class_total,
+                    NULL AS target_couples,
+                    NULL AS wra_4ps,
+                    NULL AS wra_non4ps,
+                    NULL AS wra_usapan,
+                    NULL AS wra_pmc,
+                    NULL AS wra_h2h,
+                    NULL AS wra_profiled,
+                    NULL AS wra_total,
+                    NULL AS solo_male,
+                    NULL AS solo_female,
+                    NULL AS couple_attendee,
+                    NULL AS reached_total,
+                    NULL AS date_processed
+            ;
+        END;
+    ELSE
+        BEGIN
+             SELECT DISTINCT
+                    rd.REPORT_YEAR AS report_year,
+                    rd.PSGC_CODE AS psgc_code,
+                    rd.REPORT_MONTH AS report_month,
+                    rd.CLASS_4PS AS class_4ps,
+                    rd.CLASS_NON4PS AS class_non4ps,
+                    rd.CLASS_USAPAN AS class_usapan,
+                    rd.CLASS_PMC AS class_pmc,
+                    rd.CLASS_H2H AS class_h2h,
+                    rd.CLASS_PROFILED AS class_profiled,
+                    rd.CLASS_TOTAL AS class_total,
+                    rd.TARGET_COUPLES AS target_couples,
+                    rd.WRA_4PS AS wra_4ps,
+                    rd.WRA_NON4PS AS wra_non4ps,
+                    rd.WRA_USAPAN AS wra_usapan,
+                    rd.WRA_PMC AS wra_pmc,
+                    rd.WRA_H2H AS wra_h2h,
+                    rd.WRA_PROFILED AS wra_profiled,
+                    rd.WRA_TOTAL AS wra_total,
+                    rd.SOLO_MALE AS solo_male,
+                    rd.SOLO_FEMALE AS solo_female,
+                    rd.COUPLE_ATTENDEE AS couple_attendee,
+                    rd.REACHED_TOTAL AS reached_total,
+                    rd.DATE_PROCESSED AS date_processed
+               FROM rpfp.report_demandgen rd
+              WHERE rd.REPORT_YEAR = report_year
+                AND rd.REPORT_MONTH <= report_month
+           ORDER BY rd.REPORT_MONTH ASC
+            ;
+        END;
+    END IF;
+END$$
+
+CREATE DEFINER=root@localhost PROCEDURE rdm_get_report_demandgen_details(
     IN report_month INT,
     IN report_year INT
     )   READS SQL DATA
@@ -9044,6 +9142,75 @@ CREATE DEFINER=root@localhost PROCEDURE get_report_unmet_need_details(
     IN report_month INT,
     IN report_year INT
     )   READS SQL DATA
+proc_exit_point :
+BEGIN
+    DECLARE read_offset INT;
+    DECLARE role_of_user INT;
+
+    SET role_of_user := rpfp.profile_get_own_role();
+
+    IF role_of_user = 90 THEN
+        CALL pmed_get_report_unmet_need_details(report_month, report_year);
+        LEAVE proc_exit_point;
+    END IF;
+
+    IF role_of_user = 80 THEN
+        CALL rdm_get_report_unmet_need_details(report_month, report_year);
+        LEAVE proc_exit_point;
+    END IF;
+END$$
+
+CREATE DEFINER=root@localhost PROCEDURE pmed_get_report_unmet_need_details(
+    IN report_month INT,
+    IN report_year INT
+    )   READS SQL DATA
+BEGIN
+    IF NOT EXISTS (
+         SELECT ru.REPORT_ID
+           FROM rpfp.report_unmet_need ru
+          WHERE ru.REPORT_YEAR = report_year
+    ) THEN
+        BEGIN
+             SELECT NULL AS report_year,
+                    NULL AS psgc_code,
+                    NULL AS report_month,
+                    NULL AS unmet_modern,
+                    NULL AS served_modern,
+                    NULL AS no_intention,
+                    NULL AS w_intention,
+                    NULL AS served_traditional,
+                    NULL AS total_unmet,
+                    NULL AS total_served,
+                    NULL AS date_processed
+            ;
+        END;
+    ELSE
+        BEGIN
+             SELECT DISTINCT
+                    ru.REPORT_MONTH AS report_month,
+                    ru.REPORT_YEAR AS report_year,
+                    ru.PSGC_CODE AS psgc_code,
+                    ru.UNMET_MODERN_FP AS unmet_modern,
+                    ru.SERVED_MODERN_FP AS served_modern,
+                    ru.NO_INTENTION AS no_intention,
+                    ru.W_INTENTION AS w_intention,
+                    ru.SERVED_TRADITIONAL AS served_traditional,
+                    ru.TOTAL_UNMET AS total_unmet,
+                    ru.TOTAL_SERVED AS total_served,
+                    ru.DATE_PROCESSED AS date_processed
+               FROM rpfp.report_unmet_need ru
+              WHERE ru.REPORT_YEAR = report_year
+                AND ru.REPORT_MONTH <= report_month
+           ORDER BY ru.REPORT_MONTH ASC
+            ;
+        END;
+    END IF;
+END$$
+
+CREATE DEFINER=root@localhost PROCEDURE rdm_get_report_unmet_need_details(
+    IN report_month INT,
+    IN report_year INT
+    )   READS SQL DATA
 BEGIN
     IF NOT EXISTS (
          SELECT ru.REPORT_ID
@@ -9088,6 +9255,87 @@ BEGIN
 END$$
 
 CREATE DEFINER=root@localhost PROCEDURE get_report_served_method_mix_details(
+    IN report_month INT,
+    IN report_year INT
+    )   READS SQL DATA
+proc_exit_point :
+BEGIN
+    DECLARE read_offset INT;
+    DECLARE role_of_user INT;
+
+    SET role_of_user := rpfp.profile_get_own_role();
+
+    IF role_of_user = 90 THEN
+        CALL pmed_get_report_served_method_mix_details(report_month, report_year);
+        LEAVE proc_exit_point;
+    END IF;
+
+    IF role_of_user = 80 THEN
+        CALL rdm_get_report_served_method_mix_details(report_month, report_year);
+        LEAVE proc_exit_point;
+    END IF;
+END$$
+
+CREATE DEFINER=root@localhost PROCEDURE pmed_get_report_served_method_mix_details(
+    IN report_month INT,
+    IN report_year INT
+    )   READS SQL DATA
+BEGIN
+    IF NOT EXISTS (
+         SELECT rs.REPORT_ID
+           FROM rpfp.report_served_method_mix rs
+          WHERE rs.REPORT_YEAR = report_year
+    ) THEN
+        BEGIN
+             SELECT NULL AS report_year,
+                    NULL AS psgc_code,
+                    NULL AS report_month,
+                    NULL AS served_condom,
+                    NULL AS served_iud,
+                    NULL AS served_pills,
+                    NULL AS served_injectables,
+                    NULL AS served_nsv,
+                    NULL AS served_btl,
+                    NULL AS served_implant,
+                    NULL AS served_cmm,
+                    NULL AS served_bbt,
+                    NULL AS served_symptothermal,
+                    NULL AS served_sdm,
+                    NULL AS served_lam,
+                    NULL AS total_served,
+                    NULL AS date_processed
+            ;
+        END;
+    ELSE
+        BEGIN
+             SELECT DISTINCT
+                    rs.REPORT_YEAR AS report_year,
+                    rs.PSGC_CODE AS psgc_code,
+                    rs.REPORT_MONTH AS report_month,
+                    rs.SERVED_CONDOM AS served_condom,
+                    rs.SERVED_IUD AS served_iud,
+                    rs.SERVED_PILLS AS served_pills,
+                    rs.SERVED_INJECTABLES AS served_injectables,
+                    rs.SERVED_NSV AS served_nsv,
+                    rs.SERVED_BTL AS served_btl,
+                    rs.SERVED_IMPLANT AS served_implant,
+                    rs.SERVED_CMM AS served_cmm,
+                    rs.SERVED_BBT AS served_bbt,
+                    rs.SERVED_SYMPTOTHERMAL AS served_symptothermal,
+                    rs.SERVED_SDM AS served_sdm,
+                    rs.SERVED_LAM AS served_lam,
+                    rs.TOTAL_SERVED AS total_served,
+                    rs.DATE_PROCESSED AS date_processed
+               FROM rpfp.report_served_method_mix rs
+              WHERE rs.REPORT_YEAR = report_year
+                AND rs.REPORT_MONTH <= report_month
+           ORDER BY rs.REPORT_MONTH ASC
+            ;
+        END;
+    END IF;
+END$$
+
+CREATE DEFINER=root@localhost PROCEDURE rdm_get_report_served_method_mix_details(
     IN report_month INT,
     IN report_year INT
     )   READS SQL DATA
