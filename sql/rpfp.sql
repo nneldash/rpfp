@@ -1293,12 +1293,95 @@ CREATE DEFINER=root@localhost PROCEDURE encoder_get_class_list_pending (
     )   READS SQL DATA
 BEGIN
     DECLARE status_pending INT DEFAULT 2;
-    CALL rpfp.get_class_list(
-            status_pending,
-            page_no,
-            items_per_page
-    );
+    
+    DECLARE name_user VARCHAR(50);
+    DECLARE db_user_name VARCHAR(50);
+    DECLARE read_offset INT;
+    DECLARE user_scope INT;
+    DECLARE user_location INT;
+    DECLARE multiplier INT;
+    DECLARE is_not_encoder INT(1);
+    DECLARE barangay_id_no INT;
+    DECLARE record_id INT;
+    
+    CALL rpfp.lib_extract_user_name( USER(), name_user, db_user_name );
+    SET user_scope := rpfp.profile_get_scope( name_user );
+    SET multiplier := rpfp.lib_get_multiplier( user_scope );
+    SET user_location := rpfp.profile_get_location( name_user, user_scope );
+    SET is_not_encoder := NOT IFNULL(rpfp.profile_check_if_encoder(), FALSE);
 
+    IF ( NOT EXISTS (
+         SELECT rc.RPFP_CLASS_ID
+           FROM rpfp.rpfp_class rc
+      LEFT JOIN rpfp.couples apc
+             ON apc.RPFP_CLASS_ID = rc.RPFP_CLASS_ID
+          WHERE apc.IS_ACTIVE = status_pending
+            AND user_location = (rc.BARANGAY_ID DIV POWER( 10, multiplier ))
+        )
+    ) THEN
+         SELECT NULL AS rpfpclass,
+                NULL AS typeclass,
+                NULL AS others_specify,
+                NULL AS region_id,
+                NULL AS region_name,
+                NULL AS province_id,
+                NULL AS province_name,
+                NULL AS municipality_id,
+                NULL AS municipality_name,
+                NULL AS psgc_code,
+                NULL AS barangay,
+                NULL AS class_no,
+                NULL AS couples_encoded,
+                NULL AS date_conduct,
+                NULL AS lastname,
+                NULL AS firstname
+        ;
+    ELSE BEGIN
+            IF (IFNULL( page_no, 0) = 0) THEN
+                /** DEFAULT PAGE NO. */
+                SET page_no := 1;
+            END IF;
+            IF (IFNULL( items_per_page, 0) = 0) THEN
+                /** DEFAULT COUNT PER PAGE*/
+                SET items_per_page := 10;
+            END IF;
+
+            SET read_offset := (page_no - 1) * items_per_page;
+            --  SELECT rc.BARANGAY_ID INTO barangay_id_no FROM rpfp.rpfp_class rc WHERE rc.RPFP_CLASS_ID = record_id;
+
+             SELECT rc.RPFP_CLASS_ID AS rpfpclass,
+                    tc.TYPE_CLASS_DESC AS typeclass,
+                    rc.OTHERS_SPECIFY AS others_specify,
+                    prov.LOCATION_DESCRIPTION AS province_name,
+                    city.LOCATION_DESCRIPTION AS municipality_name,
+                    brgy.LOCATION_DESCRIPTION AS barangay,
+                    COUNT(apc.COUPLES_ID) AS couples_encoded,
+                    rc.CLASS_NUMBER AS class_no,
+                    rc.DATE_CONDUCTED AS date_conduct,
+                    up.LAST_NAME AS lastname,
+                    up.FIRST_NAME AS firstname
+               FROM rpfp.rpfp_class rc
+          LEFT JOIN rpfp.couples apc ON apc.RPFP_CLASS_ID = rc.RPFP_CLASS_ID
+          LEFT JOIN rpfp.lib_type_class tc ON tc.TYPE_CLASS_ID = rc.TYPE_CLASS_ID
+                      LEFT JOIN rpfp.lib_psgc_locations brgy
+                             ON brgy.PSGC_CODE = rc.BARANGAY_ID
+                      LEFT JOIN rpfp.lib_psgc_locations city
+                             ON city.PSGC_CODE = (brgy.MUNICIPALITY_CODE * POWER( 10, 3 ))
+                      LEFT JOIN rpfp.lib_psgc_locations prov
+                             ON prov.PSGC_CODE = (brgy.PROVINCE_CODE * POWER( 10, 5 ))
+          LEFT JOIN rpfp.user_profile up ON up.DB_USER_ID = rc.DB_USER_ID
+              WHERE apc.IS_ACTIVE = status_pending
+                AND (   rc.DB_USER_ID = name_user
+                    OR (   is_not_encoder
+                        AND user_location = (rc.BARANGAY_ID DIV POWER( 10, multiplier ))
+                        )
+                    )
+           GROUP BY rc.CLASS_NUMBER
+           ORDER BY rc.DATE_CONDUCTED DESC
+              LIMIT read_offset, items_per_page
+            ;
+        END;
+    END IF;
 END$$
 
 CREATE DEFINER=root@localhost PROCEDURE encoder_get_class_list_approved (
