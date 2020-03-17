@@ -38,7 +38,7 @@ $forma_list = ReportFormA::getFromVariable($form_A);
                 <b>
                     RPFP CLASSES IMPLEMENTATION REPORT <br>
                     FOR THE PERIOD <?= strtoupper( date('F, Y', $forma_list->From)) ?> <br>
-                    POPCOM Regional Office <?= $forma_list->RegionalOffice ?> <br>
+                    POPCOM <?= ($forma_list->RegionalOffice != '' ? 'Regional Office '. $forma_list->RegionalOffice : 'Central Office' ) ?> <br>
                     DEMAND GENERATION ACTIVITIES
                 </b>
             </p>

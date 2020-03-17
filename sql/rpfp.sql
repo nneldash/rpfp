@@ -8464,6 +8464,7 @@ DECLARE random_no VARCHAR(400) DEFAULT 0 ;
        AND YEAR(fs.DATE_SERVED) = report_year 
        AND MONTH(fs.DATE_SERVED) = report_month
        AND fs.FP_SERVED_ID = 1
+       AND fs.IS_PROVIDED_SERVICE = 1
          AND (
                 QUOTE(lp.REGION_CODE) = QUOTE(psgc_code)
              OR (IFNULL( psgc_code, 0 ) = 0)
@@ -8480,6 +8481,7 @@ DECLARE random_no VARCHAR(400) DEFAULT 0 ;
        AND YEAR(fs.DATE_SERVED) = report_year 
        AND MONTH(fs.DATE_SERVED) = report_month
        AND fs.FP_SERVED_ID = 2
+       AND fs.IS_PROVIDED_SERVICE = 1
          AND (
                 QUOTE(lp.REGION_CODE) = QUOTE(psgc_code)
              OR (IFNULL( psgc_code, 0 ) = 0)
@@ -8496,6 +8498,7 @@ DECLARE random_no VARCHAR(400) DEFAULT 0 ;
        AND YEAR(fs.DATE_SERVED) = report_year 
        AND MONTH(fs.DATE_SERVED) = report_month
        AND fs.FP_SERVED_ID = 3
+       AND fs.IS_PROVIDED_SERVICE = 1
          AND (
                 QUOTE(lp.REGION_CODE) = QUOTE(psgc_code)
              OR (IFNULL( psgc_code, 0 ) = 0)
@@ -8512,6 +8515,7 @@ DECLARE random_no VARCHAR(400) DEFAULT 0 ;
        AND YEAR(fs.DATE_SERVED) = report_year 
        AND MONTH(fs.DATE_SERVED) = report_month
        AND fs.FP_SERVED_ID = 4
+       AND fs.IS_PROVIDED_SERVICE = 1
          AND (
                 QUOTE(lp.REGION_CODE) = QUOTE(psgc_code)
              OR (IFNULL( psgc_code, 0 ) = 0)
@@ -8528,6 +8532,7 @@ DECLARE random_no VARCHAR(400) DEFAULT 0 ;
        AND YEAR(fs.DATE_SERVED) = report_year 
        AND MONTH(fs.DATE_SERVED) = report_month
        AND fs.FP_SERVED_ID = 5
+       AND fs.IS_PROVIDED_SERVICE = 1
          AND (
                 QUOTE(lp.REGION_CODE) = QUOTE(psgc_code)
              OR (IFNULL( psgc_code, 0 ) = 0)
@@ -8544,6 +8549,7 @@ DECLARE random_no VARCHAR(400) DEFAULT 0 ;
        AND YEAR(fs.DATE_SERVED) = report_year 
        AND MONTH(fs.DATE_SERVED) = report_month
        AND fs.FP_SERVED_ID = 6
+       AND fs.IS_PROVIDED_SERVICE = 1
          AND (
                 QUOTE(lp.REGION_CODE) = QUOTE(psgc_code)
              OR (IFNULL( psgc_code, 0 ) = 0)
@@ -8560,6 +8566,7 @@ DECLARE random_no VARCHAR(400) DEFAULT 0 ;
        AND YEAR(fs.DATE_SERVED) = report_year 
        AND MONTH(fs.DATE_SERVED) = report_month
        AND fs.FP_SERVED_ID = 7
+       AND fs.IS_PROVIDED_SERVICE = 1
          AND (
                 QUOTE(lp.REGION_CODE) = QUOTE(psgc_code)
              OR (IFNULL( psgc_code, 0 ) = 0)
@@ -8576,6 +8583,7 @@ DECLARE random_no VARCHAR(400) DEFAULT 0 ;
        AND YEAR(fs.DATE_SERVED) = report_year 
        AND MONTH(fs.DATE_SERVED) = report_month
        AND fs.FP_SERVED_ID = 8
+       AND fs.IS_PROVIDED_SERVICE = 1
          AND (
                 QUOTE(lp.REGION_CODE) = QUOTE(psgc_code)
              OR (IFNULL( psgc_code, 0 ) = 0)
@@ -8592,6 +8600,7 @@ DECLARE random_no VARCHAR(400) DEFAULT 0 ;
        AND YEAR(fs.DATE_SERVED) = report_year 
        AND MONTH(fs.DATE_SERVED) = report_month
        AND fs.FP_SERVED_ID = 9
+       AND fs.IS_PROVIDED_SERVICE = 1
          AND (
                 QUOTE(lp.REGION_CODE) = QUOTE(psgc_code)
              OR (IFNULL( psgc_code, 0 ) = 0)
@@ -8608,6 +8617,7 @@ DECLARE random_no VARCHAR(400) DEFAULT 0 ;
        AND YEAR(fs.DATE_SERVED) = report_year 
        AND MONTH(fs.DATE_SERVED) = report_month
        AND fs.FP_SERVED_ID = 10
+       AND fs.IS_PROVIDED_SERVICE = 1
          AND (
                 QUOTE(lp.REGION_CODE) = QUOTE(psgc_code)
              OR (IFNULL( psgc_code, 0 ) = 0)
@@ -8624,6 +8634,7 @@ DECLARE random_no VARCHAR(400) DEFAULT 0 ;
        AND YEAR(fs.DATE_SERVED) = report_year 
        AND MONTH(fs.DATE_SERVED) = report_month
        AND fs.FP_SERVED_ID = 11
+       AND fs.IS_PROVIDED_SERVICE = 1
          AND (
                 QUOTE(lp.REGION_CODE) = QUOTE(psgc_code)
              OR (IFNULL( psgc_code, 0 ) = 0)
@@ -8640,6 +8651,23 @@ DECLARE random_no VARCHAR(400) DEFAULT 0 ;
        AND YEAR(fs.DATE_SERVED) = report_year 
        AND MONTH(fs.DATE_SERVED) = report_month
        AND fs.FP_SERVED_ID = 12
+       AND fs.IS_PROVIDED_SERVICE = 1
+         AND (
+                QUOTE(lp.REGION_CODE) = QUOTE(psgc_code)
+             OR (IFNULL( psgc_code, 0 ) = 0)
+            )
+       ;
+
+    SELECT COUNT(*)
+      INTO total_served 
+      FROM rpfp.couples apc
+ LEFT JOIN rpfp.fp_service fs ON fs.COUPLES_ID = apc.COUPLES_ID
+ LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
+ LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
+     WHERE apc.IS_ACTIVE = 0
+       AND YEAR(fs.DATE_SERVED) = report_year 
+       AND MONTH(fs.DATE_SERVED) = report_month
+       AND fs.IS_PROVIDED_SERVICE = 1
          AND (
                 QUOTE(lp.REGION_CODE) = QUOTE(psgc_code)
              OR (IFNULL( psgc_code, 0 ) = 0)
