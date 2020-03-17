@@ -7548,6 +7548,8 @@ BEGIN
     DECLARE class_no VARCHAR(100) DEFAULT "";
     DECLARE encoded_couples INT;
     DECLARE approved_couples INT;
+    DECLARE pending_couples INT;
+    DECLARE served_couples INT;
     DECLARE duplicates INT;
     DECLARE invalids INT;
     DECLARE firstname VARCHAR(50);
@@ -7614,6 +7616,43 @@ BEGIN
                 )
         ;
 
+         SELECT COUNT(apc.COUPLES_ID)
+           INTO served_couples
+           FROM rpfp.couples apc 
+      LEFT JOIN rpfp.rpfp_class rc
+             ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
+      LEFT JOIN rpfp.lib_psgc_locations lp
+             ON lp.PSGC_CODE = rc.BARANGAY_ID
+      LEFT JOIN rpfp.fp_service fs 
+             ON fs.COUPLES_ID = apc.COUPLES_ID
+          WHERE apc.IS_ACTIVE = 0
+            AND fs.IS_PROVIDED_SERVICE = 1
+            AND rc.DATE_CONDUCTED >= date_from 
+            AND rc.DATE_CONDUCTED <= date_to
+            AND rc.CLASS_NUMBER = class_no
+            AND (
+                    QUOTE(lp.REGION_CODE) = QUOTE(psgc_code)
+                 OR (IFNULL( psgc_code, 0 ) = 0)
+                )
+        ;
+
+         SELECT COUNT(apc.COUPLES_ID)
+           INTO pending_couples
+           FROM rpfp.couples apc 
+      LEFT JOIN rpfp.rpfp_class rc
+             ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
+      LEFT JOIN rpfp.lib_psgc_locations lp
+             ON lp.PSGC_CODE = rc.BARANGAY_ID
+          WHERE apc.IS_ACTIVE = 2
+            AND rc.DATE_CONDUCTED >= date_from 
+            AND rc.DATE_CONDUCTED <= date_to
+            AND rc.CLASS_NUMBER = class_no
+            AND (
+                    QUOTE(lp.REGION_CODE) = QUOTE(psgc_code)
+                 OR (IFNULL( psgc_code, 0 ) = 0)
+                )
+        ;
+
          SELECT COUNT(rad.REPORT_ID)
            INTO duplicates
            FROM rpfp.report_duplicate_encoded rad
@@ -7629,6 +7668,8 @@ BEGIN
                     RPFP_CLASS_NO,
                     ENCODED_COUPLES,
                     APPROVED_COUPLES,
+                    PENDING_COUPLES,
+                    SERVED_COUPLES,
                     DUPLICATES,
                     INVALIDS,
                     DB_USER_ID,
@@ -7641,6 +7682,8 @@ BEGIN
                     class_no,
                     encoded_couples,
                     approved_couples,
+                    pending_couples,
+                    served_couples,
                     duplicates,
                     invalids,
                     username,
@@ -9128,6 +9171,8 @@ BEGIN
                     NULL AS class_no,
                     NULL AS encoded_couples,
                     NULL AS approved_couples,
+                    NULL AS pending_couples,
+                    NULL AS served_couples,
                     NULL AS duplicates,
                     NULL AS invalids,
                     NULL AS username,
@@ -9142,6 +9187,8 @@ BEGIN
                     rce.RPFP_CLASS_NO AS class_no,
                     rce.ENCODED_COUPLES AS encoded_couples,
                     rce.APPROVED_COUPLES AS approved_couples,
+                    rce.PENDING_COUPLES AS pending_couples,
+                    rce.SERVED_COUPLES AS served_couples,
                     rce.DUPLICATES AS duplicates,
                     rce.INVALIDS AS invalids,
                     rce.DATE_PROCESSED AS date_processed
@@ -10672,6 +10719,8 @@ CREATE TABLE report_couples_encoded (
           RPFP_CLASS_NO VARCHAR(100),
         ENCODED_COUPLES INT,
        APPROVED_COUPLES INT,
+        PENDING_COUPLES INT,
+         SERVED_COUPLES INT,
              DUPLICATES INT,
                INVALIDS INT,
              DB_USER_ID VARCHAR(50),

@@ -39,21 +39,27 @@ $accomp_no = $this->input->get('ReportNo');
 				<table class="table table-bordered table-condensed">
         			<thead>
         				<tr>
-        					<th class="text-center" style="width: 30%;"><p>RPFP Class Number</p></th>
-        					<th class="text-center" style="width: 20%;"><p>Encoded Couples</p></th>
-        					<th class="text-center" style="width: 20%;"><p>Approved Couples</p></th>
-        					<th class="text-center" style="width: 20%;"><p>Duplicates</p></th>
-        					<th class="text-center" style="width: 20%;"><p>Invalids</p></th>
+        					<th class="text-center" style="width: 40%;"><p>RPFP Class Number</p></th>
+        					<th class="text-center" style="width: 10%;"><p>Encoded Couples</p></th>
+        					<th class="text-center" style="width: 10%;"><p>Approved Couples</p></th>
+        					<th class="text-center" style="width: 10%;"><p>Pending Couples</p></th>
+        					<th class="text-center" style="width: 10%;"><p>Served Couples</p></th>
+        					<th class="text-center" style="width: 10%;"><p>Duplicates</p></th>
+        					<th class="text-center" style="width: 10%;"><p>Invalids</p></th>
         				</tr>
         			</thead>
         			<tbody>
 						<?php
+							$total_class = 0;
 							$encoded_couples = 0;
 							$approved_couples = 0;
+							$pending_couples = 0;
+							$served_couples = 0;
 							$duplicates = 0;
 						foreach ($accomplishment as $accomplished) : ?>
 							<tr>
 								<td><?= $accomplished->ClassNo ?></td>
+								<?php $total_class++ ?>
 								<td>
 									<?php 
 										if($accomplished->EncodedCouples != 'N/A') {
@@ -69,6 +75,26 @@ $accomp_no = $this->input->get('ReportNo');
 										if($accomplished->ApprovedCouples != 'N/A') {
 											echo $accomplished->ApprovedCouples;
 											$approved_couples+= $accomplished->ApprovedCouples; 
+										} else {
+											echo 0;
+										}
+									?>
+								</td>
+								<td>
+									<?php 
+										if($accomplished->PendingCouples != 'N/A') {
+											echo $accomplished->PendingCouples;
+											$pending_couples+= $accomplished->PendingCouples; 
+										} else {
+											echo 0;
+										}
+									?>
+								</td>
+								<td>
+									<?php 
+										if($accomplished->ServedCouples != 'N/A') {
+											echo $accomplished->ServedCouples;
+											$served_couples+= $accomplished->ServedCouples; 
 										} else {
 											echo 0;
 										}
@@ -107,6 +133,16 @@ $accomp_no = $this->input->get('ReportNo');
         					</td>
         					<td class="text-center">
         						<p class="text-bold text-italic">
+        							<?= $pending_couples ?>
+        						</p>
+        					</td>
+        					<td class="text-center">
+        						<p class="text-bold text-italic">
+        							<?= $served_couples ?>
+        						</p>
+        					</td>
+        					<td class="text-center">
+        						<p class="text-bold text-italic">
         							<?= $duplicates ?>
         						</p>
         					</td>
@@ -117,6 +153,15 @@ $accomp_no = $this->input->get('ReportNo');
         					</td>
         				</tr>
         				<tr>
+        					<td colspan="1" class="text-center" style="border-right: 0;">
+        						<p class="text-bold">TOTAL <br> (Classes)</p>
+        					</td>
+        					<td style="border-right: 0; border-left: 0;"></td>
+        					<td colspan="1" class="text-right" style="border-left: 0; padding-right: 4%;">
+        						<h4 class="text-bold">
+        							<?= $total_class ?>
+								</h4>
+        					</td>
         					<td colspan="2" class="text-center" style="border-right: 0;">
         						<p class="text-bold">GRAND TOTAL <br> (Approved Couples)</p>
         					</td>

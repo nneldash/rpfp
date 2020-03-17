@@ -13,5 +13,7 @@ abstract class AccomplishmentInterface extends BaseInterface
     public $ClassNo;
     public $EncodedCouples;
     public $ApprovedCouples;
+    public $PendingCouples;
+    public $ServedCouples;
     public $Duplicates;
 }

@@ -51,6 +51,8 @@ class AccomplishmentModel extends BaseModel
                 'ClassNo' => 'class_no',
                 'EncodedCouples' => 'encoded_couples',
                 'ApprovedCouples' => 'approved_couples',
+                'PendingCouples' => 'pending_couples',
+                'ServedCouples' => 'served_couples',
                 'Duplicates' => 'duplicates'
             ),
             'get_report_accomplishment_details',
