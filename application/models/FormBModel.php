@@ -25,7 +25,7 @@ class FormBModel extends BaseModel
                 'ReportID' => 'report_id',
                 'ReportYear' => 'report_year',
                 'ReportMonth' => 'report_month',
-                // 'ReportNo' => 'demandgen_id',
+                'RegionalOffice' => 'psgc_code',
                 'DateProcessed' => 'date_processed'
             ),
             'get_report_unmet_need_list',

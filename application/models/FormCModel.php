@@ -26,7 +26,7 @@ class FormCModel extends BaseModel
                 'ReportID' => 'report_id',
                 'ReportYear' => 'report_year',
                 'ReportMonth' => 'report_month',
-                // 'ReportNo' => 'demandgen_id',
+                'RegionalOffice' => 'psgc_code',
                 'DateProcessed' => 'date_processed'
             ),
             'get_report_served_method_mix_list',
