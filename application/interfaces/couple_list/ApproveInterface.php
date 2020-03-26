@@ -12,6 +12,7 @@ abstract class ApproveInterface extends BaseInterface
     public $Municipality;
     public $Barangay;
     public $CouplesEncoded;
+    public $CouplesServed;
     public $ClassNo;
     public $DateConduct;
     public $LastName;

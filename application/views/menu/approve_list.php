@@ -13,6 +13,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 <th>Municipality / City</th>
                 <th>Barangay</th>
                 <th>Number of Couples</th>
+                <th>Number of Couples Served</th>
                 <th>Date Conducted</th>
                 <th>Encoded By</th>
                 <th style="width: 10%;">Action</th>
@@ -28,6 +29,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         <td><?= $approved->Municipality; ?></td>
                         <td><?= $approved->Barangay; ?></td>
                         <td><?= $approved->CouplesEncoded; ?></td>
+                        <td><?= ( $approved->CouplesServed > 0 ? $approved->CouplesServed : '0' ) ?></td>
                         <td><?= date('F d, Y', strtotime($approved->DateConduct)); ?></td>
                         <td><?= ucfirst($approved->FirstName) .' '. ucfirst($approved->LastName); ?></td>
                         <td class="text-center">

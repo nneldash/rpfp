@@ -1084,6 +1084,7 @@ BEGIN
                 NULL AS barangay,
                 NULL AS class_no,
                 NULL AS couples_encoded,
+                NULL AS served_count,
                 NULL AS date_conduct,
                 NULL AS lastname,
                 NULL AS firstname
@@ -1108,6 +1109,7 @@ BEGIN
                     city.LOCATION_DESCRIPTION AS municipality_name,
                     brgy.LOCATION_DESCRIPTION AS barangay,
                     COUNT(apc.COUPLES_ID) AS couples_encoded,
+                    COUNT(fs.COUPLES_ID) AS served_count,
                     rc.CLASS_NUMBER AS class_no,
                     rc.DATE_CONDUCTED AS date_conduct,
                     up.LAST_NAME AS lastname,
@@ -1122,6 +1124,7 @@ BEGIN
                       LEFT JOIN rpfp.lib_psgc_locations prov
                              ON prov.PSGC_CODE = (brgy.PROVINCE_CODE * POWER( 10, 5 ))
           LEFT JOIN rpfp.user_profile up ON up.DB_USER_ID = rc.DB_USER_ID
+          LEFT JOIN rpfp.fp_service fs ON fs.COUPLES_ID = apc.COUPLES_ID
               WHERE apc.IS_ACTIVE = status_active
                 AND user_location = (rc.BARANGAY_ID DIV POWER( 10, multiplier ))
            GROUP BY rc.CLASS_NUMBER
@@ -1332,6 +1335,7 @@ BEGIN
                 NULL AS barangay,
                 NULL AS class_no,
                 NULL AS couples_encoded,
+                NULL AS served_count,
                 NULL AS date_conduct,
                 NULL AS lastname,
                 NULL AS firstname
@@ -1356,6 +1360,7 @@ BEGIN
                     city.LOCATION_DESCRIPTION AS municipality_name,
                     brgy.LOCATION_DESCRIPTION AS barangay,
                     COUNT(apc.COUPLES_ID) AS couples_encoded,
+                    COUNT(fs.COUPLES_ID) AS served_count,
                     rc.CLASS_NUMBER AS class_no,
                     rc.DATE_CONDUCTED AS date_conduct,
                     up.LAST_NAME AS lastname,
@@ -1370,6 +1375,7 @@ BEGIN
                       LEFT JOIN rpfp.lib_psgc_locations prov
                              ON prov.PSGC_CODE = (brgy.PROVINCE_CODE * POWER( 10, 5 ))
           LEFT JOIN rpfp.user_profile up ON up.DB_USER_ID = rc.DB_USER_ID
+          LEFT JOIN rpfp.fp_service fs ON fs.COUPLES_ID = apc.COUPLES_ID
               WHERE apc.IS_ACTIVE = status_pending
                 AND (   rc.DB_USER_ID = name_user
                     OR (   is_not_encoder
@@ -4735,6 +4741,7 @@ BEGIN
                         NULL AS barangay,
                         NULL AS class_no,
                         NULL AS couples_encoded,
+                        NULL AS served_count,
                         NULL AS date_conduct,
                         NULL AS lastname,
                         NULL AS firstname
@@ -4758,6 +4765,7 @@ BEGIN
                    lp.LOCATION_DESCRIPTION AS barangay,
                    rc.CLASS_NUMBER AS class_no,
                    COUNT(apc.COUPLES_ID) AS couples_encoded,
+                   COUNT(fs.COUPLES_ID) AS served_count,
                    rc.DATE_CONDUCTED AS date_conduct,
                    up.LAST_NAME AS lastname,
                    up.FIRST_NAME AS firstname
@@ -4769,6 +4777,7 @@ BEGIN
          LEFT JOIN rpfp.lib_psgc_locations city ON city.PSGC_CODE = (lp.MUNICIPALITY_CODE * POWER( 10, 3 ))
          LEFT JOIN rpfp.lib_psgc_locations prov ON prov.PSGC_CODE = (lp.PROVINCE_CODE * POWER( 10, 5 ))
          LEFT JOIN rpfp.user_profile up ON up.DB_USER_ID = rc.DB_USER_ID
+         LEFT JOIN rpfp.fp_service fs ON fs.COUPLES_ID = apc.COUPLES_ID
              WHERE rc.CLASS_NUMBER LIKE CONCAT('%',class_number,'%')
                AND lp.PSGC_CODE >= location_code_from
                AND lp.PSGC_CODE <= location_code_to
@@ -4880,6 +4889,7 @@ BEGIN
                         NULL AS barangay,
                         NULL AS class_no,
                         NULL AS couples_encoded,
+                        NULL AS served_count,
                         NULL AS date_conduct,
                         NULL AS lastname,
                         NULL AS firstname
@@ -4903,6 +4913,7 @@ BEGIN
                    lp.LOCATION_DESCRIPTION AS barangay,
                    rc.CLASS_NUMBER AS class_no,
                    COUNT(apc.COUPLES_ID) AS couples_encoded,
+                   COUNT(fs.COUPLES_ID) AS served_count,
                    rc.DATE_CONDUCTED AS date_conduct,
                    up.LAST_NAME AS lastname,
                    up.FIRST_NAME AS firstname
@@ -4914,6 +4925,7 @@ BEGIN
          LEFT JOIN rpfp.lib_psgc_locations city ON city.PSGC_CODE = (lp.MUNICIPALITY_CODE * POWER( 10, 3 ))
          LEFT JOIN rpfp.lib_psgc_locations prov ON prov.PSGC_CODE = (lp.PROVINCE_CODE * POWER( 10, 5 ))
          LEFT JOIN rpfp.user_profile up ON up.DB_USER_ID = rc.DB_USER_ID
+         LEFT JOIN rpfp.fp_service fs ON fs.COUPLES_ID = apc.COUPLES_ID
              WHERE rc.CLASS_NUMBER LIKE CONCAT('%',class_number,'%')
                AND lp.PSGC_CODE >= location_code_from
                AND lp.PSGC_CODE <= location_code_to
@@ -5029,6 +5041,7 @@ BEGIN
                         NULL AS barangay,
                         NULL AS class_no,
                         NULL AS couples_encoded,
+                        NULL AS served_count,
                         NULL AS date_conduct,
                         NULL AS lastname,
                         NULL AS firstname
@@ -5052,6 +5065,7 @@ BEGIN
                    lp.LOCATION_DESCRIPTION AS barangay,
                    rc.CLASS_NUMBER AS class_no,
                    COUNT(apc.COUPLES_ID) AS couples_encoded,
+                   COUNT(fs.COUPLES_ID) AS served_count,
                    rc.DATE_CONDUCTED AS date_conduct,
                    up.LAST_NAME AS lastname,
                    up.FIRST_NAME AS firstname
@@ -5180,6 +5194,7 @@ BEGIN
                         NULL AS barangay,
                         NULL AS class_no,
                         NULL AS couples_encoded,
+                        NULL AS served_count,
                         NULL AS date_conduct,
                         NULL AS lastname,
                         NULL AS firstname
@@ -5203,6 +5218,7 @@ BEGIN
                    lp.LOCATION_DESCRIPTION AS barangay,
                    rc.CLASS_NUMBER AS class_no,
                    COUNT(apc.COUPLES_ID) AS couples_encoded,
+                   COUNT(fs.COUPLES_ID) AS served_count,
                    rc.DATE_CONDUCTED AS date_conduct,
                    up.LAST_NAME AS lastname,
                    up.FIRST_NAME AS firstname
@@ -5213,6 +5229,7 @@ BEGIN
          LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
          LEFT JOIN rpfp.lib_psgc_locations city ON city.PSGC_CODE = (lp.MUNICIPALITY_CODE * POWER( 10, 3 ))
          LEFT JOIN rpfp.lib_psgc_locations prov ON prov.PSGC_CODE = (lp.PROVINCE_CODE * POWER( 10, 5 ))
+         LEFT JOIN rpfp.fp_service fs ON fs.COUPLES_ID = apc.COUPLES_ID
          LEFT JOIN rpfp.user_profile up ON up.DB_USER_ID = rc.DB_USER_ID
              WHERE rc.CLASS_NUMBER LIKE CONCAT('%',class_number,'%')
                AND lp.PSGC_CODE >= location_code_from
@@ -5326,6 +5343,7 @@ BEGIN
                         NULL AS barangay,
                         NULL AS class_no,
                         NULL AS couples_encoded,
+                        NULL AS served_count,
                         NULL AS date_conduct,
                         NULL AS lastname,
                         NULL AS firstname
@@ -5349,6 +5367,7 @@ BEGIN
                    lp.LOCATION_DESCRIPTION AS barangay,
                    rc.CLASS_NUMBER AS class_no,
                    COUNT(apc.COUPLES_ID) AS couples_encoded,
+                   COUNT(fs.COUPLES_ID) AS served_count,
                    rc.DATE_CONDUCTED AS date_conduct,
                    up.LAST_NAME AS lastname,
                    up.FIRST_NAME AS firstname
@@ -5814,6 +5833,7 @@ IF ( IFNULL( tfp_used, 0 ) = 0 ) THEN
                         NULL AS barangay,
                         NULL AS class_no,
                         NULL AS couples_encoded,
+                        NULL AS served_count,
                         NULL AS date_conduct,
                         NULL AS lastname,
                         NULL AS firstname
@@ -5837,6 +5857,7 @@ IF ( IFNULL( tfp_used, 0 ) = 0 ) THEN
                    lp.LOCATION_DESCRIPTION AS barangay,
                    rc.CLASS_NUMBER AS class_no,
                    COUNT(apc.COUPLES_ID) AS couples_encoded,
+                   COUNT(fs.COUPLES_ID) AS served_count,
                    rc.DATE_CONDUCTED AS date_conduct,
                    up.LAST_NAME AS lastname,
                    up.FIRST_NAME AS firstname
@@ -5847,6 +5868,7 @@ IF ( IFNULL( tfp_used, 0 ) = 0 ) THEN
          LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
          LEFT JOIN rpfp.lib_psgc_locations city ON city.PSGC_CODE = (lp.MUNICIPALITY_CODE * POWER( 10, 3 ))
          LEFT JOIN rpfp.lib_psgc_locations prov ON prov.PSGC_CODE = (lp.PROVINCE_CODE * POWER( 10, 5 ))
+         LEFT JOIN rpfp.fp_service fs ON fs.COUPLES_ID = apc.COUPLES_ID
          LEFT JOIN rpfp.user_profile up ON up.DB_USER_ID = rc.DB_USER_ID
              WHERE rc.CLASS_NUMBER LIKE CONCAT('%',class_number,'%')
                AND lp.PSGC_CODE >= location_code_from
@@ -5899,6 +5921,7 @@ IF intention_status = 'A' THEN
                         NULL AS barangay,
                         NULL AS class_no,
                         NULL AS couples_encoded,
+                        NULL AS served_count,
                         NULL AS date_conduct,
                         NULL AS lastname,
                         NULL AS firstname
@@ -5930,6 +5953,7 @@ IF intention_status = 'A' THEN
                    lp.LOCATION_DESCRIPTION AS barangay,
                    rc.CLASS_NUMBER AS class_no,
                    COUNT(apc.COUPLES_ID) AS couples_encoded,
+                   COUNT(fs.COUPLES_ID) AS served_count,
                    rc.DATE_CONDUCTED AS date_conduct,
                    up.LAST_NAME AS lastname,
                    up.FIRST_NAME AS firstname
@@ -5940,6 +5964,7 @@ IF intention_status = 'A' THEN
          LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
          LEFT JOIN rpfp.lib_psgc_locations city ON city.PSGC_CODE = (lp.MUNICIPALITY_CODE * POWER( 10, 3 ))
          LEFT JOIN rpfp.lib_psgc_locations prov ON prov.PSGC_CODE = (lp.PROVINCE_CODE * POWER( 10, 5 ))
+         LEFT JOIN rpfp.fp_service fs ON fs.COUPLES_ID = apc.COUPLES_ID
          LEFT JOIN rpfp.user_profile up ON up.DB_USER_ID = rc.DB_USER_ID
              WHERE rc.CLASS_NUMBER LIKE CONCAT('%',class_number,'%')
                AND lp.PSGC_CODE >= location_code_from
@@ -5996,6 +6021,7 @@ ELSE
                         NULL AS barangay,
                         NULL AS class_no,
                         NULL AS couples_encoded,
+                        NULL AS served_count,
                         NULL AS date_conduct,
                         NULL AS lastname,
                         NULL AS firstname
@@ -6020,6 +6046,7 @@ ELSE
                    lp.LOCATION_DESCRIPTION AS barangay,
                    rc.CLASS_NUMBER AS class_no,
                    COUNT(apc.COUPLES_ID) AS couples_encoded,
+                   COUNT(fs.COUPLES_ID) AS served_count,
                    rc.DATE_CONDUCTED AS date_conduct,
                    up.LAST_NAME AS lastname,
                    up.FIRST_NAME AS firstname
@@ -6030,6 +6057,7 @@ ELSE
          LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
          LEFT JOIN rpfp.lib_psgc_locations city ON city.PSGC_CODE = (lp.MUNICIPALITY_CODE * POWER( 10, 3 ))
          LEFT JOIN rpfp.lib_psgc_locations prov ON prov.PSGC_CODE = (lp.PROVINCE_CODE * POWER( 10, 5 ))
+         LEFT JOIN rpfp.fp_service ON fs.COUPLES_ID = apc.COUPLES_ID
          LEFT JOIN rpfp.user_profile up ON up.DB_USER_ID = rc.DB_USER_ID
              WHERE rc.CLASS_NUMBER LIKE CONCAT('%',class_number,'%')
                AND lp.PSGC_CODE >= location_code_from
@@ -6162,6 +6190,7 @@ IF ( IFNULL( tfp_used, 0 ) = 0 ) THEN
                         NULL AS barangay,
                         NULL AS class_no,
                         NULL AS couples_encoded,
+                        NULL AS served_count,
                         NULL AS date_conduct,
                         NULL AS lastname,
                         NULL AS firstname
@@ -6185,6 +6214,7 @@ IF ( IFNULL( tfp_used, 0 ) = 0 ) THEN
                    lp.LOCATION_DESCRIPTION AS barangay,
                    rc.CLASS_NUMBER AS class_no,
                    COUNT(apc.COUPLES_ID) AS couples_encoded,
+                   COUNT(fs.COUPLES_ID) AS served_count,
                    rc.DATE_CONDUCTED AS date_conduct,
                    up.LAST_NAME AS lastname,
                    up.FIRST_NAME AS firstname
@@ -6195,6 +6225,7 @@ IF ( IFNULL( tfp_used, 0 ) = 0 ) THEN
          LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
          LEFT JOIN rpfp.lib_psgc_locations city ON city.PSGC_CODE = (lp.MUNICIPALITY_CODE * POWER( 10, 3 ))
          LEFT JOIN rpfp.lib_psgc_locations prov ON prov.PSGC_CODE = (lp.PROVINCE_CODE * POWER( 10, 5 ))
+         LEFT JOIN rpfp.fp_service fs ON fs.COUPLES_ID = apc.COUPLES_ID
          LEFT JOIN rpfp.user_profile up ON up.DB_USER_ID = rc.DB_USER_ID
              WHERE rc.CLASS_NUMBER LIKE CONCAT('%',class_number,'%')
                AND lp.PSGC_CODE >= location_code_from
@@ -6251,6 +6282,7 @@ IF intention_status = 'A' THEN
                         NULL AS barangay,
                         NULL AS class_no,
                         NULL AS couples_encoded,
+                        NULL AS served_count,
                         NULL AS date_conduct,
                         NULL AS lastname,
                         NULL AS firstname
@@ -6282,6 +6314,7 @@ IF intention_status = 'A' THEN
                    lp.LOCATION_DESCRIPTION AS barangay,
                    rc.CLASS_NUMBER AS class_no,
                    COUNT(apc.COUPLES_ID) AS couples_encoded,
+                   COUNT(fs.COUPLES_ID) AS served_count,
                    rc.DATE_CONDUCTED AS date_conduct,
                    up.LAST_NAME AS lastname,
                    up.FIRST_NAME AS firstname
@@ -6292,6 +6325,7 @@ IF intention_status = 'A' THEN
          LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
          LEFT JOIN rpfp.lib_psgc_locations city ON city.PSGC_CODE = (lp.MUNICIPALITY_CODE * POWER( 10, 3 ))
          LEFT JOIN rpfp.lib_psgc_locations prov ON prov.PSGC_CODE = (lp.PROVINCE_CODE * POWER( 10, 5 ))
+         LEFT JOIN rpfp.fp_service ON fs.COUPLES_ID = apc.COUPLES_ID
          LEFT JOIN rpfp.user_profile up ON up.DB_USER_ID = rc.DB_USER_ID
              WHERE rc.CLASS_NUMBER LIKE CONCAT('%',class_number,'%')
                AND lp.PSGC_CODE >= location_code_from
@@ -6352,6 +6386,7 @@ ELSE
                         NULL AS barangay,
                         NULL AS class_no,
                         NULL AS couples_encoded,
+                        NULL AS served_count,
                         NULL AS date_conduct,
                         NULL AS lastname,
                         NULL AS firstname
@@ -6376,6 +6411,7 @@ ELSE
                    lp.LOCATION_DESCRIPTION AS barangay,
                    rc.CLASS_NUMBER AS class_no,
                    COUNT(apc.COUPLES_ID) AS couples_encoded,
+                   COUNT(fs.COUPLES_ID) AS served_count,
                    rc.DATE_CONDUCTED AS date_conduct,
                    up.LAST_NAME AS lastname,
                    up.FIRST_NAME AS firstname
@@ -6386,6 +6422,7 @@ ELSE
          LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
          LEFT JOIN rpfp.lib_psgc_locations city ON city.PSGC_CODE = (lp.MUNICIPALITY_CODE * POWER( 10, 3 ))
          LEFT JOIN rpfp.lib_psgc_locations prov ON prov.PSGC_CODE = (lp.PROVINCE_CODE * POWER( 10, 5 ))
+         LEFT JOIN rpfp.fp_service ON fs.COUPLES_ID = apc.COUPLES_ID
          LEFT JOIN rpfp.user_profile up ON up.DB_USER_ID = rc.DB_USER_ID
              WHERE rc.CLASS_NUMBER LIKE CONCAT('%',class_number,'%')
                AND lp.PSGC_CODE >= location_code_from
@@ -6522,6 +6559,7 @@ IF ( IFNULL( tfp_used, 0 ) = 0 ) THEN
                         NULL AS barangay,
                         NULL AS class_no,
                         NULL AS couples_encoded,
+                        NULL AS served_count,
                         NULL AS date_conduct,
                         NULL AS lastname,
                         NULL AS firstname
@@ -6545,6 +6583,7 @@ IF ( IFNULL( tfp_used, 0 ) = 0 ) THEN
                    lp.LOCATION_DESCRIPTION AS barangay,
                    rc.CLASS_NUMBER AS class_no,
                    COUNT(apc.COUPLES_ID) AS couples_encoded,
+                   COUNT(fs.COUPLES_ID) AS served_count,
                    rc.DATE_CONDUCTED AS date_conduct,
                    up.LAST_NAME AS lastname,
                    up.FIRST_NAME AS firstname
@@ -6613,6 +6652,7 @@ IF intention_status = 'A' THEN
                         NULL AS barangay,
                         NULL AS class_no,
                         NULL AS couples_encoded,
+                        NULL AS served_count,
                         NULL AS date_conduct,
                         NULL AS lastname,
                         NULL AS firstname
@@ -6644,6 +6684,7 @@ IF intention_status = 'A' THEN
                    lp.LOCATION_DESCRIPTION AS barangay,
                    rc.CLASS_NUMBER AS class_no,
                    COUNT(apc.COUPLES_ID) AS couples_encoded,
+                   COUNT(fs.COUPLES_ID) AS served_count,
                    rc.DATE_CONDUCTED AS date_conduct,
                    up.LAST_NAME AS lastname,
                    up.FIRST_NAME AS firstname
@@ -6716,6 +6757,7 @@ ELSE
                         NULL AS barangay,
                         NULL AS class_no,
                         NULL AS couples_encoded,
+                        NULL AS served_count,
                         NULL AS date_conduct,
                         NULL AS lastname,
                         NULL AS firstname
@@ -6740,6 +6782,7 @@ ELSE
                    lp.LOCATION_DESCRIPTION AS barangay,
                    rc.CLASS_NUMBER AS class_no,
                    COUNT(apc.COUPLES_ID) AS couples_encoded,
+                   COUNT(fs.COUPLES_ID) AS served_count,
                    rc.DATE_CONDUCTED AS date_conduct,
                    up.LAST_NAME AS lastname,
                    up.FIRST_NAME AS firstname
@@ -6880,6 +6923,7 @@ IF ( IFNULL( tfp_used, 0 ) = 0 ) THEN
                         NULL AS barangay,
                         NULL AS class_no,
                         NULL AS couples_encoded,
+                        NULL AS served_count,
                         NULL AS date_conduct,
                         NULL AS lastname,
                         NULL AS firstname
@@ -6903,6 +6947,7 @@ IF ( IFNULL( tfp_used, 0 ) = 0 ) THEN
                    lp.LOCATION_DESCRIPTION AS barangay,
                    rc.CLASS_NUMBER AS class_no,
                    COUNT(apc.COUPLES_ID) AS couples_encoded,
+                   COUNT(fs.COUPLES_ID) AS served_count,
                    rc.DATE_CONDUCTED AS date_conduct,
                    up.LAST_NAME AS lastname,
                    up.FIRST_NAME AS firstname
@@ -6913,6 +6958,7 @@ IF ( IFNULL( tfp_used, 0 ) = 0 ) THEN
          LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
          LEFT JOIN rpfp.lib_psgc_locations city ON city.PSGC_CODE = (lp.MUNICIPALITY_CODE * POWER( 10, 3 ))
          LEFT JOIN rpfp.lib_psgc_locations prov ON prov.PSGC_CODE = (lp.PROVINCE_CODE * POWER( 10, 5 ))
+         LEFT JOIN rpfp.fp_service fs ON fs.COUPLES_ID = apc.COUPLES_ID
          LEFT JOIN rpfp.user_profile up ON up.DB_USER_ID = rc.DB_USER_ID
              WHERE rc.CLASS_NUMBER LIKE CONCAT('%',class_number,'%')
                AND lp.PSGC_CODE >= location_code_from
@@ -6966,6 +7012,7 @@ IF intention_status = 'A' THEN
                         NULL AS barangay,
                         NULL AS class_no,
                         NULL AS couples_encoded,
+                        NULL AS served_count,
                         NULL AS date_conduct,
                         NULL AS lastname,
                         NULL AS firstname
@@ -6997,6 +7044,7 @@ IF intention_status = 'A' THEN
                    lp.LOCATION_DESCRIPTION AS barangay,
                    rc.CLASS_NUMBER AS class_no,
                    COUNT(apc.COUPLES_ID) AS couples_encoded,
+                   COUNT(fs.COUPLES_ID) AS served_count,
                    rc.DATE_CONDUCTED AS date_conduct,
                    up.LAST_NAME AS lastname,
                    up.FIRST_NAME AS firstname
@@ -7007,6 +7055,7 @@ IF intention_status = 'A' THEN
          LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
          LEFT JOIN rpfp.lib_psgc_locations city ON city.PSGC_CODE = (lp.MUNICIPALITY_CODE * POWER( 10, 3 ))
          LEFT JOIN rpfp.lib_psgc_locations prov ON prov.PSGC_CODE = (lp.PROVINCE_CODE * POWER( 10, 5 ))
+         LEFT JOIN rpfp.fp_service fs ON fs.COUPLES_ID = apc.COUPLES_ID
          LEFT JOIN rpfp.user_profile up ON up.DB_USER_ID = rc.DB_USER_ID
              WHERE rc.CLASS_NUMBER LIKE CONCAT('%',class_number,'%')
                AND lp.PSGC_CODE >= location_code_from
@@ -7064,6 +7113,7 @@ ELSE
                         NULL AS barangay,
                         NULL AS class_no,
                         NULL AS couples_encoded,
+                        NULL AS served_count,
                         NULL AS date_conduct,
                         NULL AS lastname,
                         NULL AS firstname
@@ -7088,6 +7138,7 @@ ELSE
                    lp.LOCATION_DESCRIPTION AS barangay,
                    rc.CLASS_NUMBER AS class_no,
                    COUNT(apc.COUPLES_ID) AS couples_encoded,
+                   COUNT(fs.COUPLES_ID) AS served_count,
                    rc.DATE_CONDUCTED AS date_conduct,
                    up.LAST_NAME AS lastname,
                    up.FIRST_NAME AS firstname
@@ -7098,6 +7149,7 @@ ELSE
          LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
          LEFT JOIN rpfp.lib_psgc_locations city ON city.PSGC_CODE = (lp.MUNICIPALITY_CODE * POWER( 10, 3 ))
          LEFT JOIN rpfp.lib_psgc_locations prov ON prov.PSGC_CODE = (lp.PROVINCE_CODE * POWER( 10, 5 ))
+         LEFT JOIN rpfp.fp_service fs ON fs.COUPLES_ID = apc.COUPLES_ID
          LEFT JOIN rpfp.user_profile up ON up.DB_USER_ID = rc.DB_USER_ID
              WHERE rc.CLASS_NUMBER LIKE CONCAT('%',class_number,'%')
                AND lp.PSGC_CODE >= location_code_from
@@ -7223,6 +7275,7 @@ IF ( IFNULL( tfp_used, 0 ) = 0 ) THEN
                         NULL AS barangay,
                         NULL AS class_no,
                         NULL AS couples_encoded,
+                        NULL AS served_count,
                         NULL AS date_conduct,
                         NULL AS lastname,
                         NULL AS firstname
@@ -7246,6 +7299,7 @@ IF ( IFNULL( tfp_used, 0 ) = 0 ) THEN
                    lp.LOCATION_DESCRIPTION AS barangay,
                    rc.CLASS_NUMBER AS class_no,
                    COUNT(apc.COUPLES_ID) AS couples_encoded,
+                   COUNT(fs.COUPLES_ID) AS served_count,
                    rc.DATE_CONDUCTED AS date_conduct,
                    up.LAST_NAME AS lastname,
                    up.FIRST_NAME AS firstname
@@ -7310,6 +7364,7 @@ IF intention_status = 'A' THEN
                         NULL AS barangay,
                         NULL AS class_no,
                         NULL AS couples_encoded,
+                        NULL AS served_count,
                         NULL AS date_conduct,
                         NULL AS lastname,
                         NULL AS firstname
@@ -7341,6 +7396,7 @@ IF intention_status = 'A' THEN
                    lp.LOCATION_DESCRIPTION AS barangay,
                    rc.CLASS_NUMBER AS class_no,
                    COUNT(apc.COUPLES_ID) AS couples_encoded,
+                   COUNT(fs.COUPLES_ID) AS served_count,
                    rc.DATE_CONDUCTED AS date_conduct,
                    up.LAST_NAME AS lastname,
                    up.FIRST_NAME AS firstname
@@ -7409,6 +7465,7 @@ ELSE
                         NULL AS barangay,
                         NULL AS class_no,
                         NULL AS couples_encoded,
+                        NULL AS served_count,
                         NULL AS date_conduct,
                         NULL AS lastname,
                         NULL AS firstname
@@ -7433,6 +7490,7 @@ ELSE
                    lp.LOCATION_DESCRIPTION AS barangay,
                    rc.CLASS_NUMBER AS class_no,
                    COUNT(apc.COUPLES_ID) AS couples_encoded,
+                   COUNT(fs.COUPLES_ID) AS served_count,
                    rc.DATE_CONDUCTED AS date_conduct,
                    up.LAST_NAME AS lastname,
                    up.FIRST_NAME AS firstname
@@ -7440,7 +7498,7 @@ ELSE
          LEFT JOIN rpfp.couples apc ON apc.RPFP_CLASS_ID = rc.RPFP_CLASS_ID
          LEFT JOIN rpfp.individual ic ON ic.COUPLES_ID = apc.COUPLES_ID
          LEFT JOIN rpfp.fp_details fd ON fd.COUPLES_ID = ic.COUPLES_ID
-          LEFT JOIN rpfp.fp_service fs ON fs.COUPLES_ID = apc.COUPLES_ID
+         LEFT JOIN rpfp.fp_service fs ON fs.COUPLES_ID = apc.COUPLES_ID
          LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
          LEFT JOIN rpfp.lib_psgc_locations city ON city.PSGC_CODE = (lp.MUNICIPALITY_CODE * POWER( 10, 3 ))
          LEFT JOIN rpfp.lib_psgc_locations prov ON prov.PSGC_CODE = (lp.PROVINCE_CODE * POWER( 10, 5 ))

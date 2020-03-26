@@ -20,6 +20,7 @@ if (empty($title)) {
             <th>Municipality / City</th>
             <th>Barangay</th>
             <th>Number of Couples</th>
+            <th>Number of Couples Served</th>
             <th>Date Conducted</th>
             <th>Encoded By</th>
             <th style="width: 10%;">Action</th>
@@ -35,6 +36,7 @@ if (empty($title)) {
                     <td><?= $pendings->Municipality; ?></td>
 					<td><?= $pendings->Barangay; ?></td>
                     <td><?= $pendings->CouplesEncoded; ?></td>
+                    <td><?= ( $pendings->CouplesServed > 0 ? $pendings->CouplesServed : '0' ) ?></td>
 					<td><?= date('F d, Y', strtotime($pendings->DateConduct)); ?></td>
                     <td><?= ucfirst($pendings->FirstName) .' '. ucfirst($pendings->LastName); ?></td>
                     <td class="text-center">

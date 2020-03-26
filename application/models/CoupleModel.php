@@ -32,6 +32,7 @@ class CoupleModel extends BaseModel
                 'Barangay' => 'barangay',
                 'ClassNo' => 'class_no',
                 'CouplesEncoded' => 'couples_encoded',
+                'CouplesServed' => 'served_count',
                 'DateConduct' => 'date_conduct',
                 'LastName' => 'lastname',
                 'FirstName' => 'firstname'
@@ -66,6 +67,7 @@ class CoupleModel extends BaseModel
                 'Barangay' => 'barangay',
                 'ClassNo' => 'class_no',
                 'CouplesEncoded' => 'couples_encoded',
+                'CouplesServed' => 'served_count',
                 'DateConduct' => 'date_conduct',
                 'LastName' => 'lastname',
                 'FirstName' => 'firstname'
@@ -99,6 +101,7 @@ class CoupleModel extends BaseModel
                 'Barangay' => 'barangay',
                 'ClassNo' => 'class_no',
                 'CouplesEncoded' => 'couples_encoded',
+                'CouplesServed' => 'served_count',
                 'DateConduct' => 'date_conduct',
                 'LastName' => 'lastname',
                 'FirstName' => 'firstname'
@@ -164,6 +167,7 @@ class CoupleModel extends BaseModel
                 'Barangay' => 'barangay',
                 'ClassNo' => 'class_no',
                 'CouplesEncoded' => 'couples_encoded',
+                'CouplesServed' => 'served_count',
                 'DateConduct' => 'date_conduct',
                 'LastName' => 'lastname',
                 'FirstName' => 'firstname'
