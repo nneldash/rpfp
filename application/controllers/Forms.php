@@ -401,8 +401,25 @@ class Forms extends CI_Controller
             $mpdf->debug = true;
 
             $html = $this->load->view('forms/form1', array('form1' => $form1, 'is_pdf' => true), true);
+            $footer = '<html>
+                            <head>
+                            <style>
+                                @page {
+                                    size: auto;
+                                    odd-footer-name: MyFooter1;
+                                    margin-right: 20px;
+                                    margin-left: 20px;
+                                }
+                            </style>
+                            </head>
+                            <body>
+                                <pagefooter name="MyFooter1" content-right="{DATE M j,Y h:i a}"
+                                footer-style="font-size: 7pt;" />
+                            </body>
+                        </html>';
 
             $mpdf->setTitle('Online RPFP Monitoring System | Form 1');
+            $mpdf->WriteHTML($footer);
             $mpdf->WriteHTML($html);
             $mpdf->Output(date('Ymd') . ' - Form 1.pdf', 'I');
         } catch (\Mpdf\MpdfException $e) {
@@ -422,10 +439,28 @@ class Forms extends CI_Controller
             $mpdf->debug = true;
 
             $html = $this->load->view('forms/forma', array('is_pdf' => true), true);
+            $footer = '<html>
+                            <head>
+                            <style>
+                                @page {
+                                    size: auto;
+                                    odd-footer-name: MyFooter1;
+                                    margin-right: 20px;
+                                    margin-left: 20px;
+                                }
+                            </style>
+                            </head>
+                            <body>
+                                <pagefooter name="MyFooter1" content-right="{DATE M j,Y h:i a}"
+                                footer-style="font-size: 7pt;" />
+                            </body>
+                        </html>';           
 
             $mpdf->setTitle('Online RPFP Monitoring System | Form A');
-            $mpdf->WriteHTML($html);
+            $mpdf->WriteHTML($footer);
+            $mpdf->WriteHTML($html);           
             $mpdf->Output(date('Ymd') . ' - Form A.pdf', 'I');
+            
         } catch (\Mpdf\MpdfException $e) {
             echo $e->getMessage();
         }
@@ -443,8 +478,25 @@ class Forms extends CI_Controller
             $mpdf->debug = true;
 
             $html = $this->load->view('forms/formb', array('is_pdf' => true), true);
+            $footer = '<html>
+                            <head>
+                            <style>
+                                @page {
+                                    size: auto;
+                                    odd-footer-name: MyFooter1;
+                                    margin-right: 20px;
+                                    margin-left: 20px;
+                                }
+                            </style>
+                            </head>
+                            <body>
+                                <pagefooter name="MyFooter1" content-right="{DATE M j,Y h:i a}"
+                                footer-style="font-size: 7pt;" />
+                            </body>
+                        </html>';
 
             $mpdf->setTitle('Online RPFP Monitoring System | Form B');
+            $mpdf->WriteHTML($footer);
             $mpdf->WriteHTML($html);
             $mpdf->Output(date('Ymd') . ' - Form B.pdf', 'I');
         } catch (\Mpdf\MpdfException $e) {
@@ -464,8 +516,25 @@ class Forms extends CI_Controller
             $mpdf->debug = true;
             
             $html = $this->load->view('forms/formC', array('is_pdf' => true), true);
+            $footer = '<html>
+                            <head>
+                            <style>
+                                @page {
+                                    size: auto;
+                                    odd-footer-name: MyFooter1;
+                                    margin-right: 20px;
+                                    margin-left: 20px;
+                                }
+                            </style>
+                            </head>
+                            <body>
+                                <pagefooter name="MyFooter1" content-right="{DATE M j,Y h:i a}"
+                                footer-style="font-size: 7pt;" />
+                            </body>
+                        </html>';
 
             $mpdf->setTitle('Online RPFP Monitoring System | Form C');
+            $mpdf-> WriteHTML($footer);
             $mpdf->WriteHTML($html);
             $mpdf->Output(date('Ymd') . ' - Form C.pdf', 'I');
         } catch (\Mpdf\MpdfException $e) {

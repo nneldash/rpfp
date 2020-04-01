@@ -139,8 +139,25 @@ class Menu extends CI_Controller
             $accomplishment = $this->AccomplishmentModel->getAccomplishmentReport($reportNo);
 
             $html = $this->load->view('forms/accomplishment', array('is_pdf' => true, 'accomplishment' => $accomplishment), true);
+            $footer = '<html>
+                            <head>
+                            <style>
+                                @page {
+                                    size: auto;
+                                    odd-footer-name: MyFooter1;
+                                    margin-right: 20px;
+                                    margin-left: 20px;
+                                }
+                            </style>
+                            </head>
+                            <body>
+                                <pagefooter name="MyFooter1" content-right="{DATE M j,Y h:i a}"
+                                footer-style="font-size: 7pt;" />
+                            </body>
+                        </html>';
 
             $mpdf->SetTitle('Online RPFP Monitoring System | Accomplishment Report');
+            $mpdf->WriteHTML($footer);
             $mpdf->WriteHTML($html);
             $mpdf->Output(date('Ymd') . ' - Accomplishment Report.pdf', 'I');
         } catch (\Mpdf\MpdfException $e) {
