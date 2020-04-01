@@ -679,8 +679,6 @@ function isApprove()
 
 			if(fpserved <= 1) {
 				$('.tr1' + i + ' .criteria .labelDiv').html('<span class="label label-success">Served</span>');
-				// $('.tr1' + i + ' .criteria').find('.label-success').removeClass('none');
-				// $('.tr1' + i + ' .criteria').find('.label-danger').addClass('none');
 			}
 		}
 	}
@@ -1430,10 +1428,16 @@ function importModal()
 function checkBox()
 {
 	$('#checkAll').click(function() {
-        var checked = $(this).prop('checked');
-        $('.approveCheck').find('.check').prop('checked', checked);
-    	$('td:first-child input[name="approveCouple"]').closest('tr').toggleClass("highlight", this.checked);
-    	$('td:first-child input[name="approveCouple"]').closest('tr').next('tr').toggleClass("highlight", this.checked);
+        var checked = $(this).prop('checked');	
+		
+		for (var i = 0; i <= 9; i++) {
+			var val = $('.tr1' + i + ' td .dupHighlight').val();
+			if (val > 0) {
+				$('.tr1' + i).find('.check').prop('checked', checked);
+				$('td:first-child input[name="approveCouple"]').closest('tr').toggleClass("highlight", this.checked);
+    			$('td:first-child input[name="approveCouple"]').closest('tr').next('tr').toggleClass("highlight", this.checked);
+			}
+		}
     });
 
 	$('td:first-child input[name="approveCouple"]').change(function() {
