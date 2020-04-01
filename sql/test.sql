@@ -54,10 +54,10 @@ SELECT "User Created: rdm8" AS MESSAGE;
 CALL rpfp.itdmu_create_rpfp_user('rdmncr', 'rdmncr', 'ncr', 'rdm', 'ncrpopcom@yahoo.com', 13, 130000000, 80, 40);
 SELECT "User Created: rdm8" AS MESSAGE;
 
-CALL rpfp.itdmu_create_rpfp_user('pmed', 'pmed', 'root', 'root', 'p@com.com', '', '', 90, 50);
+CALL rpfp.itdmu_create_rpfp_user('pmed', 'pmed', 'pmed', 'pmed', 'p@com.com', '', '', 90, 50);
 SELECT "User Created: pmed" AS MESSAGE;
 
-CALL rpfp.itdmu_create_rpfp_user('exect00', 'exect00', 'root', 'root', 'e@com.com', '', '', 100, 50);
+CALL rpfp.itdmu_create_rpfp_user('exect00', 'exect00', 'exect00', 'exect00', 'e@com.com', '', '', 100, 50);
 SELECT "User Created: exect00" AS MESSAGE;
 
 --

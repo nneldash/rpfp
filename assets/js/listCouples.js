@@ -179,6 +179,7 @@ function tableResults(result)
 					'<th>Municipality / City</th>' +
 					'<th>Barangay</th>' +
 					'<th>Number of Couples</th>' +
+					'<th>Number of Served Couples</th>' +
 					'<th>Date Conducted</th>' +
 					'<th>Encoded By</th>' +
 					'<th style="width: 10%;">Action</th>' +
@@ -191,6 +192,7 @@ function tableResults(result)
 					'<td>'+ result.xXxProvince.davalue +'</td>' +
 					'<td>'+ result.xXxMunicipality.davalue +'</td>' +
 					'<td>'+ result.xXxBarangay.davalue +'</td>' +
+					'<td>10</td>' +
 					'<td>10</td>' +
 					'<td>'+ result.xXxDateConduct.davalue +'</td>' +
 					'<td>'+ result.xXxFirstName.davalue +' '+ result.xXxLastName.davalue +'</td>' +
@@ -214,6 +216,7 @@ function tableResults(result)
 					'<th>Municipality / City</th>' +
 					'<th>Barangay</th>' +
 					'<th>Number of Couples</th>' +
+					'<th>Number of Served Couples</th>' +
 					'<th>Date Conducted</th>' +
 					'<th>Encoded By</th>' +
 					'<th style="width: 10%;">Action</th>' +
