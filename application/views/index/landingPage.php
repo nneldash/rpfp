@@ -89,7 +89,7 @@
             <div class="col-xs-12 col-sm-6 padding-10p0">
                 <h3 class="sans">Welcome to the Online RPFP Monitoring System Release Version 3.0</h3>
                 <br>
-                <p class="sans subheader">A Project of the Responsible Parenthood and Family Planning Program of the Commission on Population and Development</p>
+                <p class="sans subheader">A Project of the RPFP (Responsible Parenthood and Family Planning) Program of the Commission on Population and Development</p>
                 <br>
                 <br>
                     <img class="dashboard-logo" src="<?=base_url('assets/images/executive_dashboard.jpg')?>" alt="Link to Executive Dashboard" width="5%">

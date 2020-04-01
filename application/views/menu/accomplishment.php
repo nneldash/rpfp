@@ -45,7 +45,8 @@ if (empty($title)) {
                 </tr>
             <?php } else { ?>
                 <tr>
-                    <td class="text-center" colspan="4">No result(s) found.</td>
+                    <td class="text-center" colspan="5">No result(s) found.</td>
+                    <td class="text-center none"></td>
                     <td class="text-center none"></td>
                     <td class="text-center none"></td>
                     <td class="text-center none"></td>

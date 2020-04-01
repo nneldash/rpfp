@@ -94,6 +94,7 @@ $(function() {
 	statusUnmet();
 	importChanges();
 	afterLoadValidation();
+	// refreshPage();
 
 	Inputmask().mask(".birthAge");
 
@@ -117,7 +118,42 @@ $(function() {
 		$('td select').css('cursor', 'not-allowed');
 		$('td input[class="check"]').attr('disabled', false);
 	}
+
 });
+
+function refreshPage()
+{
+
+	if (window.performance) {
+	 	console.info("window.performance works fine on this browser");
+	}
+
+	if (performance.navigation.type == 1) {
+		// const Toast = Swal.mixin({
+		// 	toast: true,
+		// 	position: 'top-end',
+		// 	showConfirmButton: false,
+		// 	timer: 3000
+		// });
+		
+		// Toast.fire({
+		// 	title: "Good job", 
+		// 	text: "You clicked the button!", 
+		// 	type: "success"
+		// }).then(function(){ 
+		//    location.reload();
+		// });
+
+		// Toast.fire({
+		// 	type: 'error',
+		// 	title: 'Fill the required fields'
+		// });
+		// alert('Are you sure?')
+		// console.info("This page is reloaded" );
+	} else {
+		console.info( "This page is not reloaded");
+	}
+}
 
 function afterLoadValidation()
 {
@@ -637,8 +673,9 @@ function isApprove()
 			$('.tr2' + i).find('td input[class="check"]').attr('disabled', false);
 
 			if(fpserved <= 1) {
-				$('.tr1' + i + ' .criteria').find('.label-success').removeClass('none');
-				$('.tr1' + i + ' .criteria').find('.label-danger').addClass('none');
+				$('.tr1' + i + ' .criteria .labelDiv').html('<span class="label label-success">Served</span>');
+				// $('.tr1' + i + ' .criteria').find('.label-success').removeClass('none');
+				// $('.tr1' + i + ' .criteria').find('.label-danger').addClass('none');
 			}
 		}
 	}
@@ -736,14 +773,18 @@ function UnmetNeedCriteria(index, age, type, status)
 {
 	if (status != 'C') {
 		if (age >= 15 && age <= 49 && type >= 1 && type <= 5) {
-			$('.tr1' + index + ' .criteria').find('.label-danger').removeClass('none');
+			$('.tr1' + i + ' .criteria .labelDiv').html('<span class="label label-danger">Unmet Need</span>');
+			// $('.tr1' + index + ' .criteria').find('.label-danger').removeClass('none');
 		} else if (age >= 15 && age <= 49 && type == 6 && status == 'A') {
-			$('.tr1' + index + ' .criteria').find('.label-danger').removeClass('none');
+			$('.tr1' + i + ' .criteria .labelDiv').html('<span class="label label-danger">Unmet Need</span>');
+			// $('.tr1' + index + ' .criteria').find('.label-danger').removeClass('none');
 		} else {
-			$('.tr1' + index + ' .criteria').find('.label-danger').addClass('none');
+			$('.tr1' + i + ' .criteria .labelDiv').html('<span class="label label-danger none">Unmet Need</span>');
+			// $('.tr1' + index + ' .criteria').find('.label-danger').addClass('none');
 		}
 	} else {
-		$('.tr1' + index + ' .criteria').find('.label-danger').addClass('none');
+		$('.tr1' + i + ' .criteria .labelDiv').html('<span class="label label-danger none">Unmet Need</span>');
+		// $('.tr1' + index + ' .criteria').find('.label-danger').addClass('none');
 	}
 }
 
@@ -1409,7 +1450,7 @@ function checkRequired()
 						'signature' : 0
 	}
 
-	if ($('input[name=type_of_class]:checked').size() > 0) {
+	if ($('input[name=type_of_class]:checked').length > 0) {
 		validate['type_class'] = 0;
 		$('#rpfpClass table tr').find('td .checkmark').removeClass('required-field');
 
@@ -1459,7 +1500,7 @@ function checkRequired()
 		var trRequired2 = $('.tr2' + i).hasClass('required-tr');
 
 		if (trRequired1 == true && trRequired2 == true) {
-			if ($('input[name="attendee1['+ i +']"]:checked').size() > 0 || $('input[name="attendee2['+ i +']"]:checked').size() > 0) {
+			if ($('input[name="attendee1['+ i +']"]:checked').length > 0 || $('input[name="attendee2['+ i +']"]:checked').length > 0) {
 				$('input[name="attendee1['+ i +']"], input[name="attendee2['+ i +']"]').closest('tr').removeClass('required-tr');
 				$('input[name="attendee1['+ i +']"], input[name="attendee2['+ i +']"]').closest('tr').find('.back-eee').removeClass('required-field');
 			} else {
@@ -1469,7 +1510,7 @@ function checkRequired()
 			}
 		} else {
 			if (trRequired1 == true) {
-				if ($('input[name="attendee1['+ i +']"]:checked').size() > 0) {
+				if ($('input[name="attendee1['+ i +']"]:checked').length > 0) {
 					$('input[name="attendee1['+ i +']"]').closest('tr').removeClass('required-tr');
 					$('input[name="attendee1['+ i +']"]').closest('tr').find('.back-eee').removeClass('required-field');
 				} else {
@@ -1477,7 +1518,7 @@ function checkRequired()
 					$('input[name="attendee1['+ i +']"]').closest('tr').find('.back-eee').addClass('required-field');
 				}
 			} else if (trRequired2 == true) {
-				if ($('input[name="attendee2['+ i +']"]:checked').size() > 0) {
+				if ($('input[name="attendee2['+ i +']"]:checked').length > 0) {
 					$('input[name="attendee2['+ i +']"]').closest('tr').removeClass('required-tr');
 					$('input[name="attendee2['+ i +']"]').closest('tr').find('.back-eee').removeClass('required-field');
 				} else {
@@ -1488,12 +1529,14 @@ function checkRequired()
 		}
 	}
 
-	var countRequired = $('.required-tr').size();
+	var countRequired = $('.formTable .required-tr').length;
 	if (countRequired == 0) {
 		validate['signature'] = 0;
 	} else {
 		validate['signature'] = 1;
 	}
+
+	console.log(validate);
 
 	if (validate['type_class'] == 0 && validate['class_and_couple_details'] == 0 && validate['signature'] == 0) {
 		validate = 1

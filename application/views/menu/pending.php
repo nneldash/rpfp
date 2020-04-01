@@ -47,7 +47,11 @@ if (empty($title)) {
                 </tr>
             <?php } else { ?>
                 <tr>
-                    <td class="text-center" colspan="5">No result(s) found.</td>
+                    <td class="text-center" colspan="9">No result(s) found.</td>
+                    <td class="text-center none"></td>
+                    <td class="text-center none"></td>
+                    <td class="text-center none"></td>
+                    <td class="text-center none"></td>
                     <td class="text-center none"></td>
                     <td class="text-center none"></td>
                     <td class="text-center none"></td>
@@ -59,17 +63,8 @@ if (empty($title)) {
 </table>
 
 <script>
-    loadJs(base_url + 'NewAssets/templateJs', function() {
-        loadJs(base_url + 'assets/js/listCouples.js', function(){
-            listCoupleModal();
-        });
-        loadJs(base_url + 'NewAssets/datatableJs', function() {
-            loadJs(base_url + 'NewAssets/datatableBtJs', function() {
-                loadJs(base_url + 'NewAssets/datatableRpJs', function() {
-                    loadJs(base_url + 'NewAssets/datatableBtrpJs.js', function() {
-                    });
-                });
-            });
-        });
+    loadJs(base_url + 'assets/js/listCouples.js', function(){
+        listCoupleModal();
+        $('#datatable-responsive').DataTable();
     });
 </script>

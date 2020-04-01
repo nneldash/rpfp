@@ -41,6 +41,14 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 <?php } else { ?>
                     <tr>
                         <td class="text-center" colspan="9">No result(s) found.</td>
+                        <td class="text-center none"></td>
+                        <td class="text-center none"></td>
+                        <td class="text-center none"></td>
+                        <td class="text-center none"></td>
+                        <td class="text-center none"></td>
+                        <td class="text-center none"></td>
+                        <td class="text-center none"></td>
+                        <td class="text-center none"></td>
                     </tr>
                 <?php } ?>
             <?php endforeach; ?>

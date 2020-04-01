@@ -306,7 +306,7 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 
 			<div class="padding-t20" style="page-break-inside: avoid" id="paged_form">
 				<div class="table-responsive" style="overflow: hidden;">	
-					<table class="table table-bordered margin-b0">
+					<table class="table table-bordered margin-b0 formTable">
 						<thead>
 							<tr>
 								<?php if (!$is_pdf): ?>
@@ -482,11 +482,14 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 									<?php endif; ?>
 									<td class="text-center criteria" style="border-left: none" rowspan="2">
 										<p class="small"><?= $i + 1; ?></p>
-										<span class="label label-danger none">Unmet Need</span>
+										<div class="labelDiv">
+											
+										</div>
+										<!-- <span class="label label-danger none">Unmet Need</span>
 										<span class="label label-success none">Served</span>
 										<span class="label label-warning none">Undecided</span>
 										<span class="label label-age none">50+ and 8 below</span>
-										<span class="label label-intention none">Intention to Shift</span>
+										<span class="label label-intention none">Intention to Shift</span> -->
 										<input type="hidden" class="fp_served<?= $i; ?>" value="<?= $couple->FpServed; ?>" />
 									</td>
 									
@@ -1089,7 +1092,7 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 								</td>
 								<td style="padding-left: 5px; border-right: none">
 									<p class="small">
-										A - Espressing Intention to Use Modern FP <br> 
+										A - Expressing Intention to Use Modern FP <br> 
 											Method (indicate CODE for Modern FP Methods <br> 
 											use col. 8) <br>
 										B - Undecided <br>
@@ -1156,16 +1159,12 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 
 <?php if(!$is_pdf) : ?>
 	<script>
-		loadJs(base_url + 'NewAssets/templateJs',
-			function() {
-				loadJs(base_url + 'NewAssets/inputMaskJs', function() {
-					loadJs(base_url + 'assets/js/form.js');
-				});
-				loadJs(base_url + 'NewAssets/jqueryMaskJs');
-				loadJs(base_url + 'NewAssets/inputExtJs');
-				loadJs(base_url + 'NewAssets/bootstrapSelectJs');
-				loadJs(base_url + 'NewAssets/jQueryUi');
-			}
-		);
+		loadJs(base_url + 'NewAssets/inputMaskJs', function() {
+			loadJs(base_url + 'assets/js/form.js');
+		});
+		loadJs(base_url + 'NewAssets/jqueryMaskJs');
+		loadJs(base_url + 'NewAssets/inputExtJs');
+		loadJs(base_url + 'NewAssets/bootstrapSelectJs');
+		loadJs(base_url + 'NewAssets/jQueryUi');
 	</script>
 <?php endif; ?>
