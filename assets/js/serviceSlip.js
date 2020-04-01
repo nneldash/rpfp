@@ -145,6 +145,7 @@ function saveServiceSlip()
 	var fp_id = $('input[name="slip_id"]').val();
 
 	$('.saveServiceSlip').click(function(event) {
+		var index = $('.form_index').val();		
 		event.preventDefault();
 		const Toast = Swal.mixin({
 			toast: true,
@@ -168,6 +169,7 @@ function saveServiceSlip()
 				url: base_url + '/forms/saveServiceSlip'
 			}).done(function(result){
 				if(result.is_save == 'added') {
+					$('.tr1'+ index + ' .criteria .labelDiv').html('<span class="label label-success">Served</span>');
 					Toast.fire({
 						type: 'success',
 						title: 'Service Slip successfully saved!'

@@ -213,7 +213,12 @@ function afterLoadValidation()
 	    	$('input[name="intention-use[' + i +']"').removeAttr('required', 'required');
 	    	$('input[name="intention-use[' + i +']"').find('.intention-required').attr('hidden', 'hidden');
 	    	$('input[name="intention_use['+i+']"').attr('disabled', 'disabled');
-	    }
+		}
+		
+		var isSlipSave = $('.fp_served' + i).val();
+		if (isSlipSave == 1) {
+			$('.tr1' + i + ' .criteria .labelDiv').html('<span class="label label-success">Served</span>');
+		}
 	}
 }
 
@@ -771,20 +776,33 @@ function criteria(index1, index2, gender1, gender2, age1, age2, type, status)
 
 function UnmetNeedCriteria(index, age, type, status)
 {
+	var isSlipSave = $('.fp_served' + index).val();
 	if (status != 'C') {
 		if (age >= 15 && age <= 49 && type >= 1 && type <= 5) {
-			$('.tr1' + i + ' .criteria .labelDiv').html('<span class="label label-danger">Unmet Need</span>');
-			// $('.tr1' + index + ' .criteria').find('.label-danger').removeClass('none');
+			if (isSlipSave != 1) {
+				$('.tr1' + index + ' .criteria .labelDiv').html('<span class="label label-danger">Unmet Need</span>');
+			} else {
+				$('.tr1' + index + ' .criteria .labelDiv').html('<span class="label label-success">Served</span>');
+			}			
 		} else if (age >= 15 && age <= 49 && type == 6 && status == 'A') {
-			$('.tr1' + i + ' .criteria .labelDiv').html('<span class="label label-danger">Unmet Need</span>');
-			// $('.tr1' + index + ' .criteria').find('.label-danger').removeClass('none');
+			if (isSlipSave != 1) {
+				$('.tr1' + index + ' .criteria .labelDiv').html('<span class="label label-danger">Unmet Need</span>');
+			} else {
+				$('.tr1' + index + ' .criteria .labelDiv').html('<span class="label label-success">Served</span>');
+			}
 		} else {
-			$('.tr1' + i + ' .criteria .labelDiv').html('<span class="label label-danger none">Unmet Need</span>');
-			// $('.tr1' + index + ' .criteria').find('.label-danger').addClass('none');
+			if (isSlipSave != 1) {
+				$('.tr1' + index + ' .criteria .labelDiv').html('<span class="label label-danger none">Unmet Need</span>');
+			} else {
+				$('.tr1' + index + ' .criteria .labelDiv').html('<span class="label label-success">Served</span>');
+			}			
 		}
 	} else {
-		$('.tr1' + i + ' .criteria .labelDiv').html('<span class="label label-danger none">Unmet Need</span>');
-		// $('.tr1' + index + ' .criteria').find('.label-danger').addClass('none');
+		if (isSlipSave != 1) {
+			$('.tr1' + index + ' .criteria .labelDiv').html('<span class="label label-danger none">Unmet Need</span>');
+		} else {
+			$('.tr1' + index + ' .criteria .labelDiv').html('<span class="label label-success">Served</span>');
+		}
 	}
 }
 
@@ -1390,7 +1408,7 @@ function serviceModal()
 		var city = $(this).closest('tr').find('input[name="city['+index+']"]').val();
 		var address =  house_no_st + ' ' + brgy + ' ' + city;
 
-		$.post(base_url + '/forms/serviceSlip', {'couple_id' : coupleId, 'couple_name' : coupleName, 'address' : address})
+		$.post(base_url + '/forms/serviceSlip', {'index' : index, 'couple_id' : coupleId, 'couple_name' : coupleName, 'address' : address})
 		.done(function(html){
 			$('#menuModal .modal-body').html(html);
 		});

@@ -351,6 +351,7 @@ class Forms extends CI_Controller
 
     public function serviceSlip()
     {
+        $index = $this->input->post('index') != 'N/A' ? $this->input->post('index') : '';
         $couple_id = $this->input->post('couple_id') != 'N/A' ? $this->input->post('couple_id') : 0;
         $couple_name = $this->input->post('couple_name') != 'N/A' ? $this->input->post('couple_name') : '';
         $address = $this->input->post('address') != 'N/A' ? $this->input->post('address') : '';
@@ -362,6 +363,7 @@ class Forms extends CI_Controller
         $header['title'] = 'Online RPFP Monitoring System | Service Slip';
         $this->load->view('forms/serviceSlip',
             array(
+                'index' => $index,
                 'slip' => $serviceSlip,
                 'couple_id' => $couple_id,
                 'couple_name' => $couple_name,

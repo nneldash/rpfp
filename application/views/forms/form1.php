@@ -481,15 +481,11 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 										<?php endif; ?>
 									<?php endif; ?>
 									<td class="text-center criteria" style="border-left: none" rowspan="2">
+										<input type="text" class="isSlipSave"  hidden />
 										<p class="small"><?= $i + 1; ?></p>
 										<div class="labelDiv">
 											
 										</div>
-										<!-- <span class="label label-danger none">Unmet Need</span>
-										<span class="label label-success none">Served</span>
-										<span class="label label-warning none">Undecided</span>
-										<span class="label label-age none">50+ and 8 below</span>
-										<span class="label label-intention none">Intention to Shift</span> -->
 										<input type="hidden" class="fp_served<?= $i; ?>" value="<?= $couple->FpServed; ?>" />
 									</td>
 									

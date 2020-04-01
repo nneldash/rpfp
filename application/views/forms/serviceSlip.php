@@ -15,6 +15,7 @@ $slip = ServiceSlipClass::getServiceSlipFromVariable($slip);
 		<div class="row border-2">
 			<div class="col-md-12">
 				<div class="col-md-6 padding-r3p text-left">
+					<input type="hidden" class="form_index" value="<?= $index; ?>">
 					<input type="hidden" name="couple_id" value="<?= $couple_id; ?>">
 					<p class="small"><b>SERVICE SLIP</b></p>
 					<input type="hidden" name="slip_id" value="<?= $slip->Id != 'N/A' ? $slip->Id : ''?>">
