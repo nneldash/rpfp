@@ -174,7 +174,10 @@ $accomp_no = $this->input->get('ReportNo');
         				</tr>
         			</tfoot>
         		</table>
-        	</div>
+			</div>
+			<div class="text-right">
+				<p><?= date('M d, Y h:sa')?></p>
+			</div>
         </div>
     </div>
 </div>

@@ -490,6 +490,9 @@ $formc_list = ReportFormC::getFromVariable($form_C);
 						<td style="border: none"></td>
 					</tr>
 				</table>
+				<div class="text-right">
+					<p><?= date('M d, Y h:sa')?></p>
+				</div>
 			</div>
 	    </form>
 	</div>
