@@ -7789,8 +7789,7 @@ BEGIN
                      ON apc.RPFP_CLASS_ID = rc.RPFP_CLASS_ID
               LEFT JOIN rpfp.fp_service fs 
                      ON fs.COUPLES_ID = apc.COUPLES_ID
-                  WHERE rc.DATE_CONDUCTED < date_from 
-                    AND rc.DATE_CONDUCTED > date_to
+                  WHERE rc.DATE_CONDUCTED < date_from
                     AND apc.IS_ACTIVE = 0
                     AND fs.IS_PROVIDED_SERVICE = 1
                     AND fs.DATE_SERVED >= date_from 
