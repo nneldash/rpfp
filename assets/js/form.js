@@ -73,28 +73,12 @@ $(document).ready(function(){
 var isRDM = $('#rdm').val();
 var isFocal = $('#focal').val();
 
-$(function() {
-  	serviceModal();
-  	importModal();
-	inputValid();
+$(function() {	
 	saveForm1();
 	checkBox();
-	getDataDuplicate();
 	getProvinces();
 	isApprove();
-	sexValidation();
-	civilStatusValidation();
-	educationValidation();
-	noChildrenValidation();
-	methodValidation();
-	typeValidation();
-	statusValidation();
-	reasonValidation();
-	typeUnmet();
-	statusUnmet();
 	importChanges();
-	afterLoadValidation();
-	// refreshPage();
 
 	Inputmask().mask(".birthAge");
 
@@ -110,6 +94,8 @@ $(function() {
     });
 
 	if(isRDM == 1 || isFocal == 1){
+		saveApprove();
+
 		$('td input').attr('disabled', true);
 		$('td input').css('cursor', 'not-allowed');
 		$('td textarea').attr('disabled', true);
@@ -117,6 +103,22 @@ $(function() {
 		$('td select').attr('disabled', true);
 		$('td select').css('cursor', 'not-allowed');
 		$('td input[class="check"]').attr('disabled', false);
+	} else {
+		getDataDuplicate();
+		afterLoadValidation();
+		sexValidation();
+		civilStatusValidation();
+		educationValidation();
+		noChildrenValidation();
+		methodValidation();
+		typeValidation();
+		statusValidation();
+		reasonValidation();
+		serviceModal();
+		importModal();
+		inputValid();
+		typeUnmet();
+		statusUnmet();
 	}
 
 });
@@ -1558,8 +1560,6 @@ function checkRequired()
 		validate['signature'] = 1;
 	}
 
-	console.log(validate);
-
 	if (validate['type_class'] == 0 && validate['class_and_couple_details'] == 0 && validate['signature'] == 0) {
 		validate = 1
 		return validate;
@@ -1569,7 +1569,6 @@ function checkRequired()
 }
 
 function saveForm1()
-
 {
 	$('.saveForm1').click(function(event) {
 		event.preventDefault();
@@ -1605,7 +1604,6 @@ function saveForm1()
 			
 			formData[item.prop('name')] = item_value;
 		});
-		// console.log(formData);return false;
 		var validate = checkRequired();
 		if (validate != 1) {
 			Toast.fire({
