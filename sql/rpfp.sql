@@ -7576,6 +7576,7 @@ BEGIN
     DECLARE random_no VARCHAR(400);
     DECLARE out_message_1 VARCHAR(100);
     DECLARE out_message_2 VARCHAR(100);
+    DECLARE out_message_3 VARCHAR(100);
 
     SET random_no = CONCAT("RPFP-",YEAR(date_from),MONTH(date_to),"-",CEILING(RAND()*10000000000));
 
@@ -7589,7 +7590,8 @@ BEGIN
 
     CALL process_check_duplication( username, date_from, date_to, psgc_code, random_no, out_message_1 );
     CALL process_couples_encoded( username, date_from, date_to, psgc_code, random_no, out_message_2 );
-    SELECT out_message_2 AS MESSAGE;
+    CALL process_couples_served( username, date_from, date_to, psgc_code, random_no, out_message_3 );
+    SELECT out_message_3 AS MESSAGE;
 END$$
 
 CREATE DEFINER=root@localhost PROCEDURE process_couples_encoded (
@@ -7685,8 +7687,179 @@ BEGIN
              ON fs.COUPLES_ID = apc.COUPLES_ID
           WHERE apc.IS_ACTIVE = 0
             AND fs.IS_PROVIDED_SERVICE = 1
+            AND fs.DATE_SERVED >= date_from 
+            AND fs.DATE_SERVED <= date_to
+            AND rc.CLASS_NUMBER = class_no
+            AND (
+                    QUOTE(lp.REGION_CODE) = QUOTE(psgc_code)
+                 OR (IFNULL( psgc_code, 0 ) = 0)
+                )
+        ;
+
+         SELECT COUNT(apc.COUPLES_ID)
+           INTO pending_couples
+           FROM rpfp.couples apc 
+      LEFT JOIN rpfp.rpfp_class rc
+             ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
+      LEFT JOIN rpfp.lib_psgc_locations lp
+             ON lp.PSGC_CODE = rc.BARANGAY_ID
+          WHERE apc.IS_ACTIVE = 2
             AND rc.DATE_CONDUCTED >= date_from 
             AND rc.DATE_CONDUCTED <= date_to
+            AND rc.CLASS_NUMBER = class_no
+            AND (
+                    QUOTE(lp.REGION_CODE) = QUOTE(psgc_code)
+                 OR (IFNULL( psgc_code, 0 ) = 0)
+                )
+        ;
+
+         SELECT COUNT(rad.REPORT_ID)
+           INTO duplicates
+           FROM rpfp.report_duplicate_encoded rad
+          WHERE rad.RPFP_CLASS_NO = class_no
+            AND rad.ACCOM_ID = random_id
+        ;
+
+        INSERT INTO rpfp.report_couples_encoded (
+                    ACCOM_ID,
+                    DATE_FROM,
+                    DATE_TO,
+                    PSGC_CODE,
+                    RPFP_CLASS_NO,
+                    ENCODED_COUPLES,
+                    APPROVED_COUPLES,
+                    PENDING_COUPLES,
+                    SERVED_COUPLES,
+                    DUPLICATES,
+                    INVALIDS,
+                    DB_USER_ID,
+                    DATE_PROCESSED
+        ) VALUES (
+                    random_id,
+                    date_from,
+                    date_to,
+                    psgc_code,
+                    class_no,
+                    encoded_couples,
+                    approved_couples,
+                    pending_couples,
+                    served_couples,
+                    duplicates,
+                    invalids,
+                    username,
+                    CURRENT_DATE()
+        );
+            
+    END LOOP get_cur_class_list;
+    CLOSE cur_class_list;
+
+    SELECT CONCAT( "NEW ENTRY: ", LAST_INSERT_ID() ) INTO output_message;
+    
+END$$
+
+CREATE DEFINER=root@localhost PROCEDURE process_couples_served (
+    IN username VARCHAR(50),
+    IN date_from DATE,
+    IN date_to DATE,
+    IN psgc_code INT,
+    IN random_id VARCHAR(400),
+   OUT output_message VARCHAR(100)
+    )  MODIFIES SQL DATA
+proc_exit_point :
+BEGIN
+    DECLARE encoded_fin INTEGER DEFAULT 0;
+    DECLARE class_no VARCHAR(100) DEFAULT "";
+    DECLARE encoded_couples INT;
+    DECLARE approved_couples INT;
+    DECLARE pending_couples INT;
+    DECLARE served_couples INT;
+    DECLARE duplicates INT;
+    DECLARE invalids INT;
+    DECLARE firstname VARCHAR(50);
+    DECLARE lastname VARCHAR(50);
+    DECLARE extname VARCHAR(50);
+    DECLARE birthdate DATE;
+
+    DECLARE cur_class_list CURSOR FOR 
+        SELECT DISTINCT rc.CLASS_NUMBER
+                   FROM rpfp.rpfp_class rc 
+              LEFT JOIN rpfp.lib_psgc_locations lp
+                     ON lp.PSGC_CODE = rc.BARANGAY_ID
+              LEFT JOIN rpfp.couples apc 
+                     ON apc.RPFP_CLASS_ID = rc.RPFP_CLASS_ID
+              LEFT JOIN rpfp.fp_service fs 
+                     ON fs.COUPLES_ID = apc.COUPLES_ID
+                  WHERE rc.DATE_CONDUCTED < date_from 
+                    AND rc.DATE_CONDUCTED > date_to
+                    AND apc.IS_ACTIVE = 0
+                    AND fs.IS_PROVIDED_SERVICE = 1
+                    AND fs.DATE_SERVED >= date_from 
+                    AND fs.DATE_SERVED <= date_to
+                    AND (
+                            QUOTE(lp.REGION_CODE) = QUOTE(psgc_code)
+                         OR (IFNULL( psgc_code, 0 ) = 0)
+                        )
+    ;
+
+    DECLARE CONTINUE HANDLER FOR NOT FOUND
+        BEGIN
+            SET encoded_fin = 1;
+        END;
+
+    OPEN cur_class_list;
+
+    get_cur_class_list: LOOP
+        FETCH cur_class_list INTO class_no;
+        IF encoded_fin = 1 THEN
+            LEAVE get_cur_class_list;
+        END IF;
+    
+         SELECT COUNT(apc.COUPLES_ID)
+           INTO encoded_couples
+           FROM rpfp.couples apc 
+      LEFT JOIN rpfp.rpfp_class rc
+             ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
+      LEFT JOIN rpfp.lib_psgc_locations lp
+             ON lp.PSGC_CODE = rc.BARANGAY_ID
+          WHERE rc.DATE_CONDUCTED >= date_from 
+            AND rc.DATE_CONDUCTED <= date_to
+            AND rc.CLASS_NUMBER = class_no
+            AND (
+                    QUOTE(lp.REGION_CODE) = QUOTE(psgc_code)
+                 OR (IFNULL( psgc_code, 0 ) = 0)
+                )
+        ;
+
+         SELECT COUNT(apc.COUPLES_ID)
+           INTO approved_couples
+           FROM rpfp.couples apc 
+      LEFT JOIN rpfp.rpfp_class rc
+             ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
+      LEFT JOIN rpfp.lib_psgc_locations lp
+             ON lp.PSGC_CODE = rc.BARANGAY_ID
+          WHERE apc.IS_ACTIVE = 0
+            AND rc.DATE_CONDUCTED >= date_from 
+            AND rc.DATE_CONDUCTED <= date_to
+            AND rc.CLASS_NUMBER = class_no
+            AND (
+                    QUOTE(lp.REGION_CODE) = QUOTE(psgc_code)
+                 OR (IFNULL( psgc_code, 0 ) = 0)
+                )
+        ;
+
+         SELECT COUNT(apc.COUPLES_ID)
+           INTO served_couples
+           FROM rpfp.couples apc 
+      LEFT JOIN rpfp.rpfp_class rc
+             ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
+      LEFT JOIN rpfp.lib_psgc_locations lp
+             ON lp.PSGC_CODE = rc.BARANGAY_ID
+      LEFT JOIN rpfp.fp_service fs 
+             ON fs.COUPLES_ID = apc.COUPLES_ID
+          WHERE apc.IS_ACTIVE = 0
+            AND fs.IS_PROVIDED_SERVICE = 1
+            AND fs.DATE_SERVED >= date_from 
+            AND fs.DATE_SERVED <= date_to
             AND rc.CLASS_NUMBER = class_no
             AND (
                     QUOTE(lp.REGION_CODE) = QUOTE(psgc_code)
@@ -7856,7 +8029,9 @@ END$$
 
 
 CREATE DEFINER=root@localhost PROCEDURE process_demandgen (
+    IN report_type INT,
     IN report_year INT,
+    IN report_quarter INT,
     IN report_month INT,
     IN psgc_code INT
     )  MODIFIES SQL DATA
@@ -7887,7 +8062,18 @@ DECLARE couple_attendee INT;
 DECLARE reached_total INT;
 DECLARE report_scope VARCHAR(100);
     
-DECLARE random_no VARCHAR(400) DEFAULT 0 ;
+DECLARE random_no VARCHAR(100) DEFAULT 0 ;
+
+IF report_type = 1 THEN
+    LEAVE proc_exit_point;
+END IF;
+
+IF report_type = 2 THEN
+    LEAVE proc_exit_point;
+END IF;
+
+IF report_type = 3 THEN
+    SET random_no = CONCAT("RDM-", psgc_code, "-", report_month);
 
       SELECT COUNT(DISTINCT rc.CLASS_NUMBER) 
         INTO class_4ps 
@@ -8336,6 +8522,7 @@ DECLARE random_no VARCHAR(400) DEFAULT 0 ;
         ;
 
         SELECT CONCAT( "NEW ENTRY: ", LAST_INSERT_ID() ) AS MESSAGE;
+END IF;
 END$$
 
 CREATE DEFINER=root@localhost PROCEDURE process_unmet_need (
@@ -9259,6 +9446,7 @@ BEGIN
 END$$
 
 CREATE DEFINER=root@localhost PROCEDURE get_report_demandgen_details(
+    IN report_no VARCHAR(100),
     IN report_month INT,
     IN report_year INT
     )   READS SQL DATA
@@ -9270,17 +9458,18 @@ BEGIN
     SET role_of_user := rpfp.profile_get_own_role();
 
     IF role_of_user = 90 THEN
-        CALL pmed_get_report_demandgen_details(report_month, report_year);
+        CALL pmed_get_report_demandgen_details(report_no, report_month, report_year);
         LEAVE proc_exit_point;
     END IF;
 
     IF role_of_user = 80 THEN
-        CALL rdm_get_report_demandgen_details(report_month, report_year);
+        CALL rdm_get_report_demandgen_details(report_no, report_month, report_year);
         LEAVE proc_exit_point;
     END IF;
 END$$
 
 CREATE DEFINER=root@localhost PROCEDURE pmed_get_report_demandgen_details(
+    IN report_no VARCHAR(100),
     IN report_month INT,
     IN report_year INT
     )   READS SQL DATA
@@ -9296,6 +9485,7 @@ BEGIN
     ) THEN
         BEGIN
              SELECT NULL AS report_year,
+                    NULL AS report_no,
                     NULL AS psgc_code,
                     NULL AS report_month,
                     NULL AS class_4ps,
@@ -9323,6 +9513,7 @@ BEGIN
     ELSE
         BEGIN
              SELECT DISTINCT
+                    rd.DEMANDGEN_ID AS report_no,
                     rd.REPORT_YEAR AS report_year,
                     rd.PSGC_CODE AS psgc_code,
                     rd.REPORT_MONTH AS report_month,
@@ -9349,6 +9540,8 @@ BEGIN
                FROM rpfp.report_demandgen rd
               WHERE rd.REPORT_YEAR = report_year
                 AND rd.REPORT_MONTH <= report_month
+                AND rd.DEMANDGEN_ID = report_no
+           GROUP BY rd.DEMANDGEN_ID
            ORDER BY rd.REPORT_MONTH ASC
             ;
         END;
@@ -11012,6 +11205,7 @@ GRANT EXECUTE ON PROCEDURE rpfp.process_served_method_mix TO 'regional_data_mana
 GRANT EXECUTE ON PROCEDURE rpfp.get_forms_list to 'regional_data_manager';
 GRANT EXECUTE ON PROCEDURE rpfp.get_class_details to 'regional_data_manager';
 GRANT EXECUTE ON PROCEDURE rpfp.encoder_get_couples_with_fp_details to 'regional_data_manager';
+GRANT EXECUTE ON PROCEDURE rpfp.search_data TO 'regional_data_manager';
 
 GRANT EXECUTE ON PROCEDURE rpfp.encoder_get_class_list_pending TO 'focal_person';
 GRANT EXECUTE ON PROCEDURE rpfp.encoder_get_class_list_approved to 'focal_person';
