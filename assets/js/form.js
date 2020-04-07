@@ -70,6 +70,10 @@ $(document).ready(function(){
 	});
 });
 
+window.onbeforeunload = function(){
+	return 'Are you sure you want to leave?';
+};
+
 var isRDM = $('#rdm').val();
 var isFocal = $('#focal').val();
 
@@ -94,8 +98,6 @@ $(function() {
     });
 
 	if(isRDM == 1 || isFocal == 1){
-		saveApprove();
-
 		$('td input').attr('disabled', true);
 		$('td input').css('cursor', 'not-allowed');
 		$('td textarea').attr('disabled', true);
@@ -120,42 +122,7 @@ $(function() {
 		typeUnmet();
 		statusUnmet();
 	}
-
 });
-
-function refreshPage()
-{
-
-	if (window.performance) {
-	 	console.info("window.performance works fine on this browser");
-	}
-
-	if (performance.navigation.type == 1) {
-		// const Toast = Swal.mixin({
-		// 	toast: true,
-		// 	position: 'top-end',
-		// 	showConfirmButton: false,
-		// 	timer: 3000
-		// });
-		
-		// Toast.fire({
-		// 	title: "Good job", 
-		// 	text: "You clicked the button!", 
-		// 	type: "success"
-		// }).then(function(){ 
-		//    location.reload();
-		// });
-
-		// Toast.fire({
-		// 	type: 'error',
-		// 	title: 'Fill the required fields'
-		// });
-		// alert('Are you sure?')
-		// console.info("This page is reloaded" );
-	} else {
-		console.info( "This page is not reloaded");
-	}
-}
 
 function afterLoadValidation()
 {
