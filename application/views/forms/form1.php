@@ -470,7 +470,10 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 							?>
 								<tr class="approveCheck tr1<?= $i?> <?= $couple->Id != 'N/A' ? $couple->IsActive != 'N/A' ? ' ' : 'isApprove' : '' ?>">
 									<?php if (!$is_pdf): ?>
-										<?php if($isRegionalDataManager): ?>
+										<?php 
+											$status = $this->input->get('status');
+											if($isRegionalDataManager && $status == 2): 
+										?>
 											<td rowspan="2" class="back-eee padding-0">
 												<label class="cont">
 													<input class="check" type="checkbox" <?= $couple->Id != 'N/A' ? $couple->IsActive != 'N/A' ? ' ' : 'checked' : '' ?> 

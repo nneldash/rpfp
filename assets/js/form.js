@@ -1397,9 +1397,10 @@ function importModal()
 function checkBox()
 {
 	$('#checkAll').click(function() {
+		var count = $('tr:last-child').find('.loopIndex2').val();
         var checked = $(this).prop('checked');	
 		
-		for (var i = 0; i <= 9; i++) {
+		for (var i = 0; i <= count; i++) {
 			var val = $('.tr1' + i + ' td .dupHighlight').val();
 			if (val > 0) {
 				$('.tr1' + i).find('.check').prop('checked', checked);
