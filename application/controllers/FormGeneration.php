@@ -29,7 +29,9 @@ class FormGeneration extends CI_Controller
         $profile = $this->ProfileModel->getOwnProfile();
         $psgc_code = $profile->DesignatedLocation->Region->Code;
 
+        $genData->ReportType = $this->input->post('repTypeSelect');
         $genData->ReportYear = $this->input->post('repYearSelect');
+        $genData->ReportQuarter = $this->input->post('repQuarterSelect');
         $genData->ReportMonth = $this->input->post('repMonthSelect');
 
         if (!$this->FormAModel->saveFormA($psgc_code, $genData)) {

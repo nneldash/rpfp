@@ -8060,19 +8060,45 @@ DECLARE solo_female INT;
 DECLARE couple_attendee INT;
 DECLARE reached_total INT;
 DECLARE report_scope VARCHAR(100);
+DECLARE report_range INT;
+DECLARE count_month INT;
+DECLARE report_code VARCHAR(50);
     
 DECLARE random_no VARCHAR(100) DEFAULT 0 ;
 
 IF report_type = 1 THEN
-    LEAVE proc_exit_point;
+    SET report_scope = 'ANNUAL';
+    SET report_range = report_year;
+    SET report_month = 12;
+    SET count_month = 1;
+    SET report_code = 'Annual';
 END IF;
 
 IF report_type = 2 THEN
-    LEAVE proc_exit_point;
+    SET report_scope = 'QUARTER';
+    SET report_range = report_quarter;
+    SET report_month = report_quarter * 3;
+    SET count_month = report_quarter * 3 - 2;
+    SET report_code = CONCAT('Quarter ', report_quarter);
 END IF;
 
 IF report_type = 3 THEN
-    SET random_no = CONCAT("RDM-", psgc_code, "-", report_month);
+    SET report_scope = 'MONTHLY';
+    SET report_range = report_month;
+    SET count_month = report_month;
+    SET report_code = MONTHNAME(CONCAT(report_year,'-',report_month,'-1'));
+END IF;
+
+IF psgc_code = 0 THEN
+    SET random_no = CONCAT("PMED-", report_scope, "-", psgc_code, "-", report_range);
+ELSE
+    SET random_no = CONCAT("RDM-", report_scope, "-", psgc_code, "-", report_range);
+END IF;
+
+loop_label: LOOP
+    IF count_month > report_month THEN
+        LEAVE loop_label;
+    END IF;
 
       SELECT COUNT(DISTINCT rc.CLASS_NUMBER) 
         INTO class_4ps 
@@ -8080,7 +8106,7 @@ IF report_type = 3 THEN
    LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
        WHERE rc.TYPE_CLASS_ID = 1 
          AND YEAR(rc.DATE_CONDUCTED) = report_year 
-         AND MONTH(rc.DATE_CONDUCTED) = report_month
+         AND MONTH(rc.DATE_CONDUCTED) = count_month
          AND (
                 QUOTE(lp.REGION_CODE) = QUOTE(psgc_code)
              OR (IFNULL( psgc_code, 0 ) = 0)
@@ -8093,7 +8119,7 @@ IF report_type = 3 THEN
    LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
        WHERE rc.TYPE_CLASS_ID = 2 
          AND YEAR(rc.DATE_CONDUCTED) = report_year 
-         AND MONTH(rc.DATE_CONDUCTED) = report_month 
+         AND MONTH(rc.DATE_CONDUCTED) = count_month 
          AND (
                 QUOTE(lp.REGION_CODE) = QUOTE(psgc_code)
              OR (IFNULL( psgc_code, 0 ) = 0)
@@ -8106,7 +8132,7 @@ IF report_type = 3 THEN
    LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
        WHERE rc.TYPE_CLASS_ID = 7 
          AND YEAR(rc.DATE_CONDUCTED) = report_year 
-         AND MONTH(rc.DATE_CONDUCTED) = report_month 
+         AND MONTH(rc.DATE_CONDUCTED) = count_month 
          AND (
                 QUOTE(lp.REGION_CODE) = QUOTE(psgc_code)
              OR (IFNULL( psgc_code, 0 ) = 0)
@@ -8121,7 +8147,7 @@ IF report_type = 3 THEN
    LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
        WHERE rc.TYPE_CLASS_ID = 4 
          AND YEAR(rc.DATE_CONDUCTED) = report_year 
-         AND MONTH(rc.DATE_CONDUCTED) = report_month 
+         AND MONTH(rc.DATE_CONDUCTED) = count_month 
          AND (
                 QUOTE(lp.REGION_CODE) = QUOTE(psgc_code)
              OR (IFNULL( psgc_code, 0 ) = 0)
@@ -8134,7 +8160,7 @@ IF report_type = 3 THEN
    LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
        WHERE rc.TYPE_CLASS_ID = 3 
          AND YEAR(rc.DATE_CONDUCTED) = report_year 
-         AND MONTH(rc.DATE_CONDUCTED) = report_month 
+         AND MONTH(rc.DATE_CONDUCTED) = count_month 
          AND (
                 QUOTE(lp.REGION_CODE) = QUOTE(psgc_code)
              OR (IFNULL( psgc_code, 0 ) = 0)
@@ -8147,7 +8173,7 @@ IF report_type = 3 THEN
    LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
        WHERE rc.TYPE_CLASS_ID = 5 
          AND YEAR(rc.DATE_CONDUCTED) = report_year 
-         AND MONTH(rc.DATE_CONDUCTED) = report_month 
+         AND MONTH(rc.DATE_CONDUCTED) = count_month 
          AND (
                 QUOTE(lp.REGION_CODE) = QUOTE(psgc_code)
              OR (IFNULL( psgc_code, 0 ) = 0)
@@ -8160,7 +8186,7 @@ IF report_type = 3 THEN
    LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
        WHERE rc.TYPE_CLASS_ID = 6 
          AND YEAR(rc.DATE_CONDUCTED) = report_year 
-         AND MONTH(rc.DATE_CONDUCTED) = report_month 
+         AND MONTH(rc.DATE_CONDUCTED) = count_month 
          AND (
                 QUOTE(lp.REGION_CODE) = QUOTE(psgc_code)
              OR (IFNULL( psgc_code, 0 ) = 0)
@@ -8172,7 +8198,7 @@ IF report_type = 3 THEN
         FROM rpfp.rpfp_class rc 
    LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
        WHERE YEAR(rc.DATE_CONDUCTED) = report_year 
-         AND MONTH(rc.DATE_CONDUCTED) = report_month 
+         AND MONTH(rc.DATE_CONDUCTED) = count_month 
          AND (
                 QUOTE(lp.REGION_CODE) = QUOTE(psgc_code)
              OR (IFNULL( psgc_code, 0 ) = 0)
@@ -8183,7 +8209,7 @@ IF report_type = 3 THEN
 	    INTO target_couples
         FROM target_couples tc
        WHERE tc.TARGET_YEAR = report_year 
-         AND tc.TARGET_MONTH = report_month
+         AND tc.TARGET_MONTH = count_month
          AND (
                 QUOTE(tc.PSGC_CODE) = QUOTE(psgc_code)
              OR (IFNULL( psgc_code, 0 ) = 0)
@@ -8198,7 +8224,7 @@ IF report_type = 3 THEN
    LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
        WHERE apc.IS_ACTIVE = 0
          AND YEAR(rc.DATE_CONDUCTED) = report_year 
-         AND MONTH(rc.DATE_CONDUCTED) = report_month 
+         AND MONTH(rc.DATE_CONDUCTED) = count_month 
          AND rc.TYPE_CLASS_ID = 1
          AND (
                 QUOTE(lp.REGION_CODE) = QUOTE(psgc_code)
@@ -8214,7 +8240,7 @@ IF report_type = 3 THEN
    LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
        WHERE apc.IS_ACTIVE = 0
          AND YEAR(rc.DATE_CONDUCTED) = report_year 
-         AND MONTH(rc.DATE_CONDUCTED) = report_month 
+         AND MONTH(rc.DATE_CONDUCTED) = count_month 
          AND (
                 rc.TYPE_CLASS_ID = 2
              OR rc.TYPE_CLASS_ID = 7
@@ -8233,7 +8259,7 @@ IF report_type = 3 THEN
    LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
        WHERE apc.IS_ACTIVE = 0
          AND YEAR(rc.DATE_CONDUCTED) = report_year 
-         AND MONTH(rc.DATE_CONDUCTED) = report_month 
+         AND MONTH(rc.DATE_CONDUCTED) = count_month 
          AND rc.TYPE_CLASS_ID = 4
          AND (
                 QUOTE(lp.REGION_CODE) = QUOTE(psgc_code)
@@ -8249,7 +8275,7 @@ IF report_type = 3 THEN
    LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
        WHERE apc.IS_ACTIVE = 0
          AND YEAR(rc.DATE_CONDUCTED) = report_year 
-         AND MONTH(rc.DATE_CONDUCTED) = report_month 
+         AND MONTH(rc.DATE_CONDUCTED) = count_month 
          AND rc.TYPE_CLASS_ID = 3
          AND (
                 QUOTE(lp.REGION_CODE) = QUOTE(psgc_code)
@@ -8265,7 +8291,7 @@ IF report_type = 3 THEN
    LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
        WHERE apc.IS_ACTIVE = 0
          AND YEAR(rc.DATE_CONDUCTED) = report_year 
-         AND MONTH(rc.DATE_CONDUCTED) = report_month 
+         AND MONTH(rc.DATE_CONDUCTED) = count_month 
          AND rc.TYPE_CLASS_ID = 5
          AND (
                 QUOTE(lp.REGION_CODE) = QUOTE(psgc_code)
@@ -8281,7 +8307,7 @@ IF report_type = 3 THEN
    LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
        WHERE apc.IS_ACTIVE = 0
          AND YEAR(rc.DATE_CONDUCTED) = report_year 
-         AND MONTH(rc.DATE_CONDUCTED) = report_month 
+         AND MONTH(rc.DATE_CONDUCTED) = count_month 
          AND rc.TYPE_CLASS_ID = 6
          AND (
                 QUOTE(lp.REGION_CODE) = QUOTE(psgc_code)
@@ -8297,7 +8323,7 @@ IF report_type = 3 THEN
    LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
        WHERE apc.IS_ACTIVE = 0
          AND YEAR(rc.DATE_CONDUCTED) = report_year 
-         AND MONTH(rc.DATE_CONDUCTED) = report_month 
+         AND MONTH(rc.DATE_CONDUCTED) = count_month 
          AND (
                 QUOTE(lp.REGION_CODE) = QUOTE(psgc_code)
              OR (IFNULL( psgc_code, 0 ) = 0)
@@ -8333,8 +8359,8 @@ IF report_type = 3 THEN
                          ON full_data.w_couplesid = couples.COUPLES_ID
               WHERE couples.IS_ACTIVE = 0
                 AND full_data.w_sex IS NULL
-                AND YEAR(rc.DATE_CONDUCTED) = 2019 
-                AND MONTH(rc.DATE_CONDUCTED) = 03  
+                AND YEAR(rc.DATE_CONDUCTED) = report_year 
+                AND MONTH(rc.DATE_CONDUCTED) = count_month  
                 AND (
                         QUOTE(lp.REGION_CODE) = QUOTE(08)
                      OR (IFNULL( 08, 0 ) = 0)
@@ -8373,8 +8399,8 @@ IF report_type = 3 THEN
                          ON full_data.h_couplesid = couples.COUPLES_ID
               WHERE couples.IS_ACTIVE = 0
                 AND full_data.h_sex IS NULL
-                AND YEAR(rc.DATE_CONDUCTED) = 2019 
-                AND MONTH(rc.DATE_CONDUCTED) = 03  
+                AND YEAR(rc.DATE_CONDUCTED) = report_year 
+                AND MONTH(rc.DATE_CONDUCTED) = count_month  
                 AND (
                         QUOTE(lp.REGION_CODE) = QUOTE(08)
                      OR (IFNULL( 08, 0 ) = 0)
@@ -8416,7 +8442,7 @@ IF report_type = 3 THEN
                 AND husband.SEX != 0
                 AND full_data.w_sex != 0
                 AND YEAR(rc.DATE_CONDUCTED) = report_year 
-                AND MONTH(rc.DATE_CONDUCTED) = report_month  
+                AND MONTH(rc.DATE_CONDUCTED) = count_month  
                 AND (
                         QUOTE(lp.REGION_CODE) = QUOTE(psgc_code)
                      OR (IFNULL( psgc_code, 0 ) = 0)
@@ -8456,7 +8482,7 @@ IF report_type = 3 THEN
                          ON full_data.w_couplesid = couples.COUPLES_ID
               WHERE couples.IS_ACTIVE = 0
                 AND YEAR(rc.DATE_CONDUCTED) = report_year 
-                AND MONTH(rc.DATE_CONDUCTED) = report_month  
+                AND MONTH(rc.DATE_CONDUCTED) = count_month  
                 AND (
                         QUOTE(lp.REGION_CODE) = QUOTE(psgc_code)
                      OR (IFNULL( psgc_code, 0 ) = 0)
@@ -8469,6 +8495,7 @@ IF report_type = 3 THEN
         INSERT INTO rpfp.report_demandgen (
                 DEMANDGEN_ID,
                 REPORT_YEAR,
+                REPORT_CODE,
                 REPORT_MONTH,
                 PSGC_CODE,
                 CLASS_4PS,
@@ -8495,7 +8522,8 @@ IF report_type = 3 THEN
         VALUES (
                 random_no,
                 report_year,
-                report_month,
+                report_code,
+                count_month,
                 psgc_code,
                 class_4ps,
                 class_non4ps,
@@ -8520,8 +8548,9 @@ IF report_type = 3 THEN
             )
         ;
 
-        SELECT CONCAT( "NEW ENTRY: ", LAST_INSERT_ID() ) AS MESSAGE;
-END IF;
+        SET count_month = count_month + 1;
+END LOOP;
+    SELECT CONCAT( "NEW ENTRY: ", LAST_INSERT_ID() ) AS MESSAGE;
 END$$
 
 CREATE DEFINER=root@localhost PROCEDURE process_unmet_need (
@@ -9094,7 +9123,9 @@ BEGIN
            FROM rpfp.report_demandgen rd
     ) THEN
          SELECT NULL AS report_id,
+                NULL AS report_no,
                 NULL AS report_year,
+                NULL AS report_code,
                 NULL AS report_month,
                 NULL AS psgc_code,
                 NULL AS date_processed
@@ -9113,7 +9144,9 @@ BEGIN
         SET read_offset := (page_no - 1) * items_per_page;
 
          SELECT rd.REPORT_ID AS report_id,
+                rd.DEMANDGEN_ID AS report_no,
                 rd.REPORT_YEAR AS report_year,
+                rd.REPORT_CODE AS report_code,
                 rd.REPORT_MONTH AS report_month,
                 rd.PSGC_CODE AS psgc_code,
                 rd.DATE_PROCESSED AS date_processed
@@ -9143,7 +9176,9 @@ BEGIN
           WHERE rd.PSGC_CODE = region_of_user
     ) THEN
          SELECT NULL AS report_id,
+                NULL AS report_no,
                 NULL AS report_year,
+                NULL AS report_code,
                 NULL AS report_month,
                 NULL AS psgc_code,
                 NULL AS date_processed
@@ -9162,13 +9197,15 @@ BEGIN
         SET read_offset := (page_no - 1) * items_per_page;
 
          SELECT rd.REPORT_ID AS report_id,
+                rd.DEMANDGEN_ID AS report_no,
                 rd.REPORT_YEAR AS report_year,
+                rd.REPORT_CODE AS report_code,
                 rd.REPORT_MONTH AS report_month,
                 rd.PSGC_CODE AS psgc_code,
                 rd.DATE_PROCESSED AS date_processed
            FROM rpfp.report_demandgen rd
           WHERE rd.PSGC_CODE = region_of_user
-    --    GROUP BY rd.DEMANDGEN_ID
+          GROUP BY rd.DEMANDGEN_ID
        ORDER BY rd.DATE_PROCESSED ASC
           LIMIT read_offset, items_per_page
         ;
@@ -10878,6 +10915,7 @@ CREATE TABLE report_demandgen (
            DEMANDGEN_ID VARCHAR(100) NOT NULL,
             REPORT_YEAR INT NOT NULL,
               PSGC_CODE INT NOT NULL,
+            REPORT_CODE VARCHAR(50),
            REPORT_MONTH INT NOT NULL,
               CLASS_4PS INT,
            CLASS_NON4PS INT,

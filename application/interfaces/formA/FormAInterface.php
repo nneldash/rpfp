@@ -13,7 +13,11 @@ abstract class FormAInterface extends BaseInterface
     public $ListMonth;
 
     public $ReportID;
+    public $ReportNo;
+    public $ReportType;
     public $ReportYear;
+    public $ReportCode;
+    public $ReportQuarter;
     public $ReportMonth;
     public $DateProcessed;
 

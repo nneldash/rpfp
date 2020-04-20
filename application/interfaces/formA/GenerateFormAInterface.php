@@ -5,6 +5,9 @@ $CI->load->iface('base/BaseInterface');
 
 abstract class GenerateFormAInterface extends BaseInterface
 {
+    public $ReportType;
     public $ReportYear;
+    public $ReportCode;
+    public $ReportQuarter;
     public $ReportMonth;
 }

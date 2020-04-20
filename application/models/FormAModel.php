@@ -23,7 +23,9 @@ class FormAModel extends BaseModel
             'FormAClass',
             array(
                 'ReportID' => 'report_id',
+                'ReportNo' => 'report_no',
                 'ReportYear' => 'report_year',
+                'ReportCode' => 'report_code',
                 'ReportMonth' => 'report_month',
                 'RegionalOffice' => 'psgc_code',
                 'DateProcessed' => 'date_processed'
@@ -41,12 +43,13 @@ class FormAModel extends BaseModel
         return $retval;
     }
 
-    public function getFormAReport(int $regionalOffice, int $report_month, int $report_year) : ReportFormAInterface
+    public function getFormAReport(int $regionalOffice, int $report_no, int $report_year, int $report_month) : ReportFormAInterface
     {
         $forma_report = $this->fromDbGetReportList(
             'ReportFormA',
             'FormAClass',
             array(
+                'ReportCode' => 'report_code',
                 'ReportDate' => 'report_month',
                 'Class4Ps' => 'class_4ps',
                 'ClassNon4Ps' => 'class_non4ps',
@@ -69,7 +72,7 @@ class FormAModel extends BaseModel
                 'TotalReached' => 'reached_total'
             ),
             'get_report_demandgen_details',
-            array($report_month, $report_year)
+            array($report_no, $report_year, $report_month)
         );
 
         $retval = new ReportFormA();
@@ -89,7 +92,9 @@ class FormAModel extends BaseModel
         $method = 'process_demandgen';
 
         $params =[
+            $data->ReportType == N_A ? BLANK : $data->ReportType,
             $data->ReportYear == N_A ? BLANK : $data->ReportYear,
+            $data->ReportQuarter == N_A ? BLANK : $data->ReportQuarter,
             $data->ReportMonth == N_A ? BLANK : $data->ReportMonth,
             $psgc_code == N_A ? BLANK : $psgc_code
         ];
