@@ -13,7 +13,6 @@ abstract class FormAInterface extends BaseInterface
     public $ListMonth;
 
     public $ReportID;
-    public $ReportNo;
     public $ReportType;
     public $ReportYear;
     public $ReportCode;
@@ -22,6 +21,7 @@ abstract class FormAInterface extends BaseInterface
     public $DateProcessed;
 
     /** @var string */
+    public $ReportNo;
     public $DateText;
     /** @var int */    
     public $TotalSessions = 0;

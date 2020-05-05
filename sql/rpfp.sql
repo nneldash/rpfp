@@ -9152,7 +9152,6 @@ BEGIN
                 rd.DATE_PROCESSED AS date_processed
            FROM rpfp.report_demandgen rd
        GROUP BY rd.REPORT_MONTH 
-         HAVING rd.REPORT_ID = MAX(rd.REPORT_ID)
        ORDER BY rd.DATE_PROCESSED ASC
           LIMIT read_offset, items_per_page
         ;
@@ -9196,7 +9195,8 @@ BEGIN
 
         SET read_offset := (page_no - 1) * items_per_page;
 
-         SELECT rd.REPORT_ID AS report_id,
+         SELECT DISTINCT
+                rd.REPORT_ID AS report_id,
                 rd.DEMANDGEN_ID AS report_no,
                 rd.REPORT_YEAR AS report_year,
                 rd.REPORT_CODE AS report_code,
@@ -9262,7 +9262,8 @@ BEGIN
         END IF;
 
         SET read_offset := (page_no - 1) * items_per_page;
-         SELECT ru.REPORT_ID AS report_id,
+         SELECT DISTINCT
+                ru.REPORT_ID AS report_id,
                 ru.REPORT_YEAR AS report_year,
                 ru.REPORT_MONTH AS report_month,
                 ru.PSGC_CODE AS psgc_code,
@@ -9358,6 +9359,7 @@ BEGIN
            FROM rpfp.report_served_method_mix rs
     ) THEN
          SELECT NULL AS report_id,
+                NULL AS report_no,
                 NULL AS report_year,
                 NULL AS report_month,
                 NULL AS psgc_code,
@@ -9375,6 +9377,7 @@ BEGIN
 
         SET read_offset := (page_no - 1) * items_per_page;
          SELECT rs.REPORT_ID AS report_id,
+                rs.SERVED_ID AS report_no,
                 rs.REPORT_YEAR AS report_year,
                 rs.REPORT_MONTH AS report_month,
                 rs.PSGC_CODE AS psgc_code,
@@ -9404,6 +9407,7 @@ BEGIN
           WHERE rs.PSGC_CODE = region_of_user
     ) THEN
          SELECT NULL AS report_id,
+                NULL AS report_no,
                 NULL AS report_year,
                 NULL AS report_month,
                 NULL AS psgc_code,
@@ -9421,6 +9425,7 @@ BEGIN
 
         SET read_offset := (page_no - 1) * items_per_page;
          SELECT rs.REPORT_ID AS report_id,
+                rs.SERVED_ID AS report_no,
                 rs.REPORT_YEAR AS report_year,
                 rs.REPORT_MONTH AS report_month,
                 rs.PSGC_CODE AS psgc_code,
@@ -9482,7 +9487,7 @@ BEGIN
 END$$
 
 CREATE DEFINER=root@localhost PROCEDURE get_report_demandgen_details(
-    IN report_no VARCHAR(100),
+    IN report_no VARCHAR(50),
     IN report_month INT,
     IN report_year INT
     )   READS SQL DATA
@@ -9505,7 +9510,7 @@ BEGIN
 END$$
 
 CREATE DEFINER=root@localhost PROCEDURE pmed_get_report_demandgen_details(
-    IN report_no VARCHAR(100),
+    IN report_no VARCHAR(50),
     IN report_month INT,
     IN report_year INT
     )   READS SQL DATA
@@ -9517,7 +9522,7 @@ BEGIN
     IF NOT EXISTS (
          SELECT rd.REPORT_ID
            FROM rpfp.report_demandgen rd
-          WHERE rd.REPORT_YEAR = report_year
+          WHERE rd.DEMANDGEN_ID = report_no
     ) THEN
         BEGIN
              SELECT NULL AS report_year,
@@ -9575,9 +9580,7 @@ BEGIN
                     rd.DATE_PROCESSED AS date_processed
                FROM rpfp.report_demandgen rd
               WHERE rd.REPORT_YEAR = report_year
-                AND rd.REPORT_MONTH <= report_month
                 AND rd.DEMANDGEN_ID = report_no
-           GROUP BY rd.DEMANDGEN_ID
            ORDER BY rd.REPORT_MONTH ASC
             ;
         END;
@@ -9585,6 +9588,7 @@ BEGIN
 END$$
 
 CREATE DEFINER=root@localhost PROCEDURE rdm_get_report_demandgen_details(
+    IN report_no VARCHAR(50),
     IN report_month INT,
     IN report_year INT
     )   READS SQL DATA
@@ -9596,7 +9600,7 @@ BEGIN
     IF NOT EXISTS (
          SELECT rd.REPORT_ID
            FROM rpfp.report_demandgen rd
-          WHERE rd.REPORT_YEAR = report_year
+          WHERE rd.DEMANDGEN_ID = report_no
     ) THEN
         BEGIN
              SELECT NULL AS report_year,
@@ -9652,7 +9656,7 @@ BEGIN
                     rd.DATE_PROCESSED AS date_processed
                FROM rpfp.report_demandgen rd
               WHERE rd.REPORT_YEAR = report_year
-                AND rd.REPORT_MONTH <= report_month
+                AND rd.DEMANDGEN_ID = report_no
            ORDER BY rd.REPORT_MONTH ASC
             ;
         END;

@@ -43,13 +43,39 @@ class FormAModel extends BaseModel
         return $retval;
     }
 
-    public function getFormAReport(int $regionalOffice, int $report_no, int $report_year, int $report_month) : ReportFormAInterface
+    public function getFormAReport(int $regionalOffice, string $report_no, string $report_month, int $report_year) : ReportFormAInterface
     {
+        switch ($report_month){
+            case 'Quarter 1':
+                $report_month = 3;
+                $report_period = 1;
+                break;
+            case 'Quarter 2':
+                $report_month = 6;
+                $report_period = 4;
+                break;
+            case 'Quarter 3':
+                $report_month = 9;
+                $report_period = 7;
+                break;
+            case 'Quarter 4':
+                $report_month = 12;
+                $report_period = 10;
+                break;
+            case 'Annual':
+                $report_month = 12;
+                $report_period = 1;
+                break;
+            default:
+                $report_month = date('m', strtotime($report_month));
+                $report_period = 0;
+                break;
+        }
+
         $forma_report = $this->fromDbGetReportList(
             'ReportFormA',
             'FormAClass',
             array(
-                'ReportCode' => 'report_code',
                 'ReportDate' => 'report_month',
                 'Class4Ps' => 'class_4ps',
                 'ClassNon4Ps' => 'class_non4ps',
@@ -72,7 +98,7 @@ class FormAModel extends BaseModel
                 'TotalReached' => 'reached_total'
             ),
             'get_report_demandgen_details',
-            array($report_no, $report_year, $report_month)
+            array($report_no, $report_month, $report_year)
         );
 
         $retval = new ReportFormA();
@@ -81,8 +107,10 @@ class FormAModel extends BaseModel
             $retval->append($form_A);
         }
 
-        $retval->From = strtotime($report_year . '-' . $report_month . '-1');
-
+        $retval->To = strtotime($report_year . '-' . $report_month . '-1');
+        $retval->From = strtotime($report_year . '-' . $report_period . '-1');
+        $retval->Header = $report_period;
+        
         $retval->RegionalOffice = $regionalOffice;
         return $retval;
     }

@@ -2,8 +2,7 @@
 defined('BASEPATH') or exit('No direct script access allowed');
 $this->load->library('helpers/HtmlHelper');
 
-$forma_list = ReportFormA::getFromVariable($form_A);
-
+$forma_list = ReportFormA::getFromVariable($form_A);    
 ?>
 
 <?php if ($is_pdf) { ?>
@@ -37,7 +36,7 @@ $forma_list = ReportFormA::getFromVariable($form_A);
             <p class="small">
                 <b>
                     RPFP CLASSES IMPLEMENTATION REPORT <br>
-                    FOR THE PERIOD <?= strtoupper( date('F, Y', $forma_list->From)) ?> <br>
+                    FOR THE PERIOD <?= ($forma_list->Header != 0 ? date('F', $forma_list->From) . ' - ' : '' ) ?> <?= date('F, Y', $forma_list->To) ?> <br>
                     POPCOM <?= ($forma_list->RegionalOffice != '' ? 'Regional Office '. $forma_list->RegionalOffice : 'Central Office' ) ?> <br>
                     DEMAND GENERATION ACTIVITIES
                 </b>
@@ -452,7 +451,7 @@ $forma_list = ReportFormA::getFromVariable($form_A);
                             $z++;
                         }
                     }
-                        if ($y <= 3) {
+                        if ($y < 3) {
                     ?>
                         <tr>
                             <td class="text-center">

@@ -301,9 +301,10 @@ class Forms extends CI_Controller
         $this->load->model('FormAModel');
 
         $regionalOffice = $this->input->get('RegionalOffice');
+        $reportNo = $this->input->get('ReportNo');
         $reportMonth = $this->input->get('ReportMonth');
         $reportYear = $this->input->get('ReportYear');
-        $formA = $this->FormAModel->getFormAReport($regionalOffice,$reportMonth,$reportYear);
+        $formA = $this->FormAModel->getFormAReport($regionalOffice,$reportNo,$reportMonth,$reportYear);
 
         $this->load->view('includes/header', $header);
         $this->load->view('forms/forma', array('form_A' => $formA, 'is_pdf' => false, RELOAD => true));
@@ -337,9 +338,10 @@ class Forms extends CI_Controller
 
         $this->load->model('FormCModel');
 
+        $regionalOffice = $this->input->get('RegionalOffice');
         $reportMonth = $this->input->get('ReportMonth');
         $reportYear = $this->input->get('ReportYear');
-        $formC = $this->FormCModel->getFormCReport($reportMonth,$reportYear);
+        $formC = $this->FormCModel->getFormCReport($regionalOffice,$reportMonth,$reportYear);
 
         $this->load->view('includes/header', $header);
         $this->load->view('forms/formc', array('form_C' => $formC, 'is_pdf' => false, RELOAD => true));
