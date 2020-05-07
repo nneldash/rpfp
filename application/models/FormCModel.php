@@ -44,8 +44,35 @@ class FormCModel extends BaseModel
         return $retval;
     }
 
-    public function getFormCReport(int $regionalOffice, int $report_month, int $report_year) : ReportFormCInterface
+    public function getFormCReport(int $regionalOffice, string $report_no, string $report_month, int $report_year) : ReportFormCInterface
     {
+        switch ($report_month){
+            case 'Quarter 1':
+                $report_month = 3;
+                $report_period = 1;
+                break;
+            case 'Quarter 2':
+                $report_month = 6;
+                $report_period = 4;
+                break;
+            case 'Quarter 3':
+                $report_month = 9;
+                $report_period = 7;
+                break;
+            case 'Quarter 4':
+                $report_month = 12;
+                $report_period = 10;
+                break;
+            case 'Annual':
+                $report_month = 12;
+                $report_period = 1;
+                break;
+            default:
+                $report_month = date('m', strtotime($report_month));
+                $report_period = 0;
+                break;
+        }
+
         $formc_report = $this->fromDbGetReportList(
             'ReportFormC',
             'FormCClass',
@@ -66,7 +93,7 @@ class FormCModel extends BaseModel
                 'TotalServed' => 'total_served'
             ),
             'get_report_served_method_mix_details',
-            array($report_month, $report_year)
+            array($report_no, $report_month, $report_year)
         );
 
         $retval = new ReportFormC();
@@ -75,7 +102,10 @@ class FormCModel extends BaseModel
             $retval->append($form_C);
         }
 
-        $retval->From = strtotime($report_year . '-' . $report_month . '-1');
+        $retval->To = strtotime($report_year . '-' . $report_month . '-1');
+        $retval->From = strtotime($report_year . '-' . $report_period . '-1');
+        $retval->Header = $report_period;
+        
         $retval->RegionalOffice = $regionalOffice;
         return $retval;
     }

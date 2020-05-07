@@ -9826,6 +9826,7 @@ BEGIN
 END$$
 
 CREATE DEFINER=root@localhost PROCEDURE get_report_served_method_mix_details(
+    IN report_no VARCHAR(100),
     IN report_month INT,
     IN report_year INT
     )   READS SQL DATA
@@ -9837,21 +9838,26 @@ BEGIN
     SET role_of_user := rpfp.profile_get_own_role();
 
     IF role_of_user = 90 THEN
-        CALL pmed_get_report_served_method_mix_details(report_month, report_year);
+        CALL pmed_get_report_served_method_mix_details(report_no, report_month, report_year);
         LEAVE proc_exit_point;
     END IF;
 
     IF role_of_user = 80 THEN
-        CALL rdm_get_report_served_method_mix_details(report_month, report_year);
+        CALL rdm_get_report_served_method_mix_details(report_no, report_month, report_year);
         LEAVE proc_exit_point;
     END IF;
 END$$
 
 CREATE DEFINER=root@localhost PROCEDURE pmed_get_report_served_method_mix_details(
+    IN report_no VARCHAR(100),
     IN report_month INT,
     IN report_year INT
     )   READS SQL DATA
 BEGIN
+    DECLARE region_of_user INT;
+
+    SET region_of_user := rpfp.profile_get_own_region();
+
     IF NOT EXISTS (
          SELECT rs.REPORT_ID
            FROM rpfp.report_served_method_mix rs
@@ -9859,6 +9865,7 @@ BEGIN
     ) THEN
         BEGIN
              SELECT NULL AS report_year,
+                    NULL AS report_no,
                     NULL AS psgc_code,
                     NULL AS report_month,
                     NULL AS served_condom,
@@ -9880,6 +9887,7 @@ BEGIN
     ELSE
         BEGIN
              SELECT DISTINCT
+                    rs.SERVED_ID AS report_no,
                     rs.REPORT_YEAR AS report_year,
                     rs.PSGC_CODE AS psgc_code,
                     rs.REPORT_MONTH AS report_month,
@@ -9899,7 +9907,7 @@ BEGIN
                     rs.DATE_PROCESSED AS date_processed
                FROM rpfp.report_served_method_mix rs
               WHERE rs.REPORT_YEAR = report_year
-                AND rs.REPORT_MONTH <= report_month
+                AND rs.SERVED_ID = report_no
            ORDER BY rs.REPORT_MONTH ASC
             ;
         END;
@@ -9907,10 +9915,15 @@ BEGIN
 END$$
 
 CREATE DEFINER=root@localhost PROCEDURE rdm_get_report_served_method_mix_details(
+    IN report_no VARCHAR(100),
     IN report_month INT,
     IN report_year INT
     )   READS SQL DATA
 BEGIN
+    DECLARE region_of_user INT;
+
+    SET region_of_user := rpfp.profile_get_own_region();
+
     IF NOT EXISTS (
          SELECT rs.REPORT_ID
            FROM rpfp.report_served_method_mix rs
@@ -9918,6 +9931,7 @@ BEGIN
     ) THEN
         BEGIN
              SELECT NULL AS report_year,
+                    NULL AS report_no,
                     NULL AS psgc_code,
                     NULL AS report_month,
                     NULL AS served_condom,
@@ -9939,6 +9953,7 @@ BEGIN
     ELSE
         BEGIN
              SELECT DISTINCT
+                    rs.SERVED_ID AS report_no,
                     rs.REPORT_YEAR AS report_year,
                     rs.PSGC_CODE AS psgc_code,
                     rs.REPORT_MONTH AS report_month,
@@ -9958,7 +9973,7 @@ BEGIN
                     rs.DATE_PROCESSED AS date_processed
                FROM rpfp.report_served_method_mix rs
               WHERE rs.REPORT_YEAR = report_year
-                AND rs.REPORT_MONTH <= report_month
+                AND rs.SERVED_ID = report_no
            ORDER BY rs.REPORT_MONTH ASC
             ;
         END;
