@@ -37,7 +37,7 @@ $formc_list = ReportFormC::getFromVariable($form_C);
 			<p class="small">
 				<b>
 					RPFP CLASSES IMPLEMENTATION REPORT <br>
-					FOR THE PERIOD <?= strtoupper( date('F, Y', $formc_list->From)) ?> <br>
+					FOR THE PERIOD <?= ($formc_list->Header != 0 ? date('F', $formc_list->From) . ' - ' : '' ) ?> <?= date('F, Y', $formc_list->To) ?> <br>
 					POPCOM <?= ($formc_list->RegionalOffice != '' ? 'Regional Office '. $formc_list->RegionalOffice : 'Central Office' ) ?> <br>
 					TOTAL NUMBER OF COUPLES SERVED WITH UNMET NEED
 				</b>

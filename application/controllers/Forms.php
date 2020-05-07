@@ -339,9 +339,10 @@ class Forms extends CI_Controller
         $this->load->model('FormCModel');
 
         $regionalOffice = $this->input->get('RegionalOffice');
+        $reportNo = $this->input->get('ReportNo');
         $reportMonth = $this->input->get('ReportMonth');
         $reportYear = $this->input->get('ReportYear');
-        $formC = $this->FormCModel->getFormCReport($regionalOffice,$reportMonth,$reportYear);
+        $formC = $this->FormCModel->getFormCReport($regionalOffice,$reportNo,$reportMonth,$reportYear);
 
         $this->load->view('includes/header', $header);
         $this->load->view('forms/formc', array('form_C' => $formC, 'is_pdf' => false, RELOAD => true));

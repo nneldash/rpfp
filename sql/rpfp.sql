@@ -8746,8 +8746,9 @@ DECLARE random_no VARCHAR(400) DEFAULT 0 ;
 END$$
 
 CREATE DEFINER=root@localhost PROCEDURE process_served_method_mix (
-    IN served_id INT,
+    IN report_type INT,
     IN report_year INT,
+    IN report_quarter INT,
     IN report_month INT,
     IN psgc_code INT
     )  MODIFIES SQL DATA
@@ -8767,8 +8768,45 @@ DECLARE served_sdm INT;
 DECLARE served_lam INT;
 DECLARE total_served INT;
 DECLARE report_scope VARCHAR(100);
+DECLARE report_range INT;
+DECLARE count_month INT;
+DECLARE report_code VARCHAR(50);
 
-DECLARE random_no VARCHAR(400) DEFAULT 0 ;
+DECLARE random_no VARCHAR(100) DEFAULT 0 ;
+
+IF report_type = 1 THEN
+    SET report_scope = 'ANNUAL';
+    SET report_range = report_year;
+    SET report_month = 12;
+    SET count_month = 1;
+    SET report_code = 'Annual';
+END IF;
+
+IF report_type = 2 THEN
+    SET report_scope = 'QUARTER';
+    SET report_range = report_quarter;
+    SET report_month = report_quarter * 3;
+    SET count_month = report_quarter * 3 - 2;
+    SET report_code = CONCAT('Quarter ', report_quarter);
+END IF;
+
+IF report_type = 3 THEN
+    SET report_scope = 'MONTHLY';
+    SET report_range = report_month;
+    SET count_month = report_month;
+    SET report_code = MONTHNAME(CONCAT(report_year,'-',report_month,'-1'));
+END IF;
+
+IF psgc_code = 0 THEN
+    SET random_no = CONCAT("PMED-", report_scope, "-", psgc_code, "-", report_range);
+ELSE
+    SET random_no = CONCAT("RDM-", report_scope, "-", psgc_code, "-", report_range);
+END IF;
+
+loop_label: LOOP
+    IF count_month > report_month THEN
+        LEAVE loop_label;
+    END IF;
 
     SELECT COUNT(*)
       INTO served_condom 
@@ -8993,6 +9031,7 @@ DECLARE random_no VARCHAR(400) DEFAULT 0 ;
         INSERT INTO rpfp.report_served_method_mix (
                 SERVED_ID,
                 REPORT_YEAR,
+                REPORT_CODE,
                 REPORT_MONTH,
                 PSGC_CODE,
                 SERVED_CONDOM,
@@ -9013,7 +9052,8 @@ DECLARE random_no VARCHAR(400) DEFAULT 0 ;
         VALUES (
                 random_no,
                 report_year,
-                report_month,
+                report_code,
+                count_month,
                 psgc_code,
                 served_condom,
                 served_iud,
@@ -9032,6 +9072,8 @@ DECLARE random_no VARCHAR(400) DEFAULT 0 ;
             )
         ;
 
+        SET count_month = count_month + 1;
+END LOOP;
         SELECT CONCAT( "NEW ENTRY: ", LAST_INSERT_ID() ) AS MESSAGE;
 END$$
 /** END PROCESS REPORTS */
@@ -9151,7 +9193,7 @@ BEGIN
                 rd.PSGC_CODE AS psgc_code,
                 rd.DATE_PROCESSED AS date_processed
            FROM rpfp.report_demandgen rd
-       GROUP BY rd.REPORT_MONTH 
+       GROUP BY rd.DEMANDGEN_ID
        ORDER BY rd.DATE_PROCESSED ASC
           LIMIT read_offset, items_per_page
         ;
@@ -9205,7 +9247,7 @@ BEGIN
                 rd.DATE_PROCESSED AS date_processed
            FROM rpfp.report_demandgen rd
           WHERE rd.PSGC_CODE = region_of_user
-          GROUP BY rd.DEMANDGEN_ID
+       GROUP BY rd.DEMANDGEN_ID
        ORDER BY rd.DATE_PROCESSED ASC
           LIMIT read_offset, items_per_page
         ;
@@ -9361,6 +9403,7 @@ BEGIN
          SELECT NULL AS report_id,
                 NULL AS report_no,
                 NULL AS report_year,
+                NULL AS report_code,
                 NULL AS report_month,
                 NULL AS psgc_code,
                 NULL AS date_processed
@@ -9379,12 +9422,12 @@ BEGIN
          SELECT rs.REPORT_ID AS report_id,
                 rs.SERVED_ID AS report_no,
                 rs.REPORT_YEAR AS report_year,
+                rs.REPORT_CODE AS report_code,
                 rs.REPORT_MONTH AS report_month,
                 rs.PSGC_CODE AS psgc_code,
                 rs.DATE_PROCESSED AS date_processed
            FROM rpfp.report_served_method_mix rs
-       GROUP BY rs.REPORT_MONTH 
-       HAVING rs.REPORT_ID = MAX(rs.REPORT_ID)
+          GROUP BY rs.SERVED_ID
        ORDER BY rs.DATE_PROCESSED ASC
           LIMIT read_offset, items_per_page
         ;
@@ -9409,6 +9452,7 @@ BEGIN
          SELECT NULL AS report_id,
                 NULL AS report_no,
                 NULL AS report_year,
+                NULL AS report_code,
                 NULL AS report_month,
                 NULL AS psgc_code,
                 NULL AS date_processed
@@ -9427,11 +9471,13 @@ BEGIN
          SELECT rs.REPORT_ID AS report_id,
                 rs.SERVED_ID AS report_no,
                 rs.REPORT_YEAR AS report_year,
+                rs.REPORT_CODE AS report_code,
                 rs.REPORT_MONTH AS report_month,
                 rs.PSGC_CODE AS psgc_code,
                 rs.DATE_PROCESSED AS date_processed
            FROM rpfp.report_served_method_mix rs
           WHERE rs.PSGC_CODE = region_of_user
+       GROUP BY rs.SERVED_ID
        ORDER BY rs.DATE_PROCESSED ASC
           LIMIT read_offset, items_per_page
         ;
@@ -10975,9 +11021,10 @@ CREATE TABLE report_unmet_need (
 
 CREATE TABLE report_served_method_mix (
               REPORT_ID INT UNSIGNED NOT NULL AUTO_INCREMENT,
-              SERVED_ID INT NOT NULL,
+              SERVED_ID VARCHAR(100),
             REPORT_YEAR INT NOT NULL,
               PSGC_CODE INT NOT NULL,
+            REPORT_CODE VARCHAR(50),
            REPORT_MONTH INT NOT NULL,
           SERVED_CONDOM INT,
              SERVED_IUD INT,

@@ -24,7 +24,9 @@ class FormCModel extends BaseModel
             'FormCClass',
             array(
                 'ReportID' => 'report_id',
+                'ReportNo' => 'report_no',
                 'ReportYear' => 'report_year',
+                'ReportCode' => 'report_code',
                 'ReportMonth' => 'report_month',
                 'RegionalOffice' => 'psgc_code',
                 'DateProcessed' => 'date_processed'
@@ -42,7 +44,7 @@ class FormCModel extends BaseModel
         return $retval;
     }
 
-    public function getFormCReport(int $report_month, int $report_year) : ReportFormCInterface
+    public function getFormCReport(int $regionalOffice, int $report_month, int $report_year) : ReportFormCInterface
     {
         $formc_report = $this->fromDbGetReportList(
             'ReportFormC',
@@ -74,16 +76,18 @@ class FormCModel extends BaseModel
         }
 
         $retval->From = strtotime($report_year . '-' . $report_month . '-1');
+        $retval->RegionalOffice = $regionalOffice;
         return $retval;
     }
 
-    public function saveFormC($served_id, $psgc_code, GenerateFormCInterface $data) 
+    public function saveFormC($psgc_code, GenerateFormCInterface $data) 
     {
         $method = 'process_served_method_mix';
 
         $params =[
-            $served_id == N_A ? BLANK : $served_id,
+            $data->ReportType == N_A ? BLANK : $data->ReportType,
             $data->ReportYear == N_A ? BLANK : $data->ReportYear,
+            $data->ReportQuarter == N_A ? BLANK : $data->ReportQuarter,
             $data->ReportMonth == N_A ? BLANK : $data->ReportMonth,
             $psgc_code == N_A ? BLANK : $psgc_code
         ];

@@ -10,15 +10,21 @@ abstract class FormCInterface extends BaseInterface
     public $ListMonth;
     
     public $ReportID;
+    public $ReportType;
     public $ReportYear;
+    public $ReportCode;
+    public $ReportQuarter;
     public $ReportMonth;
     public $DateProcessed;
 
     /** @var string */
+    public $ReportNo;
     public $DateText;
 
     /** @var int */
     public $ReportDate = 0;
+    /** @var int */
+    public $RegionalOffice = 0;
     /** @var int */
     public $ServedCondom = 0;
     /** @var int */

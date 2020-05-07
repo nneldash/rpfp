@@ -21,6 +21,7 @@ if (empty($title)) {
     <thead>
         <tr>
             <th>Report #</th>
+            <th>Report Code</th>
             <th>Report Year | Month</th>
             <th>Date Generated</th>
             <th style="width: 10%;">Action</th>
@@ -31,10 +32,11 @@ if (empty($title)) {
             <?php if ($formc->ReportID != 'N/A') { ?>
                 <tr>
                     <td><?= $formc->ReportID ?></td>
-                    <td><?= $formc->ReportYear ?> - <?php if ($formc->ReportMonth != 0) { echo strftime("%b" ,mktime(0,0,0, $formc->ReportMonth )); } else { echo $formc->ReportMonth; } ?></td>
+                    <td><?= $formc->ReportNo ?></td>
+                    <td><?= $formc->ReportYear ?> - <?= $formc->ReportCode ?></td>
                     <td><?= date('F d, Y', strtotime($formc->DateProcessed)); ?></td>
                     <td class="text-center">
-                        <a class="viewForm folderview" href="<?= base_url('forms/formc?ReportMonth='. $formc->ReportMonth.'&ReportYear='. $formc->ReportYear); ?>" target="_blank">
+                        <a class="viewForm folderview" href="<?= base_url('forms/formc?RegionalOffice='. $formc->RegionalOffice.'&ReportNo='. $formc->ReportNo.'&ReportMonth='. $formc->ReportCode.'&ReportYear='. $formc->ReportYear); ?>" target="_blank">
                         <button class="btn btn-primary" data-toggle="tooltip" data-placement="left" title="View">
                             <i class="fa fa-folder-open"></i>
                         </button>					
@@ -54,7 +56,7 @@ if (empty($title)) {
 
 <script>
     loadJs(base_url + 'NewAssets/templateJs', function() {
-        loadJs(base_url + 'assets/js/modals.js', function(){
+        loadJs(base_url + 'assets/js/modalFormC.js', function(){
             clickModalReportC();
         });
     });
