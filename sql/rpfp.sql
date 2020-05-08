@@ -8554,8 +8554,9 @@ END LOOP;
 END$$
 
 CREATE DEFINER=root@localhost PROCEDURE process_unmet_need (
-    IN unmet_id INT,
+    IN report_type INT,
     IN report_year INT,
+    IN report_quarter INT,
     IN report_month INT,
     IN psgc_code INT
     )  MODIFIES SQL DATA
@@ -8570,19 +8571,45 @@ DECLARE served_traditional INT;
 DECLARE total_unmet INT;
 DECLARE total_served INT;
 DECLARE report_scope VARCHAR(100);
+DECLARE report_range INT;
+DECLARE count_month INT;
+DECLARE report_code VARCHAR(50);
+    
+DECLARE random_no VARCHAR(100) DEFAULT 0 ;
 
--- DECLARE count_id INT;
-DECLARE random_no VARCHAR(400) DEFAULT 0 ;
+IF report_type = 1 THEN
+    SET report_scope = 'ANNUAL';
+    SET report_range = report_year;
+    SET report_month = 12;
+    SET count_month = 1;
+    SET report_code = 'Annual';
+END IF;
 
--- SET random_no = CONCAT("RPFP-",report_year,report_month,"-",CEILING(RAND()*10000000000));
+IF report_type = 2 THEN
+    SET report_scope = 'QUARTER';
+    SET report_range = report_quarter;
+    SET report_month = report_quarter * 3;
+    SET count_month = report_quarter * 3 - 2;
+    SET report_code = CONCAT('Quarter ', report_quarter);
+END IF;
 
--- SELECT COUNT(*) INTO count_id FROM report_random_id WHERE RANDOM_ID = random_no;
+IF report_type = 3 THEN
+    SET report_scope = 'MONTHLY';
+    SET report_range = report_month;
+    SET count_month = report_month;
+    SET report_code = MONTHNAME(CONCAT(report_year,'-',report_month,'-1'));
+END IF;
 
--- IF count_id > 0 THEN
---     SELECT "CANNOT PROCESS RECORD WITH GIVEN PARAMETERS" AS MESSAGE;
---     LEAVE proc_exit_point;
--- END IF
--- ;
+IF psgc_code = 0 THEN
+    SET random_no = CONCAT("PMED-", report_scope, "-", psgc_code, "-", report_range);
+ELSE
+    SET random_no = CONCAT("RDM-", report_scope, "-", psgc_code, "-", report_range);
+END IF;
+
+loop_label: LOOP
+    IF count_month > report_month THEN
+        LEAVE loop_label;
+    END IF;
 
     SELECT COUNT(*) 
       INTO unmet_modern_tm 
@@ -8715,6 +8742,7 @@ DECLARE random_no VARCHAR(400) DEFAULT 0 ;
         INSERT INTO rpfp.report_unmet_need (
                 UNMET_ID,
                 REPORT_YEAR,
+                REPORT_CODE,
                 REPORT_MONTH,
                 PSGC_CODE,
                 UNMET_MODERN_FP,
@@ -8729,7 +8757,8 @@ DECLARE random_no VARCHAR(400) DEFAULT 0 ;
         VALUES (
                 random_no,
                 report_year,
-                report_month,
+                report_code,
+                count_month,
                 psgc_code,
                 total_unmet,
                 served_modern,
@@ -8742,6 +8771,8 @@ DECLARE random_no VARCHAR(400) DEFAULT 0 ;
             )
         ;
 
+        SET count_month = count_month + 1;
+END LOOP;
         SELECT CONCAT( "NEW ENTRY: ", LAST_INSERT_ID() ) AS MESSAGE;
 END$$
 
@@ -9288,7 +9319,9 @@ BEGIN
            FROM rpfp.report_unmet_need ru
     ) THEN
          SELECT NULL AS report_id,
+                NULL AS report_no,
                 NULL AS report_year,
+                NULL AS report_code,
                 NULL AS report_month,
                 NULL AS psgc_code,
                 NULL AS date_processed
@@ -9304,15 +9337,16 @@ BEGIN
         END IF;
 
         SET read_offset := (page_no - 1) * items_per_page;
-         SELECT DISTINCT
-                ru.REPORT_ID AS report_id,
+        
+         SELECT ru.REPORT_ID AS report_id,
+                ru.UNMET_ID AS report_no,
                 ru.REPORT_YEAR AS report_year,
+                ru.REPORT_CODE AS report_code,
                 ru.REPORT_MONTH AS report_month,
                 ru.PSGC_CODE AS psgc_code,
                 ru.DATE_PROCESSED AS date_processed
            FROM rpfp.report_unmet_need ru
-       GROUP BY ru.REPORT_MONTH 
-         HAVING ru.REPORT_ID = MAX(ru.REPORT_ID)
+       GROUP BY ru.UNMET_ID
        ORDER BY ru.DATE_PROCESSED ASC
           LIMIT read_offset, items_per_page
         ;
@@ -9335,7 +9369,9 @@ BEGIN
           WHERE ru.PSGC_CODE = region_of_user
     ) THEN
          SELECT NULL AS report_id,
+                NULL AS report_no,
                 NULL AS report_year,
+                NULL AS report_code,
                 NULL AS report_month,
                 NULL AS psgc_code,
                 NULL AS date_processed
@@ -9351,13 +9387,17 @@ BEGIN
         END IF;
 
         SET read_offset := (page_no - 1) * items_per_page;
+        
          SELECT ru.REPORT_ID AS report_id,
+                ru.UNMET_ID AS report_no,
                 ru.REPORT_YEAR AS report_year,
+                ru.REPORT_CODE AS report_code,
                 ru.REPORT_MONTH AS report_month,
                 ru.PSGC_CODE AS psgc_code,
                 ru.DATE_PROCESSED AS date_processed
            FROM rpfp.report_unmet_need ru
           WHERE ru.PSGC_CODE = region_of_user
+       GROUP BY ru.UNMET_ID
        ORDER BY ru.DATE_PROCESSED ASC
           LIMIT read_offset, items_per_page
         ;
@@ -11013,9 +11053,10 @@ CREATE TABLE report_demandgen (
 
 CREATE TABLE report_unmet_need (
               REPORT_ID INT UNSIGNED NOT NULL AUTO_INCREMENT,
-               UNMET_ID INT NOT NULL,
+               UNMET_ID VARCHAR(100) NOT NULL,
             REPORT_YEAR INT NOT NULL,
               PSGC_CODE INT NOT NULL,
+            REPORT_CODE VARCHAR(50),
            REPORT_MONTH INT NOT NULL,
         UNMET_MODERN_FP INT,
        SERVED_MODERN_FP INT,

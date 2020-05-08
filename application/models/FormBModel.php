@@ -23,7 +23,9 @@ class FormBModel extends BaseModel
             'FormBClass',
             array(
                 'ReportID' => 'report_id',
+                'ReportNo' => 'report_no',
                 'ReportYear' => 'report_year',
+                'ReportCode' => 'report_code',
                 'ReportMonth' => 'report_month',
                 'RegionalOffice' => 'psgc_code',
                 'DateProcessed' => 'date_processed'
@@ -70,13 +72,14 @@ class FormBModel extends BaseModel
         return $retval;
     }
 
-    public function saveFormB($unmet_id, $psgc_code, GenerateFormBInterface $data) 
+    public function saveFormB($psgc_code, GenerateFormBInterface $data) 
     {
         $method = 'process_unmet_need';
 
         $params =[
-            $unmet_id == N_A ? BLANK : $unmet_id,
+            $data->ReportType == N_A ? BLANK : $data->ReportType,
             $data->ReportYear == N_A ? BLANK : $data->ReportYear,
+            $data->ReportQuarter == N_A ? BLANK : $data->ReportQuarter,
             $data->ReportMonth == N_A ? BLANK : $data->ReportMonth,
             $psgc_code == N_A ? BLANK : $psgc_code
         ];
