@@ -331,7 +331,7 @@ $formc_list = ReportFormC::getFromVariable($form_C);
 								$z++;
 							}
 						}
-							if ($y <= 3) {
+							if ($y < 3) {
 						?>
 							<tr>
 								<td class="text-center">
