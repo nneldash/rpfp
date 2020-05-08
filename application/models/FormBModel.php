@@ -43,8 +43,35 @@ class FormBModel extends BaseModel
         return $retval;
     }
 
-    public function getFormBReport(int $report_month, int $report_year) : ReportFormBInterface
+    public function getFormBReport(int $regionalOffice, string $report_no, string $report_month, int $report_year) : ReportFormBInterface
     {
+        switch ($report_month){
+            case 'Quarter 1':
+                $report_month = 3;
+                $report_period = 1;
+                break;
+            case 'Quarter 2':
+                $report_month = 6;
+                $report_period = 4;
+                break;
+            case 'Quarter 3':
+                $report_month = 9;
+                $report_period = 7;
+                break;
+            case 'Quarter 4':
+                $report_month = 12;
+                $report_period = 10;
+                break;
+            case 'Annual':
+                $report_month = 12;
+                $report_period = 1;
+                break;
+            default:
+                $report_month = date('m', strtotime($report_month));
+                $report_period = 0;
+                break;
+        }
+
         $formb_report = $this->fromDbGetReportList(
             'ReportFormBClass',
             'FormBClass',
@@ -59,7 +86,7 @@ class FormBModel extends BaseModel
                 'TotalServed' => 'total_served'
             ),
             'get_report_unmet_need_details',
-            array($report_month,$report_year)
+            array($report_no, $report_month, $report_year)
         );
 
         $retval = new ReportFormBClass();
@@ -68,6 +95,10 @@ class FormBModel extends BaseModel
             $retval->append($form_B);
         }
 
+        $retval->To = strtotime($report_year . '-' . $report_month . '-1');
+        $retval->From = strtotime($report_year . '-' . $report_period . '-1');
+        $retval->Header = $report_period;
+        
         $retval->From = strtotime($report_year . '-' . $report_month . '-1');
         return $retval;
     }

@@ -9750,6 +9750,7 @@ BEGIN
 END$$
 
 CREATE DEFINER=root@localhost PROCEDURE get_report_unmet_need_details(
+    IN report_no VARCHAR(50),
     IN report_month INT,
     IN report_year INT
     )   READS SQL DATA
@@ -9761,17 +9762,18 @@ BEGIN
     SET role_of_user := rpfp.profile_get_own_role();
 
     IF role_of_user = 90 THEN
-        CALL pmed_get_report_unmet_need_details(report_month, report_year);
+        CALL pmed_get_report_unmet_need_details(report_no, report_month, report_year);
         LEAVE proc_exit_point;
     END IF;
 
     IF role_of_user = 80 THEN
-        CALL rdm_get_report_unmet_need_details(report_month, report_year);
+        CALL rdm_get_report_unmet_need_details(report_no, report_month, report_year);
         LEAVE proc_exit_point;
     END IF;
 END$$
 
 CREATE DEFINER=root@localhost PROCEDURE pmed_get_report_unmet_need_details(
+    IN report_no VARCHAR(50),
     IN report_month INT,
     IN report_year INT
     )   READS SQL DATA
@@ -9783,6 +9785,7 @@ BEGIN
     ) THEN
         BEGIN
              SELECT NULL AS report_year,
+                    NULL AS report_no,
                     NULL AS psgc_code,
                     NULL AS report_month,
                     NULL AS unmet_modern,
@@ -9798,9 +9801,10 @@ BEGIN
     ELSE
         BEGIN
              SELECT DISTINCT
-                    ru.REPORT_MONTH AS report_month,
+                    ru.UNMET_ID AS report_no,
                     ru.REPORT_YEAR AS report_year,
                     ru.PSGC_CODE AS psgc_code,
+                    ru.REPORT_MONTH AS report_month,
                     ru.UNMET_MODERN_FP AS unmet_modern,
                     ru.SERVED_MODERN_FP AS served_modern,
                     ru.NO_INTENTION AS no_intention,
@@ -9811,7 +9815,7 @@ BEGIN
                     ru.DATE_PROCESSED AS date_processed
                FROM rpfp.report_unmet_need ru
               WHERE ru.REPORT_YEAR = report_year
-                AND ru.REPORT_MONTH <= report_month
+                AND ru.UNMET_ID = report_no
            ORDER BY ru.REPORT_MONTH ASC
             ;
         END;
@@ -9819,6 +9823,7 @@ BEGIN
 END$$
 
 CREATE DEFINER=root@localhost PROCEDURE rdm_get_report_unmet_need_details(
+    IN report_no VARCHAR(50),
     IN report_month INT,
     IN report_year INT
     )   READS SQL DATA
@@ -9830,6 +9835,7 @@ BEGIN
     ) THEN
         BEGIN
              SELECT NULL AS report_year,
+                    NULL AS report_no,
                     NULL AS psgc_code,
                     NULL AS report_month,
                     NULL AS unmet_modern,
@@ -9858,7 +9864,7 @@ BEGIN
                     ru.DATE_PROCESSED AS date_processed
                FROM rpfp.report_unmet_need ru
               WHERE ru.REPORT_YEAR = report_year
-                AND ru.REPORT_MONTH <= report_month
+                AND ru.UNMET_ID = report_no
            ORDER BY ru.REPORT_MONTH ASC
             ;
         END;

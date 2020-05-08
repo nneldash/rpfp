@@ -29,7 +29,7 @@ $formb_list = ReportFormBClass::getFromVariable($form_B);
 			<p class="small">
 				<b>
 					RPFP CLASSES IMPLEMENTATION REPORT <br>
-					FOR THE PERIOD <?= strtoupper( date('F, Y', $formb_list->From)) ?> <br>
+					FOR THE PERIOD <?= ($formb_list->Header != 0 ? date('F', $formb_list->From) . ' - ' : '' ) ?> <?= date('F, Y', $formb_list->To) ?> <br>
 					POPCOM <?= ($formb_list->RegionalOffice != '' ? 'Regional Office '. $formb_list->RegionalOffice : 'Central Office' ) ?> <br>
 					TOTAL NUMBER OF UNMET NEED
 				</b>
@@ -237,7 +237,7 @@ $formb_list = ReportFormBClass::getFromVariable($form_B);
 								}
 
 							}
-								if ($y <= 3) {
+								if ($y < 3) {
 								?>
 									<tr>
 										<td class="text-center">
