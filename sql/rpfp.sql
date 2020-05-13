@@ -4505,6 +4505,89 @@ BEGIN
 END$$
 /** END APPROVE COUPLES DETAILS */
 
+/**  DELETE REPORT  */
+CREATE DEFINER=root@localhost PROCEDURE delete_report_demandgen (
+    IN report_no VARCHAR(100)
+    )  MODIFIES SQL DATA
+proc_exit_point :
+BEGIN
+    
+    IF report_no IS NULL THEN
+        SELECT "NO RECORD FOUND" AS MESSAGE;
+        LEAVE proc_exit_point;
+    END IF;
+
+     UPDATE rpfp.report_demandgen
+        SET IS_ACTIVE = 1
+      WHERE DEMANDGEN_ID = report_no
+    ;
+
+    SELECT "REPORT DELETED!" AS MESSAGE;
+END$$
+
+CREATE DEFINER=root@localhost PROCEDURE delete_report_unmet_need (
+    IN report_no VARCHAR(100)
+    )  MODIFIES SQL DATA
+proc_exit_point :
+BEGIN
+    
+    IF report_no IS NULL THEN
+        SELECT "NO RECORD FOUND" AS MESSAGE;
+        LEAVE proc_exit_point;
+    END IF;
+
+     UPDATE rpfp.report_unmet_need
+        SET IS_ACTIVE = 1
+      WHERE UNMET_ID = report_no
+    ;
+
+    SELECT "REPORT DELETED!" AS MESSAGE;
+END$$
+
+CREATE DEFINER=root@localhost PROCEDURE delete_report_served_method_mix (
+    IN report_no VARCHAR(100)
+    )  MODIFIES SQL DATA
+proc_exit_point :
+BEGIN
+    
+    IF report_no IS NULL THEN
+        SELECT "NO RECORD FOUND" AS MESSAGE;
+        LEAVE proc_exit_point;
+    END IF;
+
+     UPDATE rpfp.report_served_method_mix
+        SET IS_ACTIVE = 1
+      WHERE SERVED_ID = report_no
+    ;
+
+    SELECT "REPORT DELETED!" AS MESSAGE;
+END$$
+
+CREATE DEFINER=root@localhost PROCEDURE delete_report_accomplishment (
+    IN report_no VARCHAR(100)
+    )  MODIFIES SQL DATA
+proc_exit_point :
+BEGIN
+    
+    IF report_no IS NULL THEN
+        SELECT "NO RECORD FOUND" AS MESSAGE;
+        LEAVE proc_exit_point;
+    END IF;
+
+     UPDATE rpfp.report_couples_encoded
+        SET IS_ACTIVE = 1
+      WHERE ACCOM_ID = report_no
+    ;
+
+     UPDATE rpfp.report_duplicate_encoded   
+        SET IS_ACTIVE = 1
+      WHERE ACCOM_ID = report_no
+    ;
+
+    SELECT "REPORT DELETED!" AS MESSAGE;
+END$$
+/** END DELETE REPORT */
+
 /** SAVE TARGET COUPLES */
 CREATE DEFINER=root@localhost PROCEDURE rdm_save_target (
     IN target_id INT,
@@ -7590,8 +7673,8 @@ BEGIN
 
     CALL process_check_duplication( username, date_from, date_to, psgc_code, random_no, out_message_1 );
     CALL process_couples_encoded( username, date_from, date_to, psgc_code, random_no, out_message_2 );
-    CALL process_couples_served( username, date_from, date_to, psgc_code, random_no, out_message_3 );
-    SELECT out_message_3 AS MESSAGE;
+    -- CALL process_couples_served( username, date_from, date_to, psgc_code, random_no, out_message_3 );
+    SELECT out_message_2 AS MESSAGE;
 END$$
 
 CREATE DEFINER=root@localhost PROCEDURE process_couples_encoded (
@@ -7616,6 +7699,7 @@ BEGIN
     DECLARE lastname VARCHAR(50);
     DECLARE extname VARCHAR(50);
     DECLARE birthdate DATE;
+    DECLARE report_status INT DEFAULT 0;
 
     DECLARE cur_class_list CURSOR FOR 
         SELECT DISTINCT rc.CLASS_NUMBER
@@ -7733,6 +7817,7 @@ BEGIN
                     DUPLICATES,
                     INVALIDS,
                     DB_USER_ID,
+                    IS_ACTIVE,
                     DATE_PROCESSED
         ) VALUES (
                     random_id,
@@ -7747,6 +7832,7 @@ BEGIN
                     duplicates,
                     invalids,
                     username,
+                    report_status,
                     CURRENT_DATE()
         );
             
@@ -7779,6 +7865,7 @@ BEGIN
     DECLARE lastname VARCHAR(50);
     DECLARE extname VARCHAR(50);
     DECLARE birthdate DATE;
+    DECLARE report_status INT DEFAULT 0;
 
     DECLARE cur_class_list CURSOR FOR 
         SELECT DISTINCT rc.CLASS_NUMBER
@@ -7903,6 +7990,7 @@ BEGIN
                     DUPLICATES,
                     INVALIDS,
                     DB_USER_ID,
+                    IS_ACTIVE,
                     DATE_PROCESSED
         ) VALUES (
                     random_id,
@@ -7917,6 +8005,7 @@ BEGIN
                     duplicates,
                     invalids,
                     username,
+                    report_status,
                     CURRENT_DATE()
         );
             
@@ -7946,6 +8035,7 @@ BEGIN
     DECLARE birthdate DATE;
     DECLARE count_record INT;
     DECLARE last_id INT DEFAULT 0;
+    DECLARE report_status INT DEFAULT 0;
 
     DECLARE cur_duplicate_list CURSOR FOR
          SELECT ic.FNAME, ic.LNAME, ic.EXT_NAME, ic.BDATE, rc.CLASS_NUMBER, COUNT(apc.COUPLES_ID)
@@ -8002,6 +8092,7 @@ BEGIN
                             EXT_NAME,
                             BDATE,
                             DB_USER_ID,
+                            IS_ACTIVE,
                             DATE_PROCESSED
                 ) VALUES (
                             random_id,
@@ -8015,6 +8106,7 @@ BEGIN
                             extname,
                             birthdate,
                             username,
+                            report_status,
                             CURRENT_DATE()
                 );
                 SELECT LAST_INSERT_ID() INTO last_id;
@@ -8063,6 +8155,7 @@ DECLARE report_scope VARCHAR(100);
 DECLARE report_range INT;
 DECLARE count_month INT;
 DECLARE report_code VARCHAR(50);
+DECLARE report_status INT DEFAULT 0;
     
 DECLARE random_no VARCHAR(100) DEFAULT 0 ;
 
@@ -8517,6 +8610,7 @@ loop_label: LOOP
                 SOLO_FEMALE,
                 COUPLE_ATTENDEE,
                 REACHED_TOTAL,
+                IS_ACTIVE,
                 DATE_PROCESSED
             )
         VALUES (
@@ -8544,6 +8638,7 @@ loop_label: LOOP
                 solo_female,
                 couple_attendee,
                 reached_total,
+                report_status,
                 CURRENT_DATE()
             )
         ;
@@ -8574,6 +8669,7 @@ DECLARE report_scope VARCHAR(100);
 DECLARE report_range INT;
 DECLARE count_month INT;
 DECLARE report_code VARCHAR(50);
+DECLARE report_status INT DEFAULT 0;
     
 DECLARE random_no VARCHAR(100) DEFAULT 0 ;
 
@@ -8752,6 +8848,7 @@ loop_label: LOOP
                 SERVED_TRADITIONAL,
                 TOTAL_UNMET,
                 TOTAL_SERVED,
+                IS_ACTIVE,
                 DATE_PROCESSED
             )
         VALUES (
@@ -8767,6 +8864,7 @@ loop_label: LOOP
                 served_traditional,
                 total_unmet,
                 total_served,
+                report_status,
                 CURRENT_DATE()
             )
         ;
@@ -8802,6 +8900,7 @@ DECLARE report_scope VARCHAR(100);
 DECLARE report_range INT;
 DECLARE count_month INT;
 DECLARE report_code VARCHAR(50);
+DECLARE report_status INT DEFAULT 0;
 
 DECLARE random_no VARCHAR(100) DEFAULT 0 ;
 
@@ -9078,6 +9177,7 @@ loop_label: LOOP
                 SERVED_SDM,
                 SERVED_LAM,
                 TOTAL_SERVED,
+                IS_ACTIVE,
                 DATE_PROCESSED
             )
         VALUES (
@@ -9099,6 +9199,7 @@ loop_label: LOOP
                 served_sdm,
                 served_lam,
                 total_served,
+                report_status,
                 CURRENT_DATE()
             )
         ;
@@ -9153,6 +9254,7 @@ BEGIN
                 rce.DATE_PROCESSED AS date_processed
            FROM rpfp.report_couples_encoded rce
           WHERE rce.DB_USER_ID = name_user
+            AND rce.IS_ACTIVE = 0
        GROUP BY rce.ACCOM_ID
        ORDER BY rce.DATE_PROCESSED ASC
           LIMIT read_offset, items_per_page
@@ -9224,6 +9326,7 @@ BEGIN
                 rd.PSGC_CODE AS psgc_code,
                 rd.DATE_PROCESSED AS date_processed
            FROM rpfp.report_demandgen rd
+          WHERE rd.IS_ACTIVE = 0
        GROUP BY rd.DEMANDGEN_ID
        ORDER BY rd.DATE_PROCESSED ASC
           LIMIT read_offset, items_per_page
@@ -9278,6 +9381,7 @@ BEGIN
                 rd.DATE_PROCESSED AS date_processed
            FROM rpfp.report_demandgen rd
           WHERE rd.PSGC_CODE = region_of_user
+            AND rd.IS_ACTIVE = 0
        GROUP BY rd.DEMANDGEN_ID
        ORDER BY rd.DATE_PROCESSED ASC
           LIMIT read_offset, items_per_page
@@ -9346,6 +9450,7 @@ BEGIN
                 ru.PSGC_CODE AS psgc_code,
                 ru.DATE_PROCESSED AS date_processed
            FROM rpfp.report_unmet_need ru
+          WHERE ru.IS_ACTIVE = 0
        GROUP BY ru.UNMET_ID
        ORDER BY ru.DATE_PROCESSED ASC
           LIMIT read_offset, items_per_page
@@ -9397,6 +9502,7 @@ BEGIN
                 ru.DATE_PROCESSED AS date_processed
            FROM rpfp.report_unmet_need ru
           WHERE ru.PSGC_CODE = region_of_user
+            AND ru.IS_ACTIVE = 0
        GROUP BY ru.UNMET_ID
        ORDER BY ru.DATE_PROCESSED ASC
           LIMIT read_offset, items_per_page
@@ -9467,6 +9573,7 @@ BEGIN
                 rs.PSGC_CODE AS psgc_code,
                 rs.DATE_PROCESSED AS date_processed
            FROM rpfp.report_served_method_mix rs
+          WHERE rs.IS_ACTIVE = 0
           GROUP BY rs.SERVED_ID
        ORDER BY rs.DATE_PROCESSED ASC
           LIMIT read_offset, items_per_page
@@ -9517,6 +9624,7 @@ BEGIN
                 rs.DATE_PROCESSED AS date_processed
            FROM rpfp.report_served_method_mix rs
           WHERE rs.PSGC_CODE = region_of_user
+            AND rs.IS_ACTIVE = 0
        GROUP BY rs.SERVED_ID
        ORDER BY rs.DATE_PROCESSED ASC
           LIMIT read_offset, items_per_page
@@ -11047,6 +11155,7 @@ CREATE TABLE report_demandgen (
             SOLO_FEMALE INT,
         COUPLE_ATTENDEE INT,
           REACHED_TOTAL INT,
+              IS_ACTIVE INT,
          DATE_PROCESSED DATE,
             PRIMARY KEY (REPORT_ID)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
@@ -11071,6 +11180,7 @@ CREATE TABLE report_unmet_need (
      SERVED_TRADITIONAL INT,
             TOTAL_UNMET INT,
            TOTAL_SERVED INT,
+              IS_ACTIVE INT,
          DATE_PROCESSED DATE,
             PRIMARY KEY (REPORT_ID)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
@@ -11101,6 +11211,7 @@ CREATE TABLE report_served_method_mix (
              SERVED_SDM INT,
              SERVED_LAM INT,
            TOTAL_SERVED INT,
+              IS_ACTIVE INT,
          DATE_PROCESSED DATE,
             PRIMARY KEY (REPORT_ID)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
@@ -11125,6 +11236,7 @@ CREATE TABLE report_couples_encoded (
              DUPLICATES INT,
                INVALIDS INT,
              DB_USER_ID VARCHAR(50),
+              IS_ACTIVE INT,
          DATE_PROCESSED DATE,
             PRIMARY KEY (REPORT_ID)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
@@ -11148,6 +11260,7 @@ CREATE TABLE report_duplicate_encoded (
                EXT_NAME VARCHAR(50),
                   BDATE DATE,
              DB_USER_ID VARCHAR(50),
+              IS_ACTIVE INT,
          DATE_PROCESSED DATE,
             PRIMARY KEY (REPORT_ID)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
