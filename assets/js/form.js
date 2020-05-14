@@ -95,7 +95,15 @@ $(function() {
     	dateFormat: "mm/dd/yy",
     	maxDate: FromEndDate,
 		changeYear: true
-    });
+	});
+	
+	if (isFocal == 1) {
+		$('.saveForm1').val('Verify');
+	} else if (isRDM == 1) {
+		$('.saveForm1').val('Approve');
+	} else {
+		$('.saveForm1').val('Save');
+	}
 
 	if(isRDM == 1 || isFocal == 1){
 		$('td input').attr('disabled', true);

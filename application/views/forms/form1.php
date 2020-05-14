@@ -4,6 +4,7 @@ $this->load->library('helpers/HtmlHelper');
 
 $form1 = FormClass::getFromVariable($form1);
 $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0);
+$status = $this->input->get('status');
 ?>
 
 <?php if($is_pdf){ ?>
@@ -109,10 +110,12 @@ $rpfpId = (!empty($this->input->get('rpfpId')) ? $this->input->get('rpfpId') : 0
 						</ul>
 					</div>
 	
-			    </div>
-				<div id="rightButton" style="text-transform: none; ">					
-		            <input type="submit" class="save saveForm1" value="Save" name="saveform1" />
-		        </div>
+				</div>
+				<?php if ($status == 2): ?>
+					<div id="rightButton" style="text-transform: none; ">					
+						<input type="submit" class="save saveForm1" value="" name="saveform1" />
+					</div>
+				<?php endif; ?>
 			<?php endif; ?>
 			<input type="hidden" name="class_id" value="<?= $rpfpId; ?>" />
 	        <br>
