@@ -26,7 +26,7 @@
 
     <section class="container">
         <div class="row">
-            <div class="col-xs-12 col-sm-6 padding-10p">
+            <div class="col-xs-12 col-sm-6 padding-10p" >
                 <?php 
                     echo form_open(
                         $action = 'Login/loginUser',
@@ -306,9 +306,12 @@
         </script> -->
     </section>
 
-    <!-- <footer>
-        <p class="footer">Copyright © 2019-Present. <br>Commission on Population and Development, Republic of the Philippines</p>
-    </footer> -->
+    <footer>
+        <p class="footer">
+            <!-- Copyright © 2019-Present. Commission on Population and Development, Republic of the Philippines <br> -->
+            For Data Privacy concerns, kindly see our <a class="footer" href="http://popcom.gov.ph/privacy-policy/"> Policy Page </a>.
+        </p>
+    </footer>
 </body>
 
 <script>

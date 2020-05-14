@@ -15,9 +15,9 @@ body {
     overflow-x: hidden;
 }
 footer {
-    /*position: fixed;
-    left: 0;
-    bottom: 0;*/
+    position: fixed;
+    /* left: 0; */
+    bottom: 0;
     width: 100%;
     /*background-color: #fff;*/
     background-color: #043b0e;
@@ -529,6 +529,13 @@ iframe {
 .p-top40 {
     padding-top: 40px;
 }
+a.footer {
+    color: #fff;
+    padding: 0;
+}
+a.footer:hover {
+    text-decoration: underline;
+}
 .footer {
     padding: 1%;
     /*color: #333;*/
@@ -549,7 +556,7 @@ iframe {
     padding-left: 5%;
 }
 .padding-10p {
-    padding: 10%;
+    padding: 4% 10% 10%;
 }
 .padding-10p0 {
     padding: 10% 0;
