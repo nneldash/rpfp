@@ -2,29 +2,44 @@
 defined('BASEPATH') or exit('No direct script access allowed');
 $current_year = date('Y');
 ?>
+<style>
+    .text-required {
+        color: red;
+        font-size: 14px;
+    }
+</style>
 <link href="<?= base_url('NewAssets/sweetalertCss'); ?>" rel="stylesheet">
 
 <div class="container-fluid">	
 	<div class="row">
         <form id="reportGen" class="form-horizontal">
             <input style="text-transform: none;" class="formName" type="hidden" value="genFormC" />
-    		<label>Report Type: </label>
+            <label> 
+                <span class="text-required">*</span> 
+                Report Type: 
+            </label>
     		<select class="form-control" name="repTypeSelect" required>
     			<option id="repType" value="">Type</option>
                 <option id="repType" value="01">Annually</option>
                 <option id="repType" value="02">Quarterly</option>
                 <option id="repType" value="03">Monthly</option>
     		</select>
-    		<br>
-    		<label>Report Year: </label>
+            <br>
+            <label> 
+                <span class="text-required">*</span> 
+                Report Year: 
+            </label>
     		<select class="form-control" name="repYearSelect" required>
     			<option id="repYear" value="">Year</option>
     			<?php for ($i = $current_year; $i > 2017; $i--): ?>
                     <option id="repYear" value="<?=$i?>"><?= $i?></option>
                 <?php endfor?>
     		</select>
-    		<br>
-    		<label>Report Quarter: </label>
+            <br>
+            <label> 
+                <span class="text-required">*</span> 
+                Report Quarter: 
+            </label>
     		<select class="form-control" name="repQuarterSelect" required>
     			<option id="repQuarter" value="">Quarter</option>
                 <option id="repQuarter" value="01">1st Quarter</option>
@@ -32,8 +47,11 @@ $current_year = date('Y');
                 <option id="repQuarter" value="03">3rd Quarter</option>
                 <option id="repQuarter" value="04">4th Quarter</option>
     		</select>
-    		<br>
-    		<label>Report Month: </label>
+            <br>
+            <label> 
+                <span class="text-required">*</span> 
+                Report Month: 
+            </label>
     		<select class="form-control" name="repMonthSelect" required>
     			<option id="repMonth" value="">Month</option>
                 <option id="repMonth" value="01">January</option>
