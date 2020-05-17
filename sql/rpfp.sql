@@ -4484,6 +4484,31 @@ BEGIN
 END$$
 /** END COUPLES DETAILS */
 
+/**  VERIFY COUPLES DETAILS  */
+CREATE DEFINER=root@localhost PROCEDURE focal_verify_couples (
+    IN couplesid INT UNSIGNED
+    )  MODIFIES SQL DATA
+proc_exit_point :
+BEGIN
+    
+    IF ( IFNULL(couplesid, 0 ) = 0 ) THEN
+        SELECT "CANNOT SAVE RECORD WITH GIVEN PARAMETERS" AS MESSAGE;
+        LEAVE proc_exit_point;
+    END IF;
+
+     INSERT INTO rpfp.couples_verified (
+                    COUPLES_ID, 
+                    DATE_VERIFIED
+                ) VALUES (
+                    couplesid, 
+                    CURRENT_DATE()
+                )
+    ;
+
+    SELECT "COUPLES VERIFIED!" AS MESSAGE;
+END$$
+/** END VERIFY COUPLES DETAILS */
+
 /**  APPROVE COUPLES DETAILS  */
 CREATE DEFINER=root@localhost PROCEDURE rdm_approve_couples (
     IN couplesid INT UNSIGNED
@@ -4499,6 +4524,15 @@ BEGIN
      UPDATE rpfp.couples apc
         SET apc.IS_ACTIVE = 0
       WHERE apc.COUPLES_ID = couplesid
+    ;
+
+     INSERT INTO rpfp.track_approved (
+                    COUPLES_ID, 
+                    DATE_APPROVED
+                ) VALUES (
+                    couplesid, 
+                    CURRENT_DATE()
+                )
     ;
 
     SELECT "COUPLES APPROVED!" AS MESSAGE;
@@ -11057,6 +11091,32 @@ CREATE TABLE couples (
             NO_CHILDREN INT,
               IS_ACTIVE INT(1),
             PRIMARY KEY (COUPLES_ID)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table track_approved
+--
+
+CREATE TABLE track_approved (
+               TRACK_ID INT UNSIGNED NOT NULL AUTO_INCREMENT,
+             COUPLES_ID INT NOT NULL,
+          DATE_APPROVED DATE,
+            PRIMARY KEY (TRACK_ID)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table couples_verified
+--
+
+CREATE TABLE couples_verified (
+            VERIFIED_ID INT UNSIGNED NOT NULL AUTO_INCREMENT,
+             COUPLES_ID INT NOT NULL,
+          DATE_VERIFIED DATE,
+            PRIMARY KEY (VERIFIED_ID)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
