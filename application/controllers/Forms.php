@@ -434,6 +434,14 @@ class Forms extends CI_Controller
 
     public function viewforma()
     {
+        $this->load->model('FormAModel');
+
+        $regionalOffice = $this->input->get('RegionalOffice');
+        $reportNo = $this->input->get('ReportNo');
+        $reportMonth = $this->input->get('ReportMonth');
+        $reportYear = $this->input->get('ReportYear');
+        $formA = $this->FormAModel->getFormAReport($regionalOffice,$reportNo,$reportMonth,$reportYear);
+
         $mpdfConfig = array(
             'format' => 'A4',
             'orientation' => 'L'
@@ -443,7 +451,7 @@ class Forms extends CI_Controller
             $mpdf = new \Mpdf\Mpdf($mpdfConfig);
             $mpdf->debug = true;
 
-            $html = $this->load->view('forms/forma', array('is_pdf' => true), true);
+            $html = $this->load->view('forms/forma', array('is_pdf' => true, 'form_A' => $formA), true);
             $footer = '<html>
                             <head>
                             <style>
@@ -456,7 +464,7 @@ class Forms extends CI_Controller
                             </style>
                             </head>
                             <body>
-                                <pagefooter name="MyFooter1" content-right="{DATE M j,Y h:i a}"
+                                <pagefooter name="MyFooter1" content-right="{DATE M j,Y h:ia}"
                                 footer-style="font-size: 7pt;" />
                             </body>
                         </html>';           
@@ -473,6 +481,14 @@ class Forms extends CI_Controller
 
     public function viewformb()
     {
+        $this->load->model('FormBModel');
+
+        $regionalOffice = $this->input->get('RegionalOffice');
+        $reportNo = $this->input->get('ReportNo');
+        $reportMonth = $this->input->get('ReportMonth');
+        $reportYear = $this->input->get('ReportYear');
+        $formB = $this->FormBModel->getFormBReport($regionalOffice,$reportNo,$reportMonth,$reportYear);
+
         $mpdfConfig = array(
             'format' => 'A4',
             'orientation' => 'L'
@@ -482,7 +498,7 @@ class Forms extends CI_Controller
             $mpdf = new \Mpdf\Mpdf($mpdfConfig);
             $mpdf->debug = true;
 
-            $html = $this->load->view('forms/formb', array('is_pdf' => true), true);
+            $html = $this->load->view('forms/formb', array('is_pdf' => true, 'form_B' => $formB), true);
             $footer = '<html>
                             <head>
                             <style>
@@ -511,6 +527,14 @@ class Forms extends CI_Controller
 
     public function viewformc()
     {
+        $this->load->model('FormCModel');
+
+        $regionalOffice = $this->input->get('RegionalOffice');
+        $reportNo = $this->input->get('ReportNo');
+        $reportMonth = $this->input->get('ReportMonth');
+        $reportYear = $this->input->get('ReportYear');
+        $formC = $this->FormCModel->getFormCReport($regionalOffice,$reportNo,$reportMonth,$reportYear);
+
         $mpdfConfig = array(
             'format' => 'A4',
             'orientation' => 'L'
@@ -520,7 +544,7 @@ class Forms extends CI_Controller
             $mpdf = new \Mpdf\Mpdf($mpdfConfig);
             $mpdf->debug = true;
             
-            $html = $this->load->view('forms/formC', array('is_pdf' => true), true);
+            $html = $this->load->view('forms/formC', array('is_pdf' => true, 'form_C' => $formC), true);
             $footer = '<html>
                             <head>
                             <style>

@@ -14,12 +14,18 @@ if (empty($title)) {
     <div class="col-md-3" style="text-transform: none; padding: 0">
         <input type="submit" class="save genReportC" value="Generate Report" name="genFormC" />
     </div>
-    <div class="col-md-9"></div>
+    <div class="col-md-3" style="text-transform: none; padding: 0">
+        <input type="submit" class="delete" name="deleteButton" value="Delete Selected" hidden />
+    </div>
+    <div class="col-md-6"></div>
 </div>
 
 <table id="datatable-responsive" class="table table-condensed table-striped table-hover table-bordered dt-responsive nowrap formCList" cellspacing="0" width="100%">
     <thead>
         <tr>
+            <th>
+                <input id="checkAll" type="checkbox">
+            </th>
             <th>Report #</th>
             <th>Report Code</th>
             <th>Report Year | Month</th>
@@ -31,6 +37,9 @@ if (empty($title)) {
         <?php foreach ($form_C as $formc) : ?>
             <?php if ($formc->ReportID != 'N/A') { ?>
                 <tr>
+                    <td>
+                        <input class="checkSelect" name="reportNo" type="checkbox" value="<?= $formc->ReportID ?>" />
+                    </td>
                     <td><?= $formc->ReportID ?></td>
                     <td><?= $formc->ReportNo ?></td>
                     <td><?= $formc->ReportYear ?> - <?= $formc->ReportCode ?></td>
@@ -44,7 +53,8 @@ if (empty($title)) {
                 </tr>
             <?php } else { ?>
                 <tr>
-                    <td class="text-center" colspan="4">No result(s) found.</td>
+                    <td class="text-center" colspan="5">No result(s) found.</td>
+                    <td class="text-center none"></td>
                     <td class="text-center none"></td>
                     <td class="text-center none"></td>
                     <td class="text-center none"></td>
@@ -56,8 +66,9 @@ if (empty($title)) {
 
 <script>
     loadJs(base_url + 'NewAssets/templateJs', function() {
-        loadJs(base_url + 'assets/js/modalFormC.js', function(){
+        loadJs(base_url + 'assets/js/modals.js', function(){
             clickModalReportC();
+            deleteReport();
         });
     });
 

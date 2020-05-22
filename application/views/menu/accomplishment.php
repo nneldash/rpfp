@@ -16,7 +16,7 @@ if (empty($title)) {
         <input type="submit" class="save genAccomp" value="Generate Report" name="genAccomplishment" />
     </div>
     <div class="col-md-3" style="text-transform: none; padding: 0">
-        <input type="submit" class="delete" name="deleteAccomplishment" value="Delete Selected" hidden />
+        <input type="submit" class="delete" name="deleteButton" value="Delete Selected" hidden />
     </div>
     <div class="col-md-6"></div>
 </div>
@@ -39,7 +39,7 @@ if (empty($title)) {
             <?php if ($accomplished->ReportNo != 'N/A') { ?>
                 <tr>
                     <td>
-                        <input class="checkAccomp" name="reportNo" type="checkbox" value="<?= $accomplished->ReportNo ?>" />
+                        <input class="checkSelect" name="reportNo" type="checkbox" value="<?= $accomplished->ReportNo ?>" />
                     </td>
                     <td><?= $accomplished->ReportNo ?></td>
                     <td><?= date('F d, Y', strtotime($accomplished->DateFrom)); ?></td>
@@ -70,7 +70,7 @@ if (empty($title)) {
     loadJs(base_url + 'NewAssets/templateJs', function() {
         loadJs(base_url + 'assets/js/modals.js', function(){
             clickModalAccomp();
-            deleteAccomplishment();
+            deleteReport();
         });
     });
 

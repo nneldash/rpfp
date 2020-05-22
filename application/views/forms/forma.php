@@ -2,7 +2,7 @@
 defined('BASEPATH') or exit('No direct script access allowed');
 $this->load->library('helpers/HtmlHelper');
 
-$forma_list = ReportFormA::getFromVariable($form_A);    
+$forma_list = ReportFormA::getFromVariable($form_A);
 ?>
 
 <?php if ($is_pdf) { ?>
@@ -10,6 +10,9 @@ $forma_list = ReportFormA::getFromVariable($form_A);
     <style>
         .small {
             font-size: 12px!important;
+        }
+        .padding-b8 {
+            padding-bottom: 0px;
         }
     </style>
 <?php } else { ?>
@@ -19,13 +22,14 @@ $forma_list = ReportFormA::getFromVariable($form_A);
         .table-bordered {
             border: 1px solid #000;
         }        
+
     </style>
 <?php } ?>
 
 <link href="<?= base_url('assets/css/form.css') ?>" rel="stylesheet">
 
 
-<div class="body-padding">    
+<div class="body-padding" style="padding-top: 0%;">    
     <div class="">
         <div class="row">
             <div class="col padding-r3p padding-b8">
@@ -36,7 +40,7 @@ $forma_list = ReportFormA::getFromVariable($form_A);
             <p class="small">
                 <b>
                     RPFP CLASSES IMPLEMENTATION REPORT <br>
-                    FOR THE PERIOD <?= ($forma_list->Header != 0 ? date('F', $forma_list->From) . ' - ' : '' ) ?> <?= date('F, Y', $forma_list->To) ?> <br>
+                    FOR THE PERIOD <span style="text-transform: uppercase;"><?= ($forma_list->Header != 0 ? date('F', $forma_list->From) . ' - ' : '' ) ?> <?= date('F, Y', $forma_list->To) ?> </span><br>
                     POPCOM <?= ($forma_list->RegionalOffice != '' ? 'Regional Office '. $forma_list->RegionalOffice : 'Central Office' ) ?> <br>
                     DEMAND GENERATION ACTIVITIES
                 </b>
@@ -50,7 +54,9 @@ $forma_list = ReportFormA::getFromVariable($form_A);
                 </a>
             </div>
             <div id="rightButton">
-                <a href="<?= base_url('forms/viewforma') ?>" class="save" target="_blank">
+                <a href="<?= base_url('forms/viewforma?RegionalOffice=' . $this->input->get('RegionalOffice') . '&ReportNo=' . $this->input->get('ReportNo') . '&ReportMonth=' . $this->input->get('ReportMonth') . '&ReportYear=' . $this->input->get('ReportYear')); ?>" 
+                    class="save" 
+                    target="_blank">
                     <span>PRINT</span>
                 </a>
             </div>
@@ -262,61 +268,61 @@ $forma_list = ReportFormA::getFromVariable($form_A);
                                     <b>
                                 </p>
                             </td>
-                            <td>
+                            <td style="text-align: right; padding-right: 10px;">
                                 <?php echo HtmlHelper::dashInputPdf($forma->Class4Ps); ?>
                             </td>
-                            <td>
+                            <td style="text-align: right; padding-right: 10px;">
                                 <?php echo HtmlHelper::dashInputPdf($forma->ClassNon4Ps); ?>
                             </td>
-                            <td>
+                            <td style="text-align: right; padding-right: 10px;">
                                 <?php echo HtmlHelper::dashInputPdf($forma->ClassUsapan); ?>
                             </td>
-                            <td>
+                            <td style="text-align: right; padding-right: 10px;">
                                 <?php echo HtmlHelper::dashInputPdf($forma->ClassPMC); ?>
                             </td>
-                            <td>
+                            <td style="text-align: right; padding-right: 10px;">
                                 <?php echo HtmlHelper::dashInputPdf($forma->ClassH2H); ?>
                             </td>
-                            <td>
+                            <td style="text-align: right; padding-right: 10px;">
                                 <?php echo HtmlHelper::dashInputPdf($forma->ClassProfiled); ?>
                             </td>
-                            <td>
+                            <td style="text-align: right; padding-right: 10px;">
                                 <?php echo HtmlHelper::dashInputPdf($forma->TotalSessions); ?>
                             </td>
-                            <td>
+                            <td style="text-align: right; padding-right: 10px;">
                                 <?php echo HtmlHelper::dashInputPdf($forma->TargetCouples); ?>
                             </td>
-                            <td>
+                            <td style="text-align: right; padding-right: 10px;">
                                 <?php echo HtmlHelper::dashInputPdf($forma->WRA4Ps); ?>
                             </td>
-                            <td>
+                            <td style="text-align: right; padding-right: 10px;">
                                 <?php echo HtmlHelper::dashInputPdf($forma->WRANon4Ps); ?>
                             </td>
-                            <td>
+                            <td style="text-align: right; padding-right: 10px;">
                                 <?php echo HtmlHelper::dashInputPdf($forma->WRAUsapan); ?>
                             </td>
-                            <td>
+                            <td style="text-align: right; padding-right: 10px;">
                                 <?php echo HtmlHelper::dashInputPdf($forma->WRAPMC); ?>
                             </td>
-                            <td>
+                            <td style="text-align: right; padding-right: 10px;">
                                 <?php echo HtmlHelper::dashInputPdf($forma->WRAH2H); ?>
                             </td>
-                            <td>
+                            <td style="text-align: right; padding-right: 10px;">
                                 <?php echo HtmlHelper::dashInputPdf($forma->WRAProfiled); ?>
                             </td>
                             <td>
                                 <?php echo HtmlHelper::dashInputPdf($forma->TotalWRA); ?>
                             </td>
-                            <td>
+                            <td style="text-align: right; padding-right: 10px;">
                                 <?php echo HtmlHelper::dashInputPdf($forma->SoloMale); ?>
                             </td>
-                            <td>
+                            <td style="text-align: right; padding-right: 10px;">
                                 <?php echo HtmlHelper::dashInputPdf($forma->SoloFemale); ?>
                             </td>
-                            <td>
+                            <td style="text-align: right; padding-right: 10px;">
                                 <?php echo HtmlHelper::dashInputPdf($forma->CoupleAttendee); ?>
                             </td>
-                            <td>
+                            <td style="text-align: right; padding-right: 10px;">
                                 <?php echo HtmlHelper::dashInputPdf($forma->TotalReached); ?>
                             </td>
                         </tr>
@@ -367,61 +373,61 @@ $forma_list = ReportFormA::getFromVariable($form_A);
                                         <b>
                                     </p>
                                 </td>
-                                <td>
+                                <td style="text-align: right; padding-right: 10px;">
                                     <?php echo HtmlHelper::dashInputPdf($sub_total->Class4Ps); ?>
                                 </td>
-                                <td>
+                                <td style="text-align: right; padding-right: 10px;">
                                     <?php echo HtmlHelper::dashInputPdf($sub_total->ClassNon4Ps); ?>
                                 </td>
-                                <td>
+                                <td style="text-align: right; padding-right: 10px;">
                                     <?php echo HtmlHelper::dashInputPdf($sub_total->ClassUsapan); ?>
                                 </td>
-                                <td>
+                                <td style="text-align: right; padding-right: 10px;">
                                     <?php echo HtmlHelper::dashInputPdf($sub_total->ClassPMC); ?>
                                 </td>
-                                <td>
+                                <td style="text-align: right; padding-right: 10px;">
                                     <?php echo HtmlHelper::dashInputPdf($sub_total->ClassH2H); ?>
                                 </td>
-                                <td>
+                                <td style="text-align: right; padding-right: 10px;">
                                     <?php echo HtmlHelper::dashInputPdf($sub_total->ClassProfiled); ?>
                                 </td>
-                                <td>
+                                <td style="text-align: right; padding-right: 10px;">
                                     <?php echo HtmlHelper::dashInputPdf($sub_total->TotalSessions); ?>
                                 </td>
-                                <td>
+                                <td style="text-align: right; padding-right: 10px;">
                                     <?php echo HtmlHelper::dashInputPdf($sub_total->TargetCouples); ?>
                                 </td>
-                                <td>
+                                <td style="text-align: right; padding-right: 10px;">
                                     <?php echo HtmlHelper::dashInputPdf($sub_total->WRA4Ps); ?>
                                 </td>
-                                <td>
+                                <td style="text-align: right; padding-right: 10px;">
                                     <?php echo HtmlHelper::dashInputPdf($sub_total->WRANon4Ps); ?>
                                 </td>
-                                <td>
+                                <td style="text-align: right; padding-right: 10px;">
                                     <?php echo HtmlHelper::dashInputPdf($sub_total->WRAUsapan); ?>
                                 </td>
-                                <td>
+                                <td style="text-align: right; padding-right: 10px;">
                                     <?php echo HtmlHelper::dashInputPdf($sub_total->WRAPMC); ?>
                                 </td>
-                                <td>
+                                <td style="text-align: right; padding-right: 10px;">
                                     <?php echo HtmlHelper::dashInputPdf($sub_total->WRAH2H); ?>
                                 </td>
-                                <td>
+                                <td style="text-align: right; padding-right: 10px;">
                                     <?php echo HtmlHelper::dashInputPdf($sub_total->WRAProfiled); ?>
                                 </td>
-                                <td>
+                                <td style="text-align: right; padding-right: 10px;">
                                     <?php echo HtmlHelper::dashInputPdf($sub_total->TotalWRA); ?>
                                 </td>
-                                <td>
+                                <td style="text-align: right; padding-right: 10px;">
                                     <?php echo HtmlHelper::dashInputPdf($sub_total->SoloMale); ?>
                                 </td>
-                                <td>
+                                <td style="text-align: right; padding-right: 10px;">
                                     <?php echo HtmlHelper::dashInputPdf($sub_total->SoloFemale); ?>
                                 </td>
-                                <td>
+                                <td style="text-align: right; padding-right: 10px;">
                                     <?php echo HtmlHelper::dashInputPdf($sub_total->CoupleAttendee); ?>
                                 </td>
-                                <td>
+                                <td style="text-align: right; padding-right: 10px;">
                                     <?php echo HtmlHelper::dashInputPdf($sub_total->TotalReached); ?>
                                 </td>
                             </tr>
@@ -461,61 +467,61 @@ $forma_list = ReportFormA::getFromVariable($form_A);
                                     <b>
                                 </p>
                             </td>
-                            <td>
+                            <td style="text-align: right; padding-right: 10px;">
                                 <?php echo HtmlHelper::dashInputPdf($sub_total->Class4Ps); ?>
                             </td>
-                            <td>
+                            <td style="text-align: right; padding-right: 10px;">
                                 <?php echo HtmlHelper::dashInputPdf($sub_total->ClassNon4Ps); ?>
                             </td>
-                            <td>
+                            <td style="text-align: right; padding-right: 10px;">
                                 <?php echo HtmlHelper::dashInputPdf($sub_total->ClassUsapan); ?>
                             </td>
-                            <td>
+                            <td style="text-align: right; padding-right: 10px;">
                                 <?php echo HtmlHelper::dashInputPdf($sub_total->ClassPMC); ?>
                             </td>
-                            <td>
+                            <td style="text-align: right; padding-right: 10px;">
                                 <?php echo HtmlHelper::dashInputPdf($sub_total->ClassH2H); ?>
                             </td>
-                            <td>
+                            <td style="text-align: right; padding-right: 10px;">
                                 <?php echo HtmlHelper::dashInputPdf($sub_total->ClassProfiled); ?>
                             </td>
-                            <td>
+                            <td style="text-align: right; padding-right: 10px;">
                                 <?php echo HtmlHelper::dashInputPdf($sub_total->TotalSessions); ?>
                             </td>
-                            <td>
+                            <td style="text-align: right; padding-right: 10px;">
                                 <?php echo HtmlHelper::dashInputPdf($sub_total->TargetCouples); ?>
                             </td>
-                            <td>
+                            <td style="text-align: right; padding-right: 10px;">
                                 <?php echo HtmlHelper::dashInputPdf($sub_total->WRA4Ps); ?>
                             </td>
-                            <td>
+                            <td style="text-align: right; padding-right: 10px;">
                                 <?php echo HtmlHelper::dashInputPdf($sub_total->WRANon4Ps); ?>
                             </td>
-                            <td>
+                            <td style="text-align: right; padding-right: 10px;">
                                 <?php echo HtmlHelper::dashInputPdf($sub_total->WRAUsapan); ?>
                             </td>
-                            <td>
+                            <td style="text-align: right; padding-right: 10px;">
                                 <?php echo HtmlHelper::dashInputPdf($sub_total->WRAPMC); ?>
                             </td>
-                            <td>
+                            <td style="text-align: right; padding-right: 10px;">
                                 <?php echo HtmlHelper::dashInputPdf($sub_total->WRAH2H); ?>
                             </td>
-                            <td>
+                            <td style="text-align: right; padding-right: 10px;">
                                 <?php echo HtmlHelper::dashInputPdf($sub_total->WRAProfiled); ?>
                             </td>
-                            <td>
+                            <td style="text-align: right; padding-right: 10px;">
                                 <?php echo HtmlHelper::dashInputPdf($sub_total->TotalWRA); ?>
                             </td>
-                            <td>
+                            <td style="text-align: right; padding-right: 10px;">
                                 <?php echo HtmlHelper::dashInputPdf($sub_total->SoloMale); ?>
                             </td>
-                            <td>
+                            <td style="text-align: right; padding-right: 10px;">
                                 <?php echo HtmlHelper::dashInputPdf($sub_total->SoloFemale); ?>
                             </td>
-                            <td>
+                            <td style="text-align: right; padding-right: 10px;">
                                 <?php echo HtmlHelper::dashInputPdf($sub_total->CoupleAttendee); ?>
                             </td>
-                            <td>
+                            <td style="text-align: right; padding-right: 10px;">
                                 <?php echo HtmlHelper::dashInputPdf($sub_total->TotalReached); ?>
                             </td>
                         </tr>
@@ -530,61 +536,61 @@ $forma_list = ReportFormA::getFromVariable($form_A);
                                     <b>
                                 </p>
                             </td>
-                            <td>
+                            <td style="text-align: right; padding-right: 10px;">
                                 <?php echo HtmlHelper::dashInputPdf($grand_total->Class4Ps); ?>
                             </td>
-                            <td>
+                            <td style="text-align: right; padding-right: 10px;">
                                 <?php echo HtmlHelper::dashInputPdf($grand_total->ClassNon4Ps); ?>
                             </td>
-                            <td>
+                            <td style="text-align: right; padding-right: 10px;">
                                 <?php echo HtmlHelper::dashInputPdf($grand_total->ClassUsapan); ?>
                             </td>
-                            <td>
+                            <td style="text-align: right; padding-right: 10px;">
                                 <?php echo HtmlHelper::dashInputPdf($grand_total->ClassPMC); ?>
                             </td>
-                            <td>
+                            <td style="text-align: right; padding-right: 10px;">
                                 <?php echo HtmlHelper::dashInputPdf($grand_total->ClassH2H); ?>
                             </td>
-                            <td>
+                            <td style="text-align: right; padding-right: 10px;">
                                 <?php echo HtmlHelper::dashInputPdf($grand_total->ClassProfiled); ?>
                             </td>
-                            <td>
+                            <td style="text-align: right; padding-right: 10px;">
                                 <?php echo HtmlHelper::dashInputPdf($grand_total->TotalSessions); ?>
                             </td>
-                            <td>
+                            <td style="text-align: right; padding-right: 10px;">
                                 <?php echo HtmlHelper::dashInputPdf($grand_total->TargetCouples); ?>
                             </td>
-                            <td>
+                            <td style="text-align: right; padding-right: 10px;">
                                 <?php echo HtmlHelper::dashInputPdf($grand_total->WRA4Ps); ?>
                             </td>
-                            <td>
+                            <td style="text-align: right; padding-right: 10px;">
                                 <?php echo HtmlHelper::dashInputPdf($grand_total->WRANon4Ps); ?>
                             </td>
-                            <td>
+                            <td style="text-align: right; padding-right: 10px;">
                                 <?php echo HtmlHelper::dashInputPdf($grand_total->WRAUsapan); ?>
                             </td>
-                            <td>
+                            <td style="text-align: right; padding-right: 10px;">
                                 <?php echo HtmlHelper::dashInputPdf($grand_total->WRAPMC); ?>
                             </td>
-                            <td>
+                            <td style="text-align: right; padding-right: 10px;">
                                 <?php echo HtmlHelper::dashInputPdf($grand_total->WRAH2H); ?>
                             </td>
-                            <td>
+                            <td style="text-align: right; padding-right: 10px;">
                                 <?php echo HtmlHelper::dashInputPdf($grand_total->WRAProfiled); ?>
                             </td>
-                            <td>
+                            <td style="text-align: right; padding-right: 10px;">
                                 <?php echo HtmlHelper::dashInputPdf($grand_total->TotalWRA); ?>
                             </td>
-                            <td>
+                            <td style="text-align: right; padding-right: 10px;">
                                 <?php echo HtmlHelper::dashInputPdf($grand_total->SoloMale); ?>
                             </td>
-                            <td>
+                            <td style="text-align: right; padding-right: 10px;">
                                 <?php echo HtmlHelper::dashInputPdf($grand_total->SoloFemale); ?>
                             </td>
-                            <td>
+                            <td style="text-align: right; padding-right: 10px;">
                                 <?php echo HtmlHelper::dashInputPdf($grand_total->CoupleAttendee); ?>
                             </td>
-                            <td>
+                            <td style="text-align: right; padding-right: 10px;">
                                 <?php echo HtmlHelper::dashInputPdf($grand_total->TotalReached); ?>
                             </td>
                         </tr>
@@ -649,9 +655,11 @@ $forma_list = ReportFormA::getFromVariable($form_A);
                     <td style="border: none"></td>
                 </tr>
             </table>
-            <div class="text-right">
-				<p><?= date('M d, Y h:sa')?></p>
-			</div>
+            <?php if(!$is_pdf) : ?>
+                <div class="text-right">
+    				<p><?= date('M d, Y h:sa')?></p>
+    			</div>
+            <?php endif; ?>
         </div>
     </div>
 </div>

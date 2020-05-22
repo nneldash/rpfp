@@ -12,6 +12,7 @@ class Accomplishment extends CI_Controller
         }
 
         $this->load->library('accomplishment/AccomplishmentClass');
+        $this->load->library('accomplishment/DeleteAccomplishmentClass');
 
         $this->load->model('AccomplishmentModel');
         $this->load->model('ProfileModel');
@@ -41,6 +42,12 @@ class Accomplishment extends CI_Controller
         $this->output
             ->set_content_type('application/json')
             ->set_output(json_encode($data));
+    }
+
+    public function deleteAccomplishment()
+    {
+        echo 123;
+        $deleteData = new DeleteAccomplishmentClass();
     }
 
 }

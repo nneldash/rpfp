@@ -11,7 +11,10 @@ $formc_list = ReportFormC::getFromVariable($form_C);
 			margin: 0 80px;
 		}
 		.small {
-			font-size: 14px!important;
+			font-size: 12px!important;
+		}
+		.padding-b8 {
+			padding-bottom: 0;
 		}
 	</style>
 <?php } else { ?>
@@ -26,7 +29,7 @@ $formc_list = ReportFormC::getFromVariable($form_C);
 
 <link href="<?= base_url('assets/css/form.css') ?>" rel="stylesheet">
 
-<div class="body-padding">	
+<div class="body-padding" style="padding-top: 0;">	
 	<div class="">
 		<div class="row">
 			<div class="col padding-r3p padding-b8">
@@ -37,7 +40,7 @@ $formc_list = ReportFormC::getFromVariable($form_C);
 			<p class="small">
 				<b>
 					RPFP CLASSES IMPLEMENTATION REPORT <br>
-					FOR THE PERIOD <?= ($formc_list->Header != 0 ? date('F', $formc_list->From) . ' - ' : '' ) ?> <?= date('F, Y', $formc_list->To) ?> <br>
+					FOR THE PERIOD <span style="text-transform: uppercase;"><?= ($formc_list->Header != 0 ? date('F', $formc_list->From) . ' - ' : '' ) ?> <?= date('F, Y', $formc_list->To) ?></span> <br>
 					POPCOM <?= ($formc_list->RegionalOffice != '' ? 'Regional Office '. $formc_list->RegionalOffice : 'Central Office' ) ?> <br>
 					TOTAL NUMBER OF COUPLES SERVED WITH UNMET NEED
 				</b>
@@ -51,7 +54,9 @@ $formc_list = ReportFormC::getFromVariable($form_C);
                     </a>
 			    </div>
 			    <div id="rightButton">
-		        	<a href="<?= base_url('forms/viewformc') ?>" class="save" target="_blank">
+		        	<a href="<?= base_url('forms/viewformc?RegionalOffice=' . $this->input->get('RegionalOffice') . '&ReportNo=' . $this->input->get('ReportNo') . '&ReportMonth=' . $this->input->get('ReportMonth') . '&ReportYear=' . $this->input->get('ReportYear')); ?>" 
+	                    class="save" 
+	                    target="_blank">
                         <span>PRINT</span>
                     </a>
 			    </div>
@@ -190,43 +195,43 @@ $formc_list = ReportFormC::getFromVariable($form_C);
 									<b>
 								</p>
 							</td>
-							<td>
+							<td style="text-align: right; padding-right: 10px;">
 								<?php echo HtmlHelper::dashInputPdf($formc->ServedCondom); ?>
 							</td>
-							<td>
+							<td style="text-align: right; padding-right: 10px;">
 								<?php echo HtmlHelper::dashInputPdf($formc->ServedIUD); ?>
 							</td>
-							<td>
+							<td style="text-align: right; padding-right: 10px;">
 								<?php echo HtmlHelper::dashInputPdf($formc->ServedPills); ?>
 							</td>
-							<td>
+							<td style="text-align: right; padding-right: 10px;">
 								<?php echo HtmlHelper::dashInputPdf($formc->ServedInjectables); ?>
 							</td>
-							<td>
+							<td style="text-align: right; padding-right: 10px;">
 								<?php echo HtmlHelper::dashInputPdf($formc->ServedNSV); ?>
 							</td>
-							<td>
+							<td style="text-align: right; padding-right: 10px;">
 								<?php echo HtmlHelper::dashInputPdf($formc->ServedBTL); ?>
 							</td>
-							<td>
+							<td style="text-align: right; padding-right: 10px;">
 								<?php echo HtmlHelper::dashInputPdf($formc->ServedImplant); ?>
 							</td>
-							<td>
+							<td style="text-align: right; padding-right: 10px;">
 								<?php echo HtmlHelper::dashInputPdf($formc->ServedCMM); ?>
 							</td>
-							<td>
+							<td style="text-align: right; padding-right: 10px;">
 								<?php echo HtmlHelper::dashInputPdf($formc->ServedBBT); ?>
 							</td>
-							<td>
+							<td style="text-align: right; padding-right: 10px;">
 								<?php echo HtmlHelper::dashInputPdf($formc->ServedSymptoThermal); ?>
 							</td>
-							<td>
+							<td style="text-align: right; padding-right: 10px;">
 								<?php echo HtmlHelper::dashInputPdf($formc->ServedSDM); ?>
 							</td>
-							<td>
+							<td style="text-align: right; padding-right: 10px;">
 								<?php echo HtmlHelper::dashInputPdf($formc->ServedLAM); ?>
 							</td>
-							<td>
+							<td style="text-align: right; padding-right: 10px;">
 								<?php echo HtmlHelper::dashInputPdf($formc->TotalServed); ?>
 							</td>
 						</tr>
@@ -269,43 +274,43 @@ $formc_list = ReportFormC::getFromVariable($form_C);
 											<b>
 										</p>
 									</td>
-									<td>
+									<td style="text-align: right; padding-right: 10px;">
 										<?php echo HtmlHelper::dashInputPdf($sub_total->ServedCondom); ?>
 									</td>
-									<td>
+									<td style="text-align: right; padding-right: 10px;">
 										<?php echo HtmlHelper::dashInputPdf($sub_total->ServedIUD); ?>
 									</td>
-									<td>
+									<td style="text-align: right; padding-right: 10px;">
 										<?php echo HtmlHelper::dashInputPdf($sub_total->ServedPills); ?>
 									</td>
-									<td>
+									<td style="text-align: right; padding-right: 10px;">
 										<?php echo HtmlHelper::dashInputPdf($sub_total->ServedInjectables); ?>
 									</td>
-									<td>
+									<td style="text-align: right; padding-right: 10px;">
 										<?php echo HtmlHelper::dashInputPdf($sub_total->ServedNSV); ?>
 									</td>
-									<td>
+									<td style="text-align: right; padding-right: 10px;">
 										<?php echo HtmlHelper::dashInputPdf($sub_total->ServedBTL); ?>
 									</td>
-									<td>
+									<td style="text-align: right; padding-right: 10px;">
 										<?php echo HtmlHelper::dashInputPdf($sub_total->ServedImplant); ?>
 									</td>
-									<td>
+									<td style="text-align: right; padding-right: 10px;">
 										<?php echo HtmlHelper::dashInputPdf($sub_total->ServedCMM); ?>
 									</td>
-									<td>
+									<td style="text-align: right; padding-right: 10px;">
 										<?php echo HtmlHelper::dashInputPdf($sub_total->ServedBBT); ?>
 									</td>
-									<td>
+									<td style="text-align: right; padding-right: 10px;">
 										<?php echo HtmlHelper::dashInputPdf($sub_total->ServedSymptoThermal); ?>
 									</td>
-									<td>
+									<td style="text-align: right; padding-right: 10px;">
 										<?php echo HtmlHelper::dashInputPdf($sub_total->ServedSDM); ?>
 									</td>
-									<td>
+									<td style="text-align: right; padding-right: 10px;">
 										<?php echo HtmlHelper::dashInputPdf($sub_total->ServedLAM); ?>
 									</td>
-									<td>
+									<td style="text-align: right; padding-right: 10px;">
 										<?php echo HtmlHelper::dashInputPdf($sub_total->TotalServed); ?>
 									</td>
 								</tr>
@@ -341,43 +346,43 @@ $formc_list = ReportFormC::getFromVariable($form_C);
 										<b>
 									</p>
 								</td>
-								<td>
+								<td style="text-align: right; padding-right: 10px;">
 									<?php echo HtmlHelper::dashInputPdf($sub_total->ServedCondom); ?>
 								</td>
-								<td>
+								<td style="text-align: right; padding-right: 10px;">
 									<?php echo HtmlHelper::dashInputPdf($sub_total->ServedIUD); ?>
 								</td>
-								<td>
+								<td style="text-align: right; padding-right: 10px;">
 									<?php echo HtmlHelper::dashInputPdf($sub_total->ServedPills); ?>
 								</td>
-								<td>
+								<td style="text-align: right; padding-right: 10px;">
 									<?php echo HtmlHelper::dashInputPdf($sub_total->ServedInjectables); ?>
 								</td>
-								<td>
+								<td style="text-align: right; padding-right: 10px;">
 									<?php echo HtmlHelper::dashInputPdf($sub_total->ServedNSV); ?>
 								</td>
-								<td>
+								<td style="text-align: right; padding-right: 10px;">
 									<?php echo HtmlHelper::dashInputPdf($sub_total->ServedBTL); ?>
 								</td>
-								<td>
+								<td style="text-align: right; padding-right: 10px;">
 									<?php echo HtmlHelper::dashInputPdf($sub_total->ServedImplant); ?>
 								</td>
-								<td>
+								<td style="text-align: right; padding-right: 10px;">
 									<?php echo HtmlHelper::dashInputPdf($sub_total->ServedCMM); ?>
 								</td>
-								<td>
+								<td style="text-align: right; padding-right: 10px;">
 									<?php echo HtmlHelper::dashInputPdf($sub_total->ServedBBT); ?>
 								</td>
-								<td>
+								<td style="text-align: right; padding-right: 10px;">
 									<?php echo HtmlHelper::dashInputPdf($sub_total->ServedSymptoThermal); ?>
 								</td>
-								<td>
+								<td style="text-align: right; padding-right: 10px;"	>
 									<?php echo HtmlHelper::dashInputPdf($sub_total->ServedSDM); ?>
 								</td>
-								<td>
+								<td style="text-align: right; padding-right: 10px;"	>
 									<?php echo HtmlHelper::dashInputPdf($sub_total->ServedLAM); ?>
 								</td>
-								<td>
+								<td style="text-align: right; padding-right: 10px;"	>
 									<?php echo HtmlHelper::dashInputPdf($sub_total->TotalServed); ?>
 								</td>
 							</tr>
@@ -392,43 +397,43 @@ $formc_list = ReportFormC::getFromVariable($form_C);
 										<b>
 									</p>
 								</td>
-								<td>
+								<td style="text-align: right; padding-right: 10px;">
 									<?php echo HtmlHelper::dashInputPdf($grand_total->ServedCondom); ?>
 								</td>
-								<td>
+								<td style="text-align: right; padding-right: 10px;">
 									<?php echo HtmlHelper::dashInputPdf($grand_total->ServedIUD); ?>
 								</td>
-								<td>
+								<td style="text-align: right; padding-right: 10px;">
 									<?php echo HtmlHelper::dashInputPdf($grand_total->ServedPills); ?>
 								</td>
-								<td>
+								<td style="text-align: right; padding-right: 10px;">
 									<?php echo HtmlHelper::dashInputPdf($grand_total->ServedInjectables); ?>
 								</td>
-								<td>
+								<td style="text-align: right; padding-right: 10px;">
 									<?php echo HtmlHelper::dashInputPdf($grand_total->ServedNSV); ?>
 								</td>
-								<td>
+								<td style="text-align: right; padding-right: 10px;">
 									<?php echo HtmlHelper::dashInputPdf($grand_total->ServedBTL); ?>
 								</td>
-								<td>
+								<td style="text-align: right; padding-right: 10px;">
 									<?php echo HtmlHelper::dashInputPdf($grand_total->ServedImplant); ?>
 								</td>
-								<td>
+								<td style="text-align: right; padding-right: 10px;">
 									<?php echo HtmlHelper::dashInputPdf($grand_total->ServedCMM); ?>
 								</td>
-								<td>
+								<td style="text-align: right; padding-right: 10px;">
 									<?php echo HtmlHelper::dashInputPdf($grand_total->ServedBBT); ?>
 								</td>
-								<td>
+								<td style="text-align: right; padding-right: 10px;">
 									<?php echo HtmlHelper::dashInputPdf($grand_total->ServedSymptoThermal); ?>
 								</td>
-								<td>
+								<td style="text-align: right; padding-right: 10px;">
 									<?php echo HtmlHelper::dashInputPdf($grand_total->ServedSDM); ?>
 								</td>
-								<td>
+								<td style="text-align: right; padding-right: 10px;">
 									<?php echo HtmlHelper::dashInputPdf($grand_total->ServedLAM); ?>
 								</td>
-								<td>
+								<td style="text-align: right; padding-right: 10px;">
 									<?php echo HtmlHelper::dashInputPdf($grand_total->TotalServed); ?>
 								</td>
 							</tr>
@@ -490,9 +495,11 @@ $formc_list = ReportFormC::getFromVariable($form_C);
 						<td style="border: none"></td>
 					</tr>
 				</table>
-				<div class="text-right">
-					<p><?= date('M d, Y h:sa')?></p>
-				</div>
+				<?php if (!$is_pdf): ?>
+					<div class="text-right">
+						<p><?= date('M d, Y h:sa')?></p>
+					</div>
+				<?php endif; ?>
 			</div>
 	    </form>
 	</div>

@@ -13,34 +13,34 @@ function clickModalAccomp()
 	});
 }
 
-function deleteAccomplishment()
+function deleteReport()
 {
 	$('#checkAll').click(function(){
 		var checked = $(this).prop('checked');
 
 		if ($(this).is(':checked')) {
 			$('input[type="checkbox"]').prop('checked', checked);
-			$('input[name="deleteAccomplishment"]').attr('hidden', false);
+			$('input[name="deleteButton"]').attr('hidden', false);
 		} else {
 			$('input[type="checkbox"]').prop('checked', false);
-			$('input[name="deleteAccomplishment"]').attr('hidden', true);
+			$('input[name="deleteButton"]').attr('hidden', true);
 		}
 	});
 
-	$('.checkAccomp').click(function(){
+	$('.checkSelect').click(function(){
 		var checked = $(this).prop('checked');
 
 		if ($(this).is(':checked')) {
-			$('input[name="deleteAccomplishment"]').attr('hidden', false);
+			$('input[name="deleteButton"]').attr('hidden', false);
 		} else {
-			$('input[name="deleteAccomplishment"]').attr('hidden', true);
+			$('input[name="deleteButton"]').attr('hidden', true);
 		}
 	});
 
-	$('input[name="deleteAccomplishment"]').click(function(){
+	$('input[name="deleteButton"]').click(function(){
 		var formData = {};
 
-		$.each($('.checkAccomp').filter(':checked'), function(key, value) {
+		$.each($('.checkSelect').filter(':checked'), function(key, value) {
 			var item = $(value).val();
 			var className = $(value).attr('name');
 	
@@ -94,3 +94,16 @@ function clickModalReportB()
 	});
 }
 
+function clickModalReportC() {
+	$('.genReportC').click(function (event) {
+		event.preventDefault();
+
+		$('#generateReportModal').modal();
+		$('#generateReportModal .modal-title').text('Generate Report');
+
+		$.post(base_url + 'modals/viewFormCModal')
+			.done(function (html) {
+				$('#generateReportModal .modal-body').html(html);
+			});
+	});
+}

@@ -6,6 +6,12 @@ $formb_list = ReportFormBClass::getFromVariable($form_B);
 
 <?php if($is_pdf){ ?>
 	<link href="<?= base_url('NewAssets/bootstrapCss') ?>" rel="stylesheet">
+	<style>
+		.padding-b8 {
+			padding-bottom: 0;
+			padding-top: 0;
+		}
+	</style>
 <?php } else { ?>
 	<style>
 		.table-bordered > tbody > tr > td,
@@ -18,7 +24,7 @@ $formb_list = ReportFormBClass::getFromVariable($form_B);
 
 <link href="<?= base_url('assets/css/form.css') ?>" rel="stylesheet">
 
-<div class="body-padding">	
+<div class="body-padding" style="padding-top: 0;">	
 	<div class="">
 		<div class="row">
 			<div class="col padding-r3p padding-b8">
@@ -29,7 +35,7 @@ $formb_list = ReportFormBClass::getFromVariable($form_B);
 			<p class="small">
 				<b>
 					RPFP CLASSES IMPLEMENTATION REPORT <br>
-					FOR THE PERIOD <?= ($formb_list->Header != 0 ? date('F', $formb_list->From) . ' - ' : '' ) ?> <?= date('F, Y', $formb_list->To) ?> <br>
+					FOR THE PERIOD <span style="text-transform: uppercase;"><?= ($formb_list->Header != 0 ? date('F', $formb_list->From) . ' - ' : '' ) ?> <?= date('F, Y', $formb_list->To) ?></span> <br>
 					POPCOM <?= ($formb_list->RegionalOffice != '' ? 'Regional Office '. $formb_list->RegionalOffice : 'Central Office' ) ?> <br>
 					TOTAL NUMBER OF UNMET NEED
 				</b>
@@ -43,7 +49,9 @@ $formb_list = ReportFormBClass::getFromVariable($form_B);
                     </a>
 			    </div>
 			    <div id="rightButton">
-		        	<a href="<?= base_url('forms/viewformb') ?>" class="save" target="_blank">
+			    	<a href="<?= base_url('forms/viewformb?RegionalOffice=' . $this->input->get('RegionalOffice') . '&ReportNo=' . $this->input->get('ReportNo') . '&ReportMonth=' . $this->input->get('ReportMonth') . '&ReportYear=' . $this->input->get('ReportYear')); ?>" 
+                    class="save" 
+                    target="_blank">
                         <span>PRINT</span>
                     </a>
 			    </div>
@@ -147,25 +155,25 @@ $formb_list = ReportFormBClass::getFromVariable($form_B);
 											<b>
 										</p>
 									</td>
-									<td>
+									<td style="text-align: right; padding-right: 10px;">
 										<?php echo HtmlHelper::dashInputPdf($formb->UnmetModern); ?>
 									</td>
-									<td>
+									<td style="text-align: right; padding-right: 10px;">
 										<?php echo HtmlHelper::dashInputPdf($formb->ServedModern); ?>
 									</td>
-									<td>
+									<td style="text-align: right; padding-right: 10px;">
 										<?php echo HtmlHelper::dashInputPdf($formb->NoIntention); ?>
 									</td>
-									<td>
+									<td style="text-align: right; padding-right: 10px;">
 										<?php echo HtmlHelper::dashInputPdf($formb->WithIntention); ?>
 									</td>
-									<td>
+									<td style="text-align: right; padding-right: 10px;">
 										<?php echo HtmlHelper::dashInputPdf($formb->ServedTraditional); ?>
 									</td>
-									<td>
+									<td style="text-align: right; padding-right: 10px;">
 										<?php echo HtmlHelper::dashInputPdf($formb->TotalUnmet); ?>
 									</td>
-									<td>
+									<td style="text-align: right; padding-right: 10px;">
 										<?php echo HtmlHelper::dashInputPdf($formb->TotalServed); ?>
 									</td>
 								</tr>
@@ -198,25 +206,25 @@ $formb_list = ReportFormBClass::getFromVariable($form_B);
 											<b>
 										</p>
 									</td>
-									<td>
+									<td style="text-align: right; padding-right: 10px;">
 										<?php echo HtmlHelper::dashInputPdf($sub_total->UnmetModern); ?>
 									</td>
-									<td>
+									<td style="text-align: right; padding-right: 10px;">
 										<?php echo HtmlHelper::dashInputPdf($sub_total->ServedModern); ?>
 									</td>
-									<td>
+									<td style="text-align: right; padding-right: 10px;">
 										<?php echo HtmlHelper::dashInputPdf($sub_total->NoIntention); ?>
 									</td>
-									<td>
+									<td style="text-align: right; padding-right: 10px;">
 										<?php echo HtmlHelper::dashInputPdf($sub_total->WithIntention); ?>
 									</td>
-									<td>
+									<td style="text-align: right; padding-right: 10px;">
 										<?php echo HtmlHelper::dashInputPdf($sub_total->ServedTraditional); ?>
 									</td>
-									<td>
+									<td style="text-align: right; padding-right: 10px;">
 										<?php echo HtmlHelper::dashInputPdf($sub_total->TotalUnmet); ?>
 									</td>
-									<td>
+									<td style="text-align: right; padding-right: 10px;">
 										<?php echo HtmlHelper::dashInputPdf($sub_total->TotalServed); ?>
 									</td>
 								</tr>
@@ -247,25 +255,25 @@ $formb_list = ReportFormBClass::getFromVariable($form_B);
 												<b>
 											</p>
 										</td>
-										<td>
+										<td style="text-align: right; padding-right: 10px;">
 											<?php echo HtmlHelper::dashInputPdf($sub_total->UnmetModern); ?>
 										</td>
-										<td>
+										<td style="text-align: right; padding-right: 10px;">
 											<?php echo HtmlHelper::dashInputPdf($sub_total->ServedModern); ?>
 										</td>
-										<td>
+										<td style="text-align: right; padding-right: 10px;">
 											<?php echo HtmlHelper::dashInputPdf($sub_total->NoIntention); ?>
 										</td>
-										<td>
+										<td style="text-align: right; padding-right: 10px;">
 											<?php echo HtmlHelper::dashInputPdf($sub_total->WithIntention); ?>
 										</td>
-										<td>
+										<td style="text-align: right; padding-right: 10px;">
 											<?php echo HtmlHelper::dashInputPdf($sub_total->ServedTraditional); ?>
 										</td>
-										<td>
+										<td style="text-align: right; padding-right: 10px;">
 											<?php echo HtmlHelper::dashInputPdf($sub_total->TotalUnmet); ?>
 										</td>
-										<td>
+										<td style="text-align: right; padding-right: 10px;">
 											<?php echo HtmlHelper::dashInputPdf($sub_total->TotalServed); ?>
 										</td>
 									</tr>
@@ -280,25 +288,25 @@ $formb_list = ReportFormBClass::getFromVariable($form_B);
 												<b>
 											</p>
 										</td>
-										<td>
+										<td style="text-align: right; padding-right: 10px;">
 											<?php echo HtmlHelper::dashInputPdf($grand_total->UnmetModern); ?>
 										</td>
-										<td>
+										<td style="text-align: right; padding-right: 10px;">
 											<?php echo HtmlHelper::dashInputPdf($grand_total->ServedModern); ?>
 										</td>
-										<td>
+										<td style="text-align: right; padding-right: 10px;">
 											<?php echo HtmlHelper::dashInputPdf($grand_total->NoIntention); ?>
 										</td>
-										<td>
+										<td style="text-align: right; padding-right: 10px;">
 											<?php echo HtmlHelper::dashInputPdf($grand_total->WithIntention); ?>
 										</td>
-										<td>
+										<td style="text-align: right; padding-right: 10px;">
 											<?php echo HtmlHelper::dashInputPdf($grand_total->ServedTraditional); ?>
 										</td>
-										<td>
+										<td style="text-align: right; padding-right: 10px;">
 											<?php echo HtmlHelper::dashInputPdf($grand_total->TotalUnmet); ?>
 										</td>
-										<td>
+										<td style="text-align: right; padding-right: 10px;">
 											<?php echo HtmlHelper::dashInputPdf($grand_total->TotalServed); ?>
 										</td>
 									</tr>
@@ -360,9 +368,11 @@ $formb_list = ReportFormBClass::getFromVariable($form_B);
 						<td style="border: none"></td>
 					</tr>
 				</table>
-				<div class="text-right">
-					<p><?= date('M d, Y h:sa')?></p>
-				</div>
+				<?php if (!$is_pdf): ?>
+					<div class="text-right">
+						<p><?= date('M d, Y h:sa')?></p>
+					</div>
+				<?php endif; ?>
 			</div>
 	    </form>
 	</div>
