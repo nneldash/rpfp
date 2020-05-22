@@ -59,7 +59,7 @@ function checkRequired()
 {
 	var validate = 0;
 
-	$.each($('input').filter('[required]'), function(key, value) {
+	$.each($('select, option').filter('[required]'), function(key, value) {
 		var item = $(value).val();
 
 		if (item == '') {
@@ -70,4 +70,72 @@ function checkRequired()
 	});
 	
 	return validate;
+}
+
+function enableFields()
+{
+	$('select[name="repTypeSelect"]').change(function() {
+		var repType = $(this).val();
+
+		if (repType == 01) {
+			$('.yearSelect').removeAttr('disabled');
+			$('.yearSelect').attr('required', true);
+			$('.year-label-req').removeAttr('hidden');
+
+			$('.qtrSelect').val('');
+			$('.qtrSelect').attr('disabled', true);
+			$('.qtrSelect').removeAttr('required');
+			$('.qtr-label-req').attr('hidden', true);
+
+			$('.monthSelect').val('');
+			$('.monthSelect').attr('disabled', true);
+			$('.monthSelect').removeAttr('required');
+			$('.month-label-req').attr('hidden', true);
+
+		} else if (repType == 02) {
+			$('.yearSelect').removeAttr('disabled');
+			$('.yearSelect').attr('required', true);
+			$('.year-label-req').removeAttr('hidden');
+
+			$('.qtrSelect').removeAttr('disabled');
+			$('.qtrSelect').attr('required', true);
+			$('.qtr-label-req').removeAttr('hidden');
+
+			$('.monthSelect').val('');
+			$('.monthSelect').attr('disabled', true);
+			$('.monthSelect').removeAttr('required');
+			$('.month-label-req').attr('hidden', true);
+
+		} else if (repType == 03) {
+			$('.yearSelect').removeAttr('disabled');
+			$('.yearSelect').attr('required', true);
+			$('.year-label-req').removeAttr('hidden');
+
+			$('.monthSelect').removeAttr('disabled');
+			$('.monthSelect').attr('required', true);
+			$('.month-label-req').removeAttr('hidden');
+
+			$('.qtrSelect').val('');
+			$('.qtrSelect').attr('disabled', true);
+			$('.qtrSelect').removeAttr('required');
+			$('.qtr-label-req').attr('hidden', true);
+
+		} else {
+			$('.yearSelect').val('');
+			$('.yearSelect').attr('disabled', true);
+			$('.yearSelect').removeAttr('required');
+			$('.year-label-req').attr('hidden', true);
+			
+			$('.qtrSelect').val('');
+			$('.qtrSelect').attr('disabled', true);
+			$('.qtrSelect').removeAttr('required');
+			$('.qtr-label-req').attr('hidden', true);
+
+			$('.monthSelect').val('');
+			$('.monthSelect').attr('disabled', true);
+			$('.monthSelect').removeAttr('required');
+			$('.month-label-req').attr('hidden', true);
+		}
+		
+	});
 }
