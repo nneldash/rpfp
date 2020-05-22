@@ -15,12 +15,18 @@ if (empty($title)) {
     <div class="col-md-3" style="text-transform: none; padding: 0">
         <input type="submit" class="save genAccomp" value="Generate Report" name="genAccomplishment" />
     </div>
-    <div class="col-md-9"></div>
+    <div class="col-md-3" style="text-transform: none; padding: 0">
+        <input type="submit" class="delete" name="deleteAccomplishment" value="Delete Selected" hidden />
+    </div>
+    <div class="col-md-6"></div>
 </div>
 
 <table id="datatable-responsive" class="table table-condensed table-striped table-hover table-bordered dt-responsive nowrap accomplishmentList" cellspacing="0" width="100%">
     <thead>
         <tr>
+            <th>
+                <input type="checkbox" id="checkAll" />
+            </th>
             <th>Report #</th>
             <th>Encoded From</th>
             <th>Encoded To</th>
@@ -32,6 +38,9 @@ if (empty($title)) {
         <?php foreach ($accomplishment as $accomplished) : ?>
             <?php if ($accomplished->ReportNo != 'N/A') { ?>
                 <tr>
+                    <td>
+                        <input class="checkAccomp" name="reportNo" type="checkbox" value="<?= $accomplished->ReportNo ?>" />
+                    </td>
                     <td><?= $accomplished->ReportNo ?></td>
                     <td><?= date('F d, Y', strtotime($accomplished->DateFrom)); ?></td>
                     <td><?= date('F d, Y', strtotime($accomplished->DateTo)); ?></td>
@@ -45,7 +54,8 @@ if (empty($title)) {
                 </tr>
             <?php } else { ?>
                 <tr>
-                    <td class="text-center" colspan="5">No result(s) found.</td>
+                    <td class="text-center" colspan="6">No result(s) found.</td>
+                    <td class="text-center none"></td>
                     <td class="text-center none"></td>
                     <td class="text-center none"></td>
                     <td class="text-center none"></td>
@@ -60,6 +70,7 @@ if (empty($title)) {
     loadJs(base_url + 'NewAssets/templateJs', function() {
         loadJs(base_url + 'assets/js/modals.js', function(){
             clickModalAccomp();
+            deleteAccomplishment();
         });
     });
 
