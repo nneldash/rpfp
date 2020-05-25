@@ -11,16 +11,22 @@ if (empty($title)) {
 <link href="<?= base_url('NewAssets/fontAwesome'); ?>" rel="stylesheet">
 <link href="<?= base_url('assets/css/form.css'); ?>" rel="stylesheet">
 
-    <div class="col-md-12" style="padding: 0 0 20px">
-        <div class="col-md-3" style="text-transform: none; padding: 0">
-            <input type="submit" class="save genReportA" value="Generate Report" name="genFormA" />
-        </div>
-        <div class="col-md-9"></div>
+<div class="col-md-12" style="padding: 0 0 20px">
+    <div class="col-md-3" style="text-transform: none; padding: 0">
+        <input type="submit" class="save genReportA" value="Generate Report" name="genFormA" />
     </div>
+    <div class="col-md-3" style="text-transform: none; padding: 0">
+        <input type="submit" class="delete" name="deleteButton" value="Delete Selected" hidden />
+    </div>
+    <div class="col-md-6"></div>
+</div>
 
 <table id="datatable-responsive" class="table table-condensed table-striped table-hover table-bordered dt-responsive nowrap formAList" cellspacing="0" width="100%">
     <thead>
         <tr>
+            <th>
+                <input id="checkAll" type="checkbox">
+            </th>
             <th>Report #</th>
             <th>Report Code</th>
             <th>Report Year | Month</th>
@@ -32,6 +38,9 @@ if (empty($title)) {
         <?php foreach ($form_A as $forma) : ?>
             <?php if ($forma->ReportID != 'N/A') { ?>
                 <tr>
+                    <td>
+                        <input class="checkSelect" name="reportNo" type="checkbox" value="<?= $forma->ReportID ?>" />
+                    </td>
                     <td><?= $forma->ReportID ?></td>
                     <td><?= $forma->ReportNo ?></td>
                     <td><?= $forma->ReportYear ?> - <?= $forma->ReportCode ?></td>
@@ -45,7 +54,8 @@ if (empty($title)) {
                 </tr>
             <?php } else { ?>
                 <tr>
-                    <td class="text-center" colspan="4">No result(s) found.</td>
+                    <td class="text-center" colspan="5">No result(s) found.</td>
+                    <td class="text-center none"></td>
                     <td class="text-center none"></td>
                     <td class="text-center none"></td>
                     <td class="text-center none"></td>
@@ -58,8 +68,9 @@ if (empty($title)) {
 
 <script>
     loadJs(base_url + 'NewAssets/templateJs', function() {
-        loadJs(base_url + 'assets/js/modalFormA.js', function(){
+        loadJs(base_url + 'assets/js/modals.js', function(){
             clickModalReportA();
+            deleteReport();            
         });
     });
 

@@ -402,6 +402,21 @@ textarea::placeholder {
 .save:focus {
 	color: #fff;
 }
+.delete {
+	color: #fff;
+    padding: 12px 37px;
+	border-radius: 0;
+	border: 2px solid #fc2121;
+	background: #fc2121;
+}
+.delete:hover {
+	background: #fff;
+	color: #fc2121;
+}
+.delete:focus {
+	color: #fff;
+}
+
 a:hover {
     text-decoration: none;
     color: #57b846;

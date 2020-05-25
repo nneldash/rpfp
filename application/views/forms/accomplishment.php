@@ -58,9 +58,9 @@ $accomp_no = $this->input->get('ReportNo');
 							$duplicates = 0;
 						foreach ($accomplishment as $accomplished) : ?>
 							<tr>
-								<td><?= $accomplished->ClassNo ?></td>
+								<td style="padding-left: 2%"><?= $accomplished->ClassNo ?></td>
 								<?php $total_class++ ?>
-								<td>
+								<td style="text-align:right; padding-right: 10px;">
 									<?php 
 										if($accomplished->EncodedCouples != 'N/A') {
 											echo $accomplished->EncodedCouples;
@@ -70,7 +70,7 @@ $accomp_no = $this->input->get('ReportNo');
 										}
 									?>
 								</td>
-								<td>
+								<td style="text-align:right; padding-right: 10px;">
 									<?php 
 										if($accomplished->ApprovedCouples != 'N/A') {
 											echo $accomplished->ApprovedCouples;
@@ -80,7 +80,7 @@ $accomp_no = $this->input->get('ReportNo');
 										}
 									?>
 								</td>
-								<td>
+								<td style="text-align:right; padding-right: 10px;">
 									<?php 
 										if($accomplished->PendingCouples != 'N/A') {
 											echo $accomplished->PendingCouples;
@@ -90,7 +90,7 @@ $accomp_no = $this->input->get('ReportNo');
 										}
 									?>
 								</td>
-								<td>
+								<td style="text-align:right; padding-right: 10px;">
 									<?php 
 										if($accomplished->ServedCouples != 'N/A') {
 											echo $accomplished->ServedCouples;
@@ -100,7 +100,7 @@ $accomp_no = $this->input->get('ReportNo');
 										}
 									?>
 								</td>
-								<td>
+								<td style="text-align:right; padding-right: 10px;">
 									<?php 
 										if($accomplished->Duplicates != 'N/A') {
 											echo $accomplished->Duplicates;
@@ -121,32 +121,32 @@ $accomp_no = $this->input->get('ReportNo');
         							Sub-total
         						</p>
         					</td>
-        					<td class="text-center">
+        					<td class="text-right" style="padding-right: 10px;">
         						<p class="text-bold text-italic">
         							<?= $encoded_couples ?>
         						</p>
         					</td>
-        					<td class="text-center">
+        					<td class="text-right" style="padding-right: 10px;">
         						<p class="text-bold text-italic">
         							<?= $approved_couples ?>
         						</p>
         					</td>
-        					<td class="text-center">
+        					<td class="text-right" style="padding-right: 10px;">
         						<p class="text-bold text-italic">
         							<?= $pending_couples ?>
         						</p>
         					</td>
-        					<td class="text-center">
+        					<td class="text-right" style="padding-right: 10px;">
         						<p class="text-bold text-italic">
         							<?= $served_couples ?>
         						</p>
         					</td>
-        					<td class="text-center">
+        					<td class="text-right" style="padding-right: 10px;">
         						<p class="text-bold text-italic">
         							<?= $duplicates ?>
         						</p>
         					</td>
-        					<td class="text-center">
+        					<td class="text-right" 	style="padding-right: 10px;">
         						<p class="text-bold text-italic">
         							
         						</p>
@@ -154,7 +154,7 @@ $accomp_no = $this->input->get('ReportNo');
         				</tr>
         				<tr>
         					<td colspan="1" class="text-center" style="border-right: 0;">
-        						<p class="text-bold">TOTAL <br> (Classes)</p>
+        						<p class="text-bold">TOTAL <br> <span class="small">(Classes)</span></p>
         					</td>
         					<td style="border-right: 0; border-left: 0;"></td>
         					<td colspan="1" class="text-right" style="border-left: 0; padding-right: 4%;">
@@ -163,7 +163,7 @@ $accomp_no = $this->input->get('ReportNo');
 								</h4>
         					</td>
         					<td colspan="2" class="text-center" style="border-right: 0;">
-        						<p class="text-bold">GRAND TOTAL <br> (Approved Couples)</p>
+        						<p class="text-bold">GRAND TOTAL <br> <span class="small">(Approved Couples)</span></p>
         					</td>
         					<td style="border-right: 0; border-left: 0;"></td>
         					<td colspan="2" class="text-right" style="border-left: 0; padding-right: 4%;">
@@ -175,9 +175,11 @@ $accomp_no = $this->input->get('ReportNo');
         			</tfoot>
         		</table>
 			</div>
-			<div class="text-right">
+        <?php if(!$is_pdf) : ?>
+            <div class="text-right">
 				<p><?= date('M d, Y h:sa')?></p>
 			</div>
+        <?php endif; ?>
         </div>
     </div>
 </div>

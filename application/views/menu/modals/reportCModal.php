@@ -26,10 +26,10 @@ $current_year = date('Y');
     		</select>
             <br>
             <label> 
-                <span class="text-required">*</span> 
+                <span class="text-required year-label-req" hidden>*</span> 
                 Report Year: 
             </label>
-    		<select class="form-control" name="repYearSelect" required>
+    		<select class="form-control yearSelect" name="repYearSelect" disabled>
     			<option id="repYear" value="">Year</option>
     			<?php for ($i = $current_year; $i > 2017; $i--): ?>
                     <option id="repYear" value="<?=$i?>"><?= $i?></option>
@@ -37,10 +37,10 @@ $current_year = date('Y');
     		</select>
             <br>
             <label> 
-                <span class="text-required">*</span> 
+                <span class="text-required qtr-label-req" hidden>*</span> 
                 Report Quarter: 
             </label>
-    		<select class="form-control" name="repQuarterSelect" required>
+    		<select class="form-control qtrSelect" name="repQuarterSelect" disabled>
     			<option id="repQuarter" value="">Quarter</option>
                 <option id="repQuarter" value="01">1st Quarter</option>
                 <option id="repQuarter" value="02">2nd Quarter</option>
@@ -49,10 +49,10 @@ $current_year = date('Y');
     		</select>
             <br>
             <label> 
-                <span class="text-required">*</span> 
+                <span class="text-required month-label-req" hidden>*</span> 
                 Report Month: 
             </label>
-    		<select class="form-control" name="repMonthSelect" required>
+    		<select class="form-control monthSelect" name="repMonthSelect" disabled>
     			<option id="repMonth" value="">Month</option>
                 <option id="repMonth" value="01">January</option>
                 <option id="repMonth" value="02">February</option>
@@ -81,6 +81,7 @@ $current_year = date('Y');
 	loadJs(base_url + 'NewAssets/sweetalertJs', function(){
         loadJs(base_url + 'assets/js/saveForms.js', function(){
             genForm();
+            enableFields();
         });
     });
 </script>
