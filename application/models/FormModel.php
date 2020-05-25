@@ -569,7 +569,7 @@ class FormModel extends BaseModel
         );
     }
 
-    public function approveCouple(ListCoupleInt*erface $listCouple) : ErrorInterface
+    public function approveCouple(ListCoupleInterface $listCouple) : ErrorInterface
     {
         foreach ($listCouple as $couple) {
             $couple = CoupleClass::getFromVariable($couple);
