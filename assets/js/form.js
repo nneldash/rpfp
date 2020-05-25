@@ -1593,11 +1593,20 @@ function saveForm1()
 				data: formData,
 				url: base_url + '/forms/saveForm1'
 			}).done(function(result){
+				
 				Toast.fire({
 					type: (result.is_save) ? 'success' : 'error',
 					title: 'Form 1 save status',
 					message: result.message == undefined ? "There was an error saving Form 1" : result.message
 				});
+
+				if (isRDM == 1) {
+					Toast.fire({
+						type:  'success',
+						title: 'Approved',
+						message: result.message == undefined ? "There was an error approving the couple" : result.message
+					});
+				}
 
 				if (result.is_save) {
 					/** put rpfp class id in field */

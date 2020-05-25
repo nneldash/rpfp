@@ -568,4 +568,27 @@ class FormModel extends BaseModel
             array($couplesId)
         );
     }
+
+    public function approveCouple(ListCoupleInt*erface $listCouple) : ErrorInterface
+    {
+        foreach ($listCouple as $couple) {
+            $couple = CoupleClass::getFromVariable($couple);
+            
+            $method = 'rdm_approve_couples';
+
+            $param = [
+                $couple->IsApproved == N_A ? BLANK : $couple->Id
+            ];
+
+            $couple = $this->saveToDb($method, $param);
+
+            if ($couple == 'CANNOT SAVE RECORD WITH GIVEN PARAMETERS') {
+                break;
+            } else {
+                $couple->Message = 'Couple is Approved!';
+            }
+        }
+
+        return $couple;
+    }
 }

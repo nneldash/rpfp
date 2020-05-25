@@ -90,11 +90,24 @@ class Forms extends CI_Controller
     public function saveForm1()
     {
         $form1 = new FormClass();
-        /** get user role */
-        // if ($user->isRDM()) {
-        //         /** get list couples */
-        //         /** approve couples */
-        // } else {
+
+        $user = $this->ProfileModel->getOwnProfile();
+        $user = UserProfile::getFromVariable($user);
+       
+        if ($user->isRegionalDataManager()) {
+                /** get list couples */
+                /** approve couples */
+                $approve = $this->CoupleApproving();
+                $errors = $this->FormModel->approveCouple($approve);
+                
+                $data = [
+                    'message' => $errors->Message
+                ];
+
+                $this->output
+                    ->set_content_type('application/json')
+                    ->set_output(json_encode($data));
+        } else {
             $num_entries = $this->input->post('num_items');
             $form1->Seminar = $this->getInputFromSeminar();
             $form1->ListCouple = $this->getInputFromListCouples($num_entries);
@@ -106,13 +119,30 @@ class Forms extends CI_Controller
                 'description' => $errors->Description,
                 'value' => intval($errors->ReturnValue)
             ];
-        // }
+        }
 
         $this->output
             ->set_content_type('application/json')
             ->set_output(json_encode($data));
     }
     
+    private function CoupleApproving() : ListCoupleInterface
+    {
+        $couple_list = new ListCoupleClass();
+
+        for ($i = 0; $i < 10; $i++) {
+            $couple = new CoupleClass();
+
+            $couple->Id = $this->input->post('couple_id')[$i];
+            $couple->IsApproved = $this->input->post('approveCouple')[$i];
+
+            $couple_list->append($couple);
+        }
+        
+
+        return $couple_list;
+    }
+
     private function getInputFromSeminar() : SeminarInterface
     {
         $seminar = new SeminarClass();
