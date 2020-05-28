@@ -24,7 +24,8 @@ if (empty($title)) {
     <thead>
         <tr>
             <th>
-                <input id="checkAll" type="checkbox">
+                <input id="checkAll" type="checkbox" />
+                <input type="hidden" name="reportName" value="formB" />
             </th>
             <th>Report #</th>
             <th>Report Code</th>
@@ -34,11 +35,11 @@ if (empty($title)) {
         </tr>
     </thead>
     <tbody>
-        <?php foreach ($form_B as $formb) : ?>
+        <?php foreach ($form_B as $key => $formb) : ?>
             <?php if ($formb->ReportID != 'N/A') { ?>
                 <tr>
                     <td>
-                        <input class="checkSelect" name="reportNo" type="checkbox" value="<?= $formb->ReportID ?>" />
+                        <input class="checkSelect" name="reportNo[<?= $key ?>]" type="checkbox" value="<?= $formb->ReportNo ?>" />
                     </td>
                     <td><?= $formb->ReportID ?></td>
                     <td><?= $formb->ReportNo ?></td>

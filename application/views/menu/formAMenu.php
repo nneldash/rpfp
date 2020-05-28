@@ -10,6 +10,13 @@ if (empty($title)) {
 
 <link href="<?= base_url('NewAssets/fontAwesome'); ?>" rel="stylesheet">
 <link href="<?= base_url('assets/css/form.css'); ?>" rel="stylesheet">
+<link href="<?= base_url('NewAssets/sweetalertCss'); ?>" rel="stylesheet">
+
+<style>
+    .swal2-container{
+        top: 0px!important;
+    }
+</style>
 
 <div class="col-md-12" style="padding: 0 0 20px">
     <div class="col-md-3" style="text-transform: none; padding: 0">
@@ -18,14 +25,15 @@ if (empty($title)) {
     <div class="col-md-3" style="text-transform: none; padding: 0">
         <input type="submit" class="delete" name="deleteButton" value="Delete Selected" hidden />
     </div>
-    <div class="col-md-6"></div>
+    <div class="col-md-6"></div>    
 </div>
 
 <table id="datatable-responsive" class="table table-condensed table-striped table-hover table-bordered dt-responsive nowrap formAList" cellspacing="0" width="100%">
     <thead>
         <tr>
             <th>
-                <input id="checkAll" type="checkbox">
+                <input id="checkAll" type="checkbox" />
+                <input type="hidden" name="reportName" value="formA" />
             </th>
             <th>Report #</th>
             <th>Report Code</th>
@@ -35,11 +43,11 @@ if (empty($title)) {
         </tr>
     </thead>
     <tbody>
-        <?php foreach ($form_A as $forma) : ?>
+        <?php foreach ($form_A as $key => $forma) : ?>
             <?php if ($forma->ReportID != 'N/A') { ?>
                 <tr>
                     <td>
-                        <input class="checkSelect" name="reportNo" type="checkbox" value="<?= $forma->ReportID ?>" />
+                        <input class="checkSelect" name="reportNo[<?= $key ?>]" type="checkbox" value="<?= $forma->ReportNo ?>" />
                     </td>
                     <td><?= $forma->ReportID ?></td>
                     <td><?= $forma->ReportNo ?></td>
@@ -68,9 +76,11 @@ if (empty($title)) {
 
 <script>
     loadJs(base_url + 'NewAssets/templateJs', function() {
-        loadJs(base_url + 'assets/js/modals.js', function(){
-            clickModalReportA();
-            deleteReport();            
+        loadJs(base_url + 'NewAssets/sweetalertJs', function(){
+            loadJs(base_url + 'assets/js/modals.js', function(){
+                clickModalReportA();
+                deleteReport();            
+            });
         });
     });
 

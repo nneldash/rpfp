@@ -35,11 +35,11 @@ if (empty($title)) {
         </tr>
     </thead>
     <tbody>
-        <?php foreach ($accomplishment as $accomplished) : ?>
+        <?php foreach ($accomplishment as  $key => $accomplished) : ?>
             <?php if ($accomplished->ReportNo != 'N/A') { ?>
                 <tr>
                     <td>
-                        <input class="checkSelect" name="reportNo" type="checkbox" value="<?= $accomplished->ReportNo ?>" />
+                        <input class="checkSelect" name="reportNo[<?= $key ?>]" type="checkbox" value="<?= $accomplished->ReportNo ?>" />
                     </td>
                     <td><?= $accomplished->ReportNo ?></td>
                     <td><?= date('F d, Y', strtotime($accomplished->DateFrom)); ?></td>

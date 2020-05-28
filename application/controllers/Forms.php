@@ -541,7 +541,7 @@ class Forms extends CI_Controller
                             </style>
                             </head>
                             <body>
-                                <pagefooter name="MyFooter1" content-right="{DATE M j,Y h:i a}"
+                                <pagefooter name="MyFooter1" content-right="{DATE M j,Y h:ia}"
                                 footer-style="font-size: 7pt;" />
                             </body>
                         </html>';
@@ -587,7 +587,7 @@ class Forms extends CI_Controller
                             </style>
                             </head>
                             <body>
-                                <pagefooter name="MyFooter1" content-right="{DATE M j,Y h:i a}"
+                                <pagefooter name="MyFooter1" content-right="{DATE M j,Y h:ia}"
                                 footer-style="font-size: 7pt;" />
                             </body>
                         </html>';

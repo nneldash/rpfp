@@ -3,7 +3,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 $CI =& get_instance();
 $CI->load->iface('base/BaseInterface');
 
-abstract class DeleteAccomplishmentInterface extends BaseInterface
+abstract class DeleteReportInterface extends BaseInterface
 {
     public $ReportNo;
 }
