@@ -11,7 +11,7 @@ class AccomplishmentModel extends BaseModel
         $this->CI->load->library('accomplishment/lists/ListAccomplishment');
         $this->CI->load->library('accomplishment/lists/ReportAccomplishment');
         $this->CI->load->library('accomplishment/GenerateAccomplishmentClass');
-        $this->CI->load->library('accomplishment/DeleteAccomplishmentClass');
+        $this->CI->load->library('report/DeleteReportClass');
     }
 
     public function getAccomplishmentList() : ListAccomplishmentInterface
@@ -43,15 +43,25 @@ class AccomplishmentModel extends BaseModel
         return $retval;
     }
 
-    public function deleteAccomplishment(DeleteAccomplishmentInterface $data)
+    public function deleteReport($procName, ListDeleteReportInterface $listReport)
     {
-        $method = 'delete_report_accomplishment';
+        foreach ($listReport as $report) {
+            $report = DeleteReportClass::getFromVariable($report);
+            
+            $method = $procName;
 
-        $params =[
-            $data->ReportNo == N_A ? BLANK : $data->ReportNo
-        ];
+            $param = [
+                $report->ReportNo == N_A ? BLANK : $report->ReportNo
+            ];
 
-        return $this->saveToDb($method, $params);
+            $data = $this->saveToDb($method, $param);
+
+            if ($data == 'REPORT DELETED!') {
+                return 'deleted';
+            } else {
+                return false;
+            }
+        }
     }
 
     public function getAccomplishmentReport($accomid) : ReportAccomplishmentInterface

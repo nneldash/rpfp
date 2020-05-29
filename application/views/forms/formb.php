@@ -370,7 +370,7 @@ $formb_list = ReportFormBClass::getFromVariable($form_B);
 				</table>
 				<?php if (!$is_pdf): ?>
 					<div class="text-right">
-						<p><?= date('M d, Y h:sa')?></p>
+						<p><?= date('M d, Y h:ia')?></p>
 					</div>
 				<?php endif; ?>
 			</div>

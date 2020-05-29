@@ -313,7 +313,7 @@ $status = $this->input->get('status');
 						<thead>
 							<tr>
 								<?php if (!$is_pdf): ?>
-									<?php if ($isRegionalDataManager): ?>
+									<?php if ($isRegionalDataManager || $isFocalPerson && $status == 2): ?>
 										<th rowspan="2" class="text-center">
 											<label class="cont back-eee checkApprove" style="height: 37px;">
 												<input type="checkbox" name="approve_all" id="checkAll" />
@@ -475,7 +475,7 @@ $status = $this->input->get('status');
 									<?php if (!$is_pdf): ?>
 										<?php 
 											$status = $this->input->get('status');
-											if($isRegionalDataManager && $status == 2): 
+											if($isRegionalDataManager || $isFocalPerson && $status == 2): 
 										?>
 											<td rowspan="2" class="back-eee padding-0">
 												<label class="cont">

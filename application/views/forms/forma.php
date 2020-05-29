@@ -310,7 +310,7 @@ $forma_list = ReportFormA::getFromVariable($form_A);
                             <td style="text-align: right; padding-right: 10px;">
                                 <?php echo HtmlHelper::dashInputPdf($forma->WRAProfiled); ?>
                             </td>
-                            <td>
+                            <td style="text-align: right; padding-right: 10px;">
                                 <?php echo HtmlHelper::dashInputPdf($forma->TotalWRA); ?>
                             </td>
                             <td style="text-align: right; padding-right: 10px;">
@@ -657,7 +657,7 @@ $forma_list = ReportFormA::getFromVariable($form_A);
             </table>
             <?php if(!$is_pdf) : ?>
                 <div class="text-right">
-    				<p><?= date('M d, Y h:sa')?></p>
+    				<p><?= date('M d, Y h:ia')?></p>
     			</div>
             <?php endif; ?>
         </div>
