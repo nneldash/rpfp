@@ -101,9 +101,10 @@ class Forms extends CI_Controller
                 $errors = $this->FormModel->approveCouple($approve);
                 
                 $data = [
+                    'is_save' => empty($errors->Code),
                     'message' => $errors->Message
                 ];
-
+                
                 $this->output
                     ->set_content_type('application/json')
                     ->set_output(json_encode($data));

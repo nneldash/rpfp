@@ -569,8 +569,9 @@ class FormModel extends BaseModel
         );
     }
 
-    public function approveCouple(ListCoupleInterface $listCouple) : ErrorInterface
+    public function approveCouple(ListCoupleInterface $listCouple) 
     {
+        $error = new Errors();
         foreach ($listCouple as $couple) {
             $couple = CoupleClass::getFromVariable($couple);
             
@@ -581,14 +582,28 @@ class FormModel extends BaseModel
             ];
 
             $couple = $this->saveToDb($method, $param);
-
-            if ($couple == 'CANNOT SAVE RECORD WITH GIVEN PARAMETERS') {
+            
+            $error->Code = ErrorInterface::NO_ERROR;
+            if (empty($couple)) {
+                $error->Code = ErrorInterface::DATABASE_ERROR;
+                $error->Description = 'error0';
                 break;
+            } elseif ($couple == 'CANNOT SAVE RECORD WITH GIVEN PARAMETERS') {
+                $error->Code = ErrorInterface::INVALID_PARAMETER;
+                $error->Description = 'error1';
+                break;
+            } elseif ($couple == 'COUPLES APPROVED!') {
+                $error->Message = $couple;
             } else {
-                $couple->Message = 'Couple is Approved!';
+                $error->Code = ErrorInterface::INVALID_RETURN_VALUE;
+                $error->Description = 'error2';
+                break;
             }
+
         }
 
-        return $couple;
+        return $error;
     }
+
+    
 }

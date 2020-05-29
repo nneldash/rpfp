@@ -479,7 +479,7 @@ $status = $this->input->get('status');
 										?>
 											<td rowspan="2" class="back-eee padding-0">
 												<label class="cont">
-													<input class="check" type="checkbox" <?= $couple->Id != 'N/A' ? $couple->IsActive != 'N/A' ? ' ' : 'checked' : '' ?> 
+													<input class="check toApprove" type="checkbox" <?= $couple->Id != 'N/A' ? $couple->IsActive != 'N/A' ? ' ' : 'checked' : '' ?> 
 													name="approveCouple[<?= $i ?>]" value="" <?= $couple->Id != 'N/A' ? $couple->IsActive != 'N/A' ? ' ' : 'disabled' : '' ?>  > 
 													<span class="checkmark"></span>
 												</label>

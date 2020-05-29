@@ -112,7 +112,7 @@ $(function() {
 		$('td textarea').css('cursor', 'not-allowed');
 		$('td select').attr('disabled', true);
 		$('td select').css('cursor', 'not-allowed');
-		$('td input[class="check"]').attr('disabled', false);
+		$('td input[class="check toApprove"]').attr('disabled', false);
 	} else {
 		getDataDuplicate();
 		afterLoadValidation();
@@ -1548,6 +1548,7 @@ function saveForm1()
 {
 	$('.saveForm1').click(function(event) {
 		event.preventDefault();
+
 		const Toast = Swal.mixin({
 			toast: true,
 			position: 'top-end',
@@ -1602,10 +1603,11 @@ function saveForm1()
 
 				if (isRDM == 1) {
 					Toast.fire({
-						type:  'success',
+						type:  (result.is_save) ? 'success' : 'error',
 						title: 'Approved',
 						message: result.message == undefined ? "There was an error approving the couple" : result.message
 					});
+
 				}
 
 				if (result.is_save) {
@@ -1677,9 +1679,17 @@ $(document).ready(function(){
 			new_value = current_value == 'attended' ? "" : 'attended';
 		} else if (current_checkbox.is('[name^="approveCouple"]')){
 			new_value = current_value == 'approved' ? "" : 'approved';
+		} else if (current_checkbox.is('[name^="approve_all"]')) {
+			$('.toApprove').val('approved');
+		} else if (current_checkbox.not(':checked')) {
+			$('.toApprove').val('');
 		}
+
 		current_checkbox.val(new_value);
+
 	});
+	
+	
 
 	$('#loading-wrapper').removeClass('loading');
 });
