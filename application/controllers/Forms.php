@@ -95,20 +95,30 @@ class Forms extends CI_Controller
         $user = UserProfile::getFromVariable($user);
        
         if ($user->isRegionalDataManager()) {
-                /** get list couples */
-                /** approve couples */
-                $approve = $this->CoupleApproving();
-                $errors = $this->FormModel->approveCouple($approve);
-                
-                $data = [
-                    'is_save' => empty($errors->Code),
-                    'message' => $errors->Message
-                ];
-                
-                $this->output
-                    ->set_content_type('application/json')
-                    ->set_output(json_encode($data));
-        } else {
+            /** get list couples */
+            /** approve couples */
+            $approve = $this->CoupleApproving();
+            $errors = $this->FormModel->approveCouple($approve);
+            
+            $data = [
+                'is_save' => empty($errors->Code),
+                'message' => $errors->Message
+            ];
+            
+            $this->output
+                ->set_content_type('application/json')
+                ->set_output(json_encode($data));
+
+        } elseif ($user->isFocal()) {
+            $verify = $this->VerifyCouple();
+            $errors = $this->FormModel->verifyCouple($verify);
+
+            $data = [
+                'is_save' => empty($errors->Code),
+                'message' => $errors->Message
+            ];
+
+        }   else {
             $num_entries = $this->input->post('num_items');
             $form1->Seminar = $this->getInputFromSeminar();
             $form1->ListCouple = $this->getInputFromListCouples($num_entries);
@@ -143,7 +153,24 @@ class Forms extends CI_Controller
 
         return $couple_list;
     }
+    
+    private function VerifyCouple() : ListCoupleInterface
+    {
+        $couple_list = new ListCoupleClass();
 
+        for ($i = 0; $i < 10; $i++) {
+            $couple = new CoupleClass();
+
+            $couple->Id = $this->input->post('couple_id')[$i];
+            $couple->IsVerified = $this->input->post('approveCouple')[$i];
+
+            $couple_list->append($couple);
+        }
+        
+
+        return $couple_list;
+    }
+    
     private function getInputFromSeminar() : SeminarInterface
     {
         $seminar = new SeminarClass();

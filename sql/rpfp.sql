@@ -11536,6 +11536,7 @@ GRANT EXECUTE ON PROCEDURE rpfp.get_report_demandgen_list to 'focal_person';
 GRANT EXECUTE ON PROCEDURE rpfp.get_forms_list to 'focal_person';
 GRANT EXECUTE ON PROCEDURE rpfp.get_class_details to 'focal_person';
 GRANT EXECUTE ON PROCEDURE rpfp.encoder_get_couples_with_fp_details to 'focal_person';
+GRANT EXECUTE ON PROCEDURE rpfp.focal_verify_couples to 'focal_person';
 
 GRANT EXECUTE ON PROCEDURE rpfp.process_demandgen TO 'pmed';
 GRANT EXECUTE ON PROCEDURE rpfp.process_unmet_need TO 'pmed';

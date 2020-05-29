@@ -1549,13 +1549,14 @@ function saveForm1()
 	$('.saveForm1').click(function(event) {
 		event.preventDefault();
 
+		
 		const Toast = Swal.mixin({
 			toast: true,
 			position: 'top-end',
 			showConfirmButton: false,
 			timer: 3000
 		});
-
+		
 		save_page(current_page());
 		var formData = {};
 		/** iterate all inputs/textarea */
@@ -1607,7 +1608,14 @@ function saveForm1()
 						title: 'Approved',
 						message: result.message == undefined ? "There was an error approving the couple" : result.message
 					});
+				}
 
+				if (isFocal == 1) {
+					Toast.fire({
+						type:  (result.is_save) ? 'success' : 'error',
+						title: 'Verified!',
+						message: result.message == undefined ? "There was an error verifying the couple" : result.message
+					});
 				}
 
 				if (result.is_save) {

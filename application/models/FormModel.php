@@ -605,5 +605,41 @@ class FormModel extends BaseModel
         return $error;
     }
 
+    public function verifyCouple(ListCoupleInterface $listCouple) 
+    {
+        $error = new Errors();
+        foreach ($listCouple as $couple) {
+            $couple = CoupleClass::getFromVariable($couple);
+            
+            $method = 'focal_verify_couples';
+
+            $param = [
+                $couple->IsVerified == N_A ? BLANK : $couple->Id
+            ];
+
+            $couple = $this->saveToDb($method, $param);
+            
+            $error->Code = ErrorInterface::NO_ERROR;
+            if (empty($couple)) {
+                $error->Code = ErrorInterface::DATABASE_ERROR;
+                $error->Description = 'error0';
+                break;
+            } elseif ($couple == 'CANNOT SAVE RECORD WITH GIVEN PARAMETERS') {
+                $error->Code = ErrorInterface::INVALID_PARAMETER;
+                $error->Description = 'error1';
+                break;
+            } elseif ($couple == 'COUPLES VERIFIED!') {
+                $error->Message = $couple;
+            } else {
+                $error->Code = ErrorInterface::INVALID_RETURN_VALUE;
+                $error->Description = 'error2';
+                break;
+            }
+
+        }
+
+        return $error;
+    }
+
     
 }

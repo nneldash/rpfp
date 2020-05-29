@@ -48,6 +48,9 @@ abstract class CoupleInterface extends BaseInterface
     /** @var bool */
     public $IsApproved;
 
+    /** @var bool */
+    public $IsVerified;
+
     abstract public function Husband() : IndividualInterface;
     abstract public function Wife() : IndividualInterface;
     abstract public static function getFromVariable($variable) : CoupleInterface;
