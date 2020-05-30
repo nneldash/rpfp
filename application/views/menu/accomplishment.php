@@ -26,6 +26,7 @@ if (empty($title)) {
         <tr>
             <th>
                 <input type="checkbox" id="checkAll" />
+                <input type="hidden" name="reportName" value="accompReport" />
             </th>
             <th>Report #</th>
             <th>Encoded From</th>

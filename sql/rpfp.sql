@@ -11536,6 +11536,8 @@ GRANT EXECUTE ON PROCEDURE rpfp.delete_report_unmet_need TO 'regional_data_manag
 GRANT EXECUTE ON PROCEDURE rpfp.encoder_get_class_list_pending TO 'focal_person';
 GRANT EXECUTE ON PROCEDURE rpfp.encoder_get_class_list_approved to 'focal_person';
 GRANT EXECUTE ON PROCEDURE rpfp.get_report_demandgen_list to 'focal_person';
+GRANT EXECUTE ON PROCEDURE rpfp.get_report_unmet_need_list to 'focal_person';
+GRANT EXECUTE ON PROCEDURE rpfp.get_report_served_method_mix_list to 'focal_person';
 GRANT EXECUTE ON PROCEDURE rpfp.get_forms_list to 'focal_person';
 GRANT EXECUTE ON PROCEDURE rpfp.get_class_details to 'focal_person';
 GRANT EXECUTE ON PROCEDURE rpfp.encoder_get_couples_with_fp_details to 'focal_person';
