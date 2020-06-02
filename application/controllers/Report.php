@@ -22,10 +22,10 @@ class Report extends CI_Controller
     {
         $deleteData = new DeleteReportClass();
 
-        $user = $this->ProfileModel->getOwnProfile();
-        $user = UserProfile::getFromVariable($user);
+        // $user = $this->ProfileModel->getOwnProfile();
+        // $user = UserProfile::getFromVariable($user);
 
-        if ($user->isRegionalDataManager()) {
+        // if ($user->isRegionalDataManager()) {
             $formName = $this->input->post('reportName');
             
             if ($formName == 'formA') {
@@ -51,8 +51,8 @@ class Report extends CI_Controller
 
             $this->output
                 ->set_content_type('application/json')
-                ->set_output(json_encode($data));
-        }        
+                ->set_output(json_encode($delete));
+        // }        
     }
 
     private function DeleteReportData() : ListDeleteReportInterface
