@@ -29,9 +29,11 @@ function genAccomp()
 				url: base_url + 'accomplishment/genAccompData'
 			}).done(function(result){
 				if(result.is_save == true) {
-					Toast.fire({
+					Swal.fire({
 						type: 'success',
-						title: 'Accomplishment Report successfully saved!'
+						text: 'Accomplishment Report successfully saved!',
+						showCancelButton: false,
+						showConfirmButton: false
 					});
 					$('#generateReportModal').modal('hide');
 					location.reload();

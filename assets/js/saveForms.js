@@ -31,12 +31,14 @@ function genForm()
 				url: base_url + 'FormGeneration/' + formName
 			}).done(function(result){
 				if(result.is_save == true) {
-					Toast.fire({
+					Swal.fire({
 						type: 'success',
-						title: 'Report successfully saved!'
+						text: 'Report successfully saved!',
+						showCancelButton: false,
+						showConfirmButton: false
 					});
 					$('#generateReportModal').modal('hide');
-					location.reload();
+					location.reload();					
 				} else {
 					Toast.fire({
 						type: 'error',

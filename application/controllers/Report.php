@@ -21,38 +21,32 @@ class Report extends CI_Controller
    public function deleteReport()
     {
         $deleteData = new DeleteReportClass();
+        $formName = $this->input->post('reportName');
+        
+        if ($formName == 'formA') {
+            $procName = 'delete_report_demandgen';
+        } elseif ($formName == 'formB') {
+            $procName = 'delete_report_unmet_need';
+        } elseif ($formName == 'formC') {
+            $procName = 'delete_report_served_method_mix';
+        } elseif ($formName == 'accompReport') {
+            $procName = 'delete_report_accomplishment';
+        } else {
+            return false;
+        }
 
-        // $user = $this->ProfileModel->getOwnProfile();
-        // $user = UserProfile::getFromVariable($user);
+        $deleteData = $this->DeleteReportData();
+        $delete = $this->AccomplishmentModel->deleteReport($procName, $deleteData);
+        
+        if ($delete == 'deleted') {
+            $data = ['message' => 'deleted'];
+        } else {
+            $data = ['message' => false];
+        }
 
-        // if ($user->isRegionalDataManager()) {
-            $formName = $this->input->post('reportName');
-            
-            if ($formName == 'formA') {
-                $procName = 'delete_report_demandgen';
-            } elseif ($formName == 'formB') {
-                $procName = 'delete_report_unmet_need';
-            } elseif ($formName == 'formC') {
-                $procName = 'delete_report_served_method_mix';
-            } elseif ($formName == 'accompReport') {
-                $procName = 'delete_report_accomplishment';
-            } else {
-                return false;
-            }
-
-            $deleteData = $this->DeleteReportData();
-            $delete = $this->AccomplishmentModel->deleteReport($procName, $deleteData);
-            
-            if ($delete == 'deleted') {
-                $data = ['message' => 'deleted'];
-            } else {
-                $data = ['message' => false];
-            }
-
-            $this->output
-                ->set_content_type('application/json')
-                ->set_output(json_encode($delete));
-        // }        
+        $this->output
+            ->set_content_type('application/json')
+            ->set_output(json_encode($data));
     }
 
     private function DeleteReportData() : ListDeleteReportInterface

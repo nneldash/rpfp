@@ -38,12 +38,12 @@ function deleteReport()
 	});
 
 	$('button[name="deleteButton"]').click(function(){
-		// const Toast = Swal.mixin({
-		// 	toast: true,
-		// 	position: 'top-end',
-		// 	showConfirmButton: false,
-		// 	timer: 3000
-		// });
+		const Toast = Swal.mixin({
+			toast: true,
+			position: 'top-end',
+			showConfirmButton: false,
+			timer: 3000
+		});
 
 		Swal.fire({
 			title: 'Are you sure?',
@@ -80,8 +80,7 @@ function deleteReport()
 						});
 						location.reload();
 					} else {
-						Swal.fire({
-							title: 'Error',
+						Toast.fire({
 							text: "An error occured.",
 							type: 'error'
 						})

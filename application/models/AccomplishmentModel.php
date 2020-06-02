@@ -57,11 +57,13 @@ class AccomplishmentModel extends BaseModel
             $data = $this->saveToDb($method, $param);
 
             if ($data == 'REPORT DELETED!') {
-                return 'deleted';
+                $data = 'deleted';
             } else {
-                return false;
+                $data = 'false';
             }
         }
+
+        return $data;
     }
 
     public function getAccomplishmentReport($accomid) : ReportAccomplishmentInterface
