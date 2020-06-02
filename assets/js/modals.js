@@ -20,10 +20,10 @@ function deleteReport()
 
 		if ($(this).is(':checked')) {
 			$('input[type="checkbox"]').prop('checked', checked);
-			$('input[name="deleteButton"]').attr('hidden', false);
+			$('button[name="deleteButton"]').attr('hidden', false);
 		} else {
 			$('input[type="checkbox"]').prop('checked', false);
-			$('input[name="deleteButton"]').attr('hidden', true);
+			$('button[name="deleteButton"]').attr('hidden', true);
 		}
 	});
 
@@ -31,13 +31,13 @@ function deleteReport()
 		var checked = $(this).prop('checked');
 
 		if ($(this).is(':checked')) {
-			$('input[name="deleteButton"]').attr('hidden', false);
+			$('button[name="deleteButton"]').attr('hidden', false);
 		} else {
-			$('input[name="deleteButton"]').attr('hidden', true);
+			$('button[name="deleteButton"]').attr('hidden', true);
 		}
 	});
 
-	$('input[name="deleteButton"]').click(function(){
+	$('button[name="deleteButton"]').click(function(){
 		// const Toast = Swal.mixin({
 		// 	toast: true,
 		// 	position: 'top-end',
@@ -48,7 +48,7 @@ function deleteReport()
 		Swal.fire({
 			title: 'Are you sure?',
 			text: "You won't be able to revert this!",
-			icon: 'warning',
+			type: 'warning',
 			showCancelButton: true,
 			confirmButtonColor: 'rgb(4, 65, 16)',
 			cancelButtonColor: '#d33',
@@ -74,14 +74,16 @@ function deleteReport()
 						Swal.fire({
 							title: 'Success',
 							text: "Record has been Deleted!",
-							icon: 'success'
+							type: 'success',
+							showCancelButton: false,
+  							showConfirmButton: false
 						});
 						location.reload();
 					} else {
 						Swal.fire({
 							title: 'Error',
 							text: "An error occured.",
-							icon: 'error'
+							type: 'error'
 						})
 					}
 

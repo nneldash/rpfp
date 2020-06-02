@@ -20,12 +20,14 @@ if (empty($title)) {
 
 <div class="col-md-12" style="padding: 0 0 20px">
     <div class="col-md-3" style="text-transform: none; padding: 0">
-        <input type="submit" class="save genReportA" value="Generate Report" name="genFormA" />
+        <button class="genReportA save" data-toggle="tooltip" data-placement="left" title="Generate Report" name="genFormA">
+            <i class="fa fa-plus"></i>
+        </button>
+        <button class="delete" name="deleteButton" data-toggle="tooltip" data-placement="left" title="Delete Report" hidden>
+            <i class="fa fa-trash"></i>
+        </button>
     </div>
-    <div class="col-md-3" style="text-transform: none; padding: 0">
-        <input type="submit" class="delete" name="deleteButton" value="Delete Selected" hidden />
-    </div>
-    <div class="col-md-6"></div>    
+    <div class="col-md-9"></div>    
 </div>
 
 <table id="datatable-responsive" class="table table-condensed table-striped table-hover table-bordered dt-responsive nowrap formAList" cellspacing="0" width="100%">

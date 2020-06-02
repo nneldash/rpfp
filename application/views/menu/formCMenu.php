@@ -9,15 +9,24 @@ if (empty($title)) {
 
 <link href="<?= base_url('NewAssets/fontAwesome'); ?>" rel="stylesheet">
 <link href="<?= base_url('assets/css/form.css'); ?>" rel="stylesheet">
+<link href="<?= base_url('NewAssets/sweetalertCss'); ?>" rel="stylesheet">
+
+<style>
+    .swal2-container{
+        top: 0px!important;
+    }
+</style>
 
 <div class="col-md-12" style="padding: 0 0 20px">
     <div class="col-md-3" style="text-transform: none; padding: 0">
-        <input type="submit" class="save genReportC" value="Generate Report" name="genFormC" />
+        <button class="genReportC save" data-toggle="tooltip" data-placement="left" title="Generate Report" name="genFormC">
+            <i class="fa fa-plus"></i>
+        </button>
+        <button class="delete" name="deleteButton" data-toggle="tooltip" data-placement="left" title="Delete Report" hidden>
+            <i class="fa fa-trash"></i>
+        </button>
     </div>
-    <div class="col-md-3" style="text-transform: none; padding: 0">
-        <input type="submit" class="delete" name="deleteButton" value="Delete Selected" hidden />
-    </div>
-    <div class="col-md-6"></div>
+    <div class="col-md-9"></div>    
 </div>
 
 <table id="datatable-responsive" class="table table-condensed table-striped table-hover table-bordered dt-responsive nowrap formCList" cellspacing="0" width="100%">
@@ -67,9 +76,11 @@ if (empty($title)) {
 
 <script>
     loadJs(base_url + 'NewAssets/templateJs', function() {
-        loadJs(base_url + 'assets/js/modals.js', function(){
-            clickModalReportC();
-            deleteReport();
+        loadJs(base_url + 'NewAssets/sweetalertJs', function(){
+            loadJs(base_url + 'assets/js/modals.js', function(){
+                clickModalReportC();
+                deleteReport();
+            });
         });
     });
 

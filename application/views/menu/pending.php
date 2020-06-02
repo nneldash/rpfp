@@ -35,8 +35,8 @@ if (empty($title)) {
                     <td><?= $pendings->Province; ?></td>
                     <td><?= $pendings->Municipality; ?></td>
 					<td><?= $pendings->Barangay; ?></td>
-                    <td><?= $pendings->CouplesEncoded; ?></td>
-                    <td><?= ( $pendings->CouplesServed > 0 ? $pendings->CouplesServed : '0' ) ?></td>
+                    <td class="text-center"><?= $pendings->CouplesEncoded; ?></td>
+                    <td class="text-center"><?= ( $pendings->CouplesServed > 0 ? $pendings->CouplesServed : '0' ) ?></td>
 					<td><?= date('F d, Y', strtotime($pendings->DateConduct)); ?></td>
                     <td><?= ucfirst($pendings->FirstName) .' '. ucfirst($pendings->LastName); ?></td>
                     <td class="text-center">
