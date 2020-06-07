@@ -4,6 +4,11 @@ defined('BASEPATH') or exit('No direct script access allowed');
 if (empty($title)) {
     $title = 'Online RPFP Monitoring System | RPFP Form C Report List';
 }
+
+$array = '';
+foreach ($form_C as $key => $formc) {
+    $array = $formc;
+}
 ?>
 <script>document.querySelector("head title").innerHTML = '<?=$title?>';</script>
 
@@ -33,8 +38,10 @@ if (empty($title)) {
     <thead>
         <tr>
             <th>
-                <input id="checkAll" type="checkbox" />
-                <input type="hidden" name="reportName" value="formC" />
+                <?php if (!empty($array)) : ?>
+                    <input id="checkAll" type="checkbox" />
+                    <input type="hidden" name="reportName" value="formC" />
+                <?php endif; ?>
             </th>
             <th>Report #</th>
             <th>Report Code</th>

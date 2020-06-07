@@ -5,6 +5,11 @@ if (empty($title)) {
     $title = 'Online RPFP Monitoring System | RPFP Form A Report List';
     
 }
+
+$array = '';
+foreach ($form_A as $key => $forma) {
+    $array = $forma;
+}
 ?>
 <script>document.querySelector("head title").innerHTML = '<?=$title?>';</script>
 
@@ -34,8 +39,10 @@ if (empty($title)) {
     <thead>
         <tr>
             <th>
-                <input id="checkAll" type="checkbox" />
-                <input type="hidden" name="reportName" value="formA" />
+                <?php if (!empty($array)) : ?>
+                    <input id="checkAll" type="checkbox" />
+                    <input type="hidden" name="reportName" value="formA" />
+                <?php endif; ?>
             </th>
             <th>Report #</th>
             <th>Report Code</th>
