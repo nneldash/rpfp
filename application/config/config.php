@@ -36,8 +36,8 @@ $config['base_url'] = 'https://rpfp.herokuapp.com/';
 | variable so that it is blank.
 |
 */
-// $config['index_page'] = '';
-$config['index_page'] = 'views/index/landingPage.php';
+$config['index_page'] = '';
+// $config['index_page'] = 'views/index/landingPage.php';
 
 /*
 |--------------------------------------------------------------------------
