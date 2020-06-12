@@ -183,18 +183,33 @@ class Menu extends CI_Controller
 
     public function formA()
     {
+        $profile = $this->ProfileModel->getOwnProfile();
+        $profile = UserProfile::getFromVariable($profile);
+
+        $isFocal = $profile->isFocal();
+
         $this->load->library('formA/FormAClass');
 
         $this->load->model('FormAModel');
         $forma = $this->FormAModel->getFormAList();
         if ($this->input->server(REQUEST_METHOD) == POST) {
-            $this->load->view('menu/formAMenu', array('form_A' => $forma, RELOAD => true));
+            $this->load->view('menu/formAMenu', 
+                    array('form_A' => $forma, 
+                    RELOAD => true,
+                    'isFocal' => $isFocal
+                )
+            );
             return;
         }
 
         $this->do_not_render_footer = true;
         $this->index();
-        $this->load->view('menu/formAMenu', array('form_A' => $forma));
+        $this->load->view('menu/formAMenu', 
+            array(
+                'form_A' => $forma,
+                'isFocal' => $isFocal
+            )
+        );
         $this->footer();      
         
         $this->load->library('common/PageHandler');
@@ -203,18 +218,34 @@ class Menu extends CI_Controller
 
     public function formB()
     {
+        $profile = $this->ProfileModel->getOwnProfile();
+        $profile = UserProfile::getFromVariable($profile);
+
+        $isFocal = $profile->isFocal();
+
         $this->load->library('formB/FormBClass');
 
         $this->load->model('FormBModel');
         $formb = $this->FormBModel->getFormBList();
         if ($this->input->server(REQUEST_METHOD) == POST) {
-            $this->load->view('menu/formBMenu', array('form_B' => $formb, RELOAD => true));
+            $this->load->view('menu/formBMenu', 
+                array(
+                    'form_B' => $formb, 
+                    RELOAD => true,
+                    'isFocal' => $isFocal
+                )
+            );
             return;
         }
 
         $this->do_not_render_footer = true;
         $this->index();
-        $this->load->view('menu/formBMenu', array('form_B' => $formb));
+        $this->load->view('menu/formBMenu', 
+            array(
+                'form_B' => $formb,
+                'isFocal' => $isFocal
+            )
+        );
         $this->footer();    
         
         $this->load->library('common/PageHandler');
@@ -223,18 +254,34 @@ class Menu extends CI_Controller
 
     public function formC()
     {
+        $profile = $this->ProfileModel->getOwnProfile();
+        $profile = UserProfile::getFromVariable($profile);
+
+        $isFocal = $profile->isFocal();
+        
         $this->load->library('formC/FormCClass');
 
         $this->load->model('FormCModel');
         $formc = $this->FormCModel->getFormCList();
         if ($this->input->server(REQUEST_METHOD) == POST) {
-            $this->load->view('menu/formCMenu', array('form_C' => $formc, RELOAD => true));
+            $this->load->view('menu/formCMenu', 
+                array(
+                    'form_C' => $formc,
+                    RELOAD => true,
+                    'isFocal' => $isFocal
+                )
+            );
             return;
         }
 
         $this->do_not_render_footer = true;
         $this->index();
-        $this->load->view('menu/formCMenu', array('form_C' => $formc));
+        $this->load->view('menu/formCMenu', 
+            array(
+                'form_C' => $formc,
+                'isFocal' => $isFocal
+            )
+        );
         $this->footer();
         
         $this->load->library('common/PageHandler');

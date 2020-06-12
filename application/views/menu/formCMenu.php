@@ -9,6 +9,12 @@ $array = '';
 foreach ($form_C as $key => $formc) {
     $array = $formc;
 }
+
+if (!$isFocal) {
+    $columns = 4;
+} else {
+    $columns = 5;
+}
 ?>
 <script>document.querySelector("head title").innerHTML = '<?=$title?>';</script>
 
@@ -22,27 +28,31 @@ foreach ($form_C as $key => $formc) {
     }
 </style>
 
-<div class="col-md-12" style="padding: 0 0 20px">
-    <div class="col-md-3" style="text-transform: none; padding: 0">
-        <button class="genReportC save" data-toggle="tooltip" data-placement="left" title="Generate Report" name="genFormC">
-            <i class="fa fa-plus"></i>
-        </button>
-        <button class="delete" name="deleteButton" data-toggle="tooltip" data-placement="left" title="Delete Report" hidden>
-            <i class="fa fa-trash"></i>
-        </button>
+<?php if (!$isFocal): ?>
+    <div class="col-md-12" style="padding: 0 0 20px">
+        <div class="col-md-3" style="text-transform: none; padding: 0">
+            <button class="genReportC save" data-toggle="tooltip" data-placement="left" title="Generate Report" name="genFormC">
+                <i class="fa fa-plus"></i>
+            </button>
+            <button class="delete" name="deleteButton" data-toggle="tooltip" data-placement="left" title="Delete Report" hidden>
+                <i class="fa fa-trash"></i>
+            </button>
+        </div>
+        <div class="col-md-9"></div>    
     </div>
-    <div class="col-md-9"></div>    
-</div>
+<?php endif; ?>
 
 <table id="datatable-responsive" class="table table-condensed table-striped table-hover table-bordered dt-responsive nowrap formCList" cellspacing="0" width="100%">
     <thead>
         <tr>
-            <th>
-                <?php if (!empty($array)) : ?>
-                    <input id="checkAll" type="checkbox" />
-                    <input type="hidden" name="reportName" value="formC" />
-                <?php endif; ?>
-            </th>
+            <?php if (!$isFocal): ?>
+                <th>
+                    <?php if (!empty($array)) : ?>
+                        <input id="checkAll" type="checkbox" />
+                        <input type="hidden" name="reportName" value="formC" />
+                    <?php endif; ?>
+                </th>
+            <?php endif; ?>
             <th>Report #</th>
             <th>Report Code</th>
             <th>Report Year | Month</th>
@@ -54,9 +64,11 @@ foreach ($form_C as $key => $formc) {
         <?php foreach ($form_C as $key => $formc) : ?>
             <?php if ($formc->ReportID != 'N/A') { ?>
                 <tr>
-                    <td>
-                        <input class="checkSelect" name="reportNo[<?= $key ?>]" type="checkbox" value="<?= $formc->ReportNo ?>" />
-                    </td>
+                    <?php if (!$isFocal): ?>
+                        <td>
+                            <input class="checkSelect" name="reportNo[<?= $key ?>]" type="checkbox" value="<?= $formc->ReportNo ?>" />
+                        </td>
+                    <?php endif; ?>
                     <td><?= $formc->ReportID ?></td>
                     <td><?= $formc->ReportNo ?></td>
                     <td><?= $formc->ReportYear ?> - <?= $formc->ReportCode ?></td>
@@ -70,8 +82,10 @@ foreach ($form_C as $key => $formc) {
                 </tr>
             <?php } else { ?>
                 <tr>
-                    <td class="text-center" colspan="5">No result(s) found.</td>
-                    <td class="text-center none"></td>
+                    <td class="text-center" colspan="<?= $columns; ?>">No result(s) found.</td>
+                    <?php if (!$isFocal): ?>
+                        <td class="text-center none"></td>
+                    <?php endif; ?>
                     <td class="text-center none"></td>
                     <td class="text-center none"></td>
                     <td class="text-center none"></td>
