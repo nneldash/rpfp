@@ -9312,7 +9312,7 @@ BEGIN
         LEAVE proc_exit_point;
     END IF;
 
-    IF role_of_user = 80 THEN
+    IF role_of_user <= 80 THEN
         CALL rdm_get_report_demandgen_list(page_no, items_per_page);
         LEAVE proc_exit_point;
     END IF;
@@ -9439,7 +9439,7 @@ BEGIN
         LEAVE proc_exit_point;
     END IF;
 
-    IF role_of_user = 80 THEN
+    IF role_of_user <= 80 THEN
         CALL rdm_get_report_unmet_need_list(page_no, items_per_page);
         LEAVE proc_exit_point;
     END IF;
@@ -9560,7 +9560,7 @@ BEGIN
         LEAVE proc_exit_point;
     END IF;
 
-    IF role_of_user = 80 THEN
+    IF role_of_user <= 80 THEN
         CALL rdm_get_report_served_method_mix_list(page_no, items_per_page);
         LEAVE proc_exit_point;
     END IF;
@@ -9731,7 +9731,7 @@ BEGIN
         LEAVE proc_exit_point;
     END IF;
 
-    IF role_of_user = 80 THEN
+    IF role_of_user <= 80 THEN
         CALL rdm_get_report_demandgen_details(report_no, report_month, report_year);
         LEAVE proc_exit_point;
     END IF;
@@ -9908,7 +9908,7 @@ BEGIN
         LEAVE proc_exit_point;
     END IF;
 
-    IF role_of_user = 80 THEN
+    IF role_of_user <= 80 THEN
         CALL rdm_get_report_unmet_need_details(report_no, report_month, report_year);
         LEAVE proc_exit_point;
     END IF;
@@ -10030,7 +10030,7 @@ BEGIN
         LEAVE proc_exit_point;
     END IF;
 
-    IF role_of_user = 80 THEN
+    IF role_of_user <= 80 THEN
         CALL rdm_get_report_served_method_mix_details(report_no, report_month, report_year);
         LEAVE proc_exit_point;
     END IF;
@@ -11543,6 +11543,9 @@ GRANT EXECUTE ON PROCEDURE rpfp.get_forms_list to 'focal_person';
 GRANT EXECUTE ON PROCEDURE rpfp.get_class_details to 'focal_person';
 GRANT EXECUTE ON PROCEDURE rpfp.encoder_get_couples_with_fp_details to 'focal_person';
 GRANT EXECUTE ON PROCEDURE rpfp.focal_verify_couples to 'focal_person';
+GRANT EXECUTE ON PROCEDURE rpfp.get_report_demandgen_details TO 'focal_person';
+GRANT EXECUTE ON PROCEDURE rpfp.get_report_unmet_need_details TO 'focal_person';
+GRANT EXECUTE ON PROCEDURE rpfp.get_report_served_method_mix_details TO 'focal_person';
 
 GRANT EXECUTE ON PROCEDURE rpfp.process_demandgen TO 'pmed';
 GRANT EXECUTE ON PROCEDURE rpfp.process_unmet_need TO 'pmed';

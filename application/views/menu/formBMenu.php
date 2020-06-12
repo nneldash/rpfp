@@ -4,6 +4,17 @@ defined('BASEPATH') or exit('No direct script access allowed');
 if (empty($title)) {
     $title = 'Online RPFP Monitoring System | RPFP Form B Report List';
 }
+
+$array = '';
+foreach ($form_B as $key => $formb) {
+    $array = $formb;
+}
+
+if (!$isFocal) {
+    $columns = 4;
+} else {
+    $columns = 5;
+}
 ?>
 <script>document.querySelector("head title").innerHTML = '<?=$title?>';</script>
 
@@ -17,25 +28,31 @@ if (empty($title)) {
     }
 </style>
 
-<div class="col-md-12" style="padding: 0 0 20px">
-    <div class="col-md-3" style="text-transform: none; padding: 0">
-        <button class="genReportB save" data-toggle="tooltip" data-placement="left" title="Generate Report" name="genFormB">
-            <i class="fa fa-plus"></i>
-        </button>
-        <button class="delete" name="deleteButton" data-toggle="tooltip" data-placement="left" title="Delete Report" hidden>
-            <i class="fa fa-trash"></i>
-        </button>
+<?php if (!$isFocal): ?>
+    <div class="col-md-12" style="padding: 0 0 20px">
+        <div class="col-md-3" style="text-transform: none; padding: 0">
+            <button class="genReportB save" data-toggle="tooltip" data-placement="left" title="Generate Report" name="genFormB">
+                <i class="fa fa-plus"></i>
+            </button>
+            <button class="delete" name="deleteButton" data-toggle="tooltip" data-placement="left" title="Delete Report" hidden>
+                <i class="fa fa-trash"></i>
+            </button>
+        </div>
+        <div class="col-md-9"></div>    
     </div>
-    <div class="col-md-9"></div>    
-</div>
+<?php endif; ?>
 
 <table id="datatable-responsive" class="table table-condensed table-striped table-hover table-bordered dt-responsive nowrap formBList" cellspacing="0" width="100%">
     <thead>
         <tr>
-            <th>
-                <input id="checkAll" type="checkbox" />
-                <input type="hidden" name="reportName" value="formB" />
-            </th>
+            <?php if (!$isFocal): ?>
+                <th>
+                    <?php if (!empty($array)) : ?>
+                        <input id="checkAll" type="checkbox" />
+                        <input type="hidden" name="reportName" value="formB" />
+                    <?php endif; ?>
+                </th>
+            <?php endif; ?>
             <th>Report #</th>
             <th>Report Code</th>
             <th>Report Year | Month</th>
@@ -47,9 +64,11 @@ if (empty($title)) {
         <?php foreach ($form_B as $key => $formb) : ?>
             <?php if ($formb->ReportID != 'N/A') { ?>
                 <tr>
-                    <td>
-                        <input class="checkSelect" name="reportNo[<?= $key ?>]" type="checkbox" value="<?= $formb->ReportNo ?>" />
-                    </td>
+                    <?php if (!$isFocal): ?>
+                        <td>
+                            <input class="checkSelect" name="reportNo[<?= $key ?>]" type="checkbox" value="<?= $formb->ReportNo ?>" />
+                        </td>
+                    <?php endif; ?>
                     <td><?= $formb->ReportID ?></td>
                     <td><?= $formb->ReportNo ?></td>
                     <td><?= $formb->ReportYear ?> - <?= $formb->ReportCode ?></td>
@@ -63,8 +82,10 @@ if (empty($title)) {
                 </tr>
             <?php } else { ?>
                 <tr>
-                    <td class="text-center" colspan="5">No result(s) found.</td>
-                    <td class="text-center none"></td>
+                    <td class="text-center" colspan="<?= $columns; ?>">No result(s) found.</td>
+                    <?php if (!$isFocal): ?>
+                        <td class="text-center none"></td>
+                    <?php endif; ?>
                     <td class="text-center none"></td>
                     <td class="text-center none"></td>
                     <td class="text-center none"></td>
