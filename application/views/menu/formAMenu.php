@@ -12,7 +12,7 @@ foreach ($form_A as $key => $forma) {
 }
 
 if (!$isFocal) {
-    $columns = 4;
+    $columns = 6;
 } else {
     $columns = 5;
 }
@@ -87,6 +87,7 @@ if (!$isFocal) {
                     <?php if (!$isFocal): ?>
                         <td class="text-center none"></td>
                     <?php endif; ?>
+                    <td class="text-center none"></td>
                     <td class="text-center none"></td>
                     <td class="text-center none"></td>
                     <td class="text-center none"></td>

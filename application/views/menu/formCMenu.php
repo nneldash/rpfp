@@ -11,7 +11,7 @@ foreach ($form_C as $key => $formc) {
 }
 
 if (!$isFocal) {
-    $columns = 4;
+    $columns = 6;
 } else {
     $columns = 5;
 }
