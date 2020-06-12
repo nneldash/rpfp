@@ -313,12 +313,16 @@ $status = $this->input->get('status');
 						<thead>
 							<tr>
 								<?php if (!$is_pdf): ?>
-									<?php if ($isRegionalDataManager || $isFocalPerson && $status == 2): ?>
+									<?php if ($isRegionalDataManager || $isFocalPerson): ?>
 										<th rowspan="2" class="text-center">
-											<label class="cont back-eee checkApprove" style="height: 37px;">
-												<input type="checkbox" name="approve_all" id="checkAll" />
-												<span class="checkmark"></span>
-											</label>
+											<?php if ($status == 2): ?>
+												<label class="cont back-eee checkApprove" style="height: 37px;">
+													<input type="checkbox" name="approve_all" id="checkAll" />
+													<span class="checkmark"></span>	
+												</label>		
+											<?php elseif ($status == 0): ?>		
+													<input type="hidden" name="approve_all" id="checkAll"/>
+											<?php endif; ?>
 										</th>
 									<?php endif; ?>
 								<?php endif; ?>
@@ -475,13 +479,18 @@ $status = $this->input->get('status');
 									<?php if (!$is_pdf): ?>
 										<?php 
 											$status = $this->input->get('status');
-											if($isRegionalDataManager || $isFocalPerson && $status == 2): 
+											if($isRegionalDataManager || $isFocalPerson): 
 										?>
 											<td rowspan="2" class="back-eee padding-0">
 												<label class="cont">
-													<input class="check toApprove" type="checkbox" <?= $couple->Id != 'N/A' ? $couple->IsActive != 'N/A' ? ' ' : 'checked' : '' ?> 
-													name="approveCouple[<?= $i ?>]" value="" <?= $couple->Id != 'N/A' ? $couple->IsActive != 'N/A' ? ' ' : 'disabled' : '' ?>  > 
-													<span class="checkmark"></span>
+													<?php if($status == 2): ?>
+														<input class="check toApprove" type="checkbox" <?= $couple->Id != 'N/A' ? $couple->IsActive != 'N/A' ? ' ' : 'checked' : '' ?> 
+														name="approveCouple[<?= $i ?>]" value="" <?= $couple->Id != 'N/A' ? $couple->IsActive != 'N/A' ? ' ' : 'disabled' : '' ?>  > 
+														<span class="checkmark"></span>
+													<?php elseif ($status == 0): ?>
+														<input class="check toApprove checkmark" type="checkbox" readonly checked>
+														<span class="checkmark" ></span>
+													<?php endif; ?>
 												</label>
 											</td> 
 										<?php endif; ?>

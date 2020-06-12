@@ -1689,15 +1689,11 @@ $(document).ready(function(){
 			new_value = current_value == 'approved' ? "" : 'approved';
 		} else if (current_checkbox.is('[name^="approve_all"]')) {
 			$('.toApprove').val('approved');
-		} else if (current_checkbox.not(':checked')) {
-			$('.toApprove').val('');
-		}
+		} 
 
 		current_checkbox.val(new_value);
 
 	});
-	
-	
 
 	$('#loading-wrapper').removeClass('loading');
 });
