@@ -90,14 +90,10 @@ function deleteReport()
 							text: "Record has been Deleted!",
 							type: 'success',
 							showCancelButton: false,
-  							showConfirmButton: false
+  							showConfirmButton: true
 						});
-						
-						var active_a = $('ul.nav.side-menu li a[href="' + MY_LINK + '"]')[0];			
-						active_a.click();
-						var active_li = $(active_a.parentElement);
-						active_li.addClass('active');
 
+						reload(MY_LINK);
 					} else {
 						Toast.fire({
 							text: "An error occured.",
@@ -110,6 +106,14 @@ function deleteReport()
 			}
 		});
 	});
+}
+
+function reload(MY_LINK)
+{
+	var active_a = $('ul.nav.side-menu li a[href="' + MY_LINK + '"]')[0];			
+	active_a.click();
+	var active_li = $(active_a.parentElement);
+	active_li.addClass('active');
 }
 
 function clickModalReportA()

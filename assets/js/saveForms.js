@@ -9,6 +9,18 @@ function genForm()
 
 	var formName = $('.formName').val();
 
+	var MY_LINK = '#/Menu/pending';
+
+	if (formName == 'genFormA'){ 
+		MY_LINK = '#/Menu/forma';
+	} else if (formName == 'genFormB') {
+		MY_LINK = '#/Menu/formb';
+	} else if (formName == 'genFormC') {
+		MY_LINK = '#/Menu/formc';
+	} else {
+		MY_LINK = '#/Menu/pending';
+	}
+
 	$('.genFormSubmit').click(function() {
 		const Toast = Swal.mixin({
 			toast: true,
@@ -16,18 +28,6 @@ function genForm()
 			showConfirmButton: false,
 			timer: 3000
 		});
-
-		var MY_LINK = '#/Menu/pending';
-
-		if (deleteForm == 'genFormA'){ 
-			MY_LINK = '#/Menu/forma';
-		} else if (deleteForm == 'genFormB') {
-			MY_LINK = '#/Menu/formb';
-		} else if (deleteForm == 'genFormC') {
-			MY_LINK = '#/Menu/formc';
-		} else {
-			MY_LINK = '#/Menu/pending';
-		}
 
 		var repData = $('form').serialize();
 		var validate = checkRequired();
@@ -47,16 +47,10 @@ function genForm()
 						type: 'success',
 						text: 'Report successfully saved!',
 						showCancelButton: false,
-						showConfirmButton: false
+						showConfirmButton: true
 					});
 					$('#generateReportModal').modal('hide');
-					// location.reload();
-					
-					var active_a = $('ul.nav.side-menu li a[href="' + MY_LINK + '"]')[0];			
-					active_a.click();
-					var active_li = $(active_a.parentElement);
-					active_li.addClass('active');
-
+					reload(MY_LINK);
 				} else {
 					Toast.fire({
 						type: 'error',
@@ -73,6 +67,14 @@ function genForm()
 			}); 
 		}		
 	});
+}
+
+function reload(MY_LINK)
+{
+	var active_a = $('ul.nav.side-menu li a[href="' + MY_LINK + '"]')[0];			
+	active_a.click();
+	var active_li = $(active_a.parentElement);
+	active_li.addClass('active');
 }
 
 function checkRequired()

@@ -4,7 +4,7 @@ function genAccomp()
 	    if(event.keyCode == 13) {
 			event.preventDefault();
 			return false;
-	    }
+		}
 	});
 
 	$('.genAccompSubmit').click(function() {	
@@ -33,15 +33,10 @@ function genAccomp()
 						type: 'success',
 						text: 'Accomplishment Report successfully saved!',
 						showCancelButton: false,
-						showConfirmButton: false
+						showConfirmButton: true
 					});
 					$('#generateReportModal').modal('hide');
-
-					var MY_ACCOMPLISHMENT = '#/Menu/accomplishment';
-					var active_a = $('ul.nav.side-menu li a[href="' + MY_ACCOMPLISHMENT + '"]')[0];			
-					active_a.click();
-					var active_li = $(active_a.parentElement);
-					active_li.addClass('active');
+					reload();
 				} else {
 					Toast.fire({
 						type: 'error',
@@ -58,6 +53,15 @@ function genAccomp()
 			}); 
 		}
 	});
+}
+
+function reload()
+{
+	var MY_ACCOMPLISHMENT = '#/Menu/accomplishment';
+	var active_a = $('ul.nav.side-menu li a[href="' + MY_ACCOMPLISHMENT + '"]')[0];			
+	active_a.click();
+	var active_li = $(active_a.parentElement);
+	active_li.addClass('active');
 }
 
 function checkRequired()

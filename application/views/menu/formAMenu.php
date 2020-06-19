@@ -48,10 +48,10 @@ if (!$isFocal) {
         <tr>
             <?php if (!$isFocal): ?>
                 <th>
-                    <?php if (!empty($array)) : ?>
+                    <!-- </?php if (!empty($array)) : ?> -->
                         <input id="checkAll" type="checkbox" />
                         <input type="hidden" name="reportName" value="formA" />
-                    <?php endif; ?>
+                    <!-- </?php endif; ?> -->
                 </th>
             <?php endif; ?>
             <th>Report #</th>
@@ -65,11 +65,11 @@ if (!$isFocal) {
         <?php foreach ($form_A as $key => $forma) : ?>
             <?php if ($forma->ReportID != 'N/A') { ?>
                 <tr>
-                    <?php if (!$isFocal): ?>
+                    <!-- </?php if (!$isFocal): ?> -->
                         <td>
                             <input class="checkSelect" name="reportNo[<?= $key ?>]" type="checkbox" value="<?= $forma->ReportNo ?>" />
                         </td>
-                    <?php endif; ?>
+                    <!-- </?php endif; ?> -->
                     <td><?= $forma->ReportID ?></td>
                     <td><?= $forma->ReportNo ?></td>
                     <td><?= $forma->ReportYear ?> - <?= $forma->ReportCode ?></td>
@@ -83,10 +83,10 @@ if (!$isFocal) {
                 </tr>
             <?php } else { ?>
                 <tr>
-                    <td class="text-center" colspan="<?= $columns; ?>">No result(s) found.</td>
-                    <?php if (!$isFocal): ?>
-                        <td class="text-center none"></td>
-                    <?php endif; ?>
+                    <td class="text-center" colspan="6">No result(s) found.</td>
+                    <!-- </?php if (!$isFocal): ?> -->
+                        <!-- <td class="text-center none"></td> -->
+                    <!-- </?php endif; ?> -->
                     <td class="text-center none"></td>
                     <td class="text-center none"></td>
                     <td class="text-center none"></td>
