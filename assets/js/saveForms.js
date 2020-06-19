@@ -17,6 +17,18 @@ function genForm()
 			timer: 3000
 		});
 
+		var MY_LINK = '#/Menu/pending';
+
+		if (deleteForm == 'genFormA'){ 
+			MY_LINK = '#/Menu/forma';
+		} else if (deleteForm == 'genFormB') {
+			MY_LINK = '#/Menu/formb';
+		} else if (deleteForm == 'genFormC') {
+			MY_LINK = '#/Menu/formc';
+		} else {
+			MY_LINK = '#/Menu/pending';
+		}
+
 		var repData = $('form').serialize();
 		var validate = checkRequired();
 
@@ -38,7 +50,13 @@ function genForm()
 						showConfirmButton: false
 					});
 					$('#generateReportModal').modal('hide');
-					location.reload();					
+					// location.reload();
+					
+					var active_a = $('ul.nav.side-menu li a[href="' + MY_LINK + '"]')[0];			
+					active_a.click();
+					var active_li = $(active_a.parentElement);
+					active_li.addClass('active');
+
 				} else {
 					Toast.fire({
 						type: 'error',

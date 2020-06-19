@@ -56,6 +56,20 @@ function deleteReport()
 		}).then((result) => {
 			if (result.value) {
 				var formData = {};
+				var deleteForm = $('input[name="reportName"]').val();
+				var MY_LINK = '#/Menu/pending';
+
+				if (deleteForm == 'accompReport') {
+					MY_LINK = '#/Menu/accomplishment';
+				} else if (deleteForm == 'formA'){ 
+					MY_LINK = '#/Menu/forma';
+				} else if (deleteForm == 'formB') {
+					MY_LINK = '#/Menu/formb';
+				} else if (deleteForm == 'formC') {
+					MY_LINK = '#/Menu/formc';
+				} else {
+					MY_LINK = '#/Menu/pending';
+				}
 	
 				$.each($('input[class="checkSelect"]:checked, input[name="reportName"]'), function(key, value) {
 					var item = $(value).val();
@@ -78,7 +92,12 @@ function deleteReport()
 							showCancelButton: false,
   							showConfirmButton: false
 						});
-						location.reload();
+						
+						var active_a = $('ul.nav.side-menu li a[href="' + MY_LINK + '"]')[0];			
+						active_a.click();
+						var active_li = $(active_a.parentElement);
+						active_li.addClass('active');
+
 					} else {
 						Toast.fire({
 							text: "An error occured.",

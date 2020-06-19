@@ -36,7 +36,12 @@ function genAccomp()
 						showConfirmButton: false
 					});
 					$('#generateReportModal').modal('hide');
-					location.reload();
+
+					var MY_ACCOMPLISHMENT = '#/Menu/accomplishment';
+					var active_a = $('ul.nav.side-menu li a[href="' + MY_ACCOMPLISHMENT + '"]')[0];			
+					active_a.click();
+					var active_li = $(active_a.parentElement);
+					active_li.addClass('active');
 				} else {
 					Toast.fire({
 						type: 'error',
