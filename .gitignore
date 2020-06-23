@@ -8,8 +8,8 @@ application/logs/*
 !application/logs/index.html
 !application/logs/.htaccess
 
-composer.lock
-/node_modules/
+# composer.lock
+# /node_modules/
 
 # IDE Files
 #-------------------------
@@ -25,6 +25,6 @@ composer.lock
 
 /.vscode/
 
-/vendor/
-/node_modules/
-application/config/config.php
+# /vendor/
+# /node_modules/
+# application/config/config.php
