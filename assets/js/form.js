@@ -151,6 +151,7 @@ function afterLoadValidation()
 
 		var type      =	$('.tr1' + i + ' input[name="type[' + i +']"]').val();
 		var status    =	$('.tr1' + i + ' input[name="status[' + i +']"]').val();
+		var shifter   =	$('.tr1' + i + ' input[name="fp_method[' + i +']"]').val();
 
 		var dateArr1  = bday1.split('-');
 		var month1    = $.trim(dateArr1[0]);
@@ -186,10 +187,19 @@ function afterLoadValidation()
 	    	$('input[name="intention-use[' + i +']"').find('.intention-required').removeAttr('hidden', 'hidden');
 	    	$('input[name="intention_use['+i+']"').removeAttr('disabled', 'disabled');
 	    	intentionStatusValidation(i);
+	    } else if (val == 'C') {
+	    	$('.tr1' + i + ' .criteria .labelDiv .label-warning').removeClass('none');
+	    	$('input[name="intention-use[' + i +']"').removeAttr('required', 'required');
+	    	$('input[name="intention-use[' + i +']"').find('.intention-required').attr('hidden', 'hidden');
+	    	$('input[name="intention_use['+i+']"').attr('disabled', 'disabled');
 	    } else {
 	    	$('input[name="intention-use[' + i +']"').removeAttr('required', 'required');
 	    	$('input[name="intention-use[' + i +']"').find('.intention-required').attr('hidden', 'hidden');
 	    	$('input[name="intention_use['+i+']"').attr('disabled', 'disabled');
+		}
+
+		if (shifter != '') {
+			$('.tr1' + i + ' .criteria .labelDiv .label-intention').removeClass('none');
 		}
 		
 		var isSlipSave = $('.fp_served' + i).val();
@@ -450,8 +460,11 @@ function methodValidation()
 		var val = $(this).val();
 	    if (val > 12 || val == 0) {
 	    	$(this).val('');
+	    	$(this).closest('tr').find('.criteria .labelDiv .label-intention').addClass('none');
 	    	event.preventDefault();
 			return false;
+	    } else {
+	    	$(this).closest('tr').find('.criteria .labelDiv .label-intention').removeClass('none');
 	    }
 	});
 
@@ -581,6 +594,17 @@ function statusValidation()
 	    	event.preventDefault();
 	    	return false;
 	    }
+	});
+
+	$('.status-trad').keyup(function(event){
+		var val = $(this).val();
+		val = val.toUpperCase();
+
+		if (val == 'C') {
+			$(this).closest('tr').find('.criteria .labelDiv .label-warning').removeClass('none');
+		} else {
+			$(this).closest('tr').find('.criteria .labelDiv .label-warning').addClass('none');
+		}
 	});
 }
 
@@ -755,26 +779,26 @@ function UnmetNeedCriteria(index, age, type, status)
 	if (status != 'C') {
 		if (age >= 15 && age <= 49 && type >= 1 && type <= 5) {
 			if (isSlipSave != 1) {
-				$('.tr1' + index + ' .criteria .labelDiv').html('<span class="label label-danger">Unmet Need</span>');
+				$('.tr1' + index + ' .criteria .labelDiv .label-danger').removeClass('none');
 			} else {
 				$('.tr1' + index + ' .criteria .labelDiv').html('<span class="label label-success">Served</span>');
 			}			
 		} else if (age >= 15 && age <= 49 && type == 6 && status == 'A') {
 			if (isSlipSave != 1) {
-				$('.tr1' + index + ' .criteria .labelDiv').html('<span class="label label-danger">Unmet Need</span>');
+				$('.tr1' + index + ' .criteria .labelDiv .label-danger').removeClass('none');
 			} else {
 				$('.tr1' + index + ' .criteria .labelDiv').html('<span class="label label-success">Served</span>');
 			}
 		} else {
 			if (isSlipSave != 1) {
-				$('.tr1' + index + ' .criteria .labelDiv').html('<span class="label label-danger none">Unmet Need</span>');
+				$('.tr1' + index + ' .criteria .labelDiv .label-danger').removeClass('none');
 			} else {
 				$('.tr1' + index + ' .criteria .labelDiv').html('<span class="label label-success">Served</span>');
 			}			
 		}
 	} else {
 		if (isSlipSave != 1) {
-			$('.tr1' + index + ' .criteria .labelDiv').html('<span class="label label-danger none">Unmet Need</span>');
+			$('.tr1' + index + ' .criteria .labelDiv .label-danger').removeClass('none');
 		} else {
 			$('.tr1' + index + ' .criteria .labelDiv').html('<span class="label label-success">Served</span>');
 		}

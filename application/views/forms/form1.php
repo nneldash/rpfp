@@ -499,7 +499,10 @@ $status = $this->input->get('status');
 										<input type="text" class="isSlipSave"  hidden />
 										<p class="small"><?= $i + 1; ?></p>
 										<div class="labelDiv">
-											
+											<span class="label label-danger none">Unmet Need</span>
+											<span class="label label-warning none">Currently Pregnant</span>
+											<span class="label label-intention none">Shifter</span>
+											<span class="label label-verified none">Verified</span>
 										</div>
 										<input type="hidden" class="fp_served<?= $i; ?>" value="<?= $couple->FpServed; ?>" />
 									</td>
