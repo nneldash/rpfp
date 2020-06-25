@@ -20,6 +20,9 @@ if (empty($title)) {
 </style>
 
 <br>
+<div class="loading" id="loading-wrapper" >
+    <div id="loading-text" role="status"></div>
+</div>
 <a class="searchDropdown text-right" data-toggle="collapse" data-parent="#accordion" href="#searchCouple">
     Hide/Show Search
 </a>
@@ -181,6 +184,9 @@ if (empty($title)) {
 
 <hr>
 <script>
+    setTimeout(function(){
+        $('#loading-wrapper').removeClass('loading');
+    }, 2000);
     loadJs(base_url + 'NewAssets/bootstrapSelectJs');
     loadJs(base_url + 'NewAssets/templateJs', function() {
         loadJs(base_url + 'assets/js/listCouples.js', function(){

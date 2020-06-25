@@ -462,6 +462,9 @@ $status = $this->input->get('status');
 									$dummy = new CoupleClass();
 									$couple = (empty($form1->ListCouple[$i]) ? $dummy : $form1->ListCouple[$i]);
 
+									// print_r($couple);
+									// exit;
+
 									$bday = 'N/A';
 									$bday2 = 'N/A';
 
@@ -505,6 +508,7 @@ $status = $this->input->get('status');
 											<span class="label label-verified none">Verified</span>
 										</div>
 										<input type="hidden" class="fp_served<?= $i; ?>" value="<?= $couple->FpServed; ?>" />
+										<input type="hidden" class="verified<?= $i; ?>" value="<?= $couple->IsVerified; ?>" />
 									</td>
 									
 									<td class="small highlight-this">
