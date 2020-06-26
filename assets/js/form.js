@@ -203,11 +203,10 @@ function afterLoadValidation()
 		}
 
 		var verified  =	$('.verified' + i).val();
-		console.log(i);
-		console.log(verified);
-
-		if (verified == 'N/A') {
+		if (verified != 'N/A') {
 			$('.tr1' + i + ' .criteria .labelDiv .label-verified').removeClass('none');
+		} else {
+			$('.tr1' + i + ' .criteria .labelDiv .label-verified').addClass('none');
 		}
 		
 		var isSlipSave = $('.fp_served' + i).val();

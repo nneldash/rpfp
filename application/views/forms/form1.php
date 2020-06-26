@@ -462,9 +462,6 @@ $status = $this->input->get('status');
 									$dummy = new CoupleClass();
 									$couple = (empty($form1->ListCouple[$i]) ? $dummy : $form1->ListCouple[$i]);
 
-									// print_r($couple);
-									// exit;
-
 									$bday = 'N/A';
 									$bday2 = 'N/A';
 
@@ -487,8 +484,13 @@ $status = $this->input->get('status');
 											<td rowspan="2" class="back-eee padding-0">
 												<label class="cont">
 													<?php if($status == 2): ?>
-														<input class="check toApprove" type="checkbox" <?= $couple->Id != 'N/A' ? $couple->IsActive != 'N/A' ? ' ' : 'checked' : '' ?> 
-														name="approveCouple[<?= $i ?>]" value="" <?= $couple->Id != 'N/A' ? $couple->IsActive != 'N/A' ? ' ' : 'disabled' : '' ?>  > 
+														<input class="check toApprove" type="checkbox" 
+															<?= $couple->Id != 'N/A' ? $couple->IsVerified != 'N/A' ? ' checked' : '' : '' ?>
+															<?= $couple->Id != 'N/A' ? $couple->IsActive != 'N/A' ? ' ' : 'checked' : '' ?> 
+															name="approveCouple[<?= $i ?>]" 
+															value="" 
+															<?= $couple->Id != 'N/A' ? $couple->IsActive != 'N/A' ? ' ' : 'disabled' : '' ?>  
+														/> 
 														<span class="checkmark"></span>
 													<?php elseif ($status == 0): ?>
 														<input class="check toApprove checkmark" type="checkbox" readonly checked>

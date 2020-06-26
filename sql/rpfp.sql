@@ -3387,7 +3387,9 @@ BEGIN
                 NULL AS mfp_intention_use,
                 NULL AS tfp_reason,
                 NULL AS fp_served,
-                NULL AS is_active
+                NULL AS is_active,
+                NULL AS is_approved,
+                NULL AS is_verified
         ;
     ELSE
          SELECT apc.COUPLES_ID AS couplesid,
