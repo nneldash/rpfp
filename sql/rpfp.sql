@@ -3443,7 +3443,7 @@ BEGIN
       LEFT JOIN rpfp.fp_service fs
              ON fs.COUPLES_ID = apc.COUPLES_ID
       LEFT JOIN rpfp.couples_verified cv 
-             ON vc.COUPLES_ID = apc.COUPLES_ID
+             ON cv.COUPLES_ID = apc.COUPLES_ID
       LEFT JOIN rpfp.track_approved ta 
              ON ta.COUPLES_ID = apc.COUPLES_ID
           WHERE rc.CLASS_NUMBER = class_num
