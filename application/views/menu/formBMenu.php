@@ -28,6 +28,9 @@ if (!$isFocal) {
     }
 </style>
 
+<div class="loading" id="loading-wrapper" >
+    <div id="loading-text" role="status"></div>
+</div>
 <?php if (!$isFocal): ?>
     <div class="col-md-12" style="padding: 0 0 20px">
         <div class="col-md-3" style="text-transform: none; padding: 0">
