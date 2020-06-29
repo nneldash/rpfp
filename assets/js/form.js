@@ -201,6 +201,13 @@ function afterLoadValidation()
 		if (shifter != '') {
 			$('.tr1' + i + ' .criteria .labelDiv .label-intention').removeClass('none');
 		}
+
+		var verified  =	$('.verified' + i).val();
+		if (verified != 'N/A') {
+			$('.tr1' + i + ' .criteria .labelDiv .label-verified').removeClass('none');
+		} else {
+			$('.tr1' + i + ' .criteria .labelDiv .label-verified').addClass('none');
+		}
 		
 		var isSlipSave = $('.fp_served' + i).val();
 		if (isSlipSave == 1) {

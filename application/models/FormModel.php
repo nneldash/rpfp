@@ -365,7 +365,9 @@ class FormModel extends BaseModel
                     'ReasonForUse' => 'tfp_reason'
                 ),
                 'FpServed' => 'fp_served',
-                'IsActive' => 'is_active'
+                'IsActive' => 'is_active',
+                'IsApproved' => 'is_approved',
+                'IsVerified' => 'is_verified'
             ),
             'encoder_get_couples_with_fp_details',
             array($classNo,$status)

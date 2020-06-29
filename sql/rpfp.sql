@@ -3387,7 +3387,9 @@ BEGIN
                 NULL AS mfp_intention_use,
                 NULL AS tfp_reason,
                 NULL AS fp_served,
-                NULL AS is_active
+                NULL AS is_active,
+                NULL AS is_approved,
+                NULL AS is_verified
         ;
     ELSE
          SELECT apc.COUPLES_ID AS couplesid,
@@ -3426,20 +3428,26 @@ BEGIN
                 fp.MFP_INTENTION_USE_ID AS mfp_intention_use,
                 fp.REASON_INTENDING_USE_ID AS tfp_reason,
                 (CASE WHEN fs.COUPLES_ID IS NULL THEN 0 ELSE 1 END) AS fp_served,
+                cv.VERIFIED_ID AS is_verified,
+                ta.TRACK_ID AS is_approved,
                 apc.is_active AS is_active
            FROM rpfp.rpfp_class rc
       LEFT JOIN rpfp.couples apc
              ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
       LEFT JOIN rpfp.individual ic_male
-                 ON ic_male.COUPLES_ID = apc.COUPLES_ID
-                AND ic_male.SEX = 1
+             ON ic_male.COUPLES_ID = apc.COUPLES_ID
+            AND ic_male.SEX = 1
       LEFT JOIN rpfp.individual ic_female
-                 ON ic_female.COUPLES_ID = apc.COUPLES_ID
-                AND ic_female.SEX = 2
+             ON ic_female.COUPLES_ID = apc.COUPLES_ID
+            AND ic_female.SEX = 2
       LEFT JOIN rpfp.fp_details fp
              ON fp.COUPLES_ID = apc.COUPLES_ID
       LEFT JOIN rpfp.fp_service fs
              ON fs.COUPLES_ID = apc.COUPLES_ID
+      LEFT JOIN rpfp.couples_verified cv 
+             ON cv.COUPLES_ID = apc.COUPLES_ID
+      LEFT JOIN rpfp.track_approved ta 
+             ON ta.COUPLES_ID = apc.COUPLES_ID
           WHERE rc.CLASS_NUMBER = class_num
             AND apc.IS_ACTIVE = active_status
             AND user_location = (rc.BARANGAY_ID DIV POWER( 10, multiplier ))

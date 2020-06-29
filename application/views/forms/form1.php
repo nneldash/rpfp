@@ -484,8 +484,13 @@ $status = $this->input->get('status');
 											<td rowspan="2" class="back-eee padding-0">
 												<label class="cont">
 													<?php if($status == 2): ?>
-														<input class="check toApprove" type="checkbox" <?= $couple->Id != 'N/A' ? $couple->IsActive != 'N/A' ? ' ' : 'checked' : '' ?> 
-														name="approveCouple[<?= $i ?>]" value="" <?= $couple->Id != 'N/A' ? $couple->IsActive != 'N/A' ? ' ' : 'disabled' : '' ?>  > 
+														<input class="check toApprove" type="checkbox" 
+															<?= $couple->Id != 'N/A' ? $couple->IsVerified != 'N/A' ? ' checked' : '' : '' ?>
+															<?= $couple->Id != 'N/A' ? $couple->IsActive != 'N/A' ? ' ' : 'checked' : '' ?> 
+															name="approveCouple[<?= $i ?>]" 
+															value="" 
+															<?= $couple->Id != 'N/A' ? $couple->IsActive != 'N/A' ? ' ' : 'disabled' : '' ?>  
+														/> 
 														<span class="checkmark"></span>
 													<?php elseif ($status == 0): ?>
 														<input class="check toApprove checkmark" type="checkbox" readonly checked>
@@ -505,6 +510,7 @@ $status = $this->input->get('status');
 											<span class="label label-verified none">Verified</span>
 										</div>
 										<input type="hidden" class="fp_served<?= $i; ?>" value="<?= $couple->FpServed; ?>" />
+										<input type="hidden" class="verified<?= $i; ?>" value="<?= $couple->IsVerified; ?>" />
 									</td>
 									
 									<td class="small highlight-this">
