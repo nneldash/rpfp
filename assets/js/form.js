@@ -83,6 +83,8 @@ $(function() {
 	getProvinces();
 	isApprove();
 	importChanges();
+	afterLoadValidation();
+	statusUnmet();
 
 	Inputmask().mask(".birthAge");
 
@@ -115,7 +117,6 @@ $(function() {
 		$('td input[class="check toApprove"]').attr('disabled', false);
 	} else {
 		getDataDuplicate();
-		afterLoadValidation();
 		sexValidation();
 		civilStatusValidation();
 		educationValidation();
@@ -128,7 +129,6 @@ $(function() {
 		importModal();
 		inputValid();
 		typeUnmet();
-		statusUnmet();
 	}
 });
 
@@ -178,7 +178,11 @@ function afterLoadValidation()
 		    	$('.tr2' + i).find('td .required').removeAttr('hidden', 'hidden');
 		    }
 		}
-		autoGetData(fname1, lname1, extname1, sex1, bday1, fname2, lname2, extname2, sex2, bday2, i);
+
+		if (isRDM != 1 && isFocal != 1) {
+			autoGetData(fname1, lname1, extname1, sex1, bday1, fname2, lname2, extname2, sex2, bday2, i);
+		}
+
 		criteria(i, i, sex1, sex2, age1, age2, type, status);
 
 		val = status.toUpperCase();
