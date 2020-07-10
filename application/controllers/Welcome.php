@@ -44,10 +44,10 @@ class Welcome extends CI_Controller
             return;
         }
 
-        if ($profile->isITDMU()) {
-            redirect(site_url('UserProfile'));
-            return;
-        }
+        // if ($profile->isITDMU()) {
+        //     redirect(site_url('Menu'));
+        //     return;
+        // }
 
         if ($profile->isFocal()) {
             redirect(site_url('Menu'));
