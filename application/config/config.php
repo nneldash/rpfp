@@ -23,9 +23,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | a PHP script and you can easily do that on your own.
 |
 // */
-// $config['base_url'] = 'http://[::1]/rpfp/';
+$config['base_url'] = 'http://208.109.15.179/rpfp/';
 
-$config['base_url'] = 'https://rpfp.herokuapp.com/';
+// $config['base_url'] = 'https://rpfp.herokuapp.com/';
 /*
 |--------------------------------------------------------------------------
 | Index File
