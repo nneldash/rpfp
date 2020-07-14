@@ -4715,11 +4715,11 @@ BEGIN
     DECLARE record_id INT;
     /** 
     SEARCH_STATUS
-        0 - all data
-        1 - unmet need
-        2 - served unmet need
-        3 - shifters
-        4 - served shifters
+        1 - all data in approved
+        2 - unmet need
+        3 - served unmet need
+        4 - shifters
+        5 - served shifters
     */
     DECLARE name_user VARCHAR(50);
     DECLARE db_user_name VARCHAR(50);
@@ -4739,25 +4739,27 @@ BEGIN
         SET search_status = 1;
     END IF;
 
-    IF (IFNULL( loc_province, 0 ) = 0 ) THEN
-        SET location_code_from = user_location * POWER(10, multiplier);
-        SET location_code_to = (user_location + 1) * POWER(10, multiplier) - 1;
+    /** set default location of user */
+    SET location_code_from = user_location * POWER(10, multiplier);
+    SET location_code_to = (user_location + 1) * POWER(10, multiplier) - 1;
+
+    /** set location being searched for */
+    IF (IFNULL( loc_barangay, 0 ) <> 0 ) THEN
+        SET location_code_from = loc_barangay;
+        SET location_code_to = loc_barangay;
     ELSE
-        IF (IFNULL( loc_municipality, 0 ) = 0 ) THEN
-            SET location_code_from = loc_province * 100000;
-            SET location_code_to = (loc_province + 1) * 100000 - 1;
+        IF (IFNULL( loc_municipality, 0 ) <> 0 ) THEN
+            SET location_code_from = loc_municipality * POWER(10, 3);
+            SET location_code_to = (loc_municipality + 1) * POWER(10, 3) - 1;
         ELSE
-            IF (IFNULL( loc_barangay, 0 ) = 0 ) THEN
-                SET location_code_from = loc_municipality * 1000;
-                SET location_code_to = (loc_municipality + 1) * 1000 - 1;
-            ELSE
-                SET location_code_from = loc_barangay;
-                SET location_code_to = loc_barangay;
+            IF (IFNULL( loc_province, 0 ) <> 0 ) THEN
+                SET location_code_from = loc_province * POWER(10, 5);
+                SET location_code_to = (loc_province + 1) * POWER(10, 5) - 1;
             END IF;
         END IF;
     END IF;
 
-
+    /** set other default values */
     IF (IFNULL( search_age_from, 0 ) = 0) THEN
         SET search_age_from = 0;
     END IF;
@@ -4788,8 +4790,12 @@ BEGIN
         SET search_child_to = 200;
     END IF;
    
+    /** 
+    SEARCH_STATUS
+        1 - all data in approved
+    */
     IF search_status = 1 THEN
-        IF tfp_used > 0 THEN
+        IF (tfp_used > 0) or (mfp_used > 0) THEN
             CALL rpfp.get_class_list_all(
             location_code_from,
             location_code_to,
@@ -4813,32 +4819,7 @@ BEGIN
             );
             LEAVE proc_exit_point;
         END IF;
-        
-        IF mfp_used > 0 THEN
-            CALL rpfp.get_class_list_all(
-            location_code_from,
-            location_code_to,
-            class_number,
-            search_date_from,
-            search_date_to,
-            type_class,
-            couples_name,
-            search_age_from,
-            search_age_to,
-            no_child,
-            mfp_used,
-            tfp_used,
-            intention_status,
-            intention_use,
-            search_status,
-            status_active,
-            name_user,
-            page_no,
-            items_per_page
-            );
-            LEAVE proc_exit_point;
-        END IF;
-        
+                
         IF (IFNULL( type_class, 0 ) = 0 ) THEN
             SET type_class = 1;
             SET type_class_range = 7;
@@ -4881,7 +4862,6 @@ BEGIN
             SET items_per_page := 10;
             END IF;
 
-            SET read_offset := (page_no - 1) * items_per_page;
             SELECT rc.RPFP_CLASS_ID AS rpfpclass,
                    rc.TYPE_CLASS_ID AS typeclass,
                    rc.OTHERS_SPECIFY AS others_specify,
@@ -4936,6 +4916,11 @@ BEGIN
         LEAVE proc_exit_point;
     END IF;
     
+
+    /** 
+    SEARCH_STATUS
+        2 - unmet need
+    */
     IF search_status = 2 THEN    
         IF tfp_used > 0 THEN
             CALL rpfp.get_class_list_unmet(
@@ -5088,6 +5073,10 @@ BEGIN
         LEAVE proc_exit_point;
     END IF;
 
+    /** 
+    SEARCH_STATUS
+        3 - served unmet need
+    */
     IF search_status = 3 THEN
         IF tfp_used > 0 THEN
             CALL rpfp.get_class_list_served_unmet(
@@ -5241,6 +5230,10 @@ BEGIN
         LEAVE proc_exit_point;
     END IF;
         
+    /** 
+    SEARCH_STATUS
+        4 - shifters
+    */
     IF search_status = 4 THEN
         IF tfp_used > 0 THEN
             CALL rpfp.get_class_list_shifters(
@@ -5390,6 +5383,10 @@ BEGIN
         LEAVE proc_exit_point;
     END IF;
         
+    /** 
+    SEARCH_STATUS
+        5 - served shifters
+    */
     IF search_status = 5 THEN
         IF tfp_used > 0 THEN
             CALL rpfp.get_class_list_served_shifters(
@@ -5919,10 +5916,9 @@ BEGIN
     DECLARE multiplier INT;
     DECLARE is_not_encoder INT(1);
     
-    CALL rpfp.lib_extract_user_name( USER(), name_user, db_user_name );
-    SET user_scope := rpfp.profile_get_scope( name_user );
+    SET user_scope := rpfp.profile_get_scope( username );
     SET multiplier := rpfp.lib_get_multiplier( user_scope );
-    SET user_location := rpfp.profile_get_location( name_user, user_scope );
+    SET user_location := rpfp.profile_get_location( username, user_scope );
     SET is_not_encoder := NOT IFNULL(rpfp.profile_check_if_encoder(), FALSE);
 
     IF (IFNULL( type_class, 0 ) = 0 ) THEN
@@ -6007,7 +6003,7 @@ IF ( IFNULL( tfp_used, 0 ) = 0 ) THEN
                     AND rc.DATE_CONDUCTED <= search_date_to
                 )
                AND apc.IS_ACTIVE = status_active
-               AND (   rc.DB_USER_ID = name_user
+               AND (   rc.DB_USER_ID = username
                    OR (   is_not_encoder
                       AND user_location = (rc.BARANGAY_ID DIV POWER( 10, multiplier ))
                     )

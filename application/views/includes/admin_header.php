@@ -22,10 +22,10 @@ $links = array(
 
 $profile = UserProfile::getFromVariable(empty($profile) ? BLANK : $profile);
 
-$default_tab = $links[MY_PENDING];
-if ($profile->isRegionalDataManager()) {
-    $default_tab = $links[MY_PENDING];
+if (empty($da_default_tab)) {
+    $da_default_tab = MY_PENDING;
 }
+$default_tab = $links[$da_default_tab];
 
 if (empty($title)) {
     $title = 'Online RPFP Monitoring System';
