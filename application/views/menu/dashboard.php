@@ -9,8 +9,6 @@ if (empty($title)) {
 }
 ?>
 <script>document.querySelector("head title").innerHTML = '<?=$title?>';</script>
-
-<link rel="stylesheet" href="<?= base_url('assets/css/graphCSS/morris.css')?>">
 <style>
     .border-1 {
         border: 1px solid #333;
@@ -46,7 +44,14 @@ if (empty($title)) {
 </style>
 
 <div class="container margin-t7 statisticsReport" >
-    <div class="row">    
+    <div class="row">
+        <div class="col-xs-12 text-center">
+            <img class="login-logo" style="width: 30%" src="<?=base_url('assets/images/login_logo.png')?>" alt="POPCOM_LOGO" width="10%">
+            <hr>
+            <h3>PUBLIC DASHBOARD</h3>
+            <hr>
+            <br>    
+        </div> 
         <div class="col-md-12 col-sm-12 col-xs-12 border-1"> 
             <div class="col-md-12 col-sm-12 col-xs-12">   
                 <div class="row">
@@ -123,15 +128,6 @@ if (empty($title)) {
                 </div>
             </div>
             <div class="col-md-6 col-sm-12 col-xs-9"> 
-                <!-- <div class="row">
-                    <div class="col-xs-9 col-sm-9">
-                        <h5><b>Summary of FP Users</b></h5>
-                    </div>
-                    <div class="col-xs-3 col-sm-3 text-right">
-                        
-                    </div>
-                </div> -->
-
                 <div class="row">
                     <div class="col-sm-12">
                         <h5>Modern FP Users for Yr <?= $current_year; ?></h5>
@@ -204,10 +200,13 @@ if (empty($title)) {
             </div>
         </div>
     </div>
+
+    <!-- Bar Graph 1 -->
     <div class="col-xs-12 col-sm-12 col-md-12">
         <div class="row">
             <form class="form-horizontal form-label-left">
                 <div class="form-group">
+                    <br>
                     <br>
                     <label class="control-label col-md-9 col-sm-9 col-xs-12 text-right margin-t7">Choose Year</label>
                     <div class="input-group col-md-3 col-sm-3 col-xs-12">
@@ -225,11 +224,128 @@ if (empty($title)) {
         </div>
         <div class="row">
             <br>
-            <h4 class="text-center">PERCENTAGE OF COUPLES ENCODED FOR YEAR <?= $current_year; ?></h4>
+            <h4 class="text-center">PERCENTAGE OF COUPLES ENCODED/TARGETS/REACHED</h4>
             <br><br>
-            <div id="graph"></div>
+            <canvas id="barGraph1"></canvas>
         </div>
     </div>
+
+    <!-- Bar Graph 2 -->
+    <div class="col-xs-12 col-sm-12 col-md-12">
+        <div class="row">
+            <form class="form-horizontal form-label-left">
+                <div class="form-group">
+                    <br>
+                    <br>
+                    <label class="control-label col-md-9 col-sm-9 col-xs-12 text-right margin-t7">Choose Year</label>
+                    <div class="input-group col-md-3 col-sm-3 col-xs-12">
+                        <select class="form-control" id="percentage_year"> 
+                            <?php for ($i = $current_year; $i > 2011; $i--): ?>
+                                <option value="<?=$i?>"><?= $i?></option>
+                            <?php endfor?>
+                        </select>
+                        <span class="input-group-btn">
+                            <button type="button" class="btn btn-primary btn-hover">Go</button>
+                        </span>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="row">
+            <br>
+            <h4 class="text-center">NUMBER OF COUPLES/INDIVIDUALS REACHED</h4>
+            <br><br>
+            <canvas id="barGraph2"></canvas>
+        </div>
+    </div>
+
+    <!-- Pie 1 -->
+    <div class="col-xs-12 col-sm-12 col-md-12">
+        <div class="row">
+            <form class="form-horizontal form-label-left">
+                <div class="form-group">
+                    <br>
+                    <br>
+                    <label class="control-label col-md-9 col-sm-9 col-xs-12 text-right margin-t7">Choose Year</label>
+                    <div class="input-group col-md-3 col-sm-3 col-xs-12">
+                        <select class="form-control" id="percentage_year"> 
+                            <?php for ($i = $current_year; $i > 2011; $i--): ?>
+                                <option value="<?=$i?>"><?= $i?></option>
+                            <?php endfor?>
+                        </select>
+                        <span class="input-group-btn">
+                            <button type="button" class="btn btn-primary btn-hover">Go</button>
+                        </span>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="row">
+            <br>
+            <h4 class="text-center">METHOD MIX</h4>
+            <br><br>
+            <canvas id="pieChart1"></canvas>
+        </div>
+    </div>
+
+    <!-- Bar Graph 3 -->
+    <div class="col-xs-12 col-sm-12 col-md-12">
+        <div class="row">
+            <form class="form-horizontal form-label-left">
+                <div class="form-group">
+                    <br>
+                    <br>
+                    <label class="control-label col-md-9 col-sm-9 col-xs-12 text-right margin-t7">Choose Year</label>
+                    <div class="input-group col-md-3 col-sm-3 col-xs-12">
+                        <select class="form-control" id="percentage_year"> 
+                            <?php for ($i = $current_year; $i > 2011; $i--): ?>
+                                <option value="<?=$i?>"><?= $i?></option>
+                            <?php endfor?>
+                        </select>
+                        <span class="input-group-btn">
+                            <button type="button" class="btn btn-primary btn-hover">Go</button>
+                        </span>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="row">
+            <br>
+            <h4 class="text-center">WRA by Age Group</h4>
+            <br><br>
+            <canvas id="barGraph3"></canvas>
+        </div>
+    </div>
+
+    <!-- Bar Graph 4 -->
+    <div class="col-xs-12 col-sm-12 col-md-12">
+        <div class="row">
+            <form class="form-horizontal form-label-left">
+                <div class="form-group">
+                    <br>
+                    <br>
+                    <label class="control-label col-md-9 col-sm-9 col-xs-12 text-right margin-t7">Choose Year</label>
+                    <div class="input-group col-md-3 col-sm-3 col-xs-12">
+                        <select class="form-control" id="percentage_year"> 
+                            <?php for ($i = $current_year; $i > 2011; $i--): ?>
+                                <option value="<?=$i?>"><?= $i?></option>
+                            <?php endfor?>
+                        </select>
+                        <span class="input-group-btn">
+                            <button type="button" class="btn btn-primary btn-hover">Go</button>
+                        </span>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="row">
+            <br>
+            <h4 class="text-center">Unmet Need vs Served</h4>
+            <br><br>
+            <canvas id="barGraph4"></canvas>
+        </div>
+    </div>
+
     <div class="col-xs-12 col-sm-12 col-md-12">
         <div class="row">
            <br>
@@ -239,10 +355,8 @@ if (empty($title)) {
 </div>
 <script>
     loadJs(base_url + 'NewAssets/templateJs', function() {
-        loadJs(base_url + 'assets/js/graphJs/raphael-min.js', function() {
-            loadJs(base_url + 'assets/js/graphJs/morris.min.js', function() {
-                loadJs(base_url + 'assets/js/barGraph.js');
-            });
+        loadJs(base_url + 'NewAssets/chartJS', function() {
+            loadJs(base_url + 'assets/js/barGraph.js');
         });
     });  
 </script>

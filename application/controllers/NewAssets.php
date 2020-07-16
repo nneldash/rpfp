@@ -246,4 +246,10 @@ class NewAssets extends CI_Controller
         header('Content-Type: text/css');
         readfile(BASEPATH . THEME);
     }
+
+    public function chartJS()
+    {
+        header('Content-Type: application/json');
+        readfile(BASEPATH . CHART_JS);
+    }
 }
