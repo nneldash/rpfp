@@ -25,7 +25,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 // */
 // $config['base_url'] = 'http://[::1]/rpfp/';
 
-$config['base_url'] = 'https://rpfp.herokuapp.com/';
+$config['base_url'] = 'http://208.109.15.179/rpfp/';
+
+// $config['base_url'] = 'https://rpfp.herokuapp.com/';
 /*
 |--------------------------------------------------------------------------
 | Index File
@@ -528,7 +530,7 @@ $config['proxy_ips'] = '';
 
 $config[DB_DEFAULT] = array(
     'dsn'      => '',
-    'hostname' => 'localhost',
+    'hostname' => 'ip-208-109-15-179.ip.secureserver.net',
     USERNAME => '',
     USERPASSWORD => '',
     'database' => '',
