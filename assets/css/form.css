@@ -588,6 +588,10 @@ a:hover {
 .label-success {
 	background-color: #076c1b;
 }
+.label-verified {
+	border: 1px solid #333;
+	color: #333!important;
+}
 
 /*------------------------------------------------------------------
 [ Dropdown ]*/

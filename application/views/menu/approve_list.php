@@ -21,7 +21,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
         </thead>
         <tbody>         
             <?php foreach ($approve as $approved) : ?>
-                <?php if ($approved->ClassNo != 'N/A') { ?>
+                <?php if ($approved->ClassNo != N_A && $approved->ClassNo != BLANK ) { ?>
                     <tr>
                         <td><?= $approved->ClassNo; ?></td>
                         <td><?= $approved->TypeClass; ?></td>
@@ -66,7 +66,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
     <?php
     if (!empty($reload)) {
         ?>
-        $("#datatable-responsive").DataTable();
+        // $("#datatable-responsive").DataTable();
         <?php
     }
     ?>    

@@ -193,7 +193,8 @@ class CoupleModel extends BaseModel
                 $status_active,
                 $page_no,
                 $items_per_page
-            )
+            ),
+            'couple_list'
         );
 
         $listApprove = new ListApproveCouple();

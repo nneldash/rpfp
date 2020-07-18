@@ -18,11 +18,19 @@ class Menu extends CI_Controller
 
     public function index()
     {
+        $this->index1('pending');
+    }
+
+    public function index1($default_tab)
+    {
         $profile = $this->ProfileModel->getOwnProfile();
 
         $this->load->view(
             'includes/admin_header',
-            array('profile' => $profile)
+            array(
+                'profile' => $profile, 
+                'da_default_tab' => $default_tab
+            )
         );
 
         if (empty($this->do_not_render_footer)) {
@@ -50,7 +58,7 @@ class Menu extends CI_Controller
         }
 
         $this->do_not_render_footer = true;
-        $this->index();
+        $this->index1('pending');
         $this->load->view('menu/pending', array('pending' => $pending));
         $this->footer();
 
@@ -71,7 +79,7 @@ class Menu extends CI_Controller
         }
 
         $this->do_not_render_footer = true;
-        $this->index();
+        $this->index1('approve');
         $this->load->view('menu/approve');
         $this->load->view('menu/approve_list', array('approve' => $approve));
         $this->footer();
@@ -97,7 +105,7 @@ class Menu extends CI_Controller
         }
 
         $this->do_not_render_footer = true;
-        $this->index();
+        $this->index1('accomplishment');
         $this->load->view('menu/accomplishment', array('accomplishment' => $accomplishment));
         $this->footer();
 
@@ -114,7 +122,7 @@ class Menu extends CI_Controller
         }
 
         $this->do_not_render_footer = true;
-        $this->index();
+        $this->index1('search');
         $this->load->view('menu/search');
         $this->footer();
 
@@ -173,7 +181,7 @@ class Menu extends CI_Controller
         }
 
         $this->do_not_render_footer = true;
-        $this->index();
+        $this->index1('dashboard');
         $this->load->view('menu/dashboard');
         $this->footer();
 
@@ -203,7 +211,7 @@ class Menu extends CI_Controller
         }
 
         $this->do_not_render_footer = true;
-        $this->index();
+        $this->index1('formA');
         $this->load->view('menu/formAMenu', 
             array(
                 'form_A' => $forma,
@@ -239,7 +247,7 @@ class Menu extends CI_Controller
         }
 
         $this->do_not_render_footer = true;
-        $this->index();
+        $this->index1('formB');
         $this->load->view('menu/formBMenu', 
             array(
                 'form_B' => $formb,
@@ -275,7 +283,7 @@ class Menu extends CI_Controller
         }
 
         $this->do_not_render_footer = true;
-        $this->index();
+        $this->index1('formC');
         $this->load->view('menu/formCMenu', 
             array(
                 'form_C' => $formc,

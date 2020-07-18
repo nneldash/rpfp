@@ -11,6 +11,10 @@ if (empty($title)) {
 <link href="<?= base_url('assets/css/form.css'); ?>" rel="stylesheet" />
 
 <br>
+
+<div class="loading" id="loading-wrapper" >
+    <div id="loading-text" role="status"></div>
+</div>
 <table id="datatable-responsive" class="table table-condensed table-striped table-hover table-bordered dt-responsive nowrap" cellspacing="0" width="100%">
     <thead>
         <tr>

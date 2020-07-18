@@ -171,3 +171,5 @@ defined('BOOTSTRAP_SELECT_MAP') or define('BOOTSTRAP_SELECT_MAP', '/../node_modu
 
 defined('JQUERY_UI') or define('JQUERY_UI', '/../node_modules/jquery-ui/ui/widgets/datepicker.js');
 defined('THEME') or define('THEME', '/../node_modules/jquery-ui/themes/base/datepicker.css');
+
+defined('CHART_JS') or define('CHART_JS', '/../node_modules/chart.js/dist/Chart.bundle.min.js');
