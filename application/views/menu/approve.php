@@ -196,7 +196,7 @@ if (empty($title)) {
             getProvinces();
             fpType();
             numbersOnly();
-            searchNow();
+            approveSearchNow();
         });
     });
 </script>

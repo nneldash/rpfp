@@ -148,7 +148,26 @@ function numbersOnly()
 	});
 }
 
-function searchNow()
+function pendingSearchNow()
+{
+	$('.search_now').click(function(e){
+		e.preventDefault(); 
+
+		var search = $('#search_form').serialize();
+
+		$.ajax({
+			type: 'POST',
+			data: search,
+			url: base_url + '/menu/pendingClassSearch'
+		}).done(function(result){
+			console.log(result);
+			$('.table-search-results').html(result);
+		});
+		
+	})
+}
+
+function approveSearchNow()
 {
 	$('.search_now').click(function(e){
 		e.preventDefault(); 

@@ -149,7 +149,56 @@ class CoupleModel extends BaseModel
         );
     }
 
-    public function getSearchValues($data) : ListApproveCoupleInterface
+    public function getSearchValuesForPending($data) : ListPendingCoupleInterface
+    {
+        $status_active = 0;
+        $page_no = 1;
+        $items_per_page = 10;
+
+        $result = $this->fromDbGetList(
+            'ListPendingCouple',
+            'PendingClass',
+            array(
+                'RpfpClass' => 'rpfpclass',
+                'TypeClass' => 'typeclass',
+                'OthersSpecify' => 'others_specify',
+                'Province' => 'province_name',
+                'Municipality' => 'municipality_name',
+                'Barangay' => 'barangay',
+                'ClassNo' => 'class_no',
+                'CouplesEncoded' => 'couples_encoded',
+                'CouplesServed' => 'served_count',
+                'DateConduct' => 'date_conduct',
+                'LastName' => 'lastname',
+                'FirstName' => 'firstname'
+            ),
+            'search_data',
+            array(
+                $data->ProvinceCode == N_A ? BLANK : $data->ProvinceCode,
+                $data->MunicipalityCode == N_A ? BLANK : $data->MunicipalityCode,
+                $data->BarangayCode == N_A ? BLANK : $data->BarangayCode,
+                $data->ClassNo == N_A ? BLANK : $data->ClassNo,
+                $data->DateConductedFrom == N_A ? BLANK : $data->DateConductedFrom,
+                $data->DateConductedTo == N_A ? BLANK : $data->DateConductedTo,
+                $data->TypeOfClass == N_A ? BLANK : $data->TypeOfClass,
+                $data->SearchStatus == N_A ? BLANK : $data->SearchStatus,
+                $status_active,
+                $page_no,
+                $items_per_page
+            ),
+            'pending_couple_list'
+        );
+
+        $listPending = new ListPendingCouple();
+
+        foreach ($result as $item) {
+            $listPending->append($item);
+        } 
+        
+        return $listPending;
+    }
+
+    public function getSearchValuesForApproved($data) : ListApproveCoupleInterface
     {
         $status_active = 0;
         $page_no = 1;
