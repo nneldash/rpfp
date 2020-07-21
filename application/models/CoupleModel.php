@@ -88,7 +88,7 @@ class CoupleModel extends BaseModel
 
     public function getFormList($classId) : ListPendingCoupleInterface
     {
-        $is_active = 0;
+        $is_active = 2;
         $page_no = 1;
         $items_per_page = 10;
         
@@ -152,7 +152,7 @@ class CoupleModel extends BaseModel
 
     public function getSearchValuesForPending($data) : ListPendingCoupleInterface
     {
-        $status_active = 0;
+        $status_active = 2;
         $page_no = 1;
         $items_per_page = 10;
 
@@ -173,7 +173,7 @@ class CoupleModel extends BaseModel
                 'LastName' => 'lastname',
                 'FirstName' => 'firstname'
             ),
-            'search_data',
+            'search_pending_data',
             array(
                 $data->ProvinceCode == N_A ? BLANK : $data->ProvinceCode,
                 $data->MunicipalityCode == N_A ? BLANK : $data->MunicipalityCode,

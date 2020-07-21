@@ -4672,6 +4672,217 @@ BEGIN
 END$$
 /** END SAVE TARGET COUPLES */
 
+
+/** SEARCH PENDING COUPLES */
+CREATE DEFINER=root@localhost PROCEDURE search_pending_data (
+    IN loc_province INT,
+    IN loc_municipality INT,
+    IN loc_barangay INT,
+    IN class_number VARCHAR(100),
+    IN search_date_from DATE,
+    IN search_date_to DATE,
+    IN type_class INT,
+    IN couples_name VARCHAR(100),
+    IN search_age_from INT,
+    IN search_age_to INT,
+    IN no_child INT,
+    IN mfp_used INT,
+    IN tfp_used INT,
+    IN intention_status VARCHAR(50),
+    IN intention_use INT,
+    IN search_status INT,
+    IN status_active INT,
+    IN page_no INT,
+    IN items_per_page INT
+    )   READS SQL DATA
+proc_exit_point :
+BEGIN
+    DECLARE type_class_range INT;
+    DECLARE search_child_from INT;
+    DECLARE search_child_to INT;
+    DECLARE search_mfp_from INT;
+    DECLARE search_mfp_to INT;
+    DECLARE search_tfp_from INT;
+    DECLARE search_tfp_to INT;
+    DECLARE search_intention_from INT;
+    DECLARE search_intention_to INT;
+    DECLARE search_intentionfp_from INT;
+    DECLARE search_intentionfp_to INT;
+
+    DECLARE location_code_from INT;
+    DECLARE location_code_to INT;
+    
+    DECLARE barangay_id_no INT;
+    DECLARE record_id INT;
+    /** 
+    SEARCH_STATUS
+        1 - all data in approved
+        2 - unmet need
+        3 - served unmet need
+        4 - shifters
+        5 - served shifters
+    */
+    DECLARE name_user VARCHAR(50);
+    DECLARE db_user_name VARCHAR(50);
+    DECLARE user_scope INT;
+    DECLARE user_location INT;
+    DECLARE multiplier INT;
+    DECLARE is_not_encoder INT(1);
+    DECLARE read_offset INT;
+    
+    CALL rpfp.lib_extract_user_name( USER(), name_user, db_user_name );
+    SET user_scope := rpfp.profile_get_scope( name_user );
+    SET multiplier := rpfp.lib_get_multiplier( user_scope );
+    SET user_location := rpfp.profile_get_location( name_user, user_scope );
+    SET is_not_encoder := NOT IFNULL(rpfp.profile_check_if_encoder(), FALSE);
+
+    IF (IFNULL( search_status, 0 ) = 0 ) THEN
+        SET search_status = 1;
+    END IF;
+
+    /** set default location of user */
+    SET location_code_from = user_location * POWER(10, multiplier);
+    SET location_code_to = (user_location + 1) * POWER(10, multiplier) - 1;
+
+    /** set location being searched for */
+    IF (IFNULL( loc_barangay, 0 ) <> 0 ) THEN
+        SET location_code_from = loc_barangay;
+        SET location_code_to = loc_barangay;
+    ELSE
+        IF (IFNULL( loc_municipality, 0 ) <> 0 ) THEN
+            SET location_code_from = loc_municipality * POWER(10, 3);
+            SET location_code_to = (loc_municipality + 1) * POWER(10, 3) - 1;
+        ELSE
+            IF (IFNULL( loc_province, 0 ) <> 0 ) THEN
+                SET location_code_from = loc_province * POWER(10, 5);
+                SET location_code_to = (loc_province + 1) * POWER(10, 5) - 1;
+            END IF;
+        END IF;
+    END IF;
+
+    /** set other default values */
+    IF (IFNULL( search_age_from, 0 ) = 0) THEN
+        SET search_age_from = 0;
+    END IF;
+
+    IF (IFNULL( search_age_to, 0 ) = 0) THEN
+        SET search_age_to = 200;
+    END IF;
+
+    IF (IFNULL( no_child, 0 ) = 0) THEN
+        SET search_child_from = 0;
+        SET search_child_to = 200;
+    END IF;
+
+    IF (IFNULL( status_active, 0 ) = 0 ) THEN
+        SET status_active = 0;
+    END IF;
+
+    IF (IFNULL( search_date_from, 0 ) = 0 ) THEN
+        SET search_date_from = DATE(CONCAT(YEAR(NOW()),'-01-01'));
+    END IF;
+
+    IF (IFNULL( search_date_to, 0 ) = 0 ) THEN
+        SET search_date_to = DATE(CONCAT(YEAR(NOW()),'-12-31'));
+    END IF;
+
+    IF (IFNULL( no_child, 0 ) = 0) THEN
+        SET search_child_from = 0;
+        SET search_child_to = 200;
+    END IF;
+   
+    /** 
+    SEARCH_STATUS
+        1 - all data in pending
+    */
+                
+        IF (IFNULL( type_class, 0 ) = 0 ) THEN
+            SET type_class = 1;
+            SET type_class_range = 7;
+        ELSE
+            SET type_class_range = type_class;
+        END IF;
+
+        IF NOT EXISTS (
+            SELECT rc.RPFP_CLASS_ID
+            FROM rpfp.RPFP_CLASS rc
+        LEFT JOIN rpfp.couples apc
+                ON apc.RPFP_CLASS_ID = rc.RPFP_CLASS_ID
+            WHERE apc.IS_ACTIVE = status_active
+              AND (   rc.DB_USER_ID = name_user
+                   OR (   is_not_encoder
+                      AND user_location = (rc.BARANGAY_ID DIV POWER( 10, multiplier ))
+                    )
+                )
+        ) THEN
+                SELECT NULL AS rpfpclass,
+                        NULL AS typeclass,
+                        NULL AS others_specify,
+                        NULL AS province_name,
+                        NULL AS municipality_name,
+                        NULL AS barangay,
+                        NULL AS class_no,
+                        NULL AS couples_encoded,
+                        NULL AS served_count,
+                        NULL AS date_conduct,
+                        NULL AS lastname,
+                        NULL AS firstname
+                ;
+        ELSE
+            IF (IFNULL( page_no, 0) = 0) THEN
+                /** DEFAULT PAGE NO. */
+            SET page_no := 1;
+            END IF;
+            IF (IFNULL( items_per_page, 0) = 0) THEN
+                /** DEFAULT COUNT PER PAGE*/
+            SET items_per_page := 10;
+            END IF;
+
+            SELECT rc.RPFP_CLASS_ID AS rpfpclass,
+                   rc.TYPE_CLASS_ID AS typeclass,
+                   rc.OTHERS_SPECIFY AS others_specify,
+                   prov.LOCATION_DESCRIPTION AS province_name,
+                   city.LOCATION_DESCRIPTION AS municipality_name,
+                   lp.LOCATION_DESCRIPTION AS barangay,
+                   rc.CLASS_NUMBER AS class_no,
+                   COUNT(apc.COUPLES_ID) AS couples_encoded,
+                   COUNT(fs.COUPLES_ID) AS served_count,
+                   rc.DATE_CONDUCTED AS date_conduct,
+                   up.LAST_NAME AS lastname,
+                   up.FIRST_NAME AS firstname
+              FROM rpfp.rpfp_class rc 
+         LEFT JOIN rpfp.couples apc ON apc.RPFP_CLASS_ID = rc.RPFP_CLASS_ID
+         LEFT JOIN rpfp.fp_details fd ON fd.COUPLES_ID = apc.COUPLES_ID
+         LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
+         LEFT JOIN rpfp.lib_psgc_locations city ON city.PSGC_CODE = (lp.MUNICIPALITY_CODE * POWER( 10, 3 ))
+         LEFT JOIN rpfp.lib_psgc_locations prov ON prov.PSGC_CODE = (lp.PROVINCE_CODE * POWER( 10, 5 ))
+         LEFT JOIN rpfp.user_profile up ON up.DB_USER_ID = rc.DB_USER_ID
+         LEFT JOIN rpfp.fp_service fs ON fs.COUPLES_ID = apc.COUPLES_ID
+             WHERE rc.CLASS_NUMBER LIKE CONCAT('%',class_number,'%')
+               AND lp.PSGC_CODE >= location_code_from
+               AND lp.PSGC_CODE <= location_code_to
+               AND (
+                        rc.TYPE_CLASS_ID >= type_class
+                    AND rc.TYPE_CLASS_ID <= type_class_range
+                )
+               AND (
+                        rc.DATE_CONDUCTED >= search_date_from
+                    AND rc.DATE_CONDUCTED <= search_date_to
+                )
+               AND apc.IS_ACTIVE = 2
+               AND (   rc.DB_USER_ID = name_user
+                   OR (   is_not_encoder
+                      AND user_location = (rc.BARANGAY_ID DIV POWER( 10, multiplier ))
+                    )
+                )
+        --   GROUP BY rc.RPFP_CLASS_ID
+          ORDER BY rc.DATE_CONDUCTED DESC
+             LIMIT read_offset, items_per_page
+            ; 
+        END IF;    
+END$$
+/** END SEARCH PENDING COUPLES */
+
 /** SEARCH COUPLES */
 CREATE DEFINER=root@localhost PROCEDURE search_data (
     IN loc_province INT,
@@ -4908,7 +5119,7 @@ BEGIN
                AND ic.AGE <= search_age_to
                AND apc.NO_CHILDREN >= search_child_from
                AND apc.NO_CHILDREN <= search_child_to
-          GROUP BY rc.RPFP_CLASS_ID
+        --   GROUP BY rc.RPFP_CLASS_ID
           ORDER BY rc.DATE_CONDUCTED DESC
              LIMIT read_offset, items_per_page
             ; 
@@ -11508,6 +11719,7 @@ GRANT EXECUTE ON PROCEDURE rpfp.process_accomplishment TO 'encoder';
 GRANT EXECUTE ON PROCEDURE rpfp.check_couples_details TO 'encoder';
 GRANT EXECUTE ON PROCEDURE rpfp.encoder_get_duplicate_details TO 'encoder';
 GRANT EXECUTE ON PROCEDURE rpfp.lib_get_full_location TO 'encoder';
+GRANT EXECUTE ON PROCEDURE rpfp.search_pending_data TO 'encoder';
 GRANT EXECUTE ON PROCEDURE rpfp.search_data TO 'encoder';
 GRANT EXECUTE ON PROCEDURE rpfp.check_for_duplications TO 'encoder';
 GRANT EXECUTE ON PROCEDURE rpfp.delete_report_accomplishment TO 'encoder';
