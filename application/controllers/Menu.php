@@ -54,12 +54,14 @@ class Menu extends CI_Controller
         $pending = $this->CoupleModel->getPendingList();
         if ($this->input->server(REQUEST_METHOD) == POST) {
             $this->load->view('menu/pending', array('pending' => $pending, RELOAD => true));
+            $this->load->view('menu/pending_list', array('pending' => $pending));
             return;
         }
 
         $this->do_not_render_footer = true;
         $this->index1('pending');
         $this->load->view('menu/pending', array('pending' => $pending));
+        $this->load->view('menu/pending_list', array('pending' => $pending));
         $this->footer();
 
         $this->load->library('common/PageHandler');
@@ -356,7 +358,6 @@ class Menu extends CI_Controller
         $searchPending->DateConductedFrom = $this->input->post('datefrom_search');
         $searchPending->DateConductedTo = $this->input->post('dateto_search');
         $searchPending->TypeOfClass = $this->input->post('typeclass_search');
-        $searchPending->SearchStatus = $this->input->post('fpstatus_search');
         
         $ret_val = $this->CoupleModel->getSearchValuesForPending($searchPending);
 

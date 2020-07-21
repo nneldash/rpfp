@@ -10,6 +10,7 @@ class CoupleModel extends BaseModel
         $this->CI->load->library('couple_list/PendingClass');
         $this->CI->load->library('couple_list/ApproveClass');
         $this->CI->load->library('couple_list/SearchApproveClass');
+        $this->CI->load->library('couple_list/SearchPendingClass');
         $this->CI->load->library('couple_list/lists/ListPendingCouple');
         $this->CI->load->library('couple_list/lists/ListApproveCouple');
         $this->CI->load->library('dashboard/PercentageYearClass');
@@ -181,7 +182,15 @@ class CoupleModel extends BaseModel
                 $data->DateConductedFrom == N_A ? BLANK : $data->DateConductedFrom,
                 $data->DateConductedTo == N_A ? BLANK : $data->DateConductedTo,
                 $data->TypeOfClass == N_A ? BLANK : $data->TypeOfClass,
-                $data->SearchStatus == N_A ? BLANK : $data->SearchStatus,
+                N_A,
+                N_A,
+                N_A,
+                N_A,
+                N_A,
+                N_A,
+                N_A,
+                N_A,
+                N_A,
                 $status_active,
                 $page_no,
                 $items_per_page

@@ -12,5 +12,4 @@ abstract class SearchPendingInterface extends BaseInterface
     public $DateConductedFrom;
     public $DateConductedTo;
     public $TypeOfClass;
-    public $SearchStatus;
 }
