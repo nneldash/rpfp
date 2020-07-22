@@ -11749,6 +11749,7 @@ GRANT EXECUTE ON PROCEDURE rpfp.search_data TO 'regional_data_manager';
 GRANT EXECUTE ON PROCEDURE rpfp.delete_report_demandgen TO 'regional_data_manager';
 GRANT EXECUTE ON PROCEDURE rpfp.delete_report_served_method_mix TO 'regional_data_manager';
 GRANT EXECUTE ON PROCEDURE rpfp.delete_report_unmet_need TO 'regional_data_manager';
+GRANT EXECUTE ON PROCEDURE rpfp.search_pending_data TO 'regional_data_manager';
 
 GRANT EXECUTE ON PROCEDURE rpfp.encoder_get_class_list_pending TO 'focal_person';
 GRANT EXECUTE ON PROCEDURE rpfp.encoder_get_class_list_approved to 'focal_person';
