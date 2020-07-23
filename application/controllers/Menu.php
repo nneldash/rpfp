@@ -343,8 +343,9 @@ class Menu extends CI_Controller
 
         $data = $this->CoupleModel->getPercentageYear($percentage_year);
 
-        echo '<pre>';
-        print_r($data);
+        $this->output
+            ->set_content_type('application/json')
+            ->set_output(json_encode($data));
     }
 
     public function pendingClassSearch()

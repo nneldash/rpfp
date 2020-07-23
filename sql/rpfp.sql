@@ -11592,6 +11592,7 @@ GRANT EXECUTE ON PROCEDURE rpfp.profile_set_scope TO 'itdmu';
 GRANT EXECUTE ON PROCEDURE rpfp.profile_save_profile TO 'itdmu';
 GRANT EXECUTE ON PROCEDURE rpfp.profile_get_pic TO 'itdmu';
 GRANT EXECUTE ON PROCEDURE rpfp.profile_save_pic_filename TO 'itdmu';
+GRANT EXECUTE ON PROCEDURE rpfp.get_dashboard_percentage_encoded_details TO 'itdmu';
 
 GRANT EXECUTE ON PROCEDURE rpfp.encoder_get_couple_fp_details TO 'encoder';
 GRANT EXECUTE ON PROCEDURE rpfp.encoder_get_class_list_pending TO 'encoder';
@@ -11668,6 +11669,7 @@ GRANT EXECUTE ON PROCEDURE rpfp.get_report_served_method_mix_list TO 'pmed';
 GRANT EXECUTE ON PROCEDURE rpfp.get_report_demandgen_details TO 'pmed';
 GRANT EXECUTE ON PROCEDURE rpfp.get_report_unmet_need_details TO 'pmed';
 GRANT EXECUTE ON PROCEDURE rpfp.get_report_served_method_mix_details TO 'pmed';
+
 
 
 COMMIT;
