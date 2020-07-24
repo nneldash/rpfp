@@ -54,12 +54,14 @@ class Menu extends CI_Controller
         $pending = $this->CoupleModel->getPendingList();
         if ($this->input->server(REQUEST_METHOD) == POST) {
             $this->load->view('menu/pending', array('pending' => $pending, RELOAD => true));
+            $this->load->view('menu/pending_list', array('pending' => $pending));
             return;
         }
 
         $this->do_not_render_footer = true;
         $this->index1('pending');
         $this->load->view('menu/pending', array('pending' => $pending));
+        $this->load->view('menu/pending_list', array('pending' => $pending));
         $this->footer();
 
         $this->load->library('common/PageHandler');
@@ -341,8 +343,33 @@ class Menu extends CI_Controller
 
         $data = $this->CoupleModel->getPercentageYear($percentage_year);
 
-        echo '<pre>';
-        print_r($data);
+        $this->output
+            ->set_content_type('application/json')
+            ->set_output(json_encode($data));
+    }
+
+    public function pendingClassSearch()
+    {
+        $searchPending = new SearchPendingClass();
+
+        $searchPending->ProvinceCode = $this->input->post('province_search');
+        $searchPending->MunicipalityCode = $this->input->post('municipality_search');
+        $searchPending->BarangayCode = $this->input->post('barangay_search');
+        $searchPending->ClassNo = $this->input->post('classno_search');
+        $searchPending->DateConductedFrom = $this->input->post('datefrom_search');
+        $searchPending->DateConductedTo = $this->input->post('dateto_search');
+        $searchPending->TypeOfClass = $this->input->post('typeclass_search');
+        
+        $ret_val = $this->CoupleModel->getSearchValuesForPending($searchPending);
+
+        if ($this->input->server(REQUEST_METHOD) == POST) {
+            $this->load->view('menu/pending_list', array('pending' => $ret_val));
+            return;
+        }
+
+        $this->output
+            ->set_content_type('application/json')
+            ->set_output(json_encode($ret_val));
     }
 
     public function approvedClassSearch()
@@ -367,7 +394,7 @@ class Menu extends CI_Controller
         $searchApprove->SearchStatus = $this->input->post('fpstatus_search');
         
         
-        $ret_val = $this->CoupleModel->getSearchValues($searchApprove);
+        $ret_val = $this->CoupleModel->getSearchValuesForApproved($searchApprove);
 
         if ($this->input->server(REQUEST_METHOD) == POST) {
             $this->load->view('menu/approve_list', array('approve' => $ret_val));

@@ -10,6 +10,7 @@ class CoupleModel extends BaseModel
         $this->CI->load->library('couple_list/PendingClass');
         $this->CI->load->library('couple_list/ApproveClass');
         $this->CI->load->library('couple_list/SearchApproveClass');
+        $this->CI->load->library('couple_list/SearchPendingClass');
         $this->CI->load->library('couple_list/lists/ListPendingCouple');
         $this->CI->load->library('couple_list/lists/ListApproveCouple');
         $this->CI->load->library('dashboard/PercentageYearClass');
@@ -87,7 +88,7 @@ class CoupleModel extends BaseModel
 
     public function getFormList($classId) : ListPendingCoupleInterface
     {
-        $is_active = 0;
+        $is_active = 2;
         $page_no = 1;
         $items_per_page = 10;
         
@@ -124,32 +125,77 @@ class CoupleModel extends BaseModel
         return $this->fromDbGetSpecific(
             'PercentageYearClass',
             array(
-                'Region1' => 'couples_encoded_r01',
-                'Region2' => 'couples_encoded_r02',
-                'Region3' => 'couples_encoded_r03',
-                'Region4a' => 'couples_encoded_r4a',
-                'Region4b' => 'couples_encoded_r4b',
-                'Region5' => 'couples_encoded_r05',
-                'Region6' => 'couples_encoded_r06',
-                'Region7' => 'couples_encoded_r07',
-                'Region8' => 'couples_encoded_r08',
-                'Region9' => 'couples_encoded_r09',
-                'Region10' => 'couples_encoded_r10',
-                'Region11' => 'couples_encoded_r11',
-                'Region12' => 'couples_encoded_r12',
-                'Region13' => 'couples_encoded_r13',
-                'Barmm' => 'couples_encoded_barmm',
-                'Car' => 'couples_encoded_car',
-                'Ncr' => 'couples_encoded_ncr'
+                'GraphicId' => 'graph_id',
+                'ReportYear' => 'report_year',
+                'EncodedTarget' => 'encoded_target',
+                'EncodedReached' => 'encoded_reached',
+                'TargetReached' => 'target_reached'
             ),
-            'get_percentage_encoded',
+            'get_dashboard_percentage_encoded_details',
             array(
                 $percentage_year
             )
         );
     }
 
-    public function getSearchValues($data) : ListApproveCoupleInterface
+    public function getSearchValuesForPending($data) : ListPendingCoupleInterface
+    {
+        $status_active = 2;
+        $page_no = 1;
+        $items_per_page = 10;
+
+        $result = $this->fromDbGetList(
+            'ListPendingCouple',
+            'PendingClass',
+            array(
+                'RpfpClass' => 'rpfpclass',
+                'TypeClass' => 'typeclass',
+                'OthersSpecify' => 'others_specify',
+                'Province' => 'province_name',
+                'Municipality' => 'municipality_name',
+                'Barangay' => 'barangay',
+                'ClassNo' => 'class_no',
+                'CouplesEncoded' => 'couples_encoded',
+                'CouplesServed' => 'served_count',
+                'DateConduct' => 'date_conduct',
+                'LastName' => 'lastname',
+                'FirstName' => 'firstname'
+            ),
+            'search_pending_data',
+            array(
+                $data->ProvinceCode == N_A ? BLANK : $data->ProvinceCode,
+                $data->MunicipalityCode == N_A ? BLANK : $data->MunicipalityCode,
+                $data->BarangayCode == N_A ? BLANK : $data->BarangayCode,
+                $data->ClassNo == N_A ? BLANK : $data->ClassNo,
+                $data->DateConductedFrom == N_A ? BLANK : $data->DateConductedFrom,
+                $data->DateConductedTo == N_A ? BLANK : $data->DateConductedTo,
+                $data->TypeOfClass == N_A ? BLANK : $data->TypeOfClass,
+                N_A,
+                N_A,
+                N_A,
+                N_A,
+                N_A,
+                N_A,
+                N_A,
+                N_A,
+                N_A,
+                $status_active,
+                $page_no,
+                $items_per_page
+            ),
+            'pending_couple_list'
+        );
+
+        $listPending = new ListPendingCouple();
+
+        foreach ($result as $item) {
+            $listPending->append($item);
+        } 
+        
+        return $listPending;
+    }
+
+    public function getSearchValuesForApproved($data) : ListApproveCoupleInterface
     {
         $status_active = 0;
         $page_no = 1;

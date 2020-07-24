@@ -4672,6 +4672,217 @@ BEGIN
 END$$
 /** END SAVE TARGET COUPLES */
 
+
+/** SEARCH PENDING COUPLES */
+CREATE DEFINER=root@localhost PROCEDURE search_pending_data (
+    IN loc_province INT,
+    IN loc_municipality INT,
+    IN loc_barangay INT,
+    IN class_number VARCHAR(100),
+    IN search_date_from DATE,
+    IN search_date_to DATE,
+    IN type_class INT,
+    IN couples_name VARCHAR(100),
+    IN search_age_from INT,
+    IN search_age_to INT,
+    IN no_child INT,
+    IN mfp_used INT,
+    IN tfp_used INT,
+    IN intention_status VARCHAR(50),
+    IN intention_use INT,
+    IN search_status INT,
+    IN status_active INT,
+    IN page_no INT,
+    IN items_per_page INT
+    )   READS SQL DATA
+proc_exit_point :
+BEGIN
+    DECLARE type_class_range INT;
+    DECLARE search_child_from INT;
+    DECLARE search_child_to INT;
+    DECLARE search_mfp_from INT;
+    DECLARE search_mfp_to INT;
+    DECLARE search_tfp_from INT;
+    DECLARE search_tfp_to INT;
+    DECLARE search_intention_from INT;
+    DECLARE search_intention_to INT;
+    DECLARE search_intentionfp_from INT;
+    DECLARE search_intentionfp_to INT;
+
+    DECLARE location_code_from INT;
+    DECLARE location_code_to INT;
+    
+    DECLARE barangay_id_no INT;
+    DECLARE record_id INT;
+    /** 
+    SEARCH_STATUS
+        1 - all data in approved
+        2 - unmet need
+        3 - served unmet need
+        4 - shifters
+        5 - served shifters
+    */
+    DECLARE name_user VARCHAR(50);
+    DECLARE db_user_name VARCHAR(50);
+    DECLARE user_scope INT;
+    DECLARE user_location INT;
+    DECLARE multiplier INT;
+    DECLARE is_not_encoder INT(1);
+    DECLARE read_offset INT;
+    
+    CALL rpfp.lib_extract_user_name( USER(), name_user, db_user_name );
+    SET user_scope := rpfp.profile_get_scope( name_user );
+    SET multiplier := rpfp.lib_get_multiplier( user_scope );
+    SET user_location := rpfp.profile_get_location( name_user, user_scope );
+    SET is_not_encoder := NOT IFNULL(rpfp.profile_check_if_encoder(), FALSE);
+
+    IF (IFNULL( search_status, 0 ) = 0 ) THEN
+        SET search_status = 1;
+    END IF;
+
+    /** set default location of user */
+    SET location_code_from = user_location * POWER(10, multiplier);
+    SET location_code_to = (user_location + 1) * POWER(10, multiplier) - 1;
+
+    /** set location being searched for */
+    IF (IFNULL( loc_barangay, 0 ) <> 0 ) THEN
+        SET location_code_from = loc_barangay;
+        SET location_code_to = loc_barangay;
+    ELSE
+        IF (IFNULL( loc_municipality, 0 ) <> 0 ) THEN
+            SET location_code_from = loc_municipality * POWER(10, 3);
+            SET location_code_to = (loc_municipality + 1) * POWER(10, 3) - 1;
+        ELSE
+            IF (IFNULL( loc_province, 0 ) <> 0 ) THEN
+                SET location_code_from = loc_province * POWER(10, 5);
+                SET location_code_to = (loc_province + 1) * POWER(10, 5) - 1;
+            END IF;
+        END IF;
+    END IF;
+
+    /** set other default values */
+    IF (IFNULL( search_age_from, 0 ) = 0) THEN
+        SET search_age_from = 0;
+    END IF;
+
+    IF (IFNULL( search_age_to, 0 ) = 0) THEN
+        SET search_age_to = 200;
+    END IF;
+
+    IF (IFNULL( no_child, 0 ) = 0) THEN
+        SET search_child_from = 0;
+        SET search_child_to = 200;
+    END IF;
+
+    IF (IFNULL( status_active, 0 ) = 0 ) THEN
+        SET status_active = 0;
+    END IF;
+
+    IF (IFNULL( search_date_from, 0 ) = 0 ) THEN
+        SET search_date_from = DATE(CONCAT(YEAR(NOW()),'-01-01'));
+    END IF;
+
+    IF (IFNULL( search_date_to, 0 ) = 0 ) THEN
+        SET search_date_to = DATE(CONCAT(YEAR(NOW()),'-12-31'));
+    END IF;
+
+    IF (IFNULL( no_child, 0 ) = 0) THEN
+        SET search_child_from = 0;
+        SET search_child_to = 200;
+    END IF;
+   
+    /** 
+    SEARCH_STATUS
+        1 - all data in pending
+    */
+                
+        IF (IFNULL( type_class, 0 ) = 0 ) THEN
+            SET type_class = 1;
+            SET type_class_range = 7;
+        ELSE
+            SET type_class_range = type_class;
+        END IF;
+
+        IF NOT EXISTS (
+            SELECT rc.RPFP_CLASS_ID
+            FROM rpfp.RPFP_CLASS rc
+        LEFT JOIN rpfp.couples apc
+                ON apc.RPFP_CLASS_ID = rc.RPFP_CLASS_ID
+            WHERE apc.IS_ACTIVE = status_active
+              AND (   rc.DB_USER_ID = name_user
+                   OR (   is_not_encoder
+                      AND user_location = (rc.BARANGAY_ID DIV POWER( 10, multiplier ))
+                    )
+                )
+        ) THEN
+                SELECT NULL AS rpfpclass,
+                        NULL AS typeclass,
+                        NULL AS others_specify,
+                        NULL AS province_name,
+                        NULL AS municipality_name,
+                        NULL AS barangay,
+                        NULL AS class_no,
+                        NULL AS couples_encoded,
+                        NULL AS served_count,
+                        NULL AS date_conduct,
+                        NULL AS lastname,
+                        NULL AS firstname
+                ;
+        ELSE
+            IF (IFNULL( page_no, 0) = 0) THEN
+                /** DEFAULT PAGE NO. */
+            SET page_no := 1;
+            END IF;
+            IF (IFNULL( items_per_page, 0) = 0) THEN
+                /** DEFAULT COUNT PER PAGE*/
+            SET items_per_page := 10;
+            END IF;
+
+            SELECT rc.RPFP_CLASS_ID AS rpfpclass,
+                   rc.TYPE_CLASS_ID AS typeclass,
+                   rc.OTHERS_SPECIFY AS others_specify,
+                   prov.LOCATION_DESCRIPTION AS province_name,
+                   city.LOCATION_DESCRIPTION AS municipality_name,
+                   lp.LOCATION_DESCRIPTION AS barangay,
+                   rc.CLASS_NUMBER AS class_no,
+                   COUNT(apc.COUPLES_ID) AS couples_encoded,
+                   COUNT(fs.COUPLES_ID) AS served_count,
+                   rc.DATE_CONDUCTED AS date_conduct,
+                   up.LAST_NAME AS lastname,
+                   up.FIRST_NAME AS firstname
+              FROM rpfp.rpfp_class rc 
+         LEFT JOIN rpfp.couples apc ON apc.RPFP_CLASS_ID = rc.RPFP_CLASS_ID
+         LEFT JOIN rpfp.fp_details fd ON fd.COUPLES_ID = apc.COUPLES_ID
+         LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
+         LEFT JOIN rpfp.lib_psgc_locations city ON city.PSGC_CODE = (lp.MUNICIPALITY_CODE * POWER( 10, 3 ))
+         LEFT JOIN rpfp.lib_psgc_locations prov ON prov.PSGC_CODE = (lp.PROVINCE_CODE * POWER( 10, 5 ))
+         LEFT JOIN rpfp.user_profile up ON up.DB_USER_ID = rc.DB_USER_ID
+         LEFT JOIN rpfp.fp_service fs ON fs.COUPLES_ID = apc.COUPLES_ID
+             WHERE rc.CLASS_NUMBER LIKE CONCAT('%',class_number,'%')
+               AND lp.PSGC_CODE >= location_code_from
+               AND lp.PSGC_CODE <= location_code_to
+               AND (
+                        rc.TYPE_CLASS_ID >= type_class
+                    AND rc.TYPE_CLASS_ID <= type_class_range
+                )
+               AND (
+                        rc.DATE_CONDUCTED >= search_date_from
+                    AND rc.DATE_CONDUCTED <= search_date_to
+                )
+               AND apc.IS_ACTIVE = 2
+               AND (   rc.DB_USER_ID = name_user
+                   OR (   is_not_encoder
+                      AND user_location = (rc.BARANGAY_ID DIV POWER( 10, multiplier ))
+                    )
+                )
+        --   GROUP BY rc.RPFP_CLASS_ID
+          ORDER BY rc.DATE_CONDUCTED DESC
+             LIMIT read_offset, items_per_page
+            ; 
+        END IF;    
+END$$
+/** END SEARCH PENDING COUPLES */
+
 /** SEARCH COUPLES */
 CREATE DEFINER=root@localhost PROCEDURE search_data (
     IN loc_province INT,
@@ -4908,7 +5119,7 @@ BEGIN
                AND ic.AGE <= search_age_to
                AND apc.NO_CHILDREN >= search_child_from
                AND apc.NO_CHILDREN <= search_child_to
-          GROUP BY rc.RPFP_CLASS_ID
+        --   GROUP BY rc.RPFP_CLASS_ID
           ORDER BY rc.DATE_CONDUCTED DESC
              LIMIT read_offset, items_per_page
             ; 
@@ -10479,36 +10690,29 @@ BEGIN
     SELECT "SUCCESS!" AS MESSAGE;
 END$$
 
-CREATE DEFINER=root@localhost PROCEDURE process_percentage_encoded(
-    -- IN psgc_code INT
+CREATE DEFINER=root@localhost PROCEDURE process_dashboard_percentage_encoded(
+    IN report_year INT
     )   READS SQL DATA
 proc_exit_point :
 BEGIN
     DECLARE count_id INT;
     DECLARE random_no VARCHAR(400);
-    DECLARE report_year INT;
     DECLARE report_month INT;
+    DECLARE region_count INT;
+    DECLARE couples_encoded INT;
+    DECLARE region_target INT;
+    DECLARE region_reached INT;
+    DECLARE encoded_target INT;
+    DECLARE encoded_reached INT;
+    DECLARE target_reached INT;
     
-    DECLARE couples_encoded_r01 INT;
-    DECLARE couples_encoded_r02 INT;
-    DECLARE couples_encoded_r03 INT;
-    DECLARE couples_encoded_r4a INT;
-    DECLARE couples_encoded_r4b INT;
-    DECLARE couples_encoded_r05 INT;
-    DECLARE couples_encoded_r06 INT;
-    DECLARE couples_encoded_r07 INT;
-    DECLARE couples_encoded_r08 INT;
-    DECLARE couples_encoded_r09 INT;
-    DECLARE couples_encoded_r10 INT;
-    DECLARE couples_encoded_r11 INT;
-    DECLARE couples_encoded_r12 INT;
-    DECLARE couples_encoded_r13 INT;
-    DECLARE couples_encoded_barmm INT;
-    DECLARE couples_encoded_car INT;
-    DECLARE couples_encoded_ncr INT;
-
-    SET report_year = YEAR(NOW());
-    SET report_month = MONTH(NOW());
+    IF ( IFNULL( report_year, 0 ) = 0 ) THEN
+        SET report_year = YEAR(NOW());
+        SET report_month = MONTH(NOW());
+    ELSE
+        SET report_month = 12;
+    END IF
+    ;
 
     SET random_no = CONCAT("RPFP-",report_year,report_month,"-",CEILING(RAND()*10000000000));
 
@@ -10520,276 +10724,90 @@ BEGIN
     END IF
     ;
 
-    IF ( IFNULL( report_year, 0 ) = 0 ) THEN
-        SET report_year = YEAR(NOW());
-        SET report_month = MONTH(NOW());
-    ELSE
-        SET report_month = 12;
-    END IF
-    ;
+    SET region_count = 0;
 
-    SELECT COUNT( apc.COUPLES_ID )
-      INTO couples_encoded_r01
-      FROM rpfp.couples apc
- LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
- LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
-     WHERE YEAR(rc.DATE_CONDUCTED) = report_year
-       AND MONTH(rc.DATE_CONDUCTED) <= report_month
-       AND apc.IS_ACTIVE = 0
-       AND lp.REGION_CODE = 01
-    ;
-
-    SELECT COUNT( apc.COUPLES_ID )
-      INTO couples_encoded_r02
-      FROM rpfp.couples apc
- LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
- LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
-     WHERE YEAR(rc.DATE_CONDUCTED) = report_year
-       AND MONTH(rc.DATE_CONDUCTED) <= report_month
-       AND apc.IS_ACTIVE = 0
-       AND lp.REGION_CODE = 02
-    ;
-
-    SELECT COUNT( apc.COUPLES_ID )
-      INTO couples_encoded_r03
-      FROM rpfp.couples apc
- LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
- LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
-     WHERE YEAR(rc.DATE_CONDUCTED) = report_year
-       AND MONTH(rc.DATE_CONDUCTED) <= report_month
-       AND apc.IS_ACTIVE = 0
-       AND lp.REGION_CODE = 03
-    ;
-
-    SELECT COUNT( apc.COUPLES_ID )
-      INTO couples_encoded_r4a
-      FROM rpfp.couples apc
- LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
- LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
-     WHERE YEAR(rc.DATE_CONDUCTED) = report_year
-       AND MONTH(rc.DATE_CONDUCTED) <= report_month
-       AND apc.IS_ACTIVE = 0
-       AND lp.REGION_CODE = 04
-    ;
-
-    SELECT COUNT( apc.COUPLES_ID )
-      INTO couples_encoded_r4b
-      FROM rpfp.couples apc
- LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
- LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
-     WHERE YEAR(rc.DATE_CONDUCTED) = report_year
-       AND MONTH(rc.DATE_CONDUCTED) <= report_month
-       AND apc.IS_ACTIVE = 0
-       AND lp.REGION_CODE = 17
-    ;
-
-    SELECT COUNT( apc.COUPLES_ID )
-      INTO couples_encoded_r05
-      FROM rpfp.couples apc
- LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
- LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
-     WHERE YEAR(rc.DATE_CONDUCTED) = report_year
-       AND MONTH(rc.DATE_CONDUCTED) <= report_month
-       AND apc.IS_ACTIVE = 0
-       AND lp.REGION_CODE = 05
-    ;
-
-    SELECT COUNT( apc.COUPLES_ID )
-      INTO couples_encoded_r06
-      FROM rpfp.couples apc
- LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
- LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
-     WHERE YEAR(rc.DATE_CONDUCTED) = report_year
-       AND MONTH(rc.DATE_CONDUCTED) <= report_month
-       AND apc.IS_ACTIVE = 0
-       AND lp.REGION_CODE = 06
-    ;
-
-    SELECT COUNT( apc.COUPLES_ID )
-      INTO couples_encoded_r07
-      FROM rpfp.couples apc
- LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
- LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
-     WHERE YEAR(rc.DATE_CONDUCTED) = report_year
-       AND MONTH(rc.DATE_CONDUCTED) <= report_month
-       AND apc.IS_ACTIVE = 0
-       AND lp.REGION_CODE = 07
-    ;
-
-    SELECT COUNT( apc.COUPLES_ID )
-      INTO couples_encoded_r08
-      FROM rpfp.couples apc
- LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
- LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
-     WHERE YEAR(rc.DATE_CONDUCTED) = report_year
-       AND MONTH(rc.DATE_CONDUCTED) <= report_month
-       AND apc.IS_ACTIVE = 0
-       AND lp.REGION_CODE = 08
-    ;
-
-    SELECT COUNT( apc.COUPLES_ID )
-      INTO couples_encoded_r09
-      FROM rpfp.couples apc
- LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
- LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
-     WHERE YEAR(rc.DATE_CONDUCTED) = report_year
-       AND MONTH(rc.DATE_CONDUCTED) <= report_month
-       AND apc.IS_ACTIVE = 0
-       AND lp.REGION_CODE = 09
-    ;
-
-    SELECT COUNT( apc.COUPLES_ID )
-      INTO couples_encoded_r10
-      FROM rpfp.couples apc
- LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
- LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
-     WHERE YEAR(rc.DATE_CONDUCTED) = report_year
-       AND MONTH(rc.DATE_CONDUCTED) <= report_month
-       AND apc.IS_ACTIVE = 0
-       AND lp.REGION_CODE = 10
-    ;
-
-    SELECT COUNT( apc.COUPLES_ID )
-      INTO couples_encoded_r11
-      FROM rpfp.couples apc
- LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
- LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
-     WHERE YEAR(rc.DATE_CONDUCTED) = report_year
-       AND MONTH(rc.DATE_CONDUCTED) <= report_month
-       AND apc.IS_ACTIVE = 0
-       AND lp.REGION_CODE = 11
-    ;
-
-    SELECT COUNT( apc.COUPLES_ID )
-      INTO couples_encoded_r12
-      FROM rpfp.couples apc
- LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
- LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
-     WHERE YEAR(rc.DATE_CONDUCTED) = report_year
-       AND MONTH(rc.DATE_CONDUCTED) <= report_month
-       AND apc.IS_ACTIVE = 0
-       AND lp.REGION_CODE = 12
-    ;
-
-    SELECT COUNT( apc.COUPLES_ID )
-      INTO couples_encoded_ncr
-      FROM rpfp.couples apc
- LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
- LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
-     WHERE YEAR(rc.DATE_CONDUCTED) = report_year
-       AND MONTH(rc.DATE_CONDUCTED) <= report_month
-       AND apc.IS_ACTIVE = 0
-       AND lp.REGION_CODE = 13
-    ;
-
-    SELECT COUNT( apc.COUPLES_ID )
-      INTO couples_encoded_car
-      FROM rpfp.couples apc
- LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
- LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
-     WHERE YEAR(rc.DATE_CONDUCTED) = report_year
-       AND MONTH(rc.DATE_CONDUCTED) <= report_month
-       AND apc.IS_ACTIVE = 0
-       AND lp.REGION_CODE = 14
-    ;
-
-    SELECT COUNT( apc.COUPLES_ID )
-      INTO couples_encoded_barmm
-      FROM rpfp.couples apc
- LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
- LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
-     WHERE YEAR(rc.DATE_CONDUCTED) = report_year
-       AND MONTH(rc.DATE_CONDUCTED) <= report_month
-       AND apc.IS_ACTIVE = 0
-       AND lp.REGION_CODE = 15
-    ;
-
-    SELECT COUNT( apc.COUPLES_ID )
-      INTO couples_encoded_r13
-      FROM rpfp.couples apc
- LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
- LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
-     WHERE YEAR(rc.DATE_CONDUCTED) = report_year
-       AND MONTH(rc.DATE_CONDUCTED) <= report_month
-       AND apc.IS_ACTIVE = 0
-       AND lp.REGION_CODE = 16
-    ;
+    percent_encoded: LOOP
+        IF region_count = 17 THEN
+            LEAVE percent_encoded;
+        END IF
+        ;
     
-    SELECT couples_encoded_r01;
-    SELECT couples_encoded_r02;
-    SELECT couples_encoded_r03;
-    SELECT couples_encoded_r4a;
-    SELECT couples_encoded_r4b;
-    SELECT couples_encoded_r05;
-    SELECT couples_encoded_r06;
-    SELECT couples_encoded_r07;
-    SELECT couples_encoded_r08;
-    SELECT couples_encoded_r09;
-    SELECT couples_encoded_r10;
-    SELECT couples_encoded_r11;
-    SELECT couples_encoded_r12;
-    SELECT couples_encoded_r13;
-    SELECT couples_encoded_barmm;
-    SELECT couples_encoded_car;
-    SELECT couples_encoded_ncr;
-    
-        INSERT INTO rpfp.percentage_encoded (
+    SET region_count = region_count + 1;
+    SET couples_encoded = "";
+    SET region_target = "";
+    SET region_reached = "";
+    SET encoded_target = "";
+    SET encoded_reached = "";
+    SET target_reached = "";
+
+    SELECT COUNT( apc.COUPLES_ID )
+      INTO couples_encoded
+      FROM rpfp.couples apc
+ LEFT JOIN rpfp.rpfp_class rc ON rc.RPFP_CLASS_ID = apc.RPFP_CLASS_ID
+ LEFT JOIN rpfp.lib_psgc_locations lp ON lp.PSGC_CODE = rc.BARANGAY_ID
+     WHERE YEAR(rc.DATE_CONDUCTED) = report_year
+       AND MONTH(rc.DATE_CONDUCTED) <= report_month
+       AND apc.IS_ACTIVE = 0
+       AND lp.REGION_CODE = region_count
+    ;
+
+    SELECT tc.TARGET_YEAR, SUM( tc.TARGET_COUNT ) 
+      INTO report_year, region_target
+      FROM rpfp.target_couples tc 
+     WHERE tc.TARGET_YEAR = report_year
+       AND tc.TARGET_MONTH <= report_month
+       AND tc.PSGC_CODE = region_count
+  GROUP BY tc.TARGET_YEAR
+    ;
+
+    SELECT rc.REACHED_YEAR, SUM( rc.REACHED_COUNT ) 
+      INTO report_year, region_reached
+      FROM rpfp.reached_couples rc 
+     WHERE rc.REACHED_YEAR = report_year
+       AND rc.REACHED_MONTH <= report_month
+       AND rc.PSGC_CODE = region_count
+  GROUP BY rc.REACHED_YEAR
+    ;
+
+    SET encoded_target = (couples_encoded/region_target)*100;
+    SET encoded_reached = (couples_encoded/region_reached)*100;
+    SET target_reached = (region_reached/region_target)*100;
+
+    -- SET encoded_target = couples_encoded;
+    -- SET encoded_reached = region_reached;
+    -- SET target_reached = region_target;
+       
+        INSERT INTO rpfp.dashboard_percentage_encoded (
                     PERCENT_ENCODED_ID,
                     REPORT_YEAR,
                     REPORT_MONTH,
                     PSGC_CODE,
-                    COUPLES_ENCODED_R01,
-                    COUPLES_ENCODED_R02,
-                    COUPLES_ENCODED_R03,
-                    COUPLES_ENCODED_R4A,
-                    COUPLES_ENCODED_R4B,
-                    COUPLES_ENCODED_R05,
-                    COUPLES_ENCODED_R06,
-                    COUPLES_ENCODED_R07,
-                    COUPLES_ENCODED_R08,
-                    COUPLES_ENCODED_R09,
-                    COUPLES_ENCODED_R10,
-                    COUPLES_ENCODED_R11,
-                    COUPLES_ENCODED_R12,
-                    COUPLES_ENCODED_R13,
-                    COUPLES_ENCODED_BARMM,
-                    COUPLES_ENCODED_CAR,
-                    COUPLES_ENCODED_NCR,
+                    ENCODED_TARGET,
+                    ENCODED_REACHED,
+                    TARGET_REACHED,
                     DATE_PROCESSED
             )
         VALUES (
                 random_no,
                 report_year,
                 report_month,
-                psgc_code,
-                couples_encoded_r01,
-                couples_encoded_r02,
-                couples_encoded_r03,
-                couples_encoded_r4a,
-                couples_encoded_r4b,
-                couples_encoded_r05,
-                couples_encoded_r06,
-                couples_encoded_r07,
-                couples_encoded_r08,
-                couples_encoded_r09,
-                couples_encoded_r10,
-                couples_encoded_r11,
-                couples_encoded_r12,
-                couples_encoded_r13,
-                couples_encoded_barmm,
-                couples_encoded_car,
-                couples_encoded_ncr,
+                region_count,
+                encoded_target,
+                encoded_reached,
+                target_reached,
                 CURRENT_DATE()
             )
             ;
-    
+
+        END LOOP;
+
         SELECT CONCAT( "NEW ENTRY: ", LAST_INSERT_ID() ) AS MESSAGE;
         LEAVE proc_exit_point;
 
     SELECT "SUCCESS!" AS MESSAGE;
 END$$
 
-CREATE DEFINER=root@localhost PROCEDURE get_snapshot_details(
+CREATE DEFINER=root@localhost PROCEDURE get_dashboard_snapshot_details(
     )   READS SQL DATA
 BEGIN
     IF NOT EXISTS (
@@ -10853,62 +10871,45 @@ BEGIN
     END IF;
 END$$
 
-CREATE DEFINER=root@localhost PROCEDURE get_percent_encoded_details(
+CREATE DEFINER=root@localhost PROCEDURE get_dashboard_percentage_encoded_details(
+    IN report_year INT
     )   READS SQL DATA
 BEGIN
+    IF ( IFNULL( report_year, 0 ) = 0 ) THEN
+        SET report_year = YEAR(NOW());
+    END IF
+    ;
+
     IF NOT EXISTS (
-         SELECT pe.REPORT_ID
-           FROM rpfp.percentage_encoded pe
+         SELECT gpe.PERCENT_ENCODED_ID
+           FROM rpfp.dashboard_percentage_encoded gpe
     ) THEN
         BEGIN
-             SELECT NULL AS report_year,
-                    NULL AS report_month,
-                    NULL AS psgc_code,
-                    NULL AS couples_encoded_r01,
-                    NULL AS couples_encoded_r02,
-                    NULL AS couples_encoded_r03,
-                    NULL AS couples_encoded_r4a,
-                    NULL AS couples_encoded_r4b,
-                    NULL AS couples_encoded_r05,
-                    NULL AS couples_encoded_r06,
-                    NULL AS couples_encoded_r07,
-                    NULL AS couples_encoded_r08,
-                    NULL AS couples_encoded_r09,
-                    NULL AS couples_encoded_r10,
-                    NULL AS couples_encoded_r11,
-                    NULL AS couples_encoded_r12,
-                    NULL AS couples_encoded_r13,
-                    NULL AS couples_encoded_barmm,
-                    NULL AS couples_encoded_car,
-                    NULL AS couples_encoded_ncr,
+             SELECT NULL AS graph_id,
+                    NULL AS report_year,
+                    NULL AS encoded_target,
                     NULL AS date_processed
             ;
         END;
     ELSE
         BEGIN
-             SELECT pe.REPORT_YEAR AS report_year,
-                    pe.PSGC_CODE AS psgc_code,
-                    pe.REPORT_MONTH AS report_month,
-                    pe.COUPLES_ENCODED_R01 AS couples_encoded_r01,
-                    pe.COUPLES_ENCODED_R02 AS couples_encoded_r02,
-                    pe.COUPLES_ENCODED_R03 AS couples_encoded_r03,
-                    pe.COUPLES_ENCODED_R4A AS couples_encoded_r4a,
-                    pe.COUPLES_ENCODED_R4B AS couples_encoded_r4b,
-                    pe.COUPLES_ENCODED_R05 AS couples_encoded_r05,
-                    pe.COUPLES_ENCODED_R06 AS couples_encoded_r06,
-                    pe.COUPLES_ENCODED_R07 AS couples_encoded_r07,
-                    pe.COUPLES_ENCODED_R08 AS couples_encoded_r08,
-                    pe.COUPLES_ENCODED_R09 AS couples_encoded_r09,
-                    pe.COUPLES_ENCODED_R10 AS couples_encoded_r10,
-                    pe.COUPLES_ENCODED_R11 AS couples_encoded_r11,
-                    pe.COUPLES_ENCODED_R12 AS couples_encoded_r12,
-                    pe.COUPLES_ENCODED_R13 AS couples_encoded_r13,
-                    pe.COUPLES_ENCODED_BARMM AS couples_encoded_barmm,
-                    pe.COUPLES_ENCODED_CAR AS couples_encoded_car,
-                    pe.COUPLES_ENCODED_NCR AS couples_encoded_ncr,
-                    pe.DATE_PROCESSED AS date_processed
-               FROM rpfp.percentage_encoded pe
-           ORDER BY pe.report_id DESC
+             SELECT 
+                    gpe.PERCENT_ENCODED_ID AS graph_id,
+                    gpe.REPORT_YEAR AS report_year,
+                    GROUP_CONCAT(
+                        gpe.ENCODED_TARGET SEPARATOR ','
+                    ) encoded_target,
+                    GROUP_CONCAT(
+                        gpe.ENCODED_REACHED SEPARATOR ','
+                    ) encoded_reached,
+                    GROUP_CONCAT(
+                        gpe.TARGET_REACHED SEPARATOR ','
+                    ) target_reached,
+                    gpe.DATE_PROCESSED AS date_processed
+               FROM rpfp.dashboard_percentage_encoded gpe
+              WHERE gpe.REPORT_YEAR = report_year
+           GROUP BY gpe.PERCENT_ENCODED_ID
+           ORDER BY gpe.DATE_PROCESSED DESC
            LIMIT 1
             ;
         END;
@@ -11359,6 +11360,18 @@ COUPLES_ENCODED_CURRENT INT,
       COUPLES_UNDECIDED INT,
        COUPLES_PREGNANT INT,
    COUPLES_NO_INTENTION INT,
+           USERS_CONDOM INT,
+              USERS_IUD INT,
+            USERS_PILLS INT,
+       USERS_INJECTABLE INT,
+        USERS_VASECTOMY INT,
+         USERS_LIGATION INT,
+          USERS_IMPLANT INT,
+     USERS_CMM_BILLINGS INT,
+              USERS_BBT INT,
+    USERS_SYMPTOTHERMAL INT,
+              USERS_SDM INT,
+              USERS_LAM INT,
          DATE_PROCESSED DATE,
             PRIMARY KEY (REPORT_ID)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
@@ -11369,29 +11382,105 @@ COUPLES_ENCODED_CURRENT INT,
 -- Table structure for table percentage_encoded
 --
 
-CREATE TABLE percentage_encoded (
+CREATE TABLE dashboard_percentage_encoded (
               REPORT_ID INT UNSIGNED NOT NULL AUTO_INCREMENT,
      PERCENT_ENCODED_ID VARCHAR(400),
             REPORT_YEAR INT NOT NULL,
            REPORT_MONTH INT NOT NULL,
               PSGC_CODE INT NOT NULL,
-    COUPLES_ENCODED_R01 INT,
-    COUPLES_ENCODED_R02 INT,
-    COUPLES_ENCODED_R03 INT,
-    COUPLES_ENCODED_R4A INT,
-    COUPLES_ENCODED_R4B INT,
-    COUPLES_ENCODED_R05 INT,
-    COUPLES_ENCODED_R06 INT,
-    COUPLES_ENCODED_R07 INT,
-    COUPLES_ENCODED_R08 INT,
-    COUPLES_ENCODED_R09 INT,
-    COUPLES_ENCODED_R10 INT,
-    COUPLES_ENCODED_R11 INT,
-    COUPLES_ENCODED_R12 INT,
-    COUPLES_ENCODED_R13 INT,
-  COUPLES_ENCODED_BARMM INT,
-    COUPLES_ENCODED_CAR INT,
-    COUPLES_ENCODED_NCR INT,
+         ENCODED_TARGET INT,
+        ENCODED_REACHED INT,
+         TARGET_REACHED INT,
+         DATE_PROCESSED DATE,
+            PRIMARY KEY (REPORT_ID)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table couples_reached
+--
+
+CREATE TABLE dashboard_couples_reached (
+              REPORT_ID INT UNSIGNED NOT NULL AUTO_INCREMENT,
+             REACHED_ID VARCHAR(400),
+            REPORT_YEAR INT NOT NULL,
+           REPORT_MONTH INT NOT NULL,
+              PSGC_CODE INT NOT NULL,
+        COUPLES_REACHED INT,
+      MALE_ONLY_REACHED INT,
+    FEMALE_ONLY_REACHED INT,
+         DATE_PROCESSED DATE,
+            PRIMARY KEY (REPORT_ID)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table method_mix
+--
+
+CREATE TABLE dashboard_method_mix (
+              REPORT_ID INT UNSIGNED NOT NULL AUTO_INCREMENT,
+          METHOD_MIX_ID VARCHAR(400),
+            REPORT_YEAR INT NOT NULL,
+           REPORT_MONTH INT NOT NULL,
+                 CONDOM INT,
+                  PILLS INT,
+             INJECTABLE INT,
+              VASECTOMY INT,
+               LIGATION INT,
+                IMPLANT INT,
+           CMM_BILLINGS INT,
+                    BTT INT,
+         SYMPTO_THERMAL INT,
+                    SDM INT,
+                    LAM INT,
+            TRADITIONAL INT,
+              NO_METHOD INT,
+         DATE_PROCESSED DATE,
+            PRIMARY KEY (REPORT_ID)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table wra_age_group
+--
+
+CREATE TABLE dashboard_wra_age_group (
+              REPORT_ID INT UNSIGNED NOT NULL AUTO_INCREMENT,
+       WRA_AGE_GROUP_ID VARCHAR(400),
+            REPORT_YEAR INT NOT NULL,
+           REPORT_MONTH INT NOT NULL,
+         FIFTEEN_TWENTY INT,
+   TWENTYONE_TWENTYFIVE INT,
+       TWENTYSIX_THIRTY INT,
+   THIRTYONE_THIRTYFIVE INT,
+       THIRTYSIX_FOURTY INT,
+   FOURTYONE_FOURTYFIVE INT,
+        FOURTYSIX_FIFTY INT,
+     FIFTYONE_FIFTYFIVE INT,
+         FIFTYSIX_SIXTY INT,
+         SIXTYONE_ABOVE INT,
+         DATE_PROCESSED DATE,
+            PRIMARY KEY (REPORT_ID)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table unmet_need_vs_served
+--
+
+CREATE TABLE dashboard_unmet_need_vs_served (
+              REPORT_ID INT UNSIGNED NOT NULL AUTO_INCREMENT,
+UNMET_NEED_VS_SERVED_ID VARCHAR(400),
+            REPORT_YEAR INT NOT NULL,
+           REPORT_MONTH INT NOT NULL,
+              PSGC_CODE INT NOT NULL,
+             UNMET_NEED INT,
+                 SERVED INT,
          DATE_PROCESSED DATE,
             PRIMARY KEY (REPORT_ID)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
@@ -11424,6 +11513,23 @@ CREATE TABLE target_couples (
            TARGET_COUNT INT,
             PRIMARY KEY (TARGET_ID)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table reached_couples
+--
+
+CREATE TABLE reached_couples (
+             REACHED_ID INT UNSIGNED NOT NULL AUTO_INCREMENT,
+           REACHED_YEAR INT NOT NULL,
+          REACHED_MONTH INT NOT NULL,
+              PSGC_CODE INT NOT NULL,
+          REACHED_COUNT INT,
+            PRIMARY KEY (REACHED_ID)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- --------------------------------------------------------
 
 
 /** RPFP ROLES */
@@ -11486,6 +11592,7 @@ GRANT EXECUTE ON PROCEDURE rpfp.profile_set_scope TO 'itdmu';
 GRANT EXECUTE ON PROCEDURE rpfp.profile_save_profile TO 'itdmu';
 GRANT EXECUTE ON PROCEDURE rpfp.profile_get_pic TO 'itdmu';
 GRANT EXECUTE ON PROCEDURE rpfp.profile_save_pic_filename TO 'itdmu';
+GRANT EXECUTE ON PROCEDURE rpfp.get_dashboard_percentage_encoded_details TO 'itdmu';
 
 GRANT EXECUTE ON PROCEDURE rpfp.encoder_get_couple_fp_details TO 'encoder';
 GRANT EXECUTE ON PROCEDURE rpfp.encoder_get_class_list_pending TO 'encoder';
@@ -11508,6 +11615,7 @@ GRANT EXECUTE ON PROCEDURE rpfp.process_accomplishment TO 'encoder';
 GRANT EXECUTE ON PROCEDURE rpfp.check_couples_details TO 'encoder';
 GRANT EXECUTE ON PROCEDURE rpfp.encoder_get_duplicate_details TO 'encoder';
 GRANT EXECUTE ON PROCEDURE rpfp.lib_get_full_location TO 'encoder';
+GRANT EXECUTE ON PROCEDURE rpfp.search_pending_data TO 'encoder';
 GRANT EXECUTE ON PROCEDURE rpfp.search_data TO 'encoder';
 GRANT EXECUTE ON PROCEDURE rpfp.check_for_duplications TO 'encoder';
 GRANT EXECUTE ON PROCEDURE rpfp.delete_report_accomplishment TO 'encoder';
@@ -11537,6 +11645,7 @@ GRANT EXECUTE ON PROCEDURE rpfp.search_data TO 'regional_data_manager';
 GRANT EXECUTE ON PROCEDURE rpfp.delete_report_demandgen TO 'regional_data_manager';
 GRANT EXECUTE ON PROCEDURE rpfp.delete_report_served_method_mix TO 'regional_data_manager';
 GRANT EXECUTE ON PROCEDURE rpfp.delete_report_unmet_need TO 'regional_data_manager';
+GRANT EXECUTE ON PROCEDURE rpfp.search_pending_data TO 'regional_data_manager';
 
 GRANT EXECUTE ON PROCEDURE rpfp.encoder_get_class_list_pending TO 'focal_person';
 GRANT EXECUTE ON PROCEDURE rpfp.encoder_get_class_list_approved to 'focal_person';
@@ -11560,6 +11669,7 @@ GRANT EXECUTE ON PROCEDURE rpfp.get_report_served_method_mix_list TO 'pmed';
 GRANT EXECUTE ON PROCEDURE rpfp.get_report_demandgen_details TO 'pmed';
 GRANT EXECUTE ON PROCEDURE rpfp.get_report_unmet_need_details TO 'pmed';
 GRANT EXECUTE ON PROCEDURE rpfp.get_report_served_method_mix_details TO 'pmed';
+
 
 
 COMMIT;
