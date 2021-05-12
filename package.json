@@ -4,7 +4,7 @@
 	"dependencies": {
 		"bootstrap": "^3.4.1",
 		"bootstrap-select": "^1.13.18",
-		"chart.js": "^2.9.3",
+		"chart.js": "^2.9.4",
 		"gentelella": "^1.4.0",
 		"inputmask": "^4.0.9",
 		"jquery": "^3.5.1",
